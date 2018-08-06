@@ -16,7 +16,7 @@ public:
 
 
 public:
-	virtual void Init() override;
+	virtual bool Init(float fSpeed, float fGravity, float fJumpForce);
 	virtual void Update(float fDeltaTime) override;
 
 	

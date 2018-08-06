@@ -1,12 +1,12 @@
 #include "..\..\..\Include\Scene\Object\CObject.h"
 #include "..\..\..\Include\Core\Components\ComponentBase.h"
+#include "..\..\..\Include\Core\Components\InputComponent.h"
+#include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\..\Include\Core\Components\Collider.h"
 
 
-
-CObject::CObject(Types::ObjectType type, Types::Point point, UINT iWidth, 
-	UINT iHeight, Types::ObjectState state, Types::Direction dir)
-	:m_ObjectType(type), m_ObjectState(state),  m_iObjectWidth(iWidth), 
-	m_iObjectHeight(iHeight), m_ObjectDirection(dir), m_fObjectPoint(point)
+CObject::CObject(Types::ObjectType type)
+	:m_ObjectType(type), m_pScene(nullptr)
 {
 
 
@@ -23,15 +23,27 @@ CObject::~CObject()
 
 }
 
-bool CObject::Init()
+/*
+	TODO(08.06):
+		Object와 Scene간의 상호작용을 위한 Scene포인터의 초기화 추가
+		Scene, Layer, Object간의 초기화 방법에 대해 다시 생각해보자.
+*/
+
+bool CObject::Init(Types::Point point, UINT iWidth,
+	UINT iHeight, Types::ObjectState state, Types::Direction dir)
 {
+	bool ret;
 
-	for (m_it = m_ComponentTable.begin(); m_it != m_ComponentTable.end(); ++m_it) {
-		m_it->second->Init();
-	}
+	m_ObjectState = state;
+	m_ObjectDirection = dir;
+	m_fObjectPoint = point;
+	m_iObjectWidth = iWidth;
+	m_iObjectHeight = iHeight;
+	
+	for(auto& it : m_ComponentTable)
+		ret = InitComponents(it.second);
 
-
-	return true;
+	return ret;
 }
 
 void CObject::Update(float fDeltaTime)
@@ -96,4 +108,22 @@ bool CObject::DeleteComponent(const Types::tstring & tag){
 	m_ComponentTable.erase(m_it);
 
 	return true;
+}
+
+//오브젝트 초기화시 각 컴포넌트별로 기본 값으로 초기화함.
+bool CObject::InitComponents(ComponentBase* pComponent)
+{
+	Types::tstring tag = pComponent->GetComponentTag();
+	bool ret = true;
+	
+	if (!tag.compare(TEXT("PhysicsComponent"))) {
+		PhysicsComponent* physics = static_cast<PhysicsComponent*>(pComponent);
+		ret = physics->Init(400.f, 1300.f, -350.f);
+	}
+	else if (!tag.compare(TEXT("Collider"))) {
+		Collider* collider = static_cast<Collider*>(pComponent);
+		ret = collider->Init(m_fObjectPoint);
+	}
+	
+	return ret;
 }

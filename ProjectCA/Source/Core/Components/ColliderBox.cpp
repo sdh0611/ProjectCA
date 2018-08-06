@@ -6,10 +6,10 @@
 
 
 
-ColliderBox::ColliderBox(CObject * owner, float left, float top, float right, float bottom)
-	:Collider(owner, CT_BOX), m_BoxSize(Types::Rect(left, top, right, bottom)),
-	m_iWidth(right - left), m_iHeight(bottom - top)
+ColliderBox::ColliderBox(CObject * owner)
+	:Collider(owner, CT_BOX), m_BoxSize(0, 0, 0, 0)
 {
+
 	//Debug::MessageInfo(TEXT("Create Box!"));
 }
 
@@ -26,10 +26,25 @@ ColliderBox::~ColliderBox()
 	//Debug::MessageInfo(TEXT("Bos Destruct"));
 }
 
-void ColliderBox::Init()
+bool ColliderBox::Init(Types::Point point)
 {
+	if (point.x < 0.f || point.y < 0.f)
+		return false;
+
+	m_ColliderPoint = point;
+	
+	//처음 Init할 때 기본값으로 Object의 너비, 높이를 따라가도록 함.
+	m_iWidth = m_pOwner->GetObjectWidth();
+	m_iHeight = m_pOwner->GetObjectHeight();
+
+	m_BoxSize.left = m_pOwner->GetObjectPoint().x;
+	m_BoxSize.top = m_pOwner->GetObjectPoint().y;
+	m_BoxSize.right = m_pOwner->GetObjectPoint().x + m_pOwner->GetObjectWidth();
+	m_BoxSize.bottom = m_pOwner->GetObjectPoint().y + m_pOwner->GetObjectHeight();
+
 	//Debug::MessageInfo(TEXT("Box Init"));
 
+	return true;
 }
 
 //물체가 움직임에 따라 CollisionBox의 좌표도 같이 이동해야함.

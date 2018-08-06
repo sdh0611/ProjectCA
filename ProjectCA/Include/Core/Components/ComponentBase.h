@@ -9,12 +9,13 @@ class CObject;
 class ComponentBase {
 
 public:
-	ComponentBase(CObject* owner) : m_pOwner(owner) { };
+	ComponentBase(CObject* owner, const Types::tstring& strTag) 
+		: m_pOwner(owner), m_strComponentTag(strTag) { };
 	virtual ~ComponentBase() { };
 
 	
 public:
-	virtual void Init() = 0;
+	//virtual void Init() = 0;
 	virtual void Update(float fDeltaTime) = 0;
 
 

@@ -6,8 +6,8 @@
 
 
 
-CPlayer::CPlayer(UINT iWidth, UINT iHeight)
-	:CObject(Types::OT_PLAYER, Types::Point(0, 200), iWidth, iHeight)
+CPlayer::CPlayer(UINT iWidth, UINT iHeight, Types::Point startPoint)
+	:CObject(Types::OT_PLAYER), m_StartPoint(startPoint)
 {
 	
 }
@@ -16,20 +16,20 @@ CPlayer::~CPlayer()
 {
 }
 
-bool CPlayer::Init()
+bool CPlayer::Init(Types::Point point, UINT iWidth, UINT iHeight,
+	Types::ObjectState state, Types::Direction dir)
 {
+	bool ret;
+
 	//컴포넌트들 추가
-	AddComponent(TEXT("InputComponent"), new InputComponent(this));
-	AddComponent(TEXT("PhysicsComponent"), new PhysicsComponent(this));
-	AddComponent(TEXT("Collider"), new ColliderBox(this, m_fObjectPoint.x, m_fObjectPoint.y,
-		m_fObjectPoint.x + m_iObjectWidth, m_fObjectPoint.y + m_iObjectHeight));
-
-
-
+	ret = AddComponent(TEXT("InputComponent"), new InputComponent(this));
+	ret = AddComponent(TEXT("Collider"), new ColliderBox(this));
+	ret = AddComponent(TEXT("PhysicsComponent"), new PhysicsComponent(this));
+	
 	//컴포넌트들 초기화
-	CObject::Init();
+	ret = CObject::Init(m_StartPoint, iWidth, iHeight, state, dir);
 
-	return true;
+	return ret;
 }
 
 void CPlayer::Update(float fDeltaTime)

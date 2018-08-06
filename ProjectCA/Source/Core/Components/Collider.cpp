@@ -4,8 +4,8 @@
 #include "..\..\..\Include\Scene\Object\CObject.h"
 
 
-Collider::Collider(CObject* owner, ColliderType type)
-	:ComponentBase(owner), m_Type(type), m_bIsCollision(false)
+Collider::Collider(CObject* owner, ColliderType type, const Types::tstring& strTag)
+	:ComponentBase(owner, strTag), m_Type(type), m_bIsCollision(false)
 {
 	
 }

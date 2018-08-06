@@ -6,13 +6,13 @@
 
 class CProbs :public CObject {
 public:
-	CProbs(UINT width, UINT height);
-	CProbs(float left, float top, float right, float bottom);
+	CProbs();
 	virtual ~CProbs();
 
 
 public:
-	virtual bool Init() override;
+	virtual bool Init(Types::Point point, UINT iWidth, UINT iHeight,
+		Types::ObjectState state = Types::OS_IDLE, Types::Direction dir = Types::DIR_IDLE) override;
 	virtual void Update(float deltaTime) override;
 	virtual void Render(const HDC& hDC) override;
 	//virtual void LateUpdate(float fDeltaTime) override; 
@@ -31,7 +31,7 @@ private:
 
 
 private:
-	Types::Rect	m_ProbSize;
+	//Types::Rect	m_ProbSize;
 
 
 };

@@ -21,7 +21,7 @@ public:
 
 public:
 	bool Init();
-	void Update(const double& deltaTime);
+	void Update(float fDeltaTime);
 	void Render(const HDC& hDC);
 	void LateUpdate(float fDeltaTime);
 
@@ -36,6 +36,7 @@ public:
 	inline void SetLayerTag(const Types::tstring& tag) { m_strLayerTag = tag; }
 	inline int GetLayerOrder() { return m_iOrder; }
 	inline void SetLayerOrder(int order) { if (order >= 0) m_iOrder = order; }
+	inline UINT GetObjectNumber() const { return m_iObjectNumber; }
 
 private:
 
@@ -43,6 +44,7 @@ private:
 
 private:
 	int											m_iOrder;
+	UINT										m_iObjectNumber;
 	Types::tstring							m_strLayerTag;
 	std::list<CObject*>					m_ObjectList;
 	std::list<CObject*>::iterator			m_it;

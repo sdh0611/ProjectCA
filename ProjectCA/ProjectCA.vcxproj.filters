@@ -132,6 +132,9 @@
     <ClCompile Include="Source\Core\Components\Message\ComponentMessage.cpp">
       <Filter>소스 파일\Core\Components\Message</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\CResourceManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="Include\Core\Components\Message\ComponentMessage.h">
       <Filter>헤더 파일\Core\Components\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\CResourceManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

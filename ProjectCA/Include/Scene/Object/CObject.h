@@ -13,13 +13,13 @@ class ComponentBase;
 class CObject {
 	
 public:
-	CObject(Types::ObjectType type, Types::Point point, UINT iWidth, UINT iHeight , Types::ObjectState state = Types::OS_IDLE,
-		Types::Direction dir = Types::DIR_IDLE);
+	CObject(Types::ObjectType);
 	virtual ~CObject();
 
 
 public:
-	virtual bool Init();
+	virtual bool Init(Types::Point point, UINT iWidth,
+		UINT iHeight, Types::ObjectState state = Types::OS_IDLE, Types::Direction dir = Types::DIR_IDLE);
 	virtual void Update(float fDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
 	virtual void LateUpdate(float fDeltaTime);
@@ -31,17 +31,25 @@ public:
 
 
 public:
-	const Types::ObjectType& GetObjectType() const { return m_ObjectType; }
+	Types::ObjectType GetObjectType() const { return m_ObjectType; }
 	void SetObjectType(Types::ObjectType type) { m_ObjectType = type; }
-	const Types::ObjectState& GetObjectState() const { return m_ObjectState; }
+	Types::ObjectState GetObjectState() const { return m_ObjectState; }
 	void SetObjectState(Types::ObjectState state) { m_ObjectState = state; }
-	const Types::Direction& GetObjectDirection() const { return m_ObjectDirection; }
+	Types::Direction GetObjectDirection() const { return m_ObjectDirection; }
 	void SetObjectDirection(Types::Direction dir) { m_ObjectDirection = dir; }
-	const Types::Point& GetObjectPoint() const { return m_fObjectPoint; }
+	Types::Point GetObjectPoint() const { return m_fObjectPoint; }
 	void SetObjectPoint(Types::Point point) { if(point.x >= 0 && point.y >= 0) m_fObjectPoint = point; }
 	void SetObjectPoint(float x, float y) { if (x>=0 && y>=0) m_fObjectPoint = { x, y }; }
 	void SetObjectPointX(float x) { if (x>=0) m_fObjectPoint.x = x; }
 	void SetObjectPointY(float y) { if (y>=0) m_fObjectPoint.y = y; }
+	UINT GetObjectWidth() const { return m_iObjectWidth; }
+	void SetObjectWidth(UINT iWidth) { if (iWidth > 0) m_iObjectWidth = iWidth; }
+	UINT GetObjectHeight() const { return m_iObjectHeight; }
+	void SetObjectHeight(UINT iHeight) { if (iHeight > 0) m_iObjectHeight = iHeight; }
+
+
+protected:
+	bool InitComponents(ComponentBase* pComponent);
 
 
 protected:
@@ -54,6 +62,6 @@ protected:
 	typedef std::unordered_map<Types::tstring, ComponentBase*> ComponentTable;
 	ComponentTable						m_ComponentTable;
 	ComponentTable::iterator			m_it;
-
+	class CScene*							m_pScene;
 
 };

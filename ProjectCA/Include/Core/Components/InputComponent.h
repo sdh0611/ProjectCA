@@ -12,7 +12,6 @@ public:
 
 	
 public:
-	virtual void Init() override;
 	virtual void Update(float fDeltaTime) override;
 
 

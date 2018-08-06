@@ -14,31 +14,34 @@ public:
 
 
 public:
-	Collider(CObject* owner, ColliderType type);
+	Collider(CObject* owner, ColliderType type, const Types::tstring& strTag = TEXT("Collider"));
 	virtual ~Collider();
 
 
 public:
-	virtual void Init() = 0;
+	virtual bool Init(Types::Point point) = 0;
 	virtual void Update(float fDeltaTime) = 0;
 	virtual void ResolveCollision(Types::ObjectType type, CollisionType collision);
 	virtual void ResolveCollision(Types::ObjectType type);
 
 
 public:
-	const ColliderType& GetColliderType() const { return m_Type; }
+	ColliderType GetColliderType() const { return m_Type; }
 	void SetColliderType(ColliderType type) { m_Type = type; }
 	//bool GetIsTrigger() const { return m_bIsTrigger; }
 	//void SetIsTrigger(bool bIsTrigger) { m_bIsTrigger = bIsTrigger; }
 	bool GetIsCollision() const { return m_bIsCollision; }
 	void SetIsCollision(bool isCollision) { m_bIsCollision = isCollision; }
-
+	const Types::Point& GetColliderPoint() const { return m_ColliderPoint; }
+	void SetColliderPoint(Types::Point point) { if (point.x > 0 && point.y > 0) m_ColliderPoint = point; }
 
 
 protected:
 	ColliderType		m_Type;
+	Types::Point			m_ColliderPoint;
 	//bool				m_bIsTrigger;	//Trigger활성화여부->그냥 따로 상속클래스 만들어서 추가해야되나?
-	bool				m_bIsCollision;
+	bool					m_bIsCollision;
+
 
 private:
 

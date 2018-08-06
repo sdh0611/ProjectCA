@@ -29,7 +29,6 @@ bool CGameScene::Init()
 	if (!CreateLayer(TEXT("Player"), 1))
 		return false;
 	FindLayer(TEXT("Player"))->AddObjectToLayer(new CPlayer(64, 64));
-
 	
 	if (!CreateLayer(TEXT("Probs"), 3))
 		return false;
@@ -53,7 +52,6 @@ void CGameScene::Update(float fDeltaTime)
 	CScene::Update(fDeltaTime);
 
 	//Scene내부의 객체들끼리 충돌 검사
-	//Bug(06.09) : 여러개의 prob을 추가했더니 마지막 prob만 충돌검사가 수행된다..
 	CollisionDetect();
 
 	GameUpdate(fDeltaTime);
@@ -96,8 +94,7 @@ void CGameScene::GameUpdate(float fDeltaTime)
 {
 	if (!m_LayerList.empty()) {
 		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-			
-
+			(*m_it)->LateUpdate(fDeltaTime);
 		}
 
 	}

@@ -147,6 +147,7 @@
     <ClCompile Include="Source\Core\Components\Message\ComponentMessage.cpp" />
     <ClCompile Include="Source\Core\Components\PhysicsComponent.cpp" />
     <ClCompile Include="Source\Core\Components\TriggerBox.cpp" />
+    <ClCompile Include="Source\Core\CResourceManager.cpp" />
     <ClCompile Include="Source\Core\Debuging\Debug.cpp" />
     <ClCompile Include="Source\Core\Math\CVector.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Include\Core\Components\Message\ComponentMessage.h" />
     <ClInclude Include="Include\Core\Components\PhysicsComponent.h" />
     <ClInclude Include="Include\Core\Components\TriggerBox.h" />
+    <ClInclude Include="Include\Core\CResourceManager.h" />
     <ClInclude Include="Include\Core\Debuging\Debug.h" />
     <ClInclude Include="Include\Core\Math\CVector.h" />
     <ClInclude Include="Include\Core\Timer.h" />

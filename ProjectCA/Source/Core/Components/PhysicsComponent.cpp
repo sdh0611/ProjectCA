@@ -6,15 +6,23 @@
 
 
 PhysicsComponent::PhysicsComponent(CObject* owner) :
-	ComponentBase(owner), 
-	m_fSpeed(200.f), m_fGravity(1300.f), m_fJumpForce(-350.f)
+	ComponentBase(owner, TEXT("PhysicsComponent"))
+	//,m_fSpeed(200.f), m_fGravity(1300.f), m_fJumpForce(-350.f)
 {
 
 }
 
-void PhysicsComponent::Init()
+bool PhysicsComponent::Init(float fSpeed, float fGravity, float fJumpForce)
 {
+	if (fSpeed < 0.f || fGravity < 0.f)
+		return false;
+
+	m_fSpeed = fSpeed;
+	m_fGravity = fGravity;
+	m_fJumpForce = fJumpForce;
 	//m_pOwner = owner;
+
+	return true;
 }
 
 void PhysicsComponent::Update(float ffDeltaTime)

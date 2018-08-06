@@ -7,12 +7,13 @@
 class CPlayer : public CObject{
 
 public:
-	CPlayer(UINT iWidth, UINT iHeight);
+	CPlayer(UINT iWidth, UINT iHeight, Types::Point startPoint);
 	virtual ~CPlayer();
 
 
 public:
-	virtual bool Init() override;
+	virtual bool Init(Types::Point point, UINT iWidth, UINT iHeight,
+		Types::ObjectState state = Types::OS_IDLE, Types::Direction dir = Types::DIR_IDLE) override;
 	virtual void Update(float fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
 	//virtual void LateUpdate(float fDeltaTime) override;
@@ -26,6 +27,6 @@ private:
 
 
 private:
-
+	Types::Point			m_StartPoint;
 
 };

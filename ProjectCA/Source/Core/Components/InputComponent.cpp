@@ -4,17 +4,17 @@
 
 
 InputComponent::InputComponent(CObject* owner)
-	:ComponentBase(owner)
+	:ComponentBase(owner, TEXT("InputComponent"))
 {
 
 }
 
-void InputComponent::Init()
-{
-	//m_pOwner = owner;
-
-
-}
+//void InputComponent::Init()
+//{
+//	//m_pOwner = owner;
+//
+//
+//}
 
 void InputComponent::Update(float fDeltaTime)
 {
