@@ -67,6 +67,12 @@
     <Filter Include="헤더 파일\Core\Components\Message">
       <UniqueIdentifier>{0e895bab-c39c-4ab2-9d6b-ce8ea45ffd17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Core\ActorComponents">
+      <UniqueIdentifier>{353d3b3d-0781-4e09-a2d3-531c94401735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Core\ActorComponents">
+      <UniqueIdentifier>{822e3f0b-032b-4bae-864c-52cfcd2d3c56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,9 +86,6 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\CSceneManager.cpp">
       <Filter>소스 파일\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\Object\CObject.cpp">
-      <Filter>소스 파일\Scene\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Window\MainWindow.cpp">
       <Filter>소스 파일\Core\Window</Filter>
@@ -114,9 +117,6 @@
     <ClCompile Include="Source\Core\Components\TriggerBox.cpp">
       <Filter>소스 파일\Core\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Object\CPlayer.cpp">
-      <Filter>소스 파일\Scene\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Debuging\Debug.cpp">
       <Filter>소스 파일\Debug</Filter>
     </ClCompile>
@@ -126,11 +126,17 @@
     <ClCompile Include="Source\Core\Math\CVector.cpp">
       <Filter>소스 파일\Core\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Object\CProbs.cpp">
-      <Filter>소스 파일\Scene\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Components\Message\ComponentMessage.cpp">
       <Filter>소스 파일\Core\Components\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Object\CActor.cpp">
+      <Filter>소스 파일\Scene\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Object\CActorManger.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\CFileManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,9 +154,6 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\CSceneManager.h">
       <Filter>헤더 파일\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene\Object\CObject.h">
-      <Filter>헤더 파일\Scene\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Include\Core\Window\MainWindow.h">
       <Filter>헤더 파일\Core\Window</Filter>
@@ -185,9 +188,6 @@
     <ClInclude Include="Include\Core\Components\TriggerBox.h">
       <Filter>헤더 파일\Core\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Object\CPlayer.h">
-      <Filter>헤더 파일\Scene\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\Debuging\Debug.h">
       <Filter>헤더 파일\Debug</Filter>
     </ClInclude>
@@ -197,11 +197,20 @@
     <ClInclude Include="Include\Core\Math\CVector.h">
       <Filter>헤더 파일\Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Object\CProbs.h">
-      <Filter>헤더 파일\Scene\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\Components\Message\ComponentMessage.h">
       <Filter>헤더 파일\Core\Components\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Object\CActor.h">
+      <Filter>헤더 파일\Scene\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\ActorComponent\CActorComponent.h">
+      <Filter>헤더 파일\Core\ActorComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Object\CActorManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\CFileManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
