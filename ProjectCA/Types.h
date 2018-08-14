@@ -2,6 +2,12 @@
 
 #include "stdafx.h"
 
+#define MAKE_INPUT			0b00001
+#define MAKE_PHYSICS		0b00010
+#define MAKE_COL_BOX		0b00100
+#define MAKE_COL_CIR		0b01000
+
+
 namespace Types {
 
 	typedef std::basic_string<TCHAR> tstring;
@@ -102,6 +108,24 @@ namespace Types {
 		}
 
 	};
+
+	struct ObjectData {
+		ObjectData(ObjectType type, Point objectPoint, Direction dir, 
+			ObjectState state, ActorID id)
+			: objectType(type), fObjectPoint(objectPoint), objectDirection(dir), 
+			objectState(state), actorID(id)
+		{
+
+		}
+
+		ObjectType	objectType;
+		Point	fObjectPoint;
+		Direction objectDirection;
+		ObjectState	objectState;
+		ActorID		actorID;
+
+	};
+	
 	
 	//오브젝트 타입 정의
 	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROBS, OT_PICKUP, OT_MAP };

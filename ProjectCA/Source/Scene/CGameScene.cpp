@@ -5,19 +5,21 @@
 #include "..\..\Include\Scene\Object\CProbs.h"
 #include "..\..\Include\Core\CollisionDetector.h"
 #include "..\..\Include\Core\Components\Collider.h"
-
+#include "..\..\Include\Scene\Object\CObjectManager.h"
 
 
 
 CGameScene::CGameScene(Types::SceneType type)
-	:CScene(type), m_pCollisionDetector(nullptr)
-	//:CScene(type)
-	//,m_pCurStage(nullptr), m_pNextStage(nullptr)
+	:CScene(type), m_pCollisionDetector(nullptr), m_pObjectManager(nullptr)
+	,m_pCurWorld(nullptr), m_pNextWorld(nullptr)
 {
 }
 
 CGameScene::~CGameScene()
 {
+	SAFE_DELETE(m_pCurWorld)
+	SAFE_DELETE(m_pNextWorld)
+
 }
 
 //Layer우선순위 0번은 추후 UI에 줄 예정임.
@@ -38,7 +40,7 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(200.f, 350.f, 250.f, 400.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(250.f, 300.f, 300.f, 350.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(300.f, 250.f, 350.f, 300.f));
-
+	m_pObjectManager = CObjectManager::GetInstance();
 
 	CScene::Init();
 

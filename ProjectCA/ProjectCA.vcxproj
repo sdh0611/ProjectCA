@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\Core\CFileManager.cpp" />
     <ClCompile Include="Source\Core\CollisionDetector.cpp" />
     <ClCompile Include="Source\Core\Components\Collider.cpp" />
     <ClCompile Include="Source\Core\Components\ColliderBox.cpp" />
@@ -153,16 +154,17 @@
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window\MainWindow.cpp" />
     <ClCompile Include="Source\Core\Window\MyWindow.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CActor.cpp" />
     <ClCompile Include="Source\Scene\CGameScene.cpp" />
     <ClCompile Include="Source\Scene\CLayer.cpp" />
     <ClCompile Include="Source\Scene\CScene.cpp" />
     <ClCompile Include="Source\Scene\CSceneManager.cpp" />
-    <ClCompile Include="Source\Scene\Object\CObject.cpp" />
-    <ClCompile Include="Source\Scene\Object\CPlayer.cpp" />
-    <ClCompile Include="Source\Scene\Object\CProbs.cpp" />
+    <ClCompile Include="Source\Scene\CWorld.cpp" />
+    <ClCompile Include="Source\Scene\Object\CObjectManager.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Core\CFileManager.h" />
     <ClInclude Include="Include\Core\CollisionDetector.h" />
     <ClInclude Include="Include\Core\Components\Collider.h" />
     <ClInclude Include="Include\Core\Components\ColliderBox.h" />
@@ -177,13 +179,13 @@
     <ClInclude Include="Include\Core\Timer.h" />
     <ClInclude Include="Include\Core\Window\MainWindow.h" />
     <ClInclude Include="Include\Core\Window\MyWindow.h" />
+    <ClInclude Include="Include\Scene\Actor\CActor.h" />
     <ClInclude Include="Include\Scene\CGameScene.h" />
     <ClInclude Include="Include\Scene\CLayer.h" />
     <ClInclude Include="Include\Scene\CScene.h" />
     <ClInclude Include="Include\Scene\CSceneManager.h" />
-    <ClInclude Include="Include\Scene\Object\CObject.h" />
-    <ClInclude Include="Include\Scene\Object\CPlayer.h" />
-    <ClInclude Include="Include\Scene\Object\CProbs.h" />
+    <ClInclude Include="Include\Scene\CWorld.h" />
+    <ClInclude Include="Include\Scene\Object\CObjectManager.h" />
     <ClInclude Include="Include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Types.h" />

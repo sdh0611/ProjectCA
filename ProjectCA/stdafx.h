@@ -8,6 +8,7 @@
 #include <list>
 #include <unordered_map>
 #include <memory>
+#include <fstream>
 #include "Types.h"
 #include "Include\Core\Debuging\Debug.h"
 

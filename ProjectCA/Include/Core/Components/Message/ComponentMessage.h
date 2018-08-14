@@ -21,14 +21,15 @@ public:
 
 public:
 	virtual void GetComponentMessage() { };
+	virtual void SetMessageType(MessageType msg) { m_msgType = msg; }
 
 
 public:
-	MessageType GetMessageType() const { return m_Type; }
+	MessageType GetMessageType() const { return m_msgType; }
 
 
 private:
-	MessageType		m_Type;
+	MessageType		m_msgType;
 
 
 };

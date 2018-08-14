@@ -3,6 +3,7 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
+#include "Message\ComponentMessage.h"
 
 class CObject;
 
@@ -17,7 +18,7 @@ public:
 public:
 	//virtual void Init() = 0;
 	virtual void Update(float fDeltaTime) = 0;
-
+	virtual void OnMessage(ComponentMessage msg);
 
 public:
 	inline CObject* GetOwner() { return m_pOwner; }

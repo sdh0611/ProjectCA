@@ -4,7 +4,7 @@
 	NOTE:
 		GameScene의 동작 기능들을 구현.
 		CScene Class를 상속받음.
-
+		Player가 활동하게 될 World를 관리함.
 */
 
 
@@ -15,7 +15,7 @@
 
 //Stage들의 부모 클래스 전방 선언.
 //추후 구현예정(06.10)
-class CStage;
+class CWorld;
 
 class CGameScene :public CScene {
 
@@ -33,6 +33,9 @@ public:
 public:
 	void CollisionDetect();
 	void GameUpdate(float fDeltaTime);
+	bool IsWorldChange();
+	void ChangeWorld();
+
 
 private:
 	void ResetScene();		
@@ -40,7 +43,8 @@ private:
 
 private:
 	std::unique_ptr<class CollisionDetector>	m_pCollisionDetector;
-	//std::unique_ptr<CStage>						m_pCurStage;
-	//std::unique_ptr<CStage>						m_pNextStage;
+	class CObjectManager*						m_pObjectManager;
+	CWorld*											m_pCurWorld;
+	CWorld*											m_pNextWorld;
 
 };

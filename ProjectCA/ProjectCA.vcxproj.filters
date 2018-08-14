@@ -22,9 +22,6 @@
     <Filter Include="소스 파일\Scene">
       <UniqueIdentifier>{203caf04-9f1c-4d08-a851-88f9dbf7ae64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Scene\Objects">
-      <UniqueIdentifier>{d8645b7f-4b9f-4630-b022-f1cd4dc28c36}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Core\Manager">
       <UniqueIdentifier>{3cf0090a-d880-469d-9f62-0beebc7adb17}</UniqueIdentifier>
     </Filter>
@@ -39,9 +36,6 @@
     </Filter>
     <Filter Include="헤더 파일\Scene">
       <UniqueIdentifier>{ef9edfee-b23f-4955-ac91-478d6d5942b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Scene\Objects">
-      <UniqueIdentifier>{007bb277-32fb-4192-9ac2-8a84c97041f3}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Core\Window">
       <UniqueIdentifier>{5e28f060-184a-4cf3-9623-7bf04b8e79d5}</UniqueIdentifier>
@@ -67,6 +61,18 @@
     <Filter Include="헤더 파일\Core\Components\Message">
       <UniqueIdentifier>{0e895bab-c39c-4ab2-9d6b-ce8ea45ffd17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene\Actors">
+      <UniqueIdentifier>{1e77c94e-2a89-4949-956b-519b18bb896b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Scene\Actors">
+      <UniqueIdentifier>{454704c2-d2aa-4232-901c-4a934be4e283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\UI">
+      <UniqueIdentifier>{046da72c-0d2e-41b8-8ead-6eff4a1cea03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\UI">
+      <UniqueIdentifier>{83cda310-9e30-4272-b69c-9547a99a501d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,9 +86,6 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\CSceneManager.cpp">
       <Filter>소스 파일\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\Object\CObject.cpp">
-      <Filter>소스 파일\Scene\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Window\MainWindow.cpp">
       <Filter>소스 파일\Core\Window</Filter>
@@ -114,9 +117,6 @@
     <ClCompile Include="Source\Core\Components\TriggerBox.cpp">
       <Filter>소스 파일\Core\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Object\CPlayer.cpp">
-      <Filter>소스 파일\Scene\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Debuging\Debug.cpp">
       <Filter>소스 파일\Debug</Filter>
     </ClCompile>
@@ -126,14 +126,23 @@
     <ClCompile Include="Source\Core\Math\CVector.cpp">
       <Filter>소스 파일\Core\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Object\CProbs.cpp">
-      <Filter>소스 파일\Scene\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Components\Message\ComponentMessage.cpp">
       <Filter>소스 파일\Core\Components\Message</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\CResourceManager.cpp">
       <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Object\CObjectManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\CFileManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CActor.cpp">
+      <Filter>소스 파일\Scene\Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\CWorld.cpp">
+      <Filter>소스 파일\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,9 +160,6 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\CSceneManager.h">
       <Filter>헤더 파일\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene\Object\CObject.h">
-      <Filter>헤더 파일\Scene\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Include\Core\Window\MainWindow.h">
       <Filter>헤더 파일\Core\Window</Filter>
@@ -188,9 +194,6 @@
     <ClInclude Include="Include\Core\Components\TriggerBox.h">
       <Filter>헤더 파일\Core\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Object\CPlayer.h">
-      <Filter>헤더 파일\Scene\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\Debuging\Debug.h">
       <Filter>헤더 파일\Debug</Filter>
     </ClInclude>
@@ -200,14 +203,23 @@
     <ClInclude Include="Include\Core\Math\CVector.h">
       <Filter>헤더 파일\Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Object\CProbs.h">
-      <Filter>헤더 파일\Scene\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\Components\Message\ComponentMessage.h">
       <Filter>헤더 파일\Core\Components\Message</Filter>
     </ClInclude>
     <ClInclude Include="Include\Core\CResourceManager.h">
       <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Object\CObjectManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\CFileManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CActor.h">
+      <Filter>헤더 파일\Scene\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CWorld.h">
+      <Filter>헤더 파일\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

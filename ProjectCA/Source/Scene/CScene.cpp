@@ -78,7 +78,7 @@ bool CScene::DeleteLayer(const Types::tstring & tag)
 CLayer * CScene::FindLayer(const Types::tstring & tag)
 {
 	for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-		if ((*m_it)->GetLayerTag() == tag)
+		if (!(*m_it)->GetLayerTag().compare( tag))
 			return (*m_it);
 	}
 
