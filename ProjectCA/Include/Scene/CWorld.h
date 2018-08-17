@@ -7,6 +7,7 @@
 		World내 Actor들을 Layer객체들의 list를 이용하여 관리함.
 	->해당 클래스가 Actor들을 관리하는 역할까지 맡게 할 것인지, 아니면 World상의 Actor간 상호작용에 대해서만
 		역할을 하게 할 것인지 재고해볼 필요가 있음.(08.14)
+	-> World내의 모든 Actor들의 포인터에 접근하고, 물리관련 상호작용에 대해서만 기능을 수행하게끔 변경.(08.16)
 */
 
 #include "..\..\stdafx.h"
@@ -19,40 +20,24 @@ class CWorld {
 
 private:
 	CWorld();
-	virtual ~CWorld() { };
+	virtual ~CWorld();
 
 
 public:
 	bool Init();
 	void Update(float fDeltaTime);
-	void Render(const HDC& hDC);
 
 
 public:
-	bool CreateLayer(const Types::tstring& layerTag);
-	bool DeleteLayer(const Types::tstring& layerTag);
-	CLayer * FindLayer(const Types::tstring& layerTag);
-
-
-public:
-	bool CreateActor(const Types::tstring& layerTag, Types::ObjectData data);
-	CActor* GetActor(ActorID actorID);
-	CActor* GetActor(const Types::tstring& layerName, ActorID actorID);
+	void AddActor(std::shared_ptr<CActor> pActor);
+	std::weak_ptr<CActor> GetActor(ActorID actorID);
 	bool DeleteActor(ActorID actorID);
-	bool DeleteActor(CActor* pActor);
-	bool DeleteActor(const Types::tstring& layerName, ActorID actorID);
-	ActorID GetLastActorID() const { return m_lastActorID; }
-
-
-private:
-	inline void IncreaseLastActorID() { ++m_lastActorID; }
-	inline bool DecreaseLastActorID() { if (m_lastActorID < 1) return false; --m_lastActorID; return true; }
+	bool DeleteActor(std::weak_ptr<CActor> pActor);
+	bool CollisionUpdate();
 
 	
 private:
-	ActorID						m_lastActorID;
-	std::list<class CLayer*>	m_layerList;
-	
-
+	std::list<std::weak_ptr<CActor>>				m_actorList;
+	std::unique_ptr<class CollisionDetector>		m_pCollisionDetector;
 
 };

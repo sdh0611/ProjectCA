@@ -42,9 +42,9 @@ private:
 
 
 private:
-	std::unique_ptr<class CollisionDetector>	m_pCollisionDetector;
 	class CObjectManager*						m_pObjectManager;
 	CWorld*											m_pCurWorld;
 	CWorld*											m_pNextWorld;
+	std::unique_ptr<class CollisionDetector>	m_pCollisionDetector;
 
 };

@@ -3,114 +3,89 @@
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CLayer.h"
+#include "..\..\Include\Core\CollisionDetector.h"
 
+
+
+CWorld::CWorld()
+	:m_pCollisionDetector(nullptr)
+{
+
+}
+
+
+
+CWorld::~CWorld()
+{
+	if (!m_actorList.empty())
+		m_actorList.clear();
+
+}
 
 bool CWorld::Init()
 {
+	m_pCollisionDetector = std::make_unique<CollisionDetector>();
 
-	m_lastActorID = 0;
+	//m_lastActorID = 0;
 
 	return true;
 }
 
 void CWorld::Update(float fDeltaTime)
 {
-	for (auto& it : m_layerList) {
-		it->Update(fDeltaTime);
-	}
+
 }
-
-void CWorld::Render(const HDC & hDC)
+void CWorld::AddActor(std::shared_ptr<CActor> pActor)
 {
-	for (auto& it : m_layerList) {
-		it->Render(hDC);
-	}
-
+	m_actorList.emplace_back(std::weak_ptr<CActor>(pActor));
 
 }
 
-bool CWorld::CreateActor(const Types::tstring& layerTag, Types::ObjectData data)
+//해당 Actor의 weak_ptr를 찾은 경우 weak_ptr값을 반환하고, 못찾은 경우 default생성자값을 반환
+// -> lock()메소드 사용시 nullptr 반환
+std::weak_ptr<CActor>  CWorld::GetActor(ActorID actorID)
 {
-	CActor* pActor = new CActor;
-	pActor->Init(data);
+	for (auto& it : m_actorList)
+		if (it.lock()->GetActorID() == actorID)
+			return it;
 
-	CLayer* pLayer = FindLayer(layerTag);
-
-	if (pLayer == nullptr)
-		return false;
-
-	pLayer->AddActor(pActor);
-	IncreaseLastActorID();
-
-	return true;
-}
-
-CActor * CWorld::GetActor(ActorID actorID)
-{
-	CActor* pActor = nullptr;
-
-	for (auto& it : m_layerList) {
-		pActor = it->FindActor(actorID);
-		if (pActor != nullptr)
-			break;
-	}
-
-	return pActor;
-}
-
-CActor * CWorld::GetActor(const Types::tstring & layerName, ActorID actorID)
-{
-	CActor* pActor = FindLayer(layerName)->FindActor(actorID);
-
-	return pActor;
+	return std::weak_ptr<CActor>();
 }
 
 bool CWorld::DeleteActor(ActorID actorID)
 {
-
-
-	return false;
-}
-
-bool CWorld::DeleteActor(CActor * pActor)
-{
-
-
-	return false;
-}
-
-bool CWorld::DeleteActor(const Types::tstring & layerName, ActorID actorID)
-{
-
-
-	return false;
-}
-
-
-bool CWorld::CreateLayer(const Types::tstring & layerTag)
-{
-	if (FindLayer(layerTag) != nullptr)
+	std::weak_ptr<CActor> pActor = GetActor(actorID);
+	if (pActor.lock() == nullptr)	//
 		return false;
-
-	m_layerList.insert(new CLayer);
+	
+	//m_actorList.remove(pActor);
+	for (auto it = m_actorList.begin(); it != m_actorList.end();) {
+		if ((*it).lock() == pActor.lock())
+			m_actorList.erase(it);
+		else
+			++it;
+	}
 
 	return true;
 }
 
-bool CWorld::DeleteLayer(const Types::tstring & layerTag)
+bool CWorld::DeleteActor(std::weak_ptr<CActor> pActor)
 {
-	return false;
+	for (auto it = m_actorList.begin(); it != m_actorList.end();) {
+		if ((*it).lock() == pActor.lock())
+			m_actorList.erase(it);
+		else
+			++it;
+	}
+	
+	return true;
 }
 
-CLayer * CWorld::FindLayer(const Types::tstring & layerTag)
+bool CWorld::CollisionUpdate()
 {
-	for (auto& it : m_layerList) {
-		if ( !(it->GetLayerTag().compare(layerTag)) ) 
-			return it;
-
-	}
 
 
-	return nullptr;
+
+	return true;
 }
 

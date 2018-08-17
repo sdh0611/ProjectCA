@@ -132,9 +132,6 @@
     <ClCompile Include="Source\Core\CResourceManager.cpp">
       <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Object\CObjectManager.cpp">
-      <Filter>소스 파일\Core\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\CFileManager.cpp">
       <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
@@ -143,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\CWorld.cpp">
       <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CActorFactory.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -209,9 +209,6 @@
     <ClInclude Include="Include\Core\CResourceManager.h">
       <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Object\CObjectManager.h">
-      <Filter>헤더 파일\Core\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\CFileManager.h">
       <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
@@ -220,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\CWorld.h">
       <Filter>헤더 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CActorFactory.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
