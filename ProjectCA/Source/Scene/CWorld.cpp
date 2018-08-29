@@ -31,8 +31,19 @@ bool CWorld::Init()
 	return true;
 }
 
+//CWorld Class에서 관리하는 weak_ptr List중 가리키는 포인터가 소멸됬는지 확인.
 void CWorld::Update(float fDeltaTime)
 {
+	for (auto it = m_actorList.begin(); it != m_actorList.end(); ) {
+		if ((*it).expired()) {
+			it = m_actorList.erase(it);
+		}
+		else {
+			++it;
+		}
+
+	}
+	
 
 }
 void CWorld::AddActor(std::shared_ptr<CActor> pActor)
@@ -58,27 +69,30 @@ bool CWorld::DeleteActor(ActorID actorID)
 	if (pActor.lock() == nullptr)	//
 		return false;
 	
-	//m_actorList.remove(pActor);
 	for (auto it = m_actorList.begin(); it != m_actorList.end();) {
-		if ((*it).lock() == pActor.lock())
+		if ((*it).lock() == pActor.lock()) {
 			m_actorList.erase(it);
+			return true;
+		}
 		else
 			++it;
 	}
 
-	return true;
+	return false;
 }
 
 bool CWorld::DeleteActor(std::weak_ptr<CActor> pActor)
 {
 	for (auto it = m_actorList.begin(); it != m_actorList.end();) {
-		if ((*it).lock() == pActor.lock())
+		if ((*it).lock() == pActor.lock()) {
 			m_actorList.erase(it);
+			return true;
+		}
 		else
 			++it;
 	}
 	
-	return true;
+	return false;
 }
 
 bool CWorld::CollisionUpdate()

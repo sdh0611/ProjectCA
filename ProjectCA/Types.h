@@ -139,4 +139,7 @@ namespace Types {
 	//Scene 타입 정의
 	enum SceneType { ST_TITLE, ST_GAME, ST_SELECT };
 
+	//EventType 정의
+	enum EventType { ET_ATTACK, ET_DAMAGE };
+
 }

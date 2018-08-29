@@ -1,5 +1,6 @@
 #include "..\..\..\Include\Core\Window\MainWindow.h"
 #include "..\..\..\Include\Scene\CSceneManager.h"
+#include "..\..\..\Include\Scene\Actor\CActorManager.h"
 #include "..\..\..\Include\Core\Timer.h"
 
 
@@ -13,13 +14,17 @@ MainWindow::MainWindow()
 //Heap할당 객체들, DC 정리해줄 것.
 MainWindow::~MainWindow()
 {
+	//Manager Class 정리
 	m_pSceneManager->Destroy();
 	m_pTimer->Destroy();
+	CActorManager::Destroy();
+
 	ReleaseDC(m_hWnd, m_hDC);
 
 }
 
 //실질적인 MainWindow 초기화 및 생성작업이 이루어짐.
+// + Manager Class들의 Loading 수행
 bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 {
 	m_hInstance = hInstance;
@@ -41,6 +46,9 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 		return false;
 
 	if (!m_pTimer->Init())
+		return false;
+
+	if (!CActorManager::GetInstance()->Init())
 		return false;
 
 	return true;

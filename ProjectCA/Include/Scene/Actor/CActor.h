@@ -8,24 +8,30 @@
 
 #include "..\..\..\stdafx.h"
 
-
 typedef unsigned long ActorID;
 
+
 class CActor {
-	//Layer, World Class만 Actor의 생성, 파괴가 가능함.
-	friend class CWorld;
-	friend class CLayer;
+	////Layer, World Class만 Actor의 생성, 파괴가 가능함.
+	//friend class CWorld;
+	//friend class CLayer;
+	
+	//08:17 : ActorFactory에서만 생성 가능하게 바꿈.
+	//파괴의 경우엔 Actor 자체의 Destroy 메소드를 이용하여 자체적 파괴가 가능하게 수정.
+	//friend class CActorFactory;
+	friend class CActorManager;
 
 private:
 	CActor();
-	virtual ~CActor() { };
+	virtual ~CActor();
 	
 
 public:
 	virtual bool Init(const Types::ObjectData&);
 	virtual void Update(float fDeltaTime);
 	virtual void Render(const HDC& hDC);
-	
+	virtual void Destroy();
+
 
 public:
 	Types::ObjectType	GetActorType() const { return m_actorType; }
@@ -41,6 +47,7 @@ protected:
 	Types::Point				m_fActorPoint;
 	Types::ObjectType		m_actorType;
 	Types::ObjectState		m_actorState;
+	Types::Direction		m_direction;
 	ActorID					m_actorID;
 	typedef std::unordered_map<Types::tstring, class ComponentBase*> ComponentTable;
 	ComponentTable		m_componentTable;

@@ -156,8 +156,10 @@
     <ClCompile Include="Source\Core\Window\MyWindow.cpp" />
     <ClCompile Include="Source\Scene\Actor\CActor.cpp" />
     <ClCompile Include="Source\Scene\Actor\CActorFactory.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CActorManager.cpp" />
     <ClCompile Include="Source\Scene\CGameScene.cpp" />
     <ClCompile Include="Source\Scene\CLayer.cpp" />
+    <ClCompile Include="Source\Scene\CMap.cpp" />
     <ClCompile Include="Source\Scene\CScene.cpp" />
     <ClCompile Include="Source\Scene\CSceneManager.cpp" />
     <ClCompile Include="Source\Scene\CWorld.cpp" />
@@ -179,10 +181,13 @@
     <ClInclude Include="Include\Core\Timer.h" />
     <ClInclude Include="Include\Core\Window\MainWindow.h" />
     <ClInclude Include="Include\Core\Window\MyWindow.h" />
+    <ClInclude Include="Include\Event.h" />
     <ClInclude Include="Include\Scene\Actor\CActor.h" />
     <ClInclude Include="Include\Scene\Actor\CActorFactory.h" />
+    <ClInclude Include="Include\Scene\Actor\CActorManager.h" />
     <ClInclude Include="Include\Scene\CGameScene.h" />
     <ClInclude Include="Include\Scene\CLayer.h" />
+    <ClInclude Include="Include\Scene\CMap.h" />
     <ClInclude Include="Include\Scene\CScene.h" />
     <ClInclude Include="Include\Scene\CSceneManager.h" />
     <ClInclude Include="Include\Scene\CWorld.h" />

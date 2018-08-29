@@ -144,6 +144,12 @@
     <ClCompile Include="Source\Scene\Actor\CActorFactory.cpp">
       <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CActorManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\CMap.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -220,6 +226,15 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CActorFactory.h">
       <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Event.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CActorManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CMap.h">
+      <Filter>헤더 파일\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

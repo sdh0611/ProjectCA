@@ -8,7 +8,7 @@
 */
 
 
-#include "../../stdafx.h"
+#include "..\..\stdafx.h"
 #include "CScene.h"
 
 //NOTE(06.10) : 여러 개의 스테이지들에 대한 활동을 정의하는 Stage Class가 필요하다고 느껴짐.
@@ -31,10 +31,11 @@ public:
 	
 
 public:
-	void CollisionDetect();
+	//void CollisionDetect();
+	void InputUpdate(float fDeltaTime);
 	void GameUpdate(float fDeltaTime);
-	bool IsWorldChange();
-	void ChangeWorld();
+	//bool IsWorldChange();
+	//void ChangeWorld();
 
 
 private:
@@ -42,9 +43,16 @@ private:
 
 
 private:
-	class CObjectManager*						m_pObjectManager;
-	CWorld*											m_pCurWorld;
-	CWorld*											m_pNextWorld;
-	std::unique_ptr<class CollisionDetector>	m_pCollisionDetector;
+	UINT													m_iCurScore;
+	UINT													m_iHighScore;
+
+
+private:
+	class CActor*										m_pPlayer;
+	//class CActorFactory*								m_pActorFactory;
+	class CActorManager*							m_pActorManager;
+	CWorld*												m_pCurWorld;
+	CWorld*												m_pNextWorld;
+	//std::unique_ptr<class CollisionDetector>		m_pCollisionDetector;
 
 };

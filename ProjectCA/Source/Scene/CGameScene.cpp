@@ -1,17 +1,16 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\CLayer.h"
-#include "..\..\Include\Scene\Object\CPlayer.h"
-#include "..\..\Include\Scene\Object\CProbs.h"
 #include "..\..\Include\Core\CollisionDetector.h"
 #include "..\..\Include\Core\Components\Collider.h"
-#include "..\..\Include\Scene\Object\CObjectManager.h"
+#include "..\..\Include\Scene\Actor\CActorManager.h"
 
 
 
 CGameScene::CGameScene(Types::SceneType type)
-	:CScene(type), m_pCollisionDetector(nullptr), m_pObjectManager(nullptr)
-	,m_pCurWorld(nullptr), m_pNextWorld(nullptr)
+	:CScene(type), m_pActorManager(nullptr), m_pCurWorld(nullptr),
+	//m_pNextWorld(nullptr), m_pCollisionDetector(nullptr), m_pPlayer(nullptr)
+	m_pNextWorld(nullptr), m_pPlayer(nullptr)
 {
 }
 
@@ -19,7 +18,6 @@ CGameScene::~CGameScene()
 {
 	SAFE_DELETE(m_pCurWorld)
 	SAFE_DELETE(m_pNextWorld)
-
 }
 
 //Layer우선순위 0번은 추후 UI에 줄 예정임.
@@ -27,20 +25,19 @@ bool CGameScene::Init()
 {
 	//if(m_pCollisionDetector == nullptr)
 	//	m_pCollisionDetector = std::make_unique<CollisionDetector>();
+	m_pActorManager = CActorManager::GetInstance();
+	m_pActorManager->Init();	// 
 
 	if (!CreateLayer(TEXT("Player"), 1))
 		return false;
-	FindLayer(TEXT("Player"))->AddObjectToLayer(new CPlayer(64, 64));
 	
 	if (!CreateLayer(TEXT("Probs"), 3))
 		return false;
 
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(0.f, 500.f, 800.f, 600.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(100.f, 400.f, 150.f, 450.f));
-	FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(200.f, 350.f, 250.f, 400.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(250.f, 300.f, 300.f, 350.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(300.f, 250.f, 350.f, 300.f));
-	m_pObjectManager = CObjectManager::GetInstance();
 
 	CScene::Init();
 
@@ -70,24 +67,32 @@ void CGameScene::Render(const HDC& hDC)
 //Player와 Probs
 //Enemy와 Probs
 //충돌했을 때 충돌한 Object에 대한 정보도 넘겨줘야한다.
-void CGameScene::CollisionDetect()
+//void CGameScene::CollisionDetect()
+//{
+//	////Player와 Background, UI를 제외한 모든 Layer의 Object들과 충돌 검사.
+//	for (auto it = FindLayer(TEXT("Player"))->GetObjectList().begin();
+//		it != FindLayer(TEXT("Player"))->GetObjectList().end(); ++it)
+//	{		
+//		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
+//			if ( ((*m_it)->GetLayerTag() == TEXT("Background")) || ((*m_it)->GetLayerTag() == TEXT("Player")) )
+//				continue;
+//
+//			for ( auto& object : ((*m_it)->GetObjectList()) ) {
+//				//m_pCollisionDetector->Update( static_cast<Collider*>(value->GetComponent(TEXT("Collider"))), 
+//				//	static_cast<Collider*>( (*it)->GetComponent(TEXT("Collider")) ) );
+//				m_pCollisionDetector->Update((*it), object); //it : player
+//
+//			}
+//		}
+//	}
+//
+//}
+
+void CGameScene::InputUpdate(float fDeltaTime)
 {
-	////Player와 Background, UI를 제외한 모든 Layer의 Object들과 충돌 검사.
-	for (auto it = FindLayer(TEXT("Player"))->GetObjectList().begin();
-		it != FindLayer(TEXT("Player"))->GetObjectList().end(); ++it)
-	{		
-		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-			if ( ((*m_it)->GetLayerTag() == TEXT("Background")) || ((*m_it)->GetLayerTag() == TEXT("Player")) )
-				continue;
+	 
+	
 
-			for ( auto& object : ((*m_it)->GetObjectList()) ) {
-				//m_pCollisionDetector->Update( static_cast<Collider*>(value->GetComponent(TEXT("Collider"))), 
-				//	static_cast<Collider*>( (*it)->GetComponent(TEXT("Collider")) ) );
-				m_pCollisionDetector->Update((*it), object); //it : player
-
-			}
-		}
-	}
 
 }
 

@@ -32,7 +32,6 @@ public:
 private:
 
 
-
 private:
 	CScene *		m_pScene;
 	CScene*		m_pNextScene;

@@ -10,6 +10,7 @@
 #include <memory>
 #include <fstream>
 #include "Types.h"
+#include "Include\Event.h"
 #include "Include\Core\Debuging\Debug.h"
 
 

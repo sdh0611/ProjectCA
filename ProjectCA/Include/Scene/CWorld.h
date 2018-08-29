@@ -13,7 +13,7 @@
 #include "..\..\stdafx.h"
 #include "Actor\CActor.h"
 
-class CLayer;
+
 
 class CWorld {
 	friend class CGameScene;
@@ -34,6 +34,17 @@ public:
 	bool DeleteActor(ActorID actorID);
 	bool DeleteActor(std::weak_ptr<CActor> pActor);
 	bool CollisionUpdate();
+
+
+public:
+	std::weak_ptr<CActor> GetTarget(ActorID id);
+
+
+
+
+private:
+	void ResolveCollision();
+	
 
 	
 private:
