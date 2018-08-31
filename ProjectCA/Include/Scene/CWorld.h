@@ -8,6 +8,8 @@
 	->해당 클래스가 Actor들을 관리하는 역할까지 맡게 할 것인지, 아니면 World상의 Actor간 상호작용에 대해서만
 		역할을 하게 할 것인지 재고해볼 필요가 있음.(08.14)
 	-> World내의 모든 Actor들의 포인터에 접근하고, 물리관련 상호작용에 대해서만 기능을 수행하게끔 변경.(08.16)
+	-> 이부분부터 다시 해보자
+	
 */
 
 #include "..\..\stdafx.h"
@@ -37,14 +39,14 @@ public:
 
 
 public:
-	std::weak_ptr<CActor> GetTarget(ActorID id);
+	//std::weak_ptr<CActor> GetTarget(ActorID id);	// 일단 나중에 작성
 
 
 
 
 private:
 	void ResolveCollision();
-	
+	void SimulWorld();
 
 	
 private:

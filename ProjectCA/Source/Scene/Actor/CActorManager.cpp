@@ -19,9 +19,9 @@ bool CActorManager::Init() {
 	return true;
 }
 
-StrongActorPtr CActorManager::CreateActor(Types::ObjectData data)
+StrongActorPtr CActorManager::CreateActor(const Types::ObjectData& data)
 {
-	StrongActorPtr pActor(new CActor);
+	StrongActorPtr pActor = std::make_shared<CActor>();
 
 	if(pActor->Init(data))
 		return StrongActorPtr();		//return nullptr
@@ -33,11 +33,11 @@ StrongActorPtr CActorManager::CreateActor(Types::ObjectData data)
 }
 
 StrongActorPtr CActorManager::CreateActor(Types::ObjectType type, Types::Point point, 
-	Types::Direction dir, Types::ObjectState state)
+	Types::Direction dir, UINT iWidth, UINT iHeight, Types::ObjectState state)
 {
-	StrongActorPtr pActor(new CActor);
+	StrongActorPtr pActor = std::make_shared<CActor>();
 
-	if (pActor->Init(Types::ObjectData(type, point, dir, state, m_lastActorID++)))
+	if (pActor->Init(Types::ObjectData(type, point, dir, state, iWidth, iHeight, m_lastActorID++)))
 		return StrongActorPtr();		//return nullptr
 
 	m_strongActorPtrList.push_back(pActor);

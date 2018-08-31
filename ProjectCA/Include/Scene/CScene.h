@@ -40,4 +40,5 @@ protected:
 	std::list<CLayer*>					m_LayerList;
 	std::list<CLayer*>::iterator		m_it;
 
+
 };

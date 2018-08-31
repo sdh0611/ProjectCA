@@ -4,6 +4,7 @@
 #include "..\..\Include\Core\CollisionDetector.h"
 #include "..\..\Include\Core\Components\Collider.h"
 #include "..\..\Include\Scene\Actor\CActorManager.h"
+#include "..\..\Include\Scene\CWorld.h"
 
 
 
@@ -27,6 +28,9 @@ bool CGameScene::Init()
 	//	m_pCollisionDetector = std::make_unique<CollisionDetector>();
 	m_pActorManager = CActorManager::GetInstance();
 	m_pActorManager->Init();	// 
+
+	if(m_pCurWorld == nullptr)
+		m_pCurWorld = new CWorld;
 
 	if (!CreateLayer(TEXT("Player"), 1))
 		return false;
@@ -60,6 +64,8 @@ void CGameScene::Update(float fDeltaTime)
 void CGameScene::Render(const HDC& hDC)
 {
 	CScene::Render(hDC);
+
+	m_pPlayer->Render(hDC);
 	//InvalidateRect(NULL, NULL, TRUE);
 }
 

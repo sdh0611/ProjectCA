@@ -110,19 +110,25 @@ namespace Types {
 	};
 
 	struct ObjectData {
-		ObjectData(ObjectType type, Point objectPoint, Direction dir, 
-			ObjectState state, ActorID id)
+		ObjectData(ObjectType type, Point objectPoint, Direction dir,
+			ObjectState state, UINT width, UINT height, ActorID id, 
+			CWorld* pWorld, CGameScene* pScene)
 			: objectType(type), fObjectPoint(objectPoint), objectDirection(dir), 
-			objectState(state), actorID(id)
+			objectState(state), iWidth(width), iHeight(height),actorID(id),
+			pOwnerWorld(pWorld), pOwnerScene(pScene)
 		{
 
 		}
 
-		ObjectType	objectType;
-		Point	fObjectPoint;
-		Direction objectDirection;
-		ObjectState	objectState;
-		ActorID		actorID;
+		ObjectType				objectType;
+		Point						fObjectPoint;
+		Direction					objectDirection;
+		ObjectState				objectState;
+		UINT						iWidth;
+		UINT						iHeight;
+		ActorID					actorID;
+		CWorld*					pOwnerWorld;
+		CGameScene*			pOwnerScene;
 
 	};
 	

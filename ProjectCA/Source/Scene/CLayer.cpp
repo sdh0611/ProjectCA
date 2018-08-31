@@ -1,5 +1,5 @@
 #include "..\..\Include\Scene\CLayer.h"
-#include "..\..\Include\Scene\Actor\CActor.h"
+//#include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CWorld.h"
 //#include "..\..\Include\Scene\Object\CObject.h"
 
@@ -57,6 +57,7 @@ bool CLayer::Init(const Types::tstring& strTag, UINT iOrder)
 	return true;
 }
 
+//Update ¼ø¼­ : Update -> ResolveCollision -> LateUpdate
 void CLayer::Update(float fDeltaTime)
 {
 	//if (!m_ObjectList.empty())
@@ -64,9 +65,13 @@ void CLayer::Update(float fDeltaTime)
 	//		(*m_it)->Update(fDeltaTime);
 	//	}
 	
-	if (!m_actorList.empty())
+	if (!m_actorList.empty()) {
 		for (auto& it : m_actorList)
 			it->Update(fDeltaTime);
+
+		for (auto& it : m_actorList)
+			it->LateUpdate(fDeltaTime);
+	}
 
 }
 

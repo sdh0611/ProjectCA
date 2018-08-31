@@ -1,10 +1,10 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\InputComponent.h"
-#include "..\..\..\Include\Scene\Object\CObject.h"
+#include "..\..\..\Include\Scene\Actor\CActor.h"
 
 
-InputComponent::InputComponent(CObject* owner)
-	:ComponentBase(owner, TEXT("InputComponent"))
+InputComponent::InputComponent(CActor* pOwner)
+	:ComponentBase(pOwner, TEXT("InputComponent"))
 {
 
 }
@@ -15,6 +15,14 @@ InputComponent::InputComponent(CObject* owner)
 //
 //
 //}
+
+bool InputComponent::Init(CActor * pOwner, const Types::tstring & strTag)
+{
+	m_pOwner = pOwner;
+	m_strComponentTag = strTag;
+
+	return true;
+}
 
 void InputComponent::Update(float fDeltaTime)
 {
@@ -40,23 +48,23 @@ void InputComponent::KeyProcess()
 
 
 	if (KEY_DOWN(VK_LEFT)) {
-		m_pOwner->SetObjectDirection(Types::DIR_LEFT);
-		m_pOwner->SetObjectState(Types::OS_MOVE);
+		m_pOwner->SetActorDirection(Types::DIR_LEFT);
+		m_pOwner->SetActorState(Types::OS_MOVE);
 	}
 	else if (KEY_DOWN(VK_RIGHT)) {
-		m_pOwner->SetObjectDirection(Types::DIR_RIGHT);
-		m_pOwner->SetObjectState(Types::OS_MOVE);
+		m_pOwner->SetActorDirection(Types::DIR_RIGHT);
+		m_pOwner->SetActorState(Types::OS_MOVE);
 	}
 	else if (KEY_DOWN(VK_UP)) {
-		m_pOwner->SetObjectDirection(Types::DIR_UP);
-		m_pOwner->SetObjectState(Types::OS_MOVE);
+		m_pOwner->SetActorDirection(Types::DIR_UP);
+		m_pOwner->SetActorState(Types::OS_MOVE);
 	}
 	else if (KEY_DOWN(VK_DOWN)) {
-		m_pOwner->SetObjectDirection(Types::DIR_DOWN);
-		m_pOwner->SetObjectState(Types::OS_MOVE);
+		m_pOwner->SetActorDirection(Types::DIR_DOWN);
+		m_pOwner->SetActorState(Types::OS_MOVE);
 	}
 	else {
-		m_pOwner->SetObjectDirection(Types::DIR_IDLE);
-		m_pOwner->SetObjectState(Types::OS_IDLE);
+		m_pOwner->SetActorDirection(Types::DIR_IDLE);
+		m_pOwner->SetActorState(Types::OS_IDLE);
 	}
 }

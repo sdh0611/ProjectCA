@@ -103,3 +103,14 @@ bool CWorld::CollisionUpdate()
 	return true;
 }
 
+void CWorld::ResolveCollision()
+{
+
+
+
+}
+
+void CWorld::SimulWorld()
+{
+}
+

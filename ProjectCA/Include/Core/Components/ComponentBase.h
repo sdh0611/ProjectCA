@@ -18,7 +18,7 @@ public:
 
 	
 public:
-	virtual void Init() = 0;
+	virtual bool Init(CActor* pOwner, const Types::tstring& strTag) = 0;
 	virtual void Update(float fDeltaTime) = 0;
 	//virtual void OnMessage(ComponentMessage msg);
 
