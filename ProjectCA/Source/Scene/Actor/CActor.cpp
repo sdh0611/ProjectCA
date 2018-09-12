@@ -2,9 +2,9 @@
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\..\Include\Scene\CWorld.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
-#include "..\..\..\Include\Scene\CLayer.h"
-#include "..\..\..\Include\Scene\Actor\CActorFactory.h"
-
+//#include "..\..\..\Include\Scene\CLayer.h"
+//#include "..\..\..\Include\Scene\Actor\CActorFactory.h"
+#include "..\..\..\Include\Core\Components\ComponentBase.h"
 
 
 CActor::~CActor()
@@ -57,3 +57,33 @@ void CActor::Destroy()
 	m_componentTable.clear();
 
 }
+
+ComponentBase * CActor::GetComponent(const Types::tstring & strTag)
+{
+	ComponentTable::iterator it = m_componentTable.find(strTag);
+
+	if(it == m_componentTable.end())
+		return nullptr;
+
+	return it->second;
+}
+
+bool CActor::DeleteComponent(const Types::tstring & strTag)
+{
+	ComponentTable::iterator it = m_componentTable.find(strTag);
+
+	if (it == m_componentTable.end())
+		return false;
+
+	m_componentTable.erase(strTag);
+
+	return true;
+}
+
+CWorld* const CActor::GetOwnerWorld() const { return m_pOwnerWorld; }
+
+void CActor::SetOwnerWorld(CWorld* pWorld) { m_pOwnerWorld = pWorld; }
+
+CGameScene* const CActor::GetOwnerScene() const { return m_pOwnerScene; }
+
+void CActor::SetOwnerScene(CGameScene* pScene) { m_pOwnerScene = pScene; }

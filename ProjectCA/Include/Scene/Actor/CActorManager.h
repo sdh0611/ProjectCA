@@ -7,7 +7,11 @@
 
 #include "..\..\..\stdafx.h"
 #include "..\..\Singleton.hpp"
-#include "CActor.h"
+
+class CActor;
+class CWorld;
+class CGameScene;
+
 
 typedef std::weak_ptr<CActor> WeakActorPtr;
 typedef std::shared_ptr<CActor> StrongActorPtr;
@@ -27,7 +31,8 @@ public:
 public:
 	StrongActorPtr CreateActor(const Types::ObjectData& data);
 	StrongActorPtr CreateActor(Types::ObjectType type, Types::Point point, Types::Direction dir, 
-		UINT iWidth, UINT iHeight,Types::ObjectState state = Types::OS_IDLE);
+		UINT iWidth, UINT iHeight, CWorld* pWorld, CGameScene* pScene, const Types::tstring& strTag,
+		Types::ObjectState state = Types::OS_IDLE);
 	WeakActorPtr GetTarget();
 
 
@@ -39,7 +44,7 @@ private:
 private:
 	GenerateActor					m_genrateActor;
 	std::list<StrongActorPtr>		m_strongActorPtrList;
-	static ActorID					m_lastActorID;
+	static Types::ActorID					m_lastActorID;
 	
 
 

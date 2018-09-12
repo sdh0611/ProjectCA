@@ -11,6 +11,22 @@
 namespace Types {
 
 	typedef std::basic_string<TCHAR> tstring;
+	typedef unsigned long ActorID;
+
+	//오브젝트 타입 정의
+	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROBS, OT_PICKUP, OT_MAP };
+
+	//오브젝트 상태 정의
+	enum ObjectState { OS_IDLE, OS_MOVE, OS_JUMP, OS_ATTACK, OS_DAMAGED, OS_FALL };
+
+	//방향 열거체 정의
+	enum Direction { DIR_DOWN = -1, DIR_IDLE, DIR_UP, DIR_LEFT, DIR_RIGHT };
+
+	//Scene 타입 정의
+	enum SceneType { ST_TITLE, ST_GAME, ST_SELECT };
+
+	//EventType 정의
+	enum EventType { ET_ATTACK, ET_DAMAGE };
 
 	//Point구조체 정의
 	struct Point {
@@ -112,7 +128,7 @@ namespace Types {
 	struct ObjectData {
 		ObjectData(ObjectType type, Point objectPoint, Direction dir,
 			ObjectState state, UINT width, UINT height, ActorID id, 
-			CWorld* pWorld, CGameScene* pScene)
+			class CWorld* pWorld, class CGameScene* pScene, tstring strTag)
 			: objectType(type), fObjectPoint(objectPoint), objectDirection(dir), 
 			objectState(state), iWidth(width), iHeight(height),actorID(id),
 			pOwnerWorld(pWorld), pOwnerScene(pScene)
@@ -129,23 +145,11 @@ namespace Types {
 		ActorID					actorID;
 		CWorld*					pOwnerWorld;
 		CGameScene*			pOwnerScene;
+		tstring					strLayerTag;
 
 	};
 	
 	
-	//오브젝트 타입 정의
-	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROBS, OT_PICKUP, OT_MAP };
 
-	//오브젝트 상태 정의
-	enum ObjectState { OS_IDLE, OS_MOVE, OS_JUMP, OS_ATTACK, OS_DAMAGED, OS_FALL };
-
-	//방향 열거체 정의
-	enum Direction { DIR_DOWN = -1, DIR_IDLE, DIR_UP, DIR_LEFT, DIR_RIGHT };
-
-	//Scene 타입 정의
-	enum SceneType { ST_TITLE, ST_GAME, ST_SELECT };
-
-	//EventType 정의
-	enum EventType { ET_ATTACK, ET_DAMAGE };
 
 }

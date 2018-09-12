@@ -1,11 +1,11 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\Collider.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
-#include "..\..\..\Include\Scene\Object\CObject.h"
+#include "..\..\..\Include\Scene\Actor\CActor.h"
 
 
-Collider::Collider(CObject* owner, ColliderType type, const Types::tstring& strTag)
-	:ComponentBase(owner, strTag), m_Type(type), m_bIsCollision(false)
+Collider::Collider(ColliderType type)
+	:m_Type(type)
 {
 	
 }
@@ -17,7 +17,7 @@ Collider::~Collider()
 
 //Collision을 일으킨 Object Type별로 행동 정의
 //Collision의 유형에 따른 동작도 따로 정의해야함(18.07.04)
-void Collider::ResolveCollision(Types::ObjectType type, Collider::CollisionType collision)
+void Collider::OnCollision(Types::ObjectType type, Collider::CollisionType collision)
 {
 
 	switch (type) {
@@ -37,6 +37,9 @@ void Collider::ResolveCollision(Types::ObjectType type, Collider::CollisionType 
 			{
 				PhysicsComponent * physics = static_cast<PhysicsComponent*>(
 					m_pOwner->GetComponent(TEXT("PhysicsComponent")));
+				if (physics == nullptr)
+					return;
+					
 				physics->ResetJumpForce();
 				//Debug::MessageInfo(TEXT("TOP"));
 			}
@@ -45,7 +48,7 @@ void Collider::ResolveCollision(Types::ObjectType type, Collider::CollisionType 
 		//case CollisionType::COLLISION_BOT:		//밑부분에 부딫힌 경우 Y축아래로 진행하게함.
 		//	break;
 		case CollisionType::COLLISION_SIDE:		//옆면에 부딫힌 경우 X축상의 진행을 막음.
-			m_pOwner->SetObjectDirection(Types::DIR_IDLE);
+			m_pOwner->SetActorDirection(Types::DIR_IDLE);
 			//Debug::MessageInfo(TEXT("SIDE"));
 			break;
 		}
@@ -62,7 +65,7 @@ void Collider::ResolveCollision(Types::ObjectType type, Collider::CollisionType 
 }
 
 //오버로딩된 버전 제공
-void Collider::ResolveCollision(Types::ObjectType type)
+void Collider::OnCollision(Types::ObjectType type)
 {
 	if (m_bIsCollision) {
 		ComponentBase* pComponent = nullptr;

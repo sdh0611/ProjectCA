@@ -14,15 +14,15 @@ public:
 
 
 public:
-	Collider(CObject* owner, ColliderType type, const Types::tstring& strTag = TEXT("Collider"));
+	Collider(ColliderType);
 	virtual ~Collider();
 
 
 public:
-	virtual bool Init(Types::Point point) = 0;
+	virtual bool Init(CActor* owner, const Types::tstring& strTag = TEXT("Collider")) = 0;
 	virtual void Update(float fDeltaTime) = 0;
-	virtual void ResolveCollision(Types::ObjectType type, CollisionType collision);
-	virtual void ResolveCollision(Types::ObjectType type);
+	virtual void OnCollision(Types::ObjectType type, CollisionType collision);
+	virtual void OnCollision(Types::ObjectType type);
 
 
 public:

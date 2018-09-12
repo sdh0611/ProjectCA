@@ -58,6 +58,7 @@ bool CLayer::Init(const Types::tstring& strTag, UINT iOrder)
 }
 
 //Update 순서 : Update -> ResolveCollision -> LateUpdate
+//Layer Class의 역할을 Rendering으로만 축소함으로 써 Update에서는 expired된 weak_ptr만 체크하기로
 void CLayer::Update(float fDeltaTime)
 {
 	//if (!m_ObjectList.empty())
@@ -65,13 +66,18 @@ void CLayer::Update(float fDeltaTime)
 	//		(*m_it)->Update(fDeltaTime);
 	//	}
 	
-	if (!m_actorList.empty()) {
-		for (auto& it : m_actorList)
-			it->Update(fDeltaTime);
+	//if (!m_actorList.empty()) {
+	//	for (auto& it : m_actorList)
+	//		it->Update(fDeltaTime);
 
+	//	for (auto& it : m_actorList)
+	//		it->LateUpdate(fDeltaTime);
+	//}
+
+	if (!m_actorList.empty())
 		for (auto& it : m_actorList)
-			it->LateUpdate(fDeltaTime);
-	}
+			if (it.expired())
+				m_actorList.remove(it);	//나중에 erase()로 대체할 수 있게끔 수정하자.
 
 }
 
@@ -84,7 +90,7 @@ void CLayer::Render(const HDC& hDC)
 
 	if (!m_actorList.empty())
 		for (auto& it : m_actorList)
-			it->Render(hDC);
+			it.lock()->Render(hDC);
 }
 
 void CLayer::LateUpdate(float fDeltaTime)
@@ -95,7 +101,7 @@ void CLayer::LateUpdate(float fDeltaTime)
 */
 }
 
-void CLayer::AddActor(CActor * pActor)
+void CLayer::AddActor(std::shared_ptr<CActor> pActor)
 {
 	m_actorList.insert(pActor);
 
@@ -103,8 +109,8 @@ void CLayer::AddActor(CActor * pActor)
 
 bool CLayer::DeleteActor(ActorID actorID)
 {
-	CActor* pActor = FindActor(actorID);
-	if (FindActor(actorID) == nullptr)
+	std::weak_ptr<CActor> pActor = FindActor(actorID);
+	if (FindActor(actorID).lock() == nullptr)
 		return false;
 
 	m_actorList.remove(pActor);
@@ -112,9 +118,9 @@ bool CLayer::DeleteActor(ActorID actorID)
 	return true;
 }
 
-bool CLayer::DeleteActor(CActor * pActor)
+bool CLayer::DeleteActor(std::shared_ptr<CActor> pActor)
 {
-	if (FindActor(pActor) == nullptr)
+	if (FindActor(pActor).lock() == nullptr)
 		return false;
 	
 	m_actorList.remove(pActor);
@@ -124,24 +130,24 @@ bool CLayer::DeleteActor(CActor * pActor)
 
 
 
-CActor * CLayer::FindActor(ActorID actorID)
+std::weak_ptr<CActor> CLayer::FindActor(ActorID actorID)
 {
 	for (auto& it : m_actorList) {
-		if (it->GetActorID() == actorID)
+		if (it.lock()->GetActorID() == actorID)
 			return it;
 	}
 
-	return nullptr;
+	return std::weak_ptr<CActor>();	//return nullptr
 }
 
-CActor * CLayer::FindActor(CActor * pActor)
+std::weak_ptr<CActor> CLayer::FindActor(const std::weak_ptr<CActor>& pActor pActor)
 {
 	for (auto& it : m_actorList) {
-		if (it == pActor)
+		if (it.lock() == pActor.lock())
 			return it;
 	}
 
-	return nullptr;
+	return std::weak_ptr<CActor>();	//return nullptr
 }
 
 //void CLayer::AddObjectToLayer(CObject * object)

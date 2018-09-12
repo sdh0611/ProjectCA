@@ -1,48 +1,55 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
-#include "..\..\..\Include\Scene\Object\CObject.h"
+#include "..\..\..\Include\Scene\Actor\CActor.h"
 
 
 
-
-ColliderBox::ColliderBox(CObject * owner)
-	:Collider(owner, CT_BOX), m_BoxSize(0, 0, 0, 0)
+ColliderBox::ColliderBox()
+	:Collider(CT_BOX), m_BoxSize(0, 0, 0, 0)
 {
 
 	//Debug::MessageInfo(TEXT("Create Box!"));
 }
 
-ColliderBox::ColliderBox(CObject * owner, const Types::Rect& rect) :
-	Collider(owner, CT_BOX), m_BoxSize(rect),
-	m_iWidth(rect.right - rect.left), m_iHeight(rect.bottom - rect.top)
-{     
-	//Debug::MessageInfo(TEXT("Create Box2!"));
-	
-}
+//ColliderBox::ColliderBox(CObject * owner, const Types::Rect& rect) :
+//	Collider(owner, CT_BOX), m_BoxSize(rect),
+//	m_iWidth(rect.right - rect.left), m_iHeight(rect.bottom - rect.top)
+//{     
+//	//Debug::MessageInfo(TEXT("Create Box2!"));
+//	
+//}
 
 ColliderBox::~ColliderBox()
 {
 	//Debug::MessageInfo(TEXT("Bos Destruct"));
 }
 
-bool ColliderBox::Init(Types::Point point)
+bool ColliderBox::Init(CActor* owner, const Types::tstring& strTag)
 {
-	if (point.x < 0.f || point.y < 0.f)
-		return false;
+	//if (point.x < 0.f || point.y < 0.f)
+	//	return false;
 
-	m_ColliderPoint = point;
+	//m_ColliderPoint = point;
 	
 	//처음 Init할 때 기본값으로 Object의 너비, 높이를 따라가도록 함.
-	m_iWidth = m_pOwner->GetObjectWidth();
-	m_iHeight = m_pOwner->GetObjectHeight();
+	m_iWidth = m_pOwner->GetActorWidth();
+	m_iHeight = m_pOwner->GetActorHeight();
 
-	m_BoxSize.left = m_pOwner->GetObjectPoint().x;
-	m_BoxSize.top = m_pOwner->GetObjectPoint().y;
-	m_BoxSize.right = m_pOwner->GetObjectPoint().x + m_pOwner->GetObjectWidth();
-	m_BoxSize.bottom = m_pOwner->GetObjectPoint().y + m_pOwner->GetObjectHeight();
+	m_BoxSize.left = m_pOwner->GetActorPoint().x;
+	m_BoxSize.top = m_pOwner->GetActorPoint().y;
+	m_BoxSize.right = m_pOwner->GetActorPoint().x + m_pOwner->GetActorWidth();
+	m_BoxSize.bottom = m_pOwner->GetActorPoint().y + m_pOwner->GetActorHeight();
 
 	//Debug::MessageInfo(TEXT("Box Init"));
+
+	return true;
+}
+
+bool ColliderBox::Init(CActor * owner, const Types::tstring & strTag)
+{
+	//m_Collide
+
 
 	return true;
 }
@@ -52,10 +59,10 @@ bool ColliderBox::Init(Types::Point point)
 void ColliderBox::Update(float fDeltaTime)
 {
 	//물체 위치에 따라 CollisionBox 위치이동
-	m_BoxSize.left = m_pOwner->GetObjectPoint().x;
-	m_BoxSize.top = m_pOwner->GetObjectPoint().y;
-	m_BoxSize.right = m_pOwner->GetObjectPoint().x + (float)m_iWidth;
-	m_BoxSize.bottom = m_pOwner->GetObjectPoint().y + (float)m_iHeight;
+	m_BoxSize.left = m_pOwner->GetActorPoint().x;
+	m_BoxSize.top = m_pOwner->GetActorPoint().y;
+	m_BoxSize.right = m_pOwner->GetActorPoint().x + (float)m_iWidth;
+	m_BoxSize.bottom = m_pOwner->GetActorPoint().y + (float)m_iHeight;
 
 	if (m_bIsCollision) {
 		//m_bIsCollision = false;

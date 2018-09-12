@@ -2,7 +2,7 @@
 #include "..\..\Include\Core\CollisionDetector.h"
 #include "..\..\Include\Core\Components\Collider.h"
 #include "..\..\Include\Core\Components\ColliderBox.h"
-#include "..\..\Include\Scene\Object\CObject.h"
+#include "..\..\Include\Scene\Actor\CActor.h"
 //#include "..\..\Include\Core\Components\ColliderCircle.h"
 
 

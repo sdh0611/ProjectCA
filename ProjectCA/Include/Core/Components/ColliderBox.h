@@ -7,13 +7,12 @@
 class ColliderBox : public Collider {
 	
 public:
-	ColliderBox(CObject* owner);
-	ColliderBox(CObject* owner, const Types::Rect& rect);
+	ColliderBox();
 	virtual ~ColliderBox();
 
 
 public:
-	virtual bool Init(Types::Point point) override;
+	virtual bool Init(CActor* owner, const Types::tstring& strTag = TEXT("ColliderBox")) override;
 	virtual void Update(float fDeltaTime) override;
 	//virtual void ResolveCollision(Types::ObjectType type, CollisionType collision) override;
 

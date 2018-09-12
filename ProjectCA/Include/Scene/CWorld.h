@@ -13,9 +13,9 @@
 */
 
 #include "..\..\stdafx.h"
-#include "Actor\CActor.h"
 
 
+class CActor;
 
 class CWorld {
 	friend class CGameScene;
@@ -32,8 +32,8 @@ public:
 
 public:
 	void AddActor(std::shared_ptr<CActor> pActor);
-	std::weak_ptr<CActor> GetActor(ActorID actorID);
-	bool DeleteActor(ActorID actorID);
+	std::weak_ptr<CActor> GetActor(Types::ActorID actorID);
+	bool DeleteActor(Types::ActorID actorID);
 	bool DeleteActor(std::weak_ptr<CActor> pActor);
 	bool CollisionUpdate();
 

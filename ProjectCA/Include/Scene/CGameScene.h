@@ -30,7 +30,7 @@ public:
 	virtual void Render(const HDC& hDC) override;
 	
 
-public:
+private:
 	//void CollisionDetect();
 	void InputUpdate(float fDeltaTime);
 	void GameUpdate(float fDeltaTime);

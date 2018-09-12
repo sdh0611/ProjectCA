@@ -7,11 +7,14 @@
 */
 
 #include "..\..\..\stdafx.h"
+#include "..\"
+//#include "CActorManager.h"
 
-typedef unsigned long ActorID;
+
 
 class CWorld;
 class CGameScene;
+class ComponentBase;
 
 class CActor {
 	////Layer, World Class만 Actor의 생성, 파괴가 가능함.
@@ -37,6 +40,11 @@ public:
 
 
 public:
+	ComponentBase * GetComponent(const Types::tstring& strTag);
+	bool AddComponent(ComponentBase* pComponent, const Types::tstring& strTag);
+	bool DeleteComponent(const Types::tstring& strTag);
+
+public:
 	inline bool IsActive() const { return m_bActive; }
 	inline void SetActive(bool bActive) { m_bActive = bActive; }
 	Types::ObjectType	GetActorType() const { return m_actorType; }
@@ -44,12 +52,25 @@ public:
 	void SetActorState(Types::ObjectState state) { m_actorState = state; }
 	Types::Direction GetActorDirection() const { return m_direction; }
 	void SetActorDirection(Types::Direction dir) { m_direction = dir; }
-	const CWorld* const GetOwnerWorld() const { return m_pOwnerWorld; }
-	void SetOwnerWorld(CWorld* pWorld) { m_pOwnerWorld = pWorld; }
-	const CGameScene* const GetOwnerScene() const { return m_pOwnerScene; }
-	void SetOwnerScene(CGameScene* pScene) { m_pOwnerScene = pScene; }
-	inline ActorID GetActorID() const { return m_actorID; }
-	
+	UINT GetActorWidth() const { return m_iActorWidth; }
+	void SetActorWidth(UINT iWidth) { m_iActorWidth = iWidth; }
+	UINT GetActorHeight() const { return m_iActorHeight; }
+	void SetActorHeight(UINT iHeight) { m_iActorHeight = iHeight; }
+	Types::Point GetActorPoint() const { return m_fActorPoint; }
+	bool SetActorPoint(float fx, float fy) {
+		if (fx < 0 || fy < 0)
+			return false;
+
+		m_fActorPoint.x = fx;
+		m_fActorPoint.y = fy;
+		
+		return true;
+	}
+	inline Types::ActorID GetActorID() const { return m_actorID; }	
+	CWorld* const GetOwnerWorld() const;
+	void SetOwnerWorld(CWorld* pWorld);
+	CGameScene* const GetOwnerScene() const;
+	void SetOwnerScene(CGameScene* pScene);
 
 private:
 	//Actor, World, Layer클래스 마저 손보고, Git에다가 새로운 브랜치를 만들어서 Push하자.
@@ -63,7 +84,7 @@ protected:
 	Types::ObjectType		m_actorType;
 	Types::ObjectState		m_actorState;
 	Types::Direction		m_direction;
-	ActorID					m_actorID;
+	Types::ActorID			m_actorID;
 	CWorld*					m_pOwnerWorld;
 	CGameScene*			m_pOwnerScene;
 

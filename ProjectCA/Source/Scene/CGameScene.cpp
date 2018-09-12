@@ -34,7 +34,12 @@ bool CGameScene::Init()
 
 	if (!CreateLayer(TEXT("Player"), 1))
 		return false;
-	
+
+	StrongActorPtr pActor = m_pActorManager->CreateActor(Types::OT_PLAYER, Types::Point(0, 0),
+		Types::DIR_IDLE, 100, 100, m_pCurWorld, this, TEXT("Player"));
+	FindLayer()->AddActor(pActor);
+
+
 	if (!CreateLayer(TEXT("Probs"), 3))
 		return false;
 
@@ -51,13 +56,16 @@ bool CGameScene::Init()
 
 void CGameScene::Update(float fDeltaTime)
 {
-	//Scene의 하위 객체들과 컴포넌트들 Update
-	CScene::Update(fDeltaTime);
+	//1. 입력에 따른 동작 Update
+	InputUpdate(fDeltaTime);
 
-	//Scene내부의 객체들끼리 충돌 검사
-	CollisionDetect();
+	//m_pPlayer->GetComponent(TEXT("InputComponent"))->Update(fDeltaTime);
 
+	//2. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
 	GameUpdate(fDeltaTime);
+
+	//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사하기 위함.
+	CScene::Update(fDeltaTime);
 
 }
 
@@ -96,7 +104,13 @@ void CGameScene::Render(const HDC& hDC)
 
 void CGameScene::InputUpdate(float fDeltaTime)
 {
-	 
+	if (KEY_DOWN(VK_ESCAPE)) {
+		//ESC를 누를 경우 일시정치 팝업창 출력, 게임 일시정지
+
+	}
+	else {
+		m_pCurWorld->Update(fDeltaTime);
+	}
 	
 
 
@@ -106,8 +120,8 @@ void CGameScene::InputUpdate(float fDeltaTime)
 void CGameScene::GameUpdate(float fDeltaTime)
 {
 	if (!m_LayerList.empty()) {
-		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-			(*m_it)->LateUpdate(fDeltaTime);
+		for (auto& it : m_LayerList){
+			it->LateUpdate(fDeltaTime);
 		}
 
 	}
