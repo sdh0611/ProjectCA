@@ -18,8 +18,8 @@ public:
 
 
 public:
-	const Types::tstring& FindPath(const Types::tstring& path);
-	bool AddPath(const Types::tstring& pathTag, const Types::tstring& path);
+	//const Types::tstring& FindPath(const Types::tstring& path);
+	//bool AddPath(const Types::tstring& pathTag, const Types::tstring& path);
 	
 
 

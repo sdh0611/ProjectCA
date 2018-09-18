@@ -21,7 +21,7 @@ private:
 
 
 private:
-	std::ostream			m_outStream;
-	std::ofstream		m_fStream;
+	//std::ostream			m_outStream;
+	//std::ofstream		m_fStream;
 
 };

@@ -65,6 +65,7 @@ void Collider::OnCollision(Types::ObjectType type, Collider::CollisionType colli
 }
 
 //오버로딩된 버전 제공
+//	->CallBack 메소드로 구현해볼까 ?
 void Collider::OnCollision(Types::ObjectType type)
 {
 	if (m_bIsCollision) {
@@ -74,7 +75,7 @@ void Collider::OnCollision(Types::ObjectType type)
 			//m_pOwner->SetObjectState(Types::OS_IDLE);
 			pComponent = m_pOwner->GetComponent(TEXT("PhysicsComponent"));
 			PhysicsComponent* physics = static_cast<PhysicsComponent*>(pComponent);
-			physics->ResetSpeed();
+			physics->RestoreActorPoint();
 			break;
 		}
 	}

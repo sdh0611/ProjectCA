@@ -12,7 +12,6 @@ class CActor;
 class CWorld;
 class CGameScene;
 
-
 typedef std::weak_ptr<CActor> WeakActorPtr;
 typedef std::shared_ptr<CActor> StrongActorPtr;
 
@@ -24,18 +23,18 @@ class CActorManager : public Singleton<CActorManager> {
 
 public:
 	bool Init();
-	void Update();
+	//void Update();
 
 
 
 public:
-	StrongActorPtr CreateActor(const Types::ObjectData& data);
+	StrongActorPtr CreateActor(const Types::ActorData& data);
 	StrongActorPtr CreateActor(Types::ObjectType type, Types::Point point, Types::Direction dir, 
-		UINT iWidth, UINT iHeight, CWorld* pWorld, CGameScene* pScene, const Types::tstring& strTag,
+		UINT iWidth, UINT iHeight, CGameScene* pScene, const Types::tstring& strTag,
 		Types::ObjectState state = Types::OS_IDLE);
-	WeakActorPtr GetTarget();
-
-
+	WeakActorPtr GetTarget(Types::ActorID id);
+	WeakActorPtr GetTarger(const Types::tstring& strTag);
+	
 
 private:
 
@@ -44,8 +43,7 @@ private:
 private:
 	GenerateActor					m_genrateActor;
 	std::list<StrongActorPtr>		m_strongActorPtrList;
-	static Types::ActorID					m_lastActorID;
+	static Types::ActorID			m_lastActorID;
 	
-
-
 };
+

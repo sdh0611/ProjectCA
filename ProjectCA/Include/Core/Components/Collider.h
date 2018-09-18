@@ -5,6 +5,8 @@
 
 //ColliderType에 Trigger도 추가해보자.
 
+
+
 class Collider : public ComponentBase {
 public:
 	enum ColliderType{ CT_BOX, CT_CIRCLE, 
@@ -19,7 +21,7 @@ public:
 
 
 public:
-	virtual bool Init(CActor* owner, const Types::tstring& strTag = TEXT("Collider")) = 0;
+	virtual bool Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strTag = TEXT("Collider")) = 0;
 	virtual void Update(float fDeltaTime) = 0;
 	virtual void OnCollision(Types::ObjectType type, CollisionType collision);
 	virtual void OnCollision(Types::ObjectType type);
@@ -37,10 +39,10 @@ public:
 
 
 protected:
-	ColliderType		m_Type;
-	Types::Point			m_ColliderPoint;
-	//bool				m_bIsTrigger;	//Trigger활성화여부->그냥 따로 상속클래스 만들어서 추가해야되나?
-	bool					m_bIsCollision;
+	ColliderType				m_Type;
+	Types::Point					m_ColliderPoint;
+	//bool						m_bIsTrigger;	//Trigger활성화여부->그냥 따로 상속클래스 만들어서 추가해야되나?
+	bool							m_bIsCollision;
 
 
 private:

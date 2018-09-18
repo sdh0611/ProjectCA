@@ -7,6 +7,7 @@
 		Scene의 구체적인 동작은 이 Class를 상속한 후 따로 구현해야함.
 */
 
+//TODO(09.15) : Layer 개념 없애버리고 일단 빌드부터 되게끔 만들자.
 #include "..\..\stdafx.h"
 
 class CLayer;

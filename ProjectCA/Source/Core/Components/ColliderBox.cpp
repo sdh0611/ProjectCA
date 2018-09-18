@@ -25,12 +25,13 @@ ColliderBox::~ColliderBox()
 	//Debug::MessageInfo(TEXT("Bos Destruct"));
 }
 
-bool ColliderBox::Init(CActor* owner, const Types::tstring& strTag)
+bool ColliderBox::Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strTag)
 {
 	//if (point.x < 0.f || point.y < 0.f)
 	//	return false;
 
 	//m_ColliderPoint = point;
+	m_pOwner = pOwner;
 	
 	//처음 Init할 때 기본값으로 Object의 너비, 높이를 따라가도록 함.
 	m_iWidth = m_pOwner->GetActorWidth();
@@ -41,18 +42,20 @@ bool ColliderBox::Init(CActor* owner, const Types::tstring& strTag)
 	m_BoxSize.right = m_pOwner->GetActorPoint().x + m_pOwner->GetActorWidth();
 	m_BoxSize.bottom = m_pOwner->GetActorPoint().y + m_pOwner->GetActorHeight();
 
+	m_bIsCollision = false;
+	m_strComponentTag = strTag;
 	//Debug::MessageInfo(TEXT("Box Init"));
 
 	return true;
 }
 
-bool ColliderBox::Init(CActor * owner, const Types::tstring & strTag)
-{
-	//m_Collide
-
-
-	return true;
-}
+//bool ColliderBox::Init(CActor * owner, const Types::tstring & strTag)
+//{
+//	//m_Collide
+//
+//
+//	return true;
+//}
 
 //물체가 움직임에 따라 CollisionBox의 좌표도 같이 이동해야함.
 //아직 Offset적용 전이라 일단 해놓고, 나중에 Offset 적용할 때 수정할 것.(5.31)

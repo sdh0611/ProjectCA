@@ -22,11 +22,11 @@ CScene::~CScene()
 
 bool CScene::Init()
 {
-	if (!m_LayerList.empty())
-		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-			(*m_it)->Init();
+	//if (!m_LayerList.empty())
+	//	for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
+	//		(*m_it)->Init();
 
-		}
+	//	}
 
 	return true;
 }
@@ -58,7 +58,10 @@ bool CScene::CreateLayer(const Types::tstring & tag, int order)
 	if (FindLayer(tag))
 		return false;
 
-	m_LayerList.emplace_back(new CLayer(order, tag));
+	CLayer* pLayer = new CLayer;
+	pLayer->Init(tag, order);
+
+	m_LayerList.emplace_back(pLayer);
 	SortLayer();
 
 	return true;

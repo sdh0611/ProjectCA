@@ -29,19 +29,19 @@ public:
 	bool Init(const Types::tstring& strTag, UINT iOrder);
 	void Update(float fDeltaTime);
 	void Render(const HDC& hDC);
-	void LateUpdate(float fDeltaTime);
+
 
 public:
 	void AddActor(std::shared_ptr<CActor> pActor);
 	//Actor삭제 메소드는 2가지의 오버로딩 버전 제공.
 	bool DeleteActor(Types::ActorID actorID);
-	bool DeleteActor(std::shared_ptr<CActor> pActor);
+	bool DeleteActor(std::shared_ptr<CActor>& pActor);
 
 
 public:
 	inline const std::list<std::weak_ptr<CActor>>& GetActorList() const { return m_actorList; }
 	std::weak_ptr<CActor> FindActor(Types::ActorID actorID);
-	std::weak_ptr<CActor> FindActor(const std::weak_ptr<CActor>& pActor);
+	std::weak_ptr<CActor> FindActor(const std::shared_ptr<CActor>& pActor);
 
 
 public:

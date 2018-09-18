@@ -7,9 +7,8 @@
 */
 
 #include "..\..\..\stdafx.h"
-#include "..\"
+//#include "..\"
 //#include "CActorManager.h"
-
 
 
 class CWorld;
@@ -22,27 +21,32 @@ class CActor {
 	//friend class CLayer;
 	
 	//08:17 : ActorFactory에서만 생성 가능하게 바꿈.
-	//파괴의 경우엔 Actor 자체의 Destroy 메소드를 이용하여 자체적 파괴가 가능하게 수정.
+	//파괴의 경우엔 Actor 자체의 Destroy 메소드를 이용하여 내부 컴포넌트들을 정리하게끔 함.
 	//friend class CActorFactory;
+	//friend class로 ActorManager를 했던건 ActorManager에서만 생성 가능하게끔 하려는 의도였으나,
+	//스마트포인터 사용할 때 생기는 문제를 도저히 못고치겠어서 걍 생성자를 Public으로 풀었다..(09.15)
 	friend class CActorManager;
 
-private:
-	CActor();
+public:
+	CActor() = default;
 	virtual ~CActor();
 	
 
 public:
-	virtual bool Init(const Types::ObjectData&);
+	virtual bool PostInit();
+	virtual bool Init(const Types::ActorData&);
 	virtual void Update(float fDeltaTime);
 	virtual void Render(const HDC& hDC);
-	virtual void LateUpdate(float fDeltaTime);
+	//virtual void LateUpdate(float fDeltaTime);
 	virtual void Destroy();
+	//virtual void ActorBehavior() = 0;
 
 
 public:
 	ComponentBase * GetComponent(const Types::tstring& strTag);
 	bool AddComponent(ComponentBase* pComponent, const Types::tstring& strTag);
 	bool DeleteComponent(const Types::tstring& strTag);
+
 
 public:
 	inline bool IsActive() const { return m_bActive; }
@@ -60,20 +64,20 @@ public:
 	bool SetActorPoint(float fx, float fy) {
 		if (fx < 0 || fy < 0)
 			return false;
-
+	
 		m_fActorPoint.x = fx;
 		m_fActorPoint.y = fy;
 		
 		return true;
 	}
+	const Types::tstring& GetActorTag() const { return m_strActorTag; }
+	void SetActorTag(const Types::tstring& strTag) { m_strActorTag == strTag; }
 	inline Types::ActorID GetActorID() const { return m_actorID; }	
-	CWorld* const GetOwnerWorld() const;
-	void SetOwnerWorld(CWorld* pWorld);
+	//CWorld* const GetOwnerWorld() const;
+	//void SetOwnerWorld(CWorld* pWorld);
 	CGameScene* const GetOwnerScene() const;
 	void SetOwnerScene(CGameScene* pScene);
-
-private:
-	//Actor, World, Layer클래스 마저 손보고, Git에다가 새로운 브랜치를 만들어서 Push하자.
+	bool SetLayer(const Types::tstring& strLayerTag);
 
 
 protected:
@@ -85,7 +89,8 @@ protected:
 	Types::ObjectState		m_actorState;
 	Types::Direction		m_direction;
 	Types::ActorID			m_actorID;
-	CWorld*					m_pOwnerWorld;
+	Types::tstring			m_strActorTag;		 
+	//CWorld*					m_pOwnerWorld;
 	CGameScene*			m_pOwnerScene;
 
 

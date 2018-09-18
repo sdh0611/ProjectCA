@@ -3,47 +3,67 @@
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Core\CollisionDetector.h"
 #include "..\..\Include\Core\Components\Collider.h"
+#include "..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\Include\Core\Components\InputComponent.h"
 #include "..\..\Include\Scene\Actor\CActorManager.h"
-#include "..\..\Include\Scene\CWorld.h"
+#include "..\..\Include\Scene\Actor\CActor.h"
+//#include "..\..\Include\Scene\CWorld.h"
 
 
 
 CGameScene::CGameScene(Types::SceneType type)
-	:CScene(type), m_pActorManager(nullptr), m_pCurWorld(nullptr),
-	//m_pNextWorld(nullptr), m_pCollisionDetector(nullptr), m_pPlayer(nullptr)
-	m_pNextWorld(nullptr), m_pPlayer(nullptr)
+	:CScene(type), m_pActorManager(nullptr), m_pPlayer(nullptr),
+	m_pCollisionDetector(nullptr)
 {
+	//기본 레이어 생성.
+	//ActorManager에서 Actor를 생성할 경우 기본적으로 default레이어에 들어가게 할 것.
+	//Layer order 0은 UI에 줄 것.
+	CreateLayer(TEXT("default"), 1);
+
 }
 
 CGameScene::~CGameScene()
 {
-	SAFE_DELETE(m_pCurWorld)
-	SAFE_DELETE(m_pNextWorld)
+	//SAFE_DELETE(m_pCurWorld)
+	//SAFE_DELETE(m_pNextWorld)
+	m_strongActorList.clear();
 }
 
 //Layer우선순위 0번은 추후 UI에 줄 예정임.
 bool CGameScene::Init()
 {
-	//if(m_pCollisionDetector == nullptr)
-	//	m_pCollisionDetector = std::make_unique<CollisionDetector>();
+	if(m_pCollisionDetector == nullptr)
+		m_pCollisionDetector = std::make_unique<CollisionDetector>();
+
 	m_pActorManager = CActorManager::GetInstance();
 	m_pActorManager->Init();	// 
 
-	if(m_pCurWorld == nullptr)
-		m_pCurWorld = new CWorld;
+	//if(m_pCurWorld == nullptr)
+	//	m_pCurWorld = new CWorld;
 
-	if (!CreateLayer(TEXT("Player"), 1))
+	if (!CreateLayer(TEXT("Player"), 2))
 		return false;
 
-	StrongActorPtr pActor = m_pActorManager->CreateActor(Types::OT_PLAYER, Types::Point(0, 0),
-		Types::DIR_IDLE, 100, 100, m_pCurWorld, this, TEXT("Player"));
-	FindLayer()->AddActor(pActor);
+	//World의 포인터가 들어가는 자리는 임시로 nullptr로 대체함.(09.13)
+	m_pPlayer = m_pActorManager->CreateActor(Types::OT_PLAYER, Types::Point(0, 0),
+		Types::DIR_IDLE, 100, 100, (this), TEXT("Player"));
 
+	m_strongActorList.emplace_back(m_pPlayer);
+
+	if (m_pPlayer == nullptr)
+		return false;
+
+	FindLayer(TEXT("Player"))->AddActor(m_pPlayer);
 
 	if (!CreateLayer(TEXT("Probs"), 3))
 		return false;
 
-	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(0.f, 500.f, 800.f, 600.f));
+	StrongActorPtr pProb = m_pActorManager->CreateActor(Types::OT_PROBS, Types::Point(300, 300),
+		Types::DIR_IDLE, 200, 200, (this), TEXT("Probs"));
+
+	m_strongActorList.emplace_back(pProb);
+
+	FindLayer(TEXT("Probs"))->AddActor(pProb);
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(100.f, 400.f, 150.f, 450.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(250.f, 300.f, 300.f, 350.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(300.f, 250.f, 350.f, 300.f));
@@ -57,9 +77,9 @@ bool CGameScene::Init()
 void CGameScene::Update(float fDeltaTime)
 {
 	//1. 입력에 따른 동작 Update
-	InputUpdate(fDeltaTime);
-
-	//m_pPlayer->GetComponent(TEXT("InputComponent"))->Update(fDeltaTime);
+	// TODO(09.17) : 현재 Input을 받는 것을 Player에 있는 PlayerInputComponent에서 수행하고 있는데,
+	//					   이 부분을 GameScene Level에서 수행할 수 있게끔 수정할 필요가 있어보임.
+	//InputUpdate(fDeltaTime); -> 일단은 임의로 GameUpdate에 몰빵시킴.
 
 	//2. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
 	GameUpdate(fDeltaTime);
@@ -71,9 +91,10 @@ void CGameScene::Update(float fDeltaTime)
 
 void CGameScene::Render(const HDC& hDC)
 {
+	//Layer객체가 관리하는 Actor들을 Rendering
 	CScene::Render(hDC);
 
-	m_pPlayer->Render(hDC);
+	//m_pPlayer->Render(hDC);
 	//InvalidateRect(NULL, NULL, TRUE);
 }
 
@@ -81,26 +102,16 @@ void CGameScene::Render(const HDC& hDC)
 //Player와 Probs
 //Enemy와 Probs
 //충돌했을 때 충돌한 Object에 대한 정보도 넘겨줘야한다.
-//void CGameScene::CollisionDetect()
-//{
-//	////Player와 Background, UI를 제외한 모든 Layer의 Object들과 충돌 검사.
-//	for (auto it = FindLayer(TEXT("Player"))->GetObjectList().begin();
-//		it != FindLayer(TEXT("Player"))->GetObjectList().end(); ++it)
-//	{		
-//		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-//			if ( ((*m_it)->GetLayerTag() == TEXT("Background")) || ((*m_it)->GetLayerTag() == TEXT("Player")) )
-//				continue;
-//
-//			for ( auto& object : ((*m_it)->GetObjectList()) ) {
-//				//m_pCollisionDetector->Update( static_cast<Collider*>(value->GetComponent(TEXT("Collider"))), 
-//				//	static_cast<Collider*>( (*it)->GetComponent(TEXT("Collider")) ) );
-//				m_pCollisionDetector->Update((*it), object); //it : player
-//
-//			}
-//		}
-//	}
-//
-//}
+void CGameScene::CollisionDetect()
+{
+	////Player와 Background, UI를 제외한 모든 Layer의 Object들과 충돌 검사.
+	for (auto& it : m_strongActorList) {
+		if (it == m_pPlayer)
+			continue;
+		m_pCollisionDetector->Update(m_pPlayer, it);
+	}
+
+}
 
 void CGameScene::InputUpdate(float fDeltaTime)
 {
@@ -109,7 +120,8 @@ void CGameScene::InputUpdate(float fDeltaTime)
 
 	}
 	else {
-		m_pCurWorld->Update(fDeltaTime);
+		//m_pCurWorld->Update(fDeltaTime);
+		m_pPlayer->GetComponent(TEXT("InputComponent"))->Update(fDeltaTime);
 	}
 	
 
@@ -119,13 +131,20 @@ void CGameScene::InputUpdate(float fDeltaTime)
 //충돌검사 수행 후 처리
 void CGameScene::GameUpdate(float fDeltaTime)
 {
-	if (!m_LayerList.empty()) {
-		for (auto& it : m_LayerList){
-			it->LateUpdate(fDeltaTime);
-		}
-
+	//Component Update
+	for (auto& actor : m_strongActorList) {
+		actor->Update(fDeltaTime);
 	}
 
+	//Collsion detect between Actors
+	CollisionDetect();
+
+	//Collision 후 처리 부분이지만, 테스트용으로 일단 Player의 후처리만 하드코딩.(09.17)
+	//		-> 정상 작동
+	//if (static_cast<Collider*>(m_pPlayer->GetComponent(TEXT("Collider")))->GetIsCollision()) {
+	//	PhysicsComponent* pPhysics = static_cast<PhysicsComponent*>(m_pPlayer->GetComponent(TEXT("PhysicsComponent")));
+	//	pPhysics->RestoreActorPoint();
+	//}
 
 }
 

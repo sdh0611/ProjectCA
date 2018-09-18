@@ -1,8 +1,8 @@
 #include "..\..\..\Include\Core\Window\MainWindow.h"
 #include "..\..\..\Include\Scene\CSceneManager.h"
-#include "..\..\..\Include\Scene\Actor\CActorManager.h"
+//#include "..\..\..\Include\Scene\Actor\CActorManager.h"
 #include "..\..\..\Include\Core\Timer.h"
-
+#include "..\..\..\Include\Core\Debuging\Debug.h"
 
 //초기화는 Init() 메소드에서 실시함.
 MainWindow::MainWindow()
@@ -17,7 +17,7 @@ MainWindow::~MainWindow()
 	//Manager Class 정리
 	m_pSceneManager->Destroy();
 	m_pTimer->Destroy();
-	CActorManager::Destroy();
+	//CActorManager::Destroy();
 
 	ReleaseDC(m_hWnd, m_hDC);
 
@@ -48,8 +48,8 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	if (!m_pTimer->Init())
 		return false;
 
-	if (!CActorManager::GetInstance()->Init())
-		return false;
+	//if (!CActorManager::GetInstance()->Init())
+	//	return false;
 
 	return true;
 }
@@ -103,6 +103,8 @@ bool MainWindow::CreateMyWindow(const Types::tstring& wndClassName,
 		return false;
 
 	ShowWindow(m_hWnd, bIsVisible);
+
+	Debug::MessageInfo(TEXT("윈도우 생성!!"));
 
 	return true;
 

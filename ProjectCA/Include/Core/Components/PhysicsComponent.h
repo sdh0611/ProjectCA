@@ -6,18 +6,23 @@
 #include "ColliderBox.h"
 
 class PhysicsComponent :public ComponentBase {
-	friend void Collider::ResolveCollision(Types::ObjectType type, Collider::CollisionType collision);
-	friend void Collider::ResolveCollision(Types::ObjectType type);
-	friend void ColliderBox::ResolveCollision(Types::ObjectType type, Collider::CollisionType collision);
+	friend void Collider::OnCollision(Types::ObjectType type, Collider::CollisionType collision);
+	friend void Collider::OnCollision(Types::ObjectType type);
+	friend void ColliderBox::OnCollision(Types::ObjectType type, Collider::CollisionType collision);
 
 public:
-	PhysicsComponent(CObject* owner);
-	virtual ~PhysicsComponent() { };
+	PhysicsComponent();
+	virtual ~PhysicsComponent();
 
 
 public:
-	virtual bool Init(float fSpeed, float fGravity, float fJumpForce);
+	virtual bool Init(std::shared_ptr<CActor> pOwner, float fSpeed, float fGravity, float fJumpForce, 
+		const Types::tstring& strTag = TEXT("PhysicsComponent"));
 	virtual void Update(float fDeltaTime) override;
+
+
+public:
+	void RestoreActorPoint();
 
 	
 public:
@@ -27,6 +32,8 @@ public:
 	void SetGravity(float gravity) { if (gravity >= 0) m_fGravity = gravity; }
 	const float& GetJumpForce() const { return m_fGravity; }
 	void SetJumpForce(float jumpForce) { if (m_fJumpForce >= 0) m_fJumpForce = jumpForce; }
+	const Types::Point& GetLastActorPoint() const { return m_lastActorPoint; }
+	
 
 private:
 	void Move(float fDeltaTime);
@@ -42,10 +49,10 @@ private:
 
 
 private:
-	float		m_fGravity;
-	float		m_fSpeed;
-	float		m_fJumpForce;
-
+	float					m_fGravity;
+	float					m_fSpeed;
+	float					m_fJumpForce;
+	Types::Point			m_lastActorPoint;
 
 
 };

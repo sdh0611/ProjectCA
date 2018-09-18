@@ -18,21 +18,21 @@ public:
 
 	
 public:
-	virtual bool Init(CActor* pOwner, const Types::tstring& strTag) = 0;
+	//virtual bool Init(CActor* pOwner, const Types::tstring& strTag) = 0;
 	virtual void Update(float fDeltaTime) = 0;
 	//virtual void OnMessage(ComponentMessage msg);
 
 
 public:
-	inline CActor* GetOwner() { return m_pOwner; }
-	inline void SetOwner(CActor* owner) { m_pOwner = owner; }
+	inline std::weak_ptr<CActor> GetOwner() { return m_pOwner; }
+	inline void SetOwner(std::shared_ptr<CActor> owner) { m_pOwner = owner; }
 	inline const Types::tstring& GetComponentTag() const { return m_strComponentTag; }
 	inline void SetComponentName(const Types::tstring& tag) { m_strComponentTag = tag; }
 
 
 protected:
 	//Types::Point				m_point;
-	Types::tstring			m_strComponentTag;
-	CActor*					m_pOwner;
+	Types::tstring						m_strComponentTag;
+	std::shared_ptr<CActor>			m_pOwner;
 
 };

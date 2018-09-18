@@ -7,6 +7,9 @@
 #define MAKE_COL_BOX		0b00100
 #define MAKE_COL_CIR		0b01000
 
+const unsigned int MAX_WIDTH = 800;
+const unsigned int MAX_HEIGHT = 640;
+
 
 namespace Types {
 
@@ -125,16 +128,50 @@ namespace Types {
 
 	};
 
-	struct ObjectData {
-		ObjectData(ObjectType type, Point objectPoint, Direction dir,
-			ObjectState state, UINT width, UINT height, ActorID id, 
-			class CWorld* pWorld, class CGameScene* pScene, tstring strTag)
-			: objectType(type), fObjectPoint(objectPoint), objectDirection(dir), 
-			objectState(state), iWidth(width), iHeight(height),actorID(id),
-			pOwnerWorld(pWorld), pOwnerScene(pScene)
+	struct ActorData {
+		//ObjectData(ObjectType type, Point objectPoint, Direction dir,
+		//	ObjectState state, UINT width, UINT height, ActorID id, 
+		//	class CWorld* pWorld, class CGameScene* pScene, tstring strTag)
+		//	: objectType(type), fObjectPoint(objectPoint), objectDirection(dir), 
+		//	objectState(state), iWidth(width), iHeight(height),actorID(id),
+		//	pOwnerWorld(pWorld), pOwnerScene(pScene)
+		//{
+
+		//}
+
+		ActorData(ObjectType type, Point objectPoint, Direction dir,
+			ObjectState state, UINT width, UINT height, ActorID id,
+			tstring strName)
+			: objectType(type), fObjectPoint(objectPoint), objectDirection(dir),
+			objectState(state), iWidth(width), iHeight(height), actorID(id),
+			//pOwnerScene(pScene), 
+			strActorName(strName)
 		{
 
 		}
+
+		ActorData(const ActorData& other)
+		{
+			objectType = other.objectType;
+			fObjectPoint = other.fObjectPoint;
+			objectDirection = other.objectDirection;
+			objectState = other.objectState;
+			iWidth = other.iWidth;
+			iHeight = other.iHeight;
+			//pOwnerScene = other.pOwnerScene;
+			strActorName = other.strActorName;
+		}
+	
+		ActorData(ActorData&& other)
+			: objectType(other.objectType), fObjectPoint(other.fObjectPoint), objectDirection(other.objectDirection),
+			objectState(other.objectState), iWidth(other.iWidth), iHeight(other.iHeight), actorID(other.actorID),
+			//pOwnerScene(other.pOwnerScene), 
+			strActorName(std::move(other.strActorName))
+		{
+			//other.pOwnerScene = nullptr;
+		}
+
+
 
 		ObjectType				objectType;
 		Point						fObjectPoint;
@@ -143,9 +180,9 @@ namespace Types {
 		UINT						iWidth;
 		UINT						iHeight;
 		ActorID					actorID;
-		CWorld*					pOwnerWorld;
-		CGameScene*			pOwnerScene;
-		tstring					strLayerTag;
+		//CWorld*					pOwnerWorld;
+		//CGameScene*			pOwnerScene;
+		tstring					strActorName;
 
 	};
 	

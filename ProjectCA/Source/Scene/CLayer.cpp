@@ -1,5 +1,5 @@
 #include "..\..\Include\Scene\CLayer.h"
-//#include "..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CWorld.h"
 //#include "..\..\Include\Scene\Object\CObject.h"
 
@@ -22,11 +22,12 @@ CLayer::~CLayer()
 
 	//m_ObjectList.clear();
 
-	if (!m_actorList.empty())
-		for (auto& it : m_actorList)
-			SAFE_DELETE(it)
+	//if (!m_actorList.empty())
+	//	for (auto& it : m_actorList)
+	//		SAFE_DELETE(it)
 
-			m_actorList.clear();
+	m_actorList.clear();
+
 }
 
 //	TODO(08.06) : 
@@ -75,10 +76,12 @@ void CLayer::Update(float fDeltaTime)
 	//}
 
 	if (!m_actorList.empty())
-		for (auto& it : m_actorList)
-			if (it.expired())
-				m_actorList.remove(it);	//나중에 erase()로 대체할 수 있게끔 수정하자.
-
+		for (auto it = m_actorList.begin(); it != m_actorList.end(); ++it) {
+			if ((*it).expired()) {
+				m_actorList.erase(it);
+				break;
+			}
+		}
 }
 
 void CLayer::Render(const HDC& hDC)
@@ -93,44 +96,59 @@ void CLayer::Render(const HDC& hDC)
 			it.lock()->Render(hDC);
 }
 
-void CLayer::LateUpdate(float fDeltaTime)
-{
-	/*for (auto& object : m_ObjectList) {
-		object->LateUpdate(fDeltaTime);
-	}
-*/
-}
-
 void CLayer::AddActor(std::shared_ptr<CActor> pActor)
 {
-	m_actorList.insert(pActor);
+	m_actorList.emplace_back(pActor);
 
 }
 
-bool CLayer::DeleteActor(ActorID actorID)
+bool CLayer::DeleteActor(Types::ActorID actorID)
 {
 	std::weak_ptr<CActor> pActor = FindActor(actorID);
 	if (FindActor(actorID).lock() == nullptr)
 		return false;
 
-	m_actorList.remove(pActor);
+	for (auto it = m_actorList.begin(); it != m_actorList.end(); ) {
+		if ((*it).lock() == pActor.lock()) {
+			m_actorList.erase(it);
+			break;
+		}
+		else
+			++it;
+	}
 
 	return true;
 }
 
-bool CLayer::DeleteActor(std::shared_ptr<CActor> pActor)
+bool CLayer::DeleteActor(std::shared_ptr<CActor>& pActor)
 {
 	if (FindActor(pActor).lock() == nullptr)
 		return false;
-	
-	m_actorList.remove(pActor);
+
+	for (auto it = m_actorList.begin(); it != m_actorList.end(); ) {
+		if ((*it).lock() == pActor) {
+			m_actorList.erase(it);
+			break;
+		}
+		else
+			++it;
+	}
+
+
+	//auto func = [&](std::shared_ptr<CActor> strongPtr)->bool {
+	//	if (ptr == strongPtr)
+	//		return true;
+	//	return false;
+	//};
+	//
+	//m_actorList.remove_if(func);
 
 	return true;
 }
 
 
 
-std::weak_ptr<CActor> CLayer::FindActor(ActorID actorID)
+std::weak_ptr<CActor> CLayer::FindActor(Types::ActorID actorID)
 {
 	for (auto& it : m_actorList) {
 		if (it.lock()->GetActorID() == actorID)
@@ -140,10 +158,10 @@ std::weak_ptr<CActor> CLayer::FindActor(ActorID actorID)
 	return std::weak_ptr<CActor>();	//return nullptr
 }
 
-std::weak_ptr<CActor> CLayer::FindActor(const std::weak_ptr<CActor>& pActor pActor)
+std::weak_ptr<CActor> CLayer::FindActor(const std::shared_ptr<CActor>& pActor)
 {
 	for (auto& it : m_actorList) {
-		if (it.lock() == pActor.lock())
+		if (it.lock() == pActor)
 			return it;
 	}
 

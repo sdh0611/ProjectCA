@@ -6,7 +6,7 @@
 class Collider;
 class ColliderBox;
 class ColliderCircle;
-class CObject;
+class CActor;
 
 class CollisionDetector {
 public:
@@ -16,13 +16,13 @@ public:
 
 public:
 	void Init();
-	void Update(Collider* collider1, Collider* collider2);
-	void Update(CObject* object1, CObject* object2);
+	void Update(Collider* pCollider, Collider* pOther);
+	void Update(std::shared_ptr<CActor> pActor, std::shared_ptr<CActor> pOther);
 
 
 private:
 	bool BoxAndBox(ColliderBox* collider1, ColliderBox* colldier2);
-	bool BoxAndBox(CObject* object1, CObject* object2);
+	bool BoxAndBox(std::shared_ptr<CActor> pActor, std::shared_ptr<CActor> pOther);
 	//bool BoxAndCircle(ColliderBox* collider1, ColliderCircle* colldier2);
 	//bool CircleToCircle(ColliderCircle* collider1, ColliderCircle* colldier2);
 
