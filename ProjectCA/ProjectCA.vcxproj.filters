@@ -144,6 +144,12 @@
     <ClCompile Include="Source\Scene\Actor\CEnemy.cpp">
       <Filter>소스 파일\Scene\Actors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\InputManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CBomb.cpp">
+      <Filter>소스 파일\Scene\Actors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -222,6 +228,12 @@
       <Filter>헤더 파일\Core\Components</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CEnemy.h">
+      <Filter>헤더 파일\Scene\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\InputManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CBomb.h">
       <Filter>헤더 파일\Scene\Actors</Filter>
     </ClInclude>
   </ItemGroup>
