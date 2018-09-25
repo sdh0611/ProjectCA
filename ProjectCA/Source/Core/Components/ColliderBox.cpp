@@ -25,13 +25,15 @@ ColliderBox::~ColliderBox()
 	//Debug::MessageInfo(TEXT("Bos Destruct"));
 }
 
-bool ColliderBox::Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strTag)
+bool ColliderBox::Init(CActor* pOwner, const Types::tstring& strTag)
 {
+	auto pActor = std::shared_ptr<CActor>(pOwner);
+
 	//if (point.x < 0.f || point.y < 0.f)
 	//	return false;
 
 	//m_ColliderPoint = point;
-	m_pOwner = pOwner;
+	m_pOwner = pActor;
 	
 	//처음 Init할 때 기본값으로 Object의 너비, 높이를 따라가도록 함.
 	m_iWidth = m_pOwner->GetActorWidth();

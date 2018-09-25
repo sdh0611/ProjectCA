@@ -12,7 +12,7 @@ public:
 
 
 public:
-	virtual bool Init(std::shared_ptr<CActor> owner, const Types::tstring& strTag = TEXT("Collider")) override;
+	virtual bool Init(CActor* owner, const Types::tstring& strTag = TEXT("Collider")) override;
 	virtual void Update(float fDeltaTime) override;
 	//virtual void ResolveCollision(Types::ObjectType type, CollisionType collision) override;
 

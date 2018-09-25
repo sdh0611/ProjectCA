@@ -6,9 +6,11 @@ PlayerInputComponent::~PlayerInputComponent()
 {
 }
 
-bool PlayerInputComponent::Init(std::shared_ptr<CActor> pOwner, const Types::tstring & strTag)
+bool PlayerInputComponent::Init(CActor* pOwner, const Types::tstring & strTag)
 {
-	m_pOwner = pOwner;
+	auto pActor = std::shared_ptr<CActor>(pOwner);
+
+	m_pOwner = pActor;
 	m_strComponentTag = strTag;
 
 	return true;

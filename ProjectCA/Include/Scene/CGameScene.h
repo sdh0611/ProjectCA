@@ -52,10 +52,13 @@ private:
 	std::shared_ptr<CActor>								m_pPlayer;			//나중에 weak_ptr로 바꿀 여지가 있음.
 	//class CActorFactory*								m_pActorFactory;
 	class CActorManager*								m_pActorManager;
+	std::unique_ptr<class CollisionDetector>			m_pCollisionDetector;
+
+
+private:
 	typedef std::list<std::shared_ptr<CActor>>	StrongPtrActorList;
 	StrongPtrActorList										m_strongActorList;
 	//CWorld*												m_pCurWorld;
 	//CWorld*												m_pNextWorld;
-	std::unique_ptr<class CollisionDetector>			m_pCollisionDetector;
 
 };

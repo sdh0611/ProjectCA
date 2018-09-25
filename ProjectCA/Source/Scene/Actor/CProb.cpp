@@ -9,9 +9,14 @@ CProb::~CProb()
 {
 }
 
-bool CProb::Init(const Types::ActorData &)
+bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 {
 
+	return true;
+}
+
+bool CProb::Init()
+{
 	return true;
 }
 
@@ -23,4 +28,8 @@ void CProb::Update(float fDeltaTime)
 void CProb::Render(const HDC & hDC)
 {
 
+}
+
+void CProb::ActorBehavior()
+{
 }

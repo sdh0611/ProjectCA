@@ -12,45 +12,53 @@ CActor::~CActor()
 	Destroy();
 }
 
-bool CActor::PostInit()
-{
-	return true;
-}
 
-bool CActor::Init(const Types::ActorData& data)
-{
-	m_fActorPoint = data.fObjectPoint;
-	m_actorType = data.objectType;
-	m_actorState = data.objectState;
-	m_direction = data.objectDirection;
-	m_iActorWidth = data.iWidth;
-	m_iActorHeight = data.iHeight;
-	m_actorID = data.actorID;
-	m_strActorTag = data.strActorName;
-	//m_pOwnerScene = reinterpret_cast<CGameScene*>(data.pOwnerScene);
-
-	m_bActive = true;
-
-	return true;
-}
+//bool CActor::Init(const Types::ActorData& data)
+//{
+//	m_fActorPoint = data.fObjectPoint;
+//	m_actorType = data.objectType;
+//	m_actorState = data.objectState;
+//	m_direction = data.objectDirection;
+//	m_iActorWidth = data.iWidth;
+//	m_iActorHeight = data.iHeight;
+//	m_actorID = data.actorID;
+//	m_strActorTag = data.strActorName;
+//	//m_pOwnerScene = reinterpret_cast<CGameScene*>(data.pOwnerScene);
+//
+//	m_bActive = true;
+//
+//	return true;
+//}
 
 void CActor::Update(float fDeltaTime)
 {
 	if (m_bActive) {
 		//m_componentTable[TEXT("PhysicsComponent")]->Update(fDeltaTime);
-		for (auto it : m_componentTable)
+		for (auto& it : m_componentTable)
 			it.second->Update(fDeltaTime);
 	}
 
 }
 
-void CActor::Render(const HDC & hDC)
-{
-	if (m_bActive) {
-		Rectangle(hDC, m_fActorPoint.x, m_fActorPoint.y, m_fActorPoint.x + m_iActorWidth, m_fActorPoint.y + m_iActorHeight);
-	}
+//void CActor::Render(const HDC & hDC)
+//{
+//	if (m_bActive) {
+//		Rectangle(hDC, m_fActorPoint.x, m_fActorPoint.y, m_fActorPoint.x + m_iActorWidth, m_fActorPoint.y + m_iActorHeight);
+//	}
+//
+//}
 
-}
+//bool						m_bActive;
+//UINT						m_iActorWidth;
+//UINT						m_iActorHeight;
+//Types::Point				m_fActorPoint;
+//Types::ObjectType		m_actorType;
+//Types::ObjectState		m_actorState;
+//Types::Direction		m_direction;
+//Types::ActorID			m_actorID;
+//Types::tstring			m_strActorTag;
+////CWorld*					m_pOwnerWorld;
+//CGameScene*			m_pOwnerScene;
 
 //void CActor::LateUpdate(float fDeltaTime)
 //{
@@ -111,4 +119,8 @@ bool CActor::SetLayer(const Types::tstring & strLayerTag)
 	//pLayer->AddActor(this);
 
 	return true;
+}
+
+void CActor::FlopVerticalDirection()
+{
 }

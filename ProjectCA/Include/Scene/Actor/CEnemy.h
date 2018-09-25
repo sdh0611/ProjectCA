@@ -20,17 +20,19 @@ public:
 
 
 public:
-	virtual bool Init(const Types::ActorData&) override;
+	//virtual bool Init(const Types::ActorData&) override;
+	virtual bool PostInit(const Types::ActorData&, CGameScene*) override;
+	virtual bool Init() override;
 	virtual void Update(float fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
 
 
 protected:
-	virtual void ActorBehavior() = 0;
+	virtual void ActorBehavior() override;
 
 
 protected:
-
+	
 
 
 

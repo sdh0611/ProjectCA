@@ -8,6 +8,7 @@
 #include <list>
 #include <unordered_map>
 #include <memory>
+#include <typeinfo>
 #include <functional>
 #include <fstream>
 #include "Types.h"

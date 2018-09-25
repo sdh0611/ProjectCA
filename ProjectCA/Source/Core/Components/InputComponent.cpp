@@ -15,9 +15,11 @@ InputComponent::InputComponent()
 //
 //}
 
-bool InputComponent::Init(std::shared_ptr<CActor> pOwner, const Types::tstring & strTag)
+bool InputComponent::Init(CActor* pOwner, const Types::tstring & strTag)
 {
-	m_pOwner = pOwner;
+	auto pStrongOwenr = std::shared_ptr<CActor>(pOwner);
+
+	m_pOwner = pStrongOwenr;
 	m_strComponentTag = strTag;
 
 	return true;

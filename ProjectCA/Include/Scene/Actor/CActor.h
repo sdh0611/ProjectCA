@@ -33,13 +33,14 @@ public:
 	
 
 public:
-	virtual bool PostInit();
-	virtual bool Init(const Types::ActorData&);
+	virtual bool PostInit(const Types::ActorData&, CGameScene*) = 0;
+	//virtual bool Init(const Types::ActorData&);
+	virtual bool Init() = 0;
 	virtual void Update(float fDeltaTime);
-	virtual void Render(const HDC& hDC);
+	virtual void Render(const HDC& hDC) = 0;
 	//virtual void LateUpdate(float fDeltaTime);
 	virtual void Destroy();
-	//virtual void ActorBehavior() = 0;
+	virtual void ActorBehavior() = 0;
 
 
 public:
@@ -60,13 +61,13 @@ public:
 	void SetActorWidth(UINT iWidth) { m_iActorWidth = iWidth; }
 	UINT GetActorHeight() const { return m_iActorHeight; }
 	void SetActorHeight(UINT iHeight) { m_iActorHeight = iHeight; }
-	Types::Point GetActorPoint() const { return m_fActorPoint; }
+	Types::Point GetActorPoint() const { return m_actorPoint; }
 	bool SetActorPoint(float fx, float fy) {
 		if (fx < 0 || fy < 0)
 			return false;
 	
-		m_fActorPoint.x = fx;
-		m_fActorPoint.y = fy;
+		m_actorPoint.x = fx;
+		m_actorPoint.y = fy;
 		
 		return true;
 	}
@@ -78,13 +79,15 @@ public:
 	CGameScene* const GetOwnerScene() const;
 	void SetOwnerScene(CGameScene* pScene);
 	bool SetLayer(const Types::tstring& strLayerTag);
+	void FlopVerticalDirection();
+	void FlopHorizonDirection();
 
 
 protected:
-	bool						m_bActive;
 	UINT						m_iActorWidth;
 	UINT						m_iActorHeight;
-	Types::Point				m_fActorPoint;
+	Types::Point				m_actorPoint;
+	Types::Point				m_spawnPoint;
 	Types::ObjectType		m_actorType;
 	Types::ObjectState		m_actorState;
 	Types::Direction		m_direction;
@@ -92,11 +95,12 @@ protected:
 	Types::tstring			m_strActorTag;		 
 	//CWorld*					m_pOwnerWorld;
 	CGameScene*			m_pOwnerScene;
+	bool						m_bActive;
 
 
 protected:
 	typedef std::unordered_map<Types::tstring, class ComponentBase*> ComponentTable;
 	ComponentTable		m_componentTable;
 
-
+	
 };

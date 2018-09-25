@@ -5,6 +5,7 @@
 
 //ColliderType에 Trigger도 추가해보자.
 
+using Delegate = std::function<void(std::shared_ptr<CActor>)>;
 
 
 class Collider : public ComponentBase {
@@ -21,10 +22,11 @@ public:
 
 
 public:
-	virtual bool Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strTag = TEXT("Collider")) = 0;
+	virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("Collider")) = 0;
 	virtual void Update(float fDeltaTime) = 0;
 	virtual void OnCollision(Types::ObjectType type, CollisionType collision);
 	virtual void OnCollision(Types::ObjectType type);
+	virtual void OnCollision(std::shared_ptr<CActor> pOther);
 
 
 public:
@@ -46,7 +48,7 @@ protected:
 
 
 private:
-
+	Delegate						m_delegate;
 
 
 };

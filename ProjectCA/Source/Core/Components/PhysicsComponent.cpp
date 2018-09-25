@@ -16,10 +16,12 @@ PhysicsComponent::~PhysicsComponent()
 	//m_pOwner.reset();
 }
 
-bool PhysicsComponent::Init(std::shared_ptr<CActor> pOwner, float fSpeed, float fGravity, 
+bool PhysicsComponent::Init(CActor* pOwner, float fSpeed, float fGravity, 
 	float fJumpForce, const Types::tstring& strTag)
 {
-	m_pOwner = pOwner;
+	auto pActor= std::shared_ptr<CActor>(pOwner);
+
+	m_pOwner = pActor;
 	m_lastActorPoint = m_pOwner->GetActorPoint();
 
 	if (fSpeed < 0.f || fGravity < 0.f)

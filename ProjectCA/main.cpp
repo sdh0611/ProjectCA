@@ -8,7 +8,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPTSTR lpszCm
 	UNREFERENCED_PARAMETER(hPreInstance);
 	UNREFERENCED_PARAMETER(lpszCmdLine);
 
-	if (!MainWindow::GetInstance()->Init(hInstance, 800, 600)) {
+	if (!MainWindow::GetInstance()->Init(hInstance, MAX_WIDTH, MAX_HEIGHT)) {
 		MessageBox(NULL, TEXT("WNDCLASS Init Failed"), TEXT("Error"), MB_ICONERROR | MB_OK);
 		return 0;
 	}

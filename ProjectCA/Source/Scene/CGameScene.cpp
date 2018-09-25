@@ -7,6 +7,8 @@
 #include "..\..\Include\Core\Components\InputComponent.h"
 #include "..\..\Include\Scene\Actor\CActorManager.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\Include\Scene\Actor\CEnemy.h"
+#include "..\..\Include\Scene\Actor\CPlayer.h"
 //#include "..\..\Include\Scene\CWorld.h"
 
 
@@ -36,7 +38,8 @@ bool CGameScene::Init()
 		m_pCollisionDetector = std::make_unique<CollisionDetector>();
 
 	m_pActorManager = CActorManager::GetInstance();
-	m_pActorManager->Init();	// 
+	if (!m_pActorManager->Init())
+		return false; 
 
 	//if(m_pCurWorld == nullptr)
 	//	m_pCurWorld = new CWorld;
@@ -45,8 +48,11 @@ bool CGameScene::Init()
 		return false;
 
 	//World의 포인터가 들어가는 자리는 임시로 nullptr로 대체함.(09.13)
-	m_pPlayer = m_pActorManager->CreateActor(Types::OT_PLAYER, Types::Point(0, 0),
-		Types::DIR_IDLE, 100, 100, (this), TEXT("Player"));
+	//m_pPlayer = m_pActorManager->CreateActor(Types::OT_PLAYER, Types::Point(0, 0),
+	//	Types::DIR_IDLE, 100, 100, (this), TEXT("Player"));
+
+	m_pPlayer = m_pActorManager->CreateActor<CPlayer>(100, 100, 0, 0, Types::OT_PLAYER, Types::OS_IDLE, 
+		Types::DIR_IDLE, TEXT("Player"), this);
 
 	m_strongActorList.emplace_back(m_pPlayer);
 
@@ -54,16 +60,29 @@ bool CGameScene::Init()
 		return false;
 
 	FindLayer(TEXT("Player"))->AddActor(m_pPlayer);
+	
+	std::shared_ptr<CEnemy> pEnemy = m_pActorManager->CreateActor<CEnemy>(50, 50, 250, 250, Types::OT_ENEMY,
+		Types::OS_IDLE, Types::DIR_DOWN, TEXT("Enemy"), this);
 
-	if (!CreateLayer(TEXT("Probs"), 3))
+	if (pEnemy == nullptr)
 		return false;
 
-	StrongActorPtr pProb = m_pActorManager->CreateActor(Types::OT_PROBS, Types::Point(300, 300),
-		Types::DIR_IDLE, 200, 200, (this), TEXT("Probs"));
+	m_strongActorList.emplace_back(pEnemy);
 
-	m_strongActorList.emplace_back(pProb);
+	if (!CreateLayer(TEXT("Enemy"), 3))
+		return false;
 
-	FindLayer(TEXT("Probs"))->AddActor(pProb);
+	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+	//StrongActorPtr pProb = m_pActorManager->CreateActor(Types::OT_PROBS, Types::Point(300, 300),
+	//	Types::DIR_IDLE, 200, 200, (this), TEXT("Probs"));
+
+	//StrongActorPtr pProb;
+
+	//m_strongActorList.emplace_back(pProb);
+
+	//FindLayer(TEXT("Probs"))->AddActor(pProb);
+
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(100.f, 400.f, 150.f, 450.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(250.f, 300.f, 300.f, 350.f));
 	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(300.f, 250.f, 350.f, 300.f));
@@ -104,11 +123,14 @@ void CGameScene::Render(const HDC& hDC)
 //충돌했을 때 충돌한 Object에 대한 정보도 넘겨줘야한다.
 void CGameScene::CollisionDetect()
 {
-	////Player와 Background, UI를 제외한 모든 Layer의 Object들과 충돌 검사.
-	for (auto& it : m_strongActorList) {
-		if (it == m_pPlayer)
-			continue;
-		m_pCollisionDetector->Update(m_pPlayer, it);
+	////Scene내의 모든 Actor들에 대한 충돌검사 시행
+	
+	for (auto& first : m_strongActorList) {
+		for (auto& second : m_strongActorList) {
+			if (first == second)		
+				continue;
+			m_pCollisionDetector->Update(first, second);
+		}
 	}
 
 }

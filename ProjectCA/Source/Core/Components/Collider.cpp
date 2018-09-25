@@ -86,6 +86,24 @@ void Collider::OnCollision(Types::ObjectType type)
 
 }
 
+void Collider::OnCollision(std::shared_ptr<CActor> pOther)
+{
+	switch (pOther->GetActorType()) {
+	case Types::OT_ENEMY:
+		
+		break;
+	case Types::OT_PROBS:
+
+		break;
+	case Types::OT_PLAYER:
+		
+
+		break;
+
+	}
+
+}
+
 //void Collider::Init()
 //{
 //	//m_pOwner = owner;

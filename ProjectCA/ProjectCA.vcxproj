@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\Core\CollisionDetector.cpp" />
+    <ClCompile Include="Source\Core\Components\AIComponent.cpp" />
     <ClCompile Include="Source\Core\Components\Collider.cpp" />
     <ClCompile Include="Source\Core\Components\ColliderBox.cpp" />
     <ClCompile Include="Source\Core\Components\HPComponent.cpp" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Core\CollisionDetector.h" />
+    <ClInclude Include="Include\Core\Components\AIComponent.h" />
     <ClInclude Include="Include\Core\Components\Collider.h" />
     <ClInclude Include="Include\Core\Components\ColliderBox.h" />
     <ClInclude Include="Include\Core\Components\ComponentBase.h" />

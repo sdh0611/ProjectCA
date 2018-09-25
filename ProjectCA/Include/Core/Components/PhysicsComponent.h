@@ -16,7 +16,7 @@ public:
 
 
 public:
-	virtual bool Init(std::shared_ptr<CActor> pOwner, float fSpeed, float fGravity, float fJumpForce, 
+	virtual bool Init(CActor* pOwner, float fSpeed, float fGravity, float fJumpForce, 
 		const Types::tstring& strTag = TEXT("PhysicsComponent"));
 	virtual void Update(float fDeltaTime) override;
 
