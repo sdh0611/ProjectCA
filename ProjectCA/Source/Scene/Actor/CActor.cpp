@@ -7,6 +7,11 @@
 #include "..\..\..\Include\Core\Components\ComponentBase.h"
 
 
+CActor::CActor()
+	:m_actorVector(0, 0)
+{
+}
+
 CActor::~CActor()
 {
 	Destroy();
@@ -30,7 +35,7 @@ CActor::~CActor()
 //	return true;
 //}
 
-void CActor::Update(float fDeltaTime)
+void CActor::Update(double fDeltaTime)
 {
 	if (m_bActive) {
 		//m_componentTable[TEXT("PhysicsComponent")]->Update(fDeltaTime);
@@ -121,6 +126,10 @@ bool CActor::SetLayer(const Types::tstring & strLayerTag)
 	return true;
 }
 
-void CActor::FlopVerticalDirection()
+void CActor::FlipVector()
 {
+	m_actorVector.x *= -1.f;
+	m_actorVector.y *= -1.f;
+
+	//Debug::MessageInfo(TEXT("FlipVector"));
 }

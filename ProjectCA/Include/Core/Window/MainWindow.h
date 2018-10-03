@@ -25,6 +25,7 @@ public:
 	void SetWndSize(UINT iWidth, UINT iHeight);
 	bool SetVisible(HWND hWnd, BOOL bIsVisible);
 	UINT MessageLoop();
+	const HINSTANCE& GetWindowInstance() const { return m_hInstance; }
 
 
 private:
@@ -42,12 +43,15 @@ private:
 	HWND				m_hWnd;
 	HINSTANCE			m_hInstance;
 	HDC					m_hDC;
+	//HDC					m_hMemDC;
 	UINT					m_iWidth;
 	UINT					m_iHeight;
-
+	HBITMAP			m_hBackground;
 
 private:
-	class CSceneManager*	m_pSceneManager;
-	class Timer*					m_pTimer;
+	class CSceneManager*					m_pSceneManager;
+	class Timer*									m_pTimer;
+	class CResourceManager*				m_pResourceManager;
+	std::unique_ptr<class BackBuffer>			m_pBackBuffer;
 
 };

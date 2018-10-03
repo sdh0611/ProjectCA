@@ -7,6 +7,7 @@
 
 
 CEnemy::CEnemy()
+	:CActor()
 {
 }
 
@@ -40,6 +41,7 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	m_actorType = Types::OT_ENEMY;
 	m_actorState = data.actorState;
 	m_direction = data.direction;
+	m_actorVector = data.vector;
 	m_actorID = data.actorID;
 	m_strActorTag = data.strActorTag;
 	m_pOwnerScene = pScene;
@@ -57,12 +59,15 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 		auto pTemp = pActor.lock();
 
-		if (pTemp->GetActorPoint().y >= MAX_HEIGHT - pTemp->GetActorHeight())
-			pTemp->SetActorDirection(Types::DIR_UP);
+		if (pTemp->GetActorPoint().y >= MAX_HEIGHT - pTemp->GetActorHeight()) {
+			//pTemp->SetActorDirection(Types::DIR_UP);
+			pTemp->FlipVector();
+		}
 
-		if (pTemp->GetActorPoint().y < 1.f)
-			pTemp->SetActorDirection(Types::DIR_DOWN);
-		
+		if (pTemp->GetActorPoint().y < 1.f) {
+			//pTemp->SetActorDirection(Types::DIR_DOWN);
+			pTemp->FlipVector();
+		}
 	};
 	pAI->SetDelegate(enemyBehavior);
 	if (!AddComponent(pAI, pAI->GetComponentTag()))
@@ -81,6 +86,22 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pCollider->Init(this))
 		return false;
 
+	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther)->void {
+			
+		switch (pOther->GetActorType()) {
+
+		case Types::OT_PLAYER:
+			pOwner->FlipVector();
+			break;
+		case Types::OT_PROB:
+			pOwner->FlipVector();
+			break;
+		}
+	
+	};
+
+	pCollider->SetDelegate(onCollisionDelegater);
+
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
 	
@@ -95,7 +116,7 @@ bool CEnemy::Init()
 	return true;
 }
 
-void CEnemy::Update(float fDeltaTime)
+void CEnemy::Update(double fDeltaTime)
 {
 	CActor::Update(fDeltaTime);
 

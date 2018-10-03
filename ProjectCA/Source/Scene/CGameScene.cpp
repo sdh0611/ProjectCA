@@ -9,6 +9,8 @@
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\Actor\CEnemy.h"
 #include "..\..\Include\Scene\Actor\CPlayer.h"
+#include "..\..\Include\Scene\Actor\CProb.h"
+#include "..\..\Include\Scene\Actor\CBackground.h"
 //#include "..\..\Include\Scene\CWorld.h"
 
 
@@ -41,51 +43,67 @@ bool CGameScene::Init()
 	if (!m_pActorManager->Init())
 		return false; 
 
-	//if(m_pCurWorld == nullptr)
-	//	m_pCurWorld = new CWorld;
+	////if(m_pCurWorld == nullptr)
+	////	m_pCurWorld = new CWorld;
 
-	if (!CreateLayer(TEXT("Player"), 2))
-		return false;
-
-	//World의 포인터가 들어가는 자리는 임시로 nullptr로 대체함.(09.13)
-	//m_pPlayer = m_pActorManager->CreateActor(Types::OT_PLAYER, Types::Point(0, 0),
-	//	Types::DIR_IDLE, 100, 100, (this), TEXT("Player"));
-
+	//Player 생성
 	m_pPlayer = m_pActorManager->CreateActor<CPlayer>(100, 100, 0, 0, Types::OT_PLAYER, Types::OS_IDLE, 
-		Types::DIR_IDLE, TEXT("Player"), this);
+		Types::DIR_RIGHT, Types::Point(0.f, 0.f),TEXT("Player"), this);
 
 	m_strongActorList.emplace_back(m_pPlayer);
 
 	if (m_pPlayer == nullptr)
 		return false;
 
+	if (!CreateLayer(TEXT("Player"), 2))
+		return false;
+
 	FindLayer(TEXT("Player"))->AddActor(m_pPlayer);
 	
-	std::shared_ptr<CEnemy> pEnemy = m_pActorManager->CreateActor<CEnemy>(50, 50, 250, 250, Types::OT_ENEMY,
-		Types::OS_IDLE, Types::DIR_DOWN, TEXT("Enemy"), this);
 
-	if (pEnemy == nullptr)
-		return false;
+	//Enemy 생성
+	//Windows 좌표계에선 y축이 반대방향이므로 Vector의 값도 반대로 전달해줌.
+	////std::shared_ptr<CEnemy> pEnemy = m_pActorManager->CreateActor<CEnemy>(50, 50, 250, 250, Types::OT_ENEMY,
+	////	Types::OS_IDLE, Types::DIR_DOWN, Types::Point(0.f, 1.0f), TEXT("Enemy"), this);
 
-	m_strongActorList.emplace_back(pEnemy);
+	////if (pEnemy == nullptr)
+	////	return false;
 
-	if (!CreateLayer(TEXT("Enemy"), 3))
-		return false;
+	////m_strongActorList.emplace_back(pEnemy);
 
-	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+	////if (!CreateLayer(TEXT("Enemy"), 3))
+	////	return false;
 
-	//StrongActorPtr pProb = m_pActorManager->CreateActor(Types::OT_PROBS, Types::Point(300, 300),
-	//	Types::DIR_IDLE, 200, 200, (this), TEXT("Probs"));
+	////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-	//StrongActorPtr pProb;
+	//Prob 생성
+	//std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 0.f, 500.f, Types::OT_PROB,
+	//	Types::OS_IDLE, Types::DIR_DOWN, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+
+	//if (pProb == nullptr)
+	//	return false;
 
 	//m_strongActorList.emplace_back(pProb);
 
-	//FindLayer(TEXT("Probs"))->AddActor(pProb);
+	//if (!CreateLayer(TEXT("Prob"), 4))
+	//	return false;
 
-	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(100.f, 400.f, 150.f, 450.f));
-	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(250.f, 300.f, 300.f, 350.f));
-	//FindLayer(TEXT("Probs"))->AddObjectToLayer(new CProbs(300.f, 250.f, 350.f, 300.f));
+	//FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+	//Backgorund 생성
+	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::OT_BACKGROUND,
+		Types::OS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Background"), this);
+
+	if (pBack == nullptr)
+		return false;
+
+	m_strongActorList.emplace_back(pBack);
+
+	if (!CreateLayer(TEXT("Background"), 99))
+		return false;
+
+	FindLayer(TEXT("Background"))->AddActor(pBack);
+
 
 	CScene::Init();
 
@@ -93,7 +111,7 @@ bool CGameScene::Init()
 	return true;
 }
 
-void CGameScene::Update(float fDeltaTime)
+void CGameScene::Update(double fDeltaTime)
 {
 	//1. 입력에 따른 동작 Update
 	// TODO(09.17) : 현재 Input을 받는 것을 Player에 있는 PlayerInputComponent에서 수행하고 있는데,
@@ -124,18 +142,20 @@ void CGameScene::Render(const HDC& hDC)
 void CGameScene::CollisionDetect()
 {
 	////Scene내의 모든 Actor들에 대한 충돌검사 시행
-	
-	for (auto& first : m_strongActorList) {
-		for (auto& second : m_strongActorList) {
+
+	//충돌검사를 했던 Actor끼리 다시 검사하게됨.
+	//	-> 고쳐야함.
+	for (auto first = m_strongActorList.begin(); first != m_strongActorList.end(); ++first) {
+		for (auto second = first; second != m_strongActorList.end(); ++second) {
 			if (first == second)		
 				continue;
-			m_pCollisionDetector->Update(first, second);
+			m_pCollisionDetector->Update((*first), (*second));
 		}
 	}
 
 }
 
-void CGameScene::InputUpdate(float fDeltaTime)
+void CGameScene::InputUpdate(double fDeltaTime)
 {
 	if (KEY_DOWN(VK_ESCAPE)) {
 		//ESC를 누를 경우 일시정치 팝업창 출력, 게임 일시정지
@@ -151,7 +171,7 @@ void CGameScene::InputUpdate(float fDeltaTime)
 }
 
 //충돌검사 수행 후 처리
-void CGameScene::GameUpdate(float fDeltaTime)
+void CGameScene::GameUpdate(double fDeltaTime)
 {
 	//Component Update
 	for (auto& actor : m_strongActorList) {
@@ -174,10 +194,15 @@ void CGameScene::GameUpdate(float fDeltaTime)
 
 void CGameScene::ResetScene()
 {
-	//Reset키 검사
-	if (KEY_DOWN(VK_BACK)) {
+	////Reset키 검사
+	//if (KEY_DOWN(VK_BACK)) {
 
-		Init();
+	//	Init();
+	//}
+
+	for (auto& actor : m_strongActorList) {
+		actor->Init();
 	}
+
 }
 

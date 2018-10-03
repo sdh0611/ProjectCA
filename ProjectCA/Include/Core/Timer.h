@@ -21,19 +21,21 @@ public:
 
 
 public:
-	float GetDeltaTime() const { return m_fDeltaTime; }
-	float GetFPS()	const { return m_fFPS; }
-
+	double GetDeltaTime() const { return m_dDeltaTime; }
+	double GetTimeElapsed() const{ return m_dTimeElapsed; }
+	void CheckFrameCount();
+	void DrawFPS(const HDC& hDC);
 
 private:
-	LARGE_INTEGER	m_tSecond;
-	LARGE_INTEGER	m_tTime;
-	float					m_fDeltaTime;
-	float					m_fFPS;
-	float					m_fFPSTime;
-	float					m_iFrameMax;
-	float					m_iFrame;
-
+	double				m_dDeltaTime;
+	double				m_dFPSTime;
+	UINT					m_iFrameMax;
+	double				m_dFrameRate;
+	DWORD				m_iFrame;
+	DWORD											m_frameCount;
+	double											m_dTimeElapsed;
+	std::chrono::system_clock::time_point		m_curTime;
+	std::chrono::system_clock::time_point		m_lastTime;
 
 
 };

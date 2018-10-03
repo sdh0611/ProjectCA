@@ -60,7 +60,7 @@ bool CLayer::Init(const Types::tstring& strTag, UINT iOrder)
 
 //Update 순서 : Update -> ResolveCollision -> LateUpdate
 //Layer Class의 역할을 Rendering으로만 축소함으로 써 Update에서는 expired된 weak_ptr만 체크하기로
-void CLayer::Update(float fDeltaTime)
+void CLayer::Update(double fDeltaTime)
 {
 	//if (!m_ObjectList.empty())
 	//	for (m_it = m_ObjectList.begin(); m_it != m_ObjectList.end(); ++m_it) {

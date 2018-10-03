@@ -3,6 +3,7 @@
 
 Timer::Timer() {
 
+
 }
 
 Timer::~Timer() {
@@ -12,23 +13,54 @@ Timer::~Timer() {
 
 bool Timer::Init()
 {
-	QueryPerformanceFrequency(&m_tSecond);
-	QueryPerformanceCounter(&m_tTime);
+	//QueryPerformanceFrequency(&m_tSecond);
+	//QueryPerformanceCounter(&m_tTime);
 
-	m_fDeltaTime = 0.f;
-	m_fFPS = 0.f;
-	m_fFPSTime = 0.f;
+	m_dDeltaTime = 0.f;
+	m_dFPSTime = 0.f;
 	m_iFrameMax = 60;
+	m_dFrameRate = 1 / m_iFrameMax;
 	m_iFrame = 0;
+
+	m_frameCount = 0;
+	m_lastTime = std::chrono::system_clock::now();
+	m_dTimeElapsed = 0.f;
 
 	return true;
 }
 
 void Timer::Update()
 {
-	LARGE_INTEGER tTime;
-	QueryPerformanceCounter(&tTime);
-	m_fDeltaTime = (tTime.QuadPart - m_tTime.QuadPart) / (float)m_tSecond.QuadPart;
+	m_curTime = std::chrono::system_clock::now();
+	m_dDeltaTime = std::chrono::duration_cast<std::chrono::duration<double>>(m_curTime - m_lastTime).count();
+	
+	m_dTimeElapsed += m_dDeltaTime;
 
-	m_tTime = tTime;
+	m_lastTime = m_curTime;
+
+}
+
+void Timer::CheckFrameCount()
+{
+	if (m_dTimeElapsed >= 1.f) {
+		m_iFrame = m_frameCount / m_dTimeElapsed;
+		m_frameCount = 0;
+		m_dTimeElapsed = 0.f;
+		//wsprintf(m_strFrame, TEXT("Frame : %d"), m_iFrame);
+		//TextOut(hDC, 0, 0, m_strFrame.c_str(), m_strFrame.length());
+		//Debug::MessageInfo(m_strFrame);
+	}
+	else {
+		++m_frameCount;
+	}
+
+}
+
+void Timer::DrawFPS(const HDC& hDC) {
+
+	static TCHAR str[256];
+
+	wsprintf(str, TEXT("FPS : %d"), m_iFrame);
+	TextOut(hDC, 0, 0, str, wcslen(str));
+
 }

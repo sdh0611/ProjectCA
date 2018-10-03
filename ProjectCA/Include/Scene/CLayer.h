@@ -27,7 +27,7 @@ private:
 
 public:
 	bool Init(const Types::tstring& strTag, UINT iOrder);
-	void Update(float fDeltaTime);
+	void Update(double fDeltaTime);
 	void Render(const HDC& hDC);
 
 

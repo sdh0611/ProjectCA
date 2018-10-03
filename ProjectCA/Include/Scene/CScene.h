@@ -21,7 +21,7 @@ public:
 
 public:
 	virtual bool Init();
-	virtual void Update(float deltaTime);
+	virtual void Update(double deltaTime);
 	virtual void Render(const HDC& hDC);
 
 

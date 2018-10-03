@@ -27,19 +27,19 @@ public:
 
 public:
 	virtual bool Init() override;
-	virtual void Update(float fDeltaTime) override;
+	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
 	
 
 private:
 	void CollisionDetect();
-	void InputUpdate(float fDeltaTime);
-	void GameUpdate(float fDeltaTime);
+	void InputUpdate(double fDeltaTime);
+	void GameUpdate(double fDeltaTime);
 	//bool IsWorldChange();
 	//void ChangeWorld();
 
 
-private:
+public:
 	void ResetScene();		
 
 

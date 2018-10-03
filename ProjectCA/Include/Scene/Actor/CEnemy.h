@@ -23,8 +23,13 @@ public:
 	//virtual bool Init(const Types::ActorData&) override;
 	virtual bool PostInit(const Types::ActorData&, CGameScene*) override;
 	virtual bool Init() override;
-	virtual void Update(float fDeltaTime) override;
+	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
+
+
+public:
+	float GetEnemyDamage() const { return m_fDamage; }
+	void SetEnemyDamage(float fDamage) { if (fDamage < 0.f) return; m_fDamage = fDamage; }
 
 
 protected:
@@ -32,7 +37,7 @@ protected:
 
 
 protected:
-	
+	float m_fDamage;
 
 
 

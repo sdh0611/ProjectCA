@@ -23,7 +23,7 @@ bool HPComponent::Init(std::shared_ptr<CActor> pOwner, float fHP, float fMaxHP,
 	return true;
 }
 
-void HPComponent::Update(float fDeltaTime)
+void HPComponent::Update(double fDeltaTime)
 {
 
 

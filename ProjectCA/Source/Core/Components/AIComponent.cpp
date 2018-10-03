@@ -17,7 +17,7 @@ AIComponent::~AIComponent()
 //	return true;
 //}
 
-void AIComponent::Update(float fDeltaTime)
+void AIComponent::Update(double fDeltaTime)
 {
 	BehaviorUpdate();
 	
@@ -33,7 +33,8 @@ Delegater AIComponent::SetDelegate(Delegater pDelegater) {
 
 void AIComponent::BehaviorUpdate()
 {
-	m_pDelegate(m_pOwner);
+	if(m_pDelegate != nullptr)
+		m_pDelegate(m_pOwner);
 	//auto pTemp = m_pOwner;
 
 	//if (pTemp->GetActorPoint().y >= MAX_HEIGHT - pTemp->GetActorHeight())

@@ -61,7 +61,7 @@ bool ColliderBox::Init(CActor* pOwner, const Types::tstring& strTag)
 
 //물체가 움직임에 따라 CollisionBox의 좌표도 같이 이동해야함.
 //아직 Offset적용 전이라 일단 해놓고, 나중에 Offset 적용할 때 수정할 것.(5.31)
-void ColliderBox::Update(float fDeltaTime)
+void ColliderBox::Update(double fDeltaTime)
 {
 	//물체 위치에 따라 CollisionBox 위치이동
 	m_BoxSize.left = m_pOwner->GetActorPoint().x;

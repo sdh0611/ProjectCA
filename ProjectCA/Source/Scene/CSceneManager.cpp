@@ -23,7 +23,7 @@ bool CSceneManager::Init(Types::SceneType type) {
 	return true;
 }
 
-void CSceneManager::Update(float fDeltaTime)
+void CSceneManager::Update(double fDeltaTime)
 {
 	
 	m_pScene->Update(fDeltaTime);

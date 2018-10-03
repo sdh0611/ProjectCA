@@ -14,7 +14,7 @@ public:
 public:
 	bool Init(std::shared_ptr<CActor> pOwner, float fHP, float fMaxHP, 
 		const Types::tstring& strTag = TEXT("HPComponent"));
-	virtual void Update(float fDeltaTime);
+	virtual void Update(double fDeltaTime) override;
 
 	
 public:

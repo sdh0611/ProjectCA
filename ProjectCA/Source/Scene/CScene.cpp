@@ -31,7 +31,7 @@ bool CScene::Init()
 	return true;
 }
 
-void CScene::Update(float deltaTime)
+void CScene::Update(double deltaTime)
 {
 	if (!m_LayerList.empty())
 		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
@@ -46,8 +46,7 @@ void CScene::Render(const HDC& hDC)
 	if (!m_LayerList.empty())
 		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
 			(*m_it)->Render(hDC);
-
-
+			
 		}
 }
 

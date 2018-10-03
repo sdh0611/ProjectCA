@@ -3,10 +3,13 @@
 //#include "..\..\..\Include\Scene\Actor\CActorManager.h"
 #include "..\..\..\Include\Core\Timer.h"
 #include "..\..\..\Include\Core\Debuging\Debug.h"
+#include "..\..\..\Include\Core\Window\BackBuffer.h"
+#include "..\..\..\Include\Core\CResourceManager.h"
+
 
 //초기화는 Init() 메소드에서 실시함.
 MainWindow::MainWindow()
-	:m_pSceneManager(nullptr)
+	:m_pSceneManager(nullptr), m_pTimer(nullptr), m_pBackBuffer(nullptr)
 {
 	
 }
@@ -20,6 +23,7 @@ MainWindow::~MainWindow()
 	//CActorManager::Destroy();
 
 	ReleaseDC(m_hWnd, m_hDC);
+	//DeleteDC(m_hMemDC);
 
 }
 
@@ -36,10 +40,16 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 		return false;
 
 	m_hDC = GetDC(m_hWnd);
-	
+	//m_hMemDC = CreateCompatibleDC(m_hDC);
+
+
 	//Get Manager Classes Pointer;
 	m_pSceneManager = CSceneManager::GetInstance();
 	m_pTimer = Timer::GetInstance();
+	m_pResourceManager = CResourceManager::GetInstance();
+
+	if (!m_pResourceManager->Init())
+		return false;
 
 	//Initializing Manager Classes
 	if (!m_pSceneManager->Init(Types::ST_GAME))		//Test용으로 GameScene 생성.
@@ -48,8 +58,11 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	if (!m_pTimer->Init())
 		return false;
 
-	//if (!CActorManager::GetInstance()->Init())
-	//	return false;
+	if (m_pBackBuffer == nullptr)
+		m_pBackBuffer = std::make_unique<BackBuffer>(m_hDC);
+
+	//m_hBackground = (HBITMAP)LoadImage(m_hInstance, TEXT("D:/Projects/VIsualStudio17/ProjectCA/ProjectCA/Resources/Sprite/Background/background_mountain1.bmp"),
+	//	IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
 	return true;
 }
@@ -58,16 +71,31 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 void MainWindow::Update()
 {
 	m_pTimer->Update();
-	m_pSceneManager->Update( m_pTimer->GetDeltaTime() );
-
+	m_pSceneManager->Update(m_pTimer->GetDeltaTime());
+	m_pTimer->CheckFrameCount();
+	//m_pSceneManager->Update(1.f/60.f);
+	//InvalidateRect(m_hWnd, NULL, FALSE);
 }
 
 
 void MainWindow::Render()
 {
-	//MainWindow의 DC를 넘김.
-	m_pSceneManager->Render(m_hDC);
+	
+	if (!m_pBackBuffer->DrawSet(m_hDC))
+		return ;
 
+	//HDC hMemDC = CreateCompatibleDC(m_pBackBuffer->GetMemDC());
+	//HBITMAP hOldBit = (HBITMAP)SelectObject(hMemDC, m_hBackground);
+	//BitBlt(m_pBackBuffer->GetMemDC(), 0, 0, MAX_WIDTH, MAX_HEIGHT, hMemDC, 0, 0, SRCCOPY);
+	//SelectObject(hMemDC, hOldBit);
+	//
+	m_pSceneManager->Render(m_pBackBuffer->GetMemDC());
+	m_pTimer->DrawFPS(m_pBackBuffer->GetMemDC());
+	BitBlt(m_hDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, m_pBackBuffer->GetMemDC(), 0, 0, SRCCOPY);
+
+	m_pBackBuffer->DrawEnd();
+
+	//DeleteDC(hMemDC);
 }
 
 
@@ -148,18 +176,24 @@ UINT MainWindow::MessageLoop()
 
 LRESULT MainWindow::WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
-	PAINTSTRUCT ps;
-	HDC hDC;
+	//PAINTSTRUCT ps;
+	//HDC hDC;
 
 	switch (iMsg) {
+	case WM_CREATE:
+		SetTimer(hWnd, 1, 10, NULL);
+		return 0;
+	case WM_TIMER:
+		InvalidateRect(hWnd, nullptr, FALSE);
+		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
-	case WM_PAINT:
-		hDC = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
-		ReleaseDC(hWnd, hDC);
-		return 0;
+	//case WM_PAINT:
+	//	hDC = BeginPaint(hWnd, &ps);
+	//	EndPaint(hWnd, &ps);
+	//	ReleaseDC(hWnd, hDC);
+	//	return 0;
 	}
 
 	return DefWindowProc(hWnd, iMsg, wParam, lParam);

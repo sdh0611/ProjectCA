@@ -85,11 +85,17 @@
     <Filter Include="소스 파일\Scene\Actors\Prob">
       <UniqueIdentifier>{59b24586-081d-4626-bd45-94d6e8e8cbed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Scene\Actors\Pickup">
-      <UniqueIdentifier>{224b2f3b-67c3-47cf-83f0-70e283d06858}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Scene\Actors\Prob">
       <UniqueIdentifier>{0fc2a38c-9d6b-4acc-a819-d0d105c238de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\Graphic">
+      <UniqueIdentifier>{0094c806-cc53-4984-a168-c4e0c80087e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Core\Graphic">
+      <UniqueIdentifier>{505c845c-4ea6-4f56-9698-18a05dba945d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Scene\Actors\Pickup">
+      <UniqueIdentifier>{224b2f3b-67c3-47cf-83f0-70e283d06858}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +176,27 @@
     </ClCompile>
     <ClCompile Include="Source\Core\Components\AIComponent.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Math\CVector.cpp">
+      <Filter>소스 파일\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Window\BackBuffer.cpp">
+      <Filter>소스 파일\Core\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Components\RenderComponent.cpp">
+      <Filter>소스 파일\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Graphic\CSprite.cpp">
+      <Filter>소스 파일\Core\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Components\ComponentBase.cpp">
+      <Filter>소스 파일\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Graphic\CAnim.cpp">
+      <Filter>소스 파일\Core\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CBackground.cpp">
+      <Filter>소스 파일\Scene\Actors\Prob</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +286,24 @@
     </ClInclude>
     <ClInclude Include="Include\Core\Components\AIComponent.h">
       <Filter>헤더 파일\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Math\CVector.h">
+      <Filter>헤더 파일\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Window\BackBuffer.h">
+      <Filter>헤더 파일\Core\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Components\RenderComponent.h">
+      <Filter>헤더 파일\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Graphic\CSprite.h">
+      <Filter>헤더 파일\Core\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Graphic\CAnim.h">
+      <Filter>헤더 파일\Core\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CBackground.h">
+      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,9 +6,9 @@
 #include "ColliderBox.h"
 
 class PhysicsComponent :public ComponentBase {
-	friend void Collider::OnCollision(Types::ObjectType type, Collider::CollisionType collision);
 	friend void Collider::OnCollision(Types::ObjectType type);
-	friend void ColliderBox::OnCollision(Types::ObjectType type, Collider::CollisionType collision);
+	friend void Collider::OnCollision(std::shared_ptr<CActor>);
+
 
 public:
 	PhysicsComponent();
@@ -18,7 +18,7 @@ public:
 public:
 	virtual bool Init(CActor* pOwner, float fSpeed, float fGravity, float fJumpForce, 
 		const Types::tstring& strTag = TEXT("PhysicsComponent"));
-	virtual void Update(float fDeltaTime) override;
+	virtual void Update(double fDeltaTime) override;
 
 
 public:
@@ -36,8 +36,8 @@ public:
 	
 
 private:
-	void Move(float fDeltaTime);
-	void Gravity(float fDeltaTime);
+	void Move(double fDeltaTime);
+	void Gravity(double fDeltaTime);
 
 	
 private:

@@ -28,7 +28,7 @@ class CActor {
 	friend class CActorManager;
 
 public:
-	CActor() = default;
+	CActor();
 	virtual ~CActor();
 	
 
@@ -36,11 +36,11 @@ public:
 	virtual bool PostInit(const Types::ActorData&, CGameScene*) = 0;
 	//virtual bool Init(const Types::ActorData&);
 	virtual bool Init() = 0;
-	virtual void Update(float fDeltaTime);
+	virtual void Update(double fDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
 	//virtual void LateUpdate(float fDeltaTime);
 	virtual void Destroy();
-	virtual void ActorBehavior() = 0;
+	virtual void ActorBehavior() { };
 
 
 public:
@@ -56,6 +56,14 @@ public:
 	Types::ObjectState GetActorState() const { return m_actorState; }
 	void SetActorState(Types::ObjectState state) { m_actorState = state; }
 	Types::Direction GetActorDirection() const { return m_direction; }
+	Types::Point GetActorVector() const { return m_actorVector; }
+	bool SetActorVector(float fx, float fy) {		//안전하지 않은 코드 -> 추후 Vector2d class 작성하면 
+															//해당 class로 대체하면서 다시 바꿀거임.(09.25)
+		m_actorVector.x = fx;
+		m_actorVector.y = fy;
+
+		return true;
+	}
 	void SetActorDirection(Types::Direction dir) { m_direction = dir; }
 	UINT GetActorWidth() const { return m_iActorWidth; }
 	void SetActorWidth(UINT iWidth) { m_iActorWidth = iWidth; }
@@ -66,6 +74,9 @@ public:
 		if (fx < 0 || fy < 0)
 			return false;
 	
+		if (fx > MAX_WIDTH || fy > MAX_HEIGHT)
+			return false;
+
 		m_actorPoint.x = fx;
 		m_actorPoint.y = fy;
 		
@@ -79,8 +90,7 @@ public:
 	CGameScene* const GetOwnerScene() const;
 	void SetOwnerScene(CGameScene* pScene);
 	bool SetLayer(const Types::tstring& strLayerTag);
-	void FlopVerticalDirection();
-	void FlopHorizonDirection();
+	void FlipVector();
 
 
 protected:
@@ -91,6 +101,7 @@ protected:
 	Types::ObjectType		m_actorType;
 	Types::ObjectState		m_actorState;
 	Types::Direction		m_direction;
+	Types::Point				m_actorVector;
 	Types::ActorID			m_actorID;
 	Types::tstring			m_strActorTag;		 
 	//CWorld*					m_pOwnerWorld;

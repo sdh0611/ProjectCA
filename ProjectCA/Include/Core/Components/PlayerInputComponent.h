@@ -13,7 +13,7 @@ public:
 	
 public:
 	virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent")) override;
-	virtual void Update(float fDeltaTime) override;
+	virtual void Update(double fDeltaTime) override;
 
 
 private:

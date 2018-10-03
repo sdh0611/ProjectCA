@@ -39,6 +39,9 @@ void CollisionDetector::Update(std::shared_ptr<CActor> pActor, std::shared_ptr<C
 	Collider* collider1 = static_cast<Collider*>(pActor->GetComponent(TEXT("Collider")));
 	Collider* collider2 = static_cast<Collider*>(pOther->GetComponent(TEXT("Collider")));
 
+	if (collider1 == nullptr || collider2 == nullptr)
+		return;
+
 	if ((collider1->GetColliderType() == Collider::CT_BOX) && (collider2->GetColliderType() == Collider::CT_BOX))
 		BoxAndBox(pActor, pOther);
 
@@ -108,8 +111,8 @@ bool CollisionDetector::BoxAndBox(std::shared_ptr<CActor> pActor, std::shared_pt
 	//Collision이 일어났음을 각각의 Collider Component에 알리고, OnCollision 메소드를 실행하여 충돌 후 동작 처리.
 	collider1->SetIsCollision(true);
 	collider2->SetIsCollision(true);
-	collider1->OnCollision(pOther->GetActorType());
-	collider2->OnCollision(pActor->GetActorType());
+	collider1->OnCollision(pOther);
+	collider2->OnCollision(pActor);
 
 	return true;
 }

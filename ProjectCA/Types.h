@@ -7,9 +7,9 @@
 #define MAKE_COL_BOX		0b00100
 #define MAKE_COL_CIR		0b01000
 
-const unsigned int MAX_WIDTH = 800;
-const unsigned int MAX_HEIGHT = 640;
-const unsigned int MAX_ACTOR_SIZE = 400;
+const unsigned int MAX_WIDTH = 1024;
+const unsigned int MAX_HEIGHT = 720;
+const unsigned int MAX_ACTOR_SIZE = 3000;
 
 namespace Types {
 
@@ -17,7 +17,7 @@ namespace Types {
 	typedef unsigned long ActorID;
 
 	//오브젝트 타입 정의
-	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROBS, OT_PICKUP, OT_MAP };
+	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROB, OT_PICKUP, OT_MAP, OT_BACKGROUND };
 
 	//오브젝트 상태 정의
 	enum ObjectState { OS_IDLE, OS_MOVE, OS_JUMP, OS_ATTACK, OS_DAMAGED, OS_FALL };
@@ -193,9 +193,9 @@ namespace Types {
 		class CGameScene;
 
 		ActorData(UINT iWidth, UINT iHeight, Point point, ObjectType type, ObjectState state, 
-			Direction dir, ActorID id, const tstring& strTag, bool _bActive)
+			Direction dir, Point _vector,ActorID id, const tstring& strTag, bool _bActive)
 			:iActorWidth(iWidth), iActorHeight(iHeight), actorPoint(point), actorType(type), actorState(state),
-			direction(dir), actorID(id), strActorTag(strTag),  bActive(_bActive)
+			direction(dir), vector(_vector),actorID(id), strActorTag(strTag),  bActive(_bActive)
 		{
 
 
@@ -210,6 +210,7 @@ namespace Types {
 			actorType = other.actorType;
 			actorState = other.actorState;
 			direction = other.direction;
+			vector = other.vector;
 			strActorTag = other.strActorTag;
 			//pOwnerScene = other.pOwnerScene;
 			bActive = other.bActive;
@@ -222,6 +223,7 @@ namespace Types {
 		ObjectType				actorType;
 		ObjectState				actorState;
 		Direction					direction;
+		Point						vector;			//방향을 표시하기 위한 방법으로써 direction 상수대신 vector로 대체(09.25)
 		ActorID					actorID;
 		tstring					strActorTag;
 		//CWorld*					m_pOwnerWorld;

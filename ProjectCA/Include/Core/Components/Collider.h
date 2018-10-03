@@ -5,15 +5,12 @@
 
 //ColliderType에 Trigger도 추가해보자.
 
-using Delegate = std::function<void(std::shared_ptr<CActor>)>;
+using Delegate = std::function<void(std::shared_ptr<CActor>, std::shared_ptr<CActor>)>;
 
 
 class Collider : public ComponentBase {
 public:
-	enum ColliderType{ CT_BOX, CT_CIRCLE, 
-		CT_BOX_TRIGGER, CT_CIRCLE_TRIGGER };
-	enum CollisionType { COLLISION_IDLE, COLLISION_SIDE, 
-		COLLISION_TOP, COLLISION_BOT };
+	enum ColliderType { CT_BOX, CT_CIRCLE, CT_BOX_TRIGGER, CT_CIRCLE_TRIGGER };
 
 
 public:
@@ -23,10 +20,10 @@ public:
 
 public:
 	virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("Collider")) = 0;
-	virtual void Update(float fDeltaTime) = 0;
-	virtual void OnCollision(Types::ObjectType type, CollisionType collision);
+	virtual void Update(double fDeltaTime) = 0;
 	virtual void OnCollision(Types::ObjectType type);
 	virtual void OnCollision(std::shared_ptr<CActor> pOther);
+	virtual Delegate SetDelegate(Delegate dele);
 
 
 public:
@@ -48,7 +45,7 @@ protected:
 
 
 private:
-	Delegate						m_delegate;
+	Delegate						m_pDelegate;
 
 
 };

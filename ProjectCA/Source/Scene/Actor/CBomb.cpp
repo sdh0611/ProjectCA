@@ -1,7 +1,14 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CBomb.h"
+#include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
+#include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\..\Include\Core\Components\ColliderBox.h"
+#include "..\..\..\Include\Core\Components\RenderComponent.h"
+
+
 
 CBomb::CBomb()
+	:CActor()
 {
 }
 
@@ -19,13 +26,17 @@ bool CBomb::Init()
 	return true;
 }
 
-void CBomb::Update(float fDeltaTime)
+void CBomb::Update(double fDeltaTime)
 {
 
 }
 
 void CBomb::Render(const HDC & hDC)
 {
+	auto it = m_componentTable.find(TEXT("RenderComponent"));
+
+	if (it != m_componentTable.end())
+		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
 
 }
 

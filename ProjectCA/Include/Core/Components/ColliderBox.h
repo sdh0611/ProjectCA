@@ -13,7 +13,7 @@ public:
 
 public:
 	virtual bool Init(CActor* owner, const Types::tstring& strTag = TEXT("Collider")) override;
-	virtual void Update(float fDeltaTime) override;
+	virtual void Update(double fDeltaTime) override;
 	//virtual void ResolveCollision(Types::ObjectType type, CollisionType collision) override;
 
 public:

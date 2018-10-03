@@ -26,7 +26,8 @@ public:
 public:
 	void SetWndSize(UINT iWidth, UINT iHeight);
 	bool SetVisible(HWND hWnd, BOOL bIsVisible);
-	
+	const HINSTANCE& GetWindowInstance() const { return m_hInstance; }
+
 
 protected:
 	void DeadtimeLogic();
