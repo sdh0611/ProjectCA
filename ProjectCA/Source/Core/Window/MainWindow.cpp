@@ -132,7 +132,7 @@ bool MainWindow::CreateMyWindow(const Types::tstring& wndClassName,
 
 	ShowWindow(m_hWnd, bIsVisible);
 
-	Debug::MessageInfo(TEXT("扩档快 积己!!"));
+	//Debug::MessageInfo(TEXT("扩档快 积己!!"));
 
 	return true;
 

@@ -1,6 +1,8 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
+#include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 
 PlayerInputComponent::~PlayerInputComponent()
@@ -23,70 +25,98 @@ void PlayerInputComponent::Update(double fDeltaTime)
 
 }
 
+void PlayerInputComponent::JumpKeyProcess()
+{
+
+
+}
+
 void PlayerInputComponent::KeyProcess()
 {
-	Types::ObjectState state = m_pOwner->GetActorState();
+	//Types::ObjectState state = m_pOwner->GetActorState();
 	Types::Direction dir = m_pOwner->GetActorDirection();
 	RenderComponent* pRender = static_cast<RenderComponent*>( m_pOwner->GetComponent(TEXT("RenderComponent")) );
 
-
-	if (KEY_DOWN(VK_LEFT)) {
-		//m_pOwner->SetActorDirection(Types::DIR_LEFT);
-		if (state != Types::OS_JUMP || state != Types::OS_FALL) {
-			m_pOwner->SetActorState(Types::OS_MOVE);
-			if (KEY_DOWN('A'))
-				pRender->ChangeAnimation(TEXT("RunLeft"));
-			else
-				pRender->ChangeAnimation(TEXT("MoveLeft"));
+	//디버깅용 심볼
+	//BOOL bKeyDown = KEY_DOWN('X');
+	
+	
+	if (KEY_DOWN(VK_DOWN)) {
+		//m_pOwner->SetActorDirection(Types::DIR_DOWN);
+		if (m_pOwner->GetActorJumpState() != Types::JS_JUMP
+			&& m_pOwner->GetActorJumpState() != Types::JS_FALL) {
+			m_pOwner->SetActorState(Types::OS_SITDOWN);
 		}
+		m_pOwner->SetActorVector(0.f, 1.f);
+	}
+	else if (KEY_DOWN(VK_LEFT)) {
+		//m_pOwner->SetActorDirection(Types::DIR_LEFT);
+		//if (m_pOwner->GetActorJumpState() != Types::OS_JUMP 
+		//	&& m_pOwner->GetActorState() != Types::OS_FALL) {
+		if (KEY_DOWN('A'))
+			m_pOwner->SetActorState(Types::OS_RUN);
+		else
+			m_pOwner->SetActorState(Types::OS_WALK);
+		//}
 		m_pOwner->SetActorVector(-1.f, 0.f);
 		m_pOwner->SetActorDirection(Types::DIR_LEFT);
 	}
 	else if (KEY_DOWN(VK_RIGHT)) {
 		//m_pOwner->SetActorDirection(Types::DIR_RIGHT);
-		if (state != Types::OS_JUMP || state != Types::OS_FALL) {
-			m_pOwner->SetActorState(Types::OS_MOVE);
-			if (KEY_DOWN('A'))
-				pRender->ChangeAnimation(TEXT("RunRight"));
-			else
-			pRender->ChangeAnimation(TEXT("MoveRight"));
-		}
+		//if (m_pOwner->GetActorState() != Types::OS_JUMP
+		//	&& m_pOwner->GetActorState() != Types::OS_FALL) {
+		if (KEY_DOWN('A'))
+			m_pOwner->SetActorState(Types::OS_RUN);
+		else
+			m_pOwner->SetActorState(Types::OS_WALK);
+		//}
 		m_pOwner->SetActorVector(1.f, 0.f);
 		m_pOwner->SetActorDirection(Types::DIR_RIGHT);
 	}
 	else if (KEY_DOWN(VK_UP)) {
 		//m_pOwner->SetActorDirection(Types::DIR_UP);
-		if (state != Types::OS_JUMP || state != Types::OS_FALL) {
-			m_pOwner->SetActorState(Types::OS_MOVE);
-			if (dir == Types::DIR_LEFT)
-				pRender->ChangeAnimation(TEXT("LookupLeft"));
-			else if (dir == Types::DIR_RIGHT)
-				pRender->ChangeAnimation(TEXT("LookupRight"));
-		}
+		//if (m_pOwner->GetActorState() != Types::OS_JUMP
+		//	&& m_pOwner->GetActorState() != Types::OS_FALL) {
+		m_pOwner->SetActorState(Types::OS_LOOKUP);
+		//}
 		m_pOwner->SetActorVector(0.f, -1.f);
-	}
-	else if (KEY_DOWN(VK_DOWN)) {
-		//m_pOwner->SetActorDirection(Types::DIR_DOWN);
-		if (state != Types::OS_JUMP || state != Types::OS_FALL) {
-			m_pOwner->SetActorState(Types::OS_MOVE);
-			if (dir == Types::DIR_LEFT)
-				pRender->ChangeAnimation(TEXT("SitdownLeft"));
-			else if (dir == Types::DIR_RIGHT)
-				pRender->ChangeAnimation(TEXT("SitdownRight"));
-		}
-		m_pOwner->SetActorVector(0.f, 1.f);
 	}
 	else {
 		//m_pOwner->SetActorDirection(Types::DIR_IDLE);
-		if (state != Types::OS_JUMP || state != Types::OS_FALL) {
-			m_pOwner->SetActorState(Types::OS_IDLE);
-			if(dir == Types::DIR_LEFT)
-				pRender->ChangeAnimation(TEXT("IdleLeft"));
-			else if(dir == Types::DIR_RIGHT)
-				pRender->ChangeAnimation(TEXT("IdleRight"));
-
-		}
+		//if (m_pOwner->GetActorState() != Types::OS_JUMP 
+		//	&& m_pOwner->GetActorState() != Types::OS_FALL) {
+		//if (KEY_DOWN('A'))
+		//	m_pOwner->SetActorState(Types::OS_RUN);
+		//else
+		m_pOwner->SetActorState(Types::OS_IDLE);			
 		m_pOwner->SetActorVector(0.f, 0.f);
 	}
+
+	if (KEY_DOWN('X')) {
+		if (m_pOwner->GetActorJumpState() == Types::JS_IDLE) {
+			//if(m_pOwner->GetActorState() == Types::OS_RUN)
+			//	m_pOwner->SetActorState(Types::OS_RUN_JUMP);
+			//else
+				m_pOwner->SetActorJumpState(Types::JS_JUMP);
+			//static_cast<PhysicsComponent*>(m_pOwner->GetComponent(TEXT("PhysicsComponent")))->SetGrounded(false);
+			//puts("JUMP");
+		}
+	}
+	else if (KEY_UP('X')) {
+		if (m_pOwner->GetActorJumpState() == Types::JS_JUMP) {
+			m_pOwner->SetActorJumpState(Types::JS_FALL);
+		}
+	}
+	//else if (KEY_RELEASE('X')) {
+	//	m_pOwner->SetActorState(Types::OS_FALL);
+	//	//static_cast<PhysicsComponent*>(m_pOwner->GetComponent(TEXT("PhysicsComponent")))->SetGrounded(false);
+	//	puts("FALL");
+	//}
+
+	if (KEY_ONCE_PRESS(VK_ESCAPE)) {
+		puts("reset");
+		m_pOwner->GetOwnerScene()->ResetScene();
+	}
+
 
 }

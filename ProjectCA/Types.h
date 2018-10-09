@@ -20,7 +20,12 @@ namespace Types {
 	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROB, OT_PICKUP, OT_MAP, OT_BACKGROUND };
 
 	//오브젝트 상태 정의
-	enum ObjectState { OS_IDLE, OS_MOVE, OS_JUMP, OS_ATTACK, OS_DAMAGED, OS_FALL };
+	//enum ObjectState { OS_IDLE, OS_WALK, OS_RUN, OS_JUMP, OS_RUN_JUMP, OS_FALL,
+	//	OS_LOOKUP, OS_SITDOWN, OS_ATTACK, OS_DAMAGED, OS_DEAD };
+	enum ObjectState {
+		OS_IDLE, OS_WALK, OS_RUN, OS_LOOKUP, OS_SITDOWN, OS_ATTACK, OS_DAMAGED, OS_DEAD
+	};
+	enum JumpState { JS_JUMP, JS_IDLE, JS_FALL };
 
 	//방향 열거체 정의
 	enum Direction { DIR_DOWN = -1, DIR_IDLE, DIR_UP, DIR_LEFT, DIR_RIGHT };

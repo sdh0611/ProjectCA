@@ -5,18 +5,18 @@
 
 
 
-PhysicsComponent::PhysicsComponent() 
-	//,m_fSpeed(200.f), m_fGravity(1300.f), m_fJumpForce(-350.f)
+PhysicsComponent::PhysicsComponent()
+	:m_bGrounded(false), m_fGravity(0.f), m_fSpeed(0.f), m_fMaxSpeed(0.f),
+	m_fJumpForce(0.f), m_fXSpeed(0.f), m_fYSpeed(0.f), m_dTimeElapsed(0.f)
 {
 	
 }
 
 PhysicsComponent::~PhysicsComponent()
 {
-	//m_pOwner.reset();
 }
 
-bool PhysicsComponent::Init(CActor* pOwner, float fSpeed, float fGravity, 
+bool PhysicsComponent::Init(CActor* pOwner, float fSpeed, float fMaxSpeed, float fGravity, 
 	float fJumpForce, const Types::tstring& strTag)
 {
 	auto pActor= std::shared_ptr<CActor>(pOwner);
@@ -24,26 +24,31 @@ bool PhysicsComponent::Init(CActor* pOwner, float fSpeed, float fGravity,
 	m_pOwner = pActor;
 	m_lastActorPoint = m_pOwner->GetActorPoint();
 
-	if (fSpeed < 0.f || fGravity < 0.f)
+	if (fSpeed < 0.f || fMaxSpeed < 0.f || fGravity < 0.f)
 		return false;
 
-	m_fSpeed = fSpeed;
 	m_fGravity = fGravity;
+	m_fXSpeed = m_fSpeed = fSpeed;
+	m_fMaxSpeed = fMaxSpeed;
 	m_fJumpForce = fJumpForce;
-	//m_pOwner = owner;
-
 	m_strComponentTag = strTag;
+	m_bGrounded = false;
 
 	return true;
 }
 
 void PhysicsComponent::Update(double dDeltaTime)
 {
-
+	m_dTimeElapsed += dDeltaTime;
 	m_lastActorPoint = m_pOwner->GetActorPoint();
+	Gravity(dDeltaTime);
 	Move(dDeltaTime);
-	//Gravity(dDeltaTime);
-
+	//if (!m_bGrounded) {
+	//}
+	//else {
+	//	m_fYSpeed = m_fJumpForce;
+	//}
+	m_bGrounded = false;
 }
 
 void PhysicsComponent::RestoreActorPoint()
@@ -55,67 +60,61 @@ void PhysicsComponent::RestoreActorPoint()
 //NOTE(07.30) : 현재 충돌인식은 잘 되고있으나, 그에 따른 반응이 제대로 안되는 상황. 고치자
 void PhysicsComponent::Move(double dDeltaTime)
 {
-	//switch (m_pOwner->GetActorDirection()) {
-	//case Types::DIR_LEFT:
-	//	//MessageBox(NULL, TEXT("LEFT"), TEXT("Info"), MB_ICONINFORMATION);
-	//	if (m_pOwner->GetActorPoint().x > 0)
-	//		m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x - m_fSpeed * fDeltaTime, m_pOwner->GetActorPoint().y);
-	//	break;
-	//case Types::DIR_RIGHT:
-	//	//MessageBox(NULL, TEXT("RIGHT"), TEXT("Info"), MB_ICONINFORMATION);
-	//	if (m_pOwner->GetActorPoint().x < MAX_WIDTH)
-	//		m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + m_fSpeed * fDeltaTime, m_pOwner->GetActorPoint().y);
-	//	break;
-	//case Types::DIR_UP:
-	//	if (m_pOwner->GetActorPoint().y > 0)
-	//		m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x, m_pOwner->GetActorPoint().y - m_fSpeed * fDeltaTime);
-	//	break;
-	//case Types::DIR_DOWN:
-	//	if (m_pOwner->GetActorPoint().y < MAX_HEIGHT)
-	//		m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x, m_pOwner->GetActorPoint().y + m_fSpeed * fDeltaTime);
-	//	break;
-	//	//case Types::DIR_IDLE:
+	if (m_pOwner->GetActorState() == Types::OS_RUN) {
+		if(m_fXSpeed < m_fMaxSpeed)
+			m_fXSpeed += 5;
+	}
+	else if (m_pOwner->GetActorState() == Types::OS_WALK) {
+		if (m_fXSpeed > m_fSpeed)
+			m_fXSpeed -= 10;
+	}
 
-	//	//	break;
-	//}
-
-	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + m_pOwner->GetActorVector().x * m_fSpeed * dDeltaTime, 
-		m_pOwner->GetActorPoint().y + m_pOwner->GetActorVector().y * m_fSpeed * dDeltaTime);
-
-
+	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + m_pOwner->GetActorVector().x * m_fXSpeed * dDeltaTime,
+		m_pOwner->GetActorPoint().y - m_fYSpeed * dDeltaTime);
 }
 
 
 void PhysicsComponent::Gravity(double dDeltaTime)
 {
-	//점프했을 경우 일정크기의 힘 만큼 해당 Object에 힘을 가한다.
-	//if (m_pOwner->GetObjectState() == Types::OS_JUMP){
-		//m_pOwner->SetObjectPointY(0.5f * m_fGravity *fDeltaTime * fDeltaTime
-	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x, m_pOwner->GetActorPoint().y + m_fJumpForce*dDeltaTime);
+	Types::JumpState state = m_pOwner->GetActorJumpState();
 
-	if(m_fJumpForce < 500.f)
-		m_fJumpForce += m_fGravity * dDeltaTime*0.75;
+	if (m_bGrounded)
+		m_fYSpeed = 0.f;
 
+	if (m_pOwner->GetActorPreJumpState() == Types::JS_JUMP)
+		if (state == Types::JS_FALL)
+			m_fYSpeed = -50.f;
 
-	//		
-	//}
-	//else {	
-	//if (m_pOwner->GetObjectPoint().y > 400) {
-	//	m_pOwner->SetObjectPointY(400.f);
-	//	m_fJumpForce = -350.f;
-	//}
-
+	if (state != Types::JS_FALL && m_fYSpeed < 0.f)
+		m_pOwner->SetActorJumpState(Types::JS_FALL);
 	
-	////여기서 모든 prob의 충돌에 대한 업데이트를 해야하는데, 이러면 한번밖에 안한다.
-	//Collider* collider = static_cast<Collider*>(m_pOwner->GetComponent(TEXT("Collider")));
-	//if (collider->GetIsCollision()) {
-	//	//m_fJumpForce += m_fGravity;
-	//	m_fJumpForce = -350.f;
-	//}
+	if (state != Types::JS_JUMP && !m_bGrounded) {
+		m_pOwner->SetActorJumpState(Types::JS_FALL);
+	}
+	else if (state == Types::JS_JUMP) {
+		if (m_pOwner->GetActorPreJumpState() != Types::JS_JUMP) {
+			m_fYSpeed = m_fJumpForce;
+		}
+	}
+
+	if(!m_bGrounded)
+		if(m_fYSpeed > -800.f)
+			m_fYSpeed -= m_fGravity * dDeltaTime;
+
+}
+
+void PhysicsComponent::Jump(double dDeltaTime)
+{
+	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().
+		x, m_pOwner->GetActorPoint().y + m_fYSpeed * dDeltaTime);
 
 
-	//if (m_pOwner->GetObjectPoint().y < 300) {
-	//	m_pOwner->SetObjectPointY(m_pOwner->GetObjectPoint().y + m_fGravity * ffDeltaTime);
-	//	m_fJumpForce += m_fGravity;
-	//}
+
+}
+
+void PhysicsComponent::Down(double dDeltaTime)
+{
+
+
+
 }

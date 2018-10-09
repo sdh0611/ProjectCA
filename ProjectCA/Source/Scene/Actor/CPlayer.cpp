@@ -38,7 +38,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	m_iActorHeight = data.iActorHeight;
 	m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
-	m_actorState = data.actorState;
+	m_actorCurState = m_actorPreState = data.actorState;
+	m_actorPreJumpState = m_actorJumpState = Types::JS_IDLE;
 	m_direction = data.direction;
 	m_actorVector = data.vector;
 	m_actorID = data.actorID;
@@ -47,7 +48,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	
 	m_pOwnerScene = pScene;
 
-	//AIComponent (InputComponent) 초기화
+	//PlayerInputComponent (InputComponent) 초기화
 	PlayerInputComponent* pAI = new PlayerInputComponent;
 	if (!pAI->Init(this))
 		return false;
@@ -57,7 +58,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	//PhysicsComponent 초기화
 	PhysicsComponent* pPhysics = new PhysicsComponent;
-	if (!pPhysics->Init(this, 500.f, 1300.f, -600.f))
+	if (!pPhysics->Init(this, 350.f, 600.f, 1300.f, 700.f))
 		return false;
 
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
@@ -73,7 +74,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		ComponentBase* pComponent = nullptr;
 		Types::Point point;
 
-
 		switch (pOther->GetActorType()) {
 		case Types::OT_ENEMY:
 			//pComponent = pOwner->GetComponent(TEXT("PhysicsComponent"));
@@ -82,9 +82,14 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			pOwner->GetOwnerScene()->ResetScene();
 			break;
 		case Types::OT_PROB:
-			pComponent = pOwner->GetComponent(TEXT("PhysicsComponent"));
-			point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
-			pOwner->SetActorPoint(point.x, point.y); // 이부분 떄문에 PROB위에서 움직이질못함.
+			PhysicsComponent* pComponent = static_cast<PhysicsComponent*>(
+				pOwner->GetComponent(TEXT("PhysicsComponent")));
+			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
+			//point = pComponent->GetLastActorPoint();
+			pComponent->SetGrounded(true);
+			pOwner->SetActorState(Types::OS_IDLE);
+			pOwner->SetActorJumpState(Types::JS_IDLE);
+			//pOwner->SetActorPoint(point.x, point.y); // 이부분 떄문에 PROB위에서 움직이질못함.
 			break;
 
 		}
@@ -107,10 +112,16 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleLeft"), true, TEXT("IdleLeft")))
 		return false;
 
-	if (!pRender->AddAnim(0.2f, TEXT("PlayerMoveRight"), true, TEXT("MoveRight")))
+	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkRight"), true, TEXT("WalkRight")))
 		return false;
 
-	if (!pRender->AddAnim(0.2f, TEXT("PlayerMoveLeft"), true, TEXT("MoveLeft")))
+	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkLeft"), true, TEXT("WalkLeft")))
+		return false;
+
+	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunRight"), true, TEXT("RunRight")))
+		return false;
+
+	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunLeft"), true, TEXT("RunLeft")))
 		return false;
 
 	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupRight"), true, TEXT("LookupRight")))
@@ -125,11 +136,24 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownLeft"), true, TEXT("SitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunRight"), true, TEXT("RunRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpRight"), true, TEXT("JumpRight")))
 		return false;
 
-	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunLeft"), true, TEXT("RunLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpLeft"), true, TEXT("JumpLeft")))
 		return false;
+
+	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownRight"), true, TEXT("FalldownRight")))
+		return false;
+
+	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownLeft"), true, TEXT("FalldownLeft")))
+		return false;
+
+	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpRight"), true, TEXT("RunJumpRight")))
+		return false;
+
+	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpLeft"), true, TEXT("RunJumpLeft")))
+		return false;
+
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
@@ -149,18 +173,11 @@ bool CPlayer::Init()
 void CPlayer::Update(double fDeltaTime)
 {
 	CActor::Update(fDeltaTime);
+
 }
 
 void CPlayer::Render(const HDC & hDC)
 {
-	//Code for test
-	//RECT rect = {m_actorPoint.x, m_actorPoint.y, m_actorPoint.x + m_iActorWidth, m_actorPoint.y + m_iActorHeight};
-	//HBRUSH hBrush = CreateSolidBrush(RGB(255.f, 0.f, 0.f));
-
-	//FillRect(hDC, &rect, hBrush);
-
-	//DeleteObject(hBrush);
-
 	auto it = m_componentTable.find(TEXT("RenderComponent"));
 
 	if (it != m_componentTable.end())
@@ -173,6 +190,16 @@ void CPlayer::Render(const HDC & hDC)
 	else {
 		TextOut(hDC, m_actorPoint.x, m_actorPoint.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
 	}
+
+	static TCHAR buf[15];
+	wsprintf(buf, TEXT("Position : (%3ld, %3ld)"), (LONG)m_actorPoint.x, (LONG)m_actorPoint.y);
+	TextOut(hDC, 0, 20, buf, sizeof(buf));
+
+	//if (m_direction == Types::DIR_LEFT)
+	//	TextOut(hDC, 0, 20, TEXT("DIR : LEFT"), sizeof(TEXT("DIR : LEFT")));
+	//else if (m_direction == Types::DIR_RIGHT)
+	//	TextOut(hDC, 0, 20, TEXT("DIR : RIGHT"), sizeof(TEXT("DIR : RIGHT")));
+
 
 }
 

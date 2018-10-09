@@ -8,7 +8,7 @@
 
 
 CActor::CActor()
-	:m_actorVector(0, 0)
+	:m_actorVector(0, 0), m_actorJumpState(Types::JS_IDLE)
 {
 }
 
@@ -41,6 +41,9 @@ void CActor::Update(double fDeltaTime)
 		//m_componentTable[TEXT("PhysicsComponent")]->Update(fDeltaTime);
 		for (auto& it : m_componentTable)
 			it.second->Update(fDeltaTime);
+
+		m_actorPreState = m_actorCurState;
+		m_actorPreJumpState = m_actorJumpState;
 	}
 
 }

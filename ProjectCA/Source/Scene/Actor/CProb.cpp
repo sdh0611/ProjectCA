@@ -28,7 +28,8 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	m_iActorHeight = data.iActorHeight;
 	m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
-	m_actorState = data.actorState;
+	m_actorCurState = m_actorPreState = data.actorState;
+	m_actorJumpState = m_actorPreJumpState = Types::JS_IDLE;
 	m_direction = data.direction;
 	m_actorVector = data.vector;
 	m_actorID = data.actorID;
@@ -47,7 +48,7 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 	//PhysicsComponent ÃÊ±âÈ­
 	PhysicsComponent* pPhysics = new PhysicsComponent;
-	if (!pPhysics->Init(this, 0.f, 0.f, 0.f))
+	if (!pPhysics->Init(this, 0.f, 0.f, 0.f, 0.f))
 		return false;
 
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))

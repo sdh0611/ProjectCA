@@ -2,6 +2,7 @@
 #include "..\..\Include\Core\CollisionDetector.h"
 #include "..\..\Include\Core\Components\Collider.h"
 #include "..\..\Include\Core\Components\ColliderBox.h"
+#include "..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
 //#include "..\..\Include\Core\Components\ColliderCircle.h"
 
@@ -82,19 +83,30 @@ bool CollisionDetector::BoxAndBox(std::shared_ptr<CActor> pActor, std::shared_pt
 {
 	ColliderBox* collider1 = static_cast<ColliderBox*>(pActor->GetComponent(TEXT("Collider")));
 	ColliderBox* collider2 = static_cast<ColliderBox*>(pOther->GetComponent(TEXT("Collider")));
+	if (collider1 == nullptr || collider2 == nullptr) // 둘 중 하나가 Collider를 갖고 있지 않음.
+		return false;
+
+	PhysicsComponent* pPhysics1 =  static_cast<PhysicsComponent*>(pActor->GetComponent(TEXT("PhysicsComponent")));
+	PhysicsComponent* pPhysics2 = static_cast<PhysicsComponent*>(pOther->GetComponent(TEXT("PhysicsComponent")));
 
 	const Types::Rect& box1 = collider1->GetBoxSize();
 	const Types::Rect& box2 = collider2->GetBoxSize();
 
-	bool isCollision = false;
+	//bool isCollision = false;
 
 	//Collider::CollisionType collisionType = Collider::COLLISION_TOP;
 
 	//충돌이 아닌 경우이다.
+	//일단 테스트용으로 충돌이 없는 모든 구간에 grounded를 false로 설정하게끔 함. -> 나중에 반드시 수정
 	if ((box1.right < box2.left) || (box1.left > box2.right))
 	{
 		collider1->SetIsCollision(false);
 		collider2->SetIsCollision(false);
+		//if (pPhysics1 != nullptr)
+		//	pPhysics1->SetGrounded(false);
+		//if (pPhysics2 != nullptr)
+		//	pPhysics2->SetGrounded(false);
+		//
 		return false;
 	}
 
@@ -103,6 +115,11 @@ bool CollisionDetector::BoxAndBox(std::shared_ptr<CActor> pActor, std::shared_pt
 		//Debug::MessageInfo(TEXT("Collision!"));
 		collider1->SetIsCollision(false);
 		collider2->SetIsCollision(false);
+		if (pPhysics1 != nullptr)
+			pPhysics1->SetGrounded(false);
+		if (pPhysics2 != nullptr)
+			pPhysics2->SetGrounded(false);
+
 		return false;
 	}
 

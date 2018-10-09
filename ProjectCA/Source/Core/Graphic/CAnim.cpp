@@ -82,9 +82,6 @@ void CAnim::DrawAnimation(const HDC & hDC)
 		SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, memDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
 		SPRITE_HEIGHT, RGB(248, 7, 220));
 
-	//BitBlt(hDC, m_pOwner.lock()->GetActorPoint().x, m_pOwner.lock()->GetActorPoint().y,
-	//	SPRITE_WIDTH, SPRITE_HEIGHT, memDC, SPRITE_WIDTH * m_iCurFrame, 0,  SRCCOPY);
-
 	SelectObject(memDC, hOldBit);
 	DeleteDC(memDC);
 
@@ -99,10 +96,6 @@ void CAnim::DrawImage(const HDC & hDC)
 		MAX_WIDTH, MAX_HEIGHT, 
 		memDC, 0, 0, m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
 		RGB(255, 255, 255));
-
-	//BitBlt(hDC, m_pOwner.lock()->GetActorPoint().x, m_pOwner.lock()->GetActorPoint().y,
-	//	m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(), memDC, 
-	//	0, 0,  SRCCOPY);
 
 	SelectObject(memDC, hOldBit);
 	DeleteDC(memDC);

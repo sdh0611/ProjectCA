@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "InputComponent.h"
 
+//TODO :	 InputManager와 연동해서 조작키 변경할 수 있게끔 만들자.
+
 
 class PlayerInputComponent : public InputComponent {
 
@@ -18,6 +20,7 @@ public:
 
 private:
 	void KeyProcess();
+	void JumpKeyProcess();
 
 
 };

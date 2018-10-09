@@ -39,7 +39,8 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	m_iActorHeight = data.iActorHeight;
 	m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = Types::OT_ENEMY;
-	m_actorState = data.actorState;
+	m_actorCurState = m_actorPreState = data.actorState;
+	m_actorJumpState = m_actorPreJumpState = Types::JS_IDLE;
 	m_direction = data.direction;
 	m_actorVector = data.vector;
 	m_actorID = data.actorID;
@@ -75,7 +76,7 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	//PhysicsComponent ÃÊ±âÈ­
 	PhysicsComponent* pPhysics = new PhysicsComponent;
-	if (!pPhysics->Init(this, 300.f, 600.f, -1200.f))
+	if (!pPhysics->Init(this, 300.f, 400.f, 600.f, -1200.f))
 		return false;
 
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))

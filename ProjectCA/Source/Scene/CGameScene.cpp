@@ -77,18 +77,18 @@ bool CGameScene::Init()
 	////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 	//Prob 생성
-	//std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 0.f, 500.f, Types::OT_PROB,
-	//	Types::OS_IDLE, Types::DIR_DOWN, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 0.f, 500.f, Types::OT_PROB,
+		Types::OS_IDLE, Types::DIR_DOWN, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 
-	//if (pProb == nullptr)
-	//	return false;
+	if (pProb == nullptr)
+		return false;
 
-	//m_strongActorList.emplace_back(pProb);
+	m_strongActorList.emplace_back(pProb);
 
-	//if (!CreateLayer(TEXT("Prob"), 4))
-	//	return false;
+	if (!CreateLayer(TEXT("Prob"), 4))
+		return false;
 
-	//FindLayer(TEXT("Prob"))->AddActor(pProb);
+	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 	//Backgorund 생성
 	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::OT_BACKGROUND,
@@ -173,14 +173,15 @@ void CGameScene::InputUpdate(double fDeltaTime)
 //충돌검사 수행 후 처리
 void CGameScene::GameUpdate(double fDeltaTime)
 {
+	//Collsion detect between Actors
+	CollisionDetect();
+	
 	//Component Update
 	for (auto& actor : m_strongActorList) {
 		actor->Update(fDeltaTime);
 	}
 
-	//Collsion detect between Actors
-	CollisionDetect();
-
+	
 	//Collision 후 처리 부분이지만, 테스트용으로 일단 Player의 후처리만 하드코딩.(09.17)
 	//		-> 정상 작동
 	//if (static_cast<Collider*>(m_pPlayer->GetComponent(TEXT("Collider")))->GetIsCollision()) {

@@ -30,10 +30,10 @@ bool CResourceManager::Init() {
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_idle_left.bmp"), TEXT("PlayerIdleLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_move_right.bmp"), TEXT("PlayerMoveRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_walk_right.bmp"), TEXT("PlayerWalkRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_move_left.bmp"), TEXT("PlayerMoveLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_walk_left.bmp"), TEXT("PlayerWalkLeft")))
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_lookup_right.bmp"), TEXT("PlayerLookupRight")))
@@ -54,6 +54,23 @@ bool CResourceManager::Init() {
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_run_left.bmp"), TEXT("PlayerRunLeft")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_jump_right.bmp"), TEXT("PlayerJumpRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_jump_left.bmp"), TEXT("PlayerJumpLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_falldown_right.bmp"), TEXT("PlayerFalldownRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_falldown_left.bmp"), TEXT("PlayerFalldownLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_run_jump_right.bmp"), TEXT("PlayerRunJumpRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_run_jump_left.bmp"), TEXT("PlayerRunJumpLeft")))
+		return false;
 
 	return true;
 }

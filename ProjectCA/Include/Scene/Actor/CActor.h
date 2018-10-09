@@ -53,8 +53,9 @@ public:
 	inline bool IsActive() const { return m_bActive; }
 	inline void SetActive(bool bActive) { m_bActive = bActive; }
 	Types::ObjectType	GetActorType() const { return m_actorType; }
-	Types::ObjectState GetActorState() const { return m_actorState; }
-	void SetActorState(Types::ObjectState state) { m_actorState = state; }
+	Types::ObjectState GetActorState() const { return m_actorCurState; }
+	void SetActorState(Types::ObjectState state) { m_actorCurState = state; }
+	Types::ObjectState GetActorPreState() const { return m_actorPreState; }
 	Types::Direction GetActorDirection() const { return m_direction; }
 	Types::Point GetActorVector() const { return m_actorVector; }
 	bool SetActorVector(float fx, float fy) {		//안전하지 않은 코드 -> 추후 Vector2d class 작성하면 
@@ -85,6 +86,9 @@ public:
 	const Types::tstring& GetActorTag() const { return m_strActorTag; }
 	void SetActorTag(const Types::tstring& strTag) { m_strActorTag == strTag; }
 	inline Types::ActorID GetActorID() const { return m_actorID; }	
+	Types::JumpState GetActorJumpState() const { return m_actorJumpState; }
+	void SetActorJumpState(Types::JumpState jump) { m_actorJumpState = jump; }
+	Types::JumpState GetActorPreJumpState() const { return m_actorPreJumpState; }
 	//CWorld* const GetOwnerWorld() const;
 	//void SetOwnerWorld(CWorld* pWorld);
 	CGameScene* const GetOwnerScene() const;
@@ -99,7 +103,10 @@ protected:
 	Types::Point				m_actorPoint;
 	Types::Point				m_spawnPoint;
 	Types::ObjectType		m_actorType;
-	Types::ObjectState		m_actorState;
+	Types::ObjectState		m_actorCurState;
+	Types::ObjectState		m_actorPreState;
+	Types::JumpState		m_actorPreJumpState;
+	Types::JumpState		m_actorJumpState;
 	Types::Direction		m_direction;
 	Types::Point				m_actorVector;
 	Types::ActorID			m_actorID;

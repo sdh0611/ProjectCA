@@ -5,9 +5,8 @@
 #include "..\..\..\Include\Core\Graphic\CAnim.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 
-
 RenderComponent::RenderComponent()
-	:m_iFrame(0), m_dTimeElapsed(0.0f), m_bVisible(true)
+	:m_bVisible(true)
 {
 }
 
@@ -18,54 +17,43 @@ RenderComponent::~RenderComponent()
 
 bool RenderComponent::Init(CActor * pOwner, const Types::tstring & strTag)
 {
-	//m_pWeakSprite = CResourceManager::GetInstance()->GetWeakSprtiePtr(strSpriteName);
-	//if (m_pWeakSprite.lock() == nullptr)
-	//	return false;
-
 	std::shared_ptr<CActor> pActor = std::shared_ptr<CActor>(pOwner);
 	m_pOwner = pActor;
 
 	m_strComponentTag = strTag;
-	//m_ownerState = m_pOwner->GetActorState();
-
-	//if (!AddSprite(Types::OS_IDLE, TEXT("PlayerIdle")))
-	//	return false;
-
-	//if (!AddSprite(Types::OS_MOVE, TEXT("PlayerMove")))
-	//	return false;
-
-
-	//For Test Code
-	//제대로 작동하면 Actor단에서 추가하도록 변경해야함.
-	//if (!AddAnim(0.2f, Types::OS_IDLE, TEXT("PlayerIdle"), TEXT("Idle")))
-	//	return false;
-
-	//if (!AddAnim(0.2f, Types::OS_MOVE, TEXT("PlayerMove"), TEXT("Move")))
-	//	return false;
+	
+	m_ownerState = m_pOwner->GetActorState();
+	m_ownerJumpState = m_pOwner->GetActorJumpState();
+	m_ownerDirection = m_pOwner->GetActorDirection();
 
 	return true;
 }
 
-void RenderComponent::Update(double fDeltaTime)
+void RenderComponent::Update(double dDeltaTime)
 {
-	//if (m_pWeakSprite.expired())
-	//	m_pWeakSprite.reset();
-
-	//if (m_ownerState != m_pOwner->GetActorState())
-	//	m_ownerState = m_pOwner->GetActorState();
-
-	for (auto& it : m_animationTable) {
-		it.second->Update(fDeltaTime);
+	if (m_ownerState != m_pOwner->GetActorState()
+		|| m_ownerDirection != m_pOwner->GetActorDirection()
+		|| m_ownerJumpState != m_pOwner->GetActorJumpState()) 
+	{
+		m_ownerState = m_pOwner->GetActorState();
+		m_ownerDirection = m_pOwner->GetActorDirection();
+		m_ownerJumpState = m_pOwner->GetActorJumpState();
+		ChangeAnimationCilp();
 	}
 
-	m_dTimeElapsed += fDeltaTime;
+	m_pWeakCurAnim.lock()->Update(dDeltaTime);
+	//for (auto& it : m_animationTable) {
+	//	it.second->Update(fDeltaTime);
+	//}
 
+	//m_dTimeElapsed += fDeltaTime;
 }
 
 //DC핸들값은 BackBuffer의 DC를 받아와야 한다.
 void RenderComponent::Draw(const HDC & hDC)
 {
-	if (m_bVisible) {
+	if (m_bVisible) 
+	{
 		//m_animTable[m_ownerState]->Draw(hDC, hMemDC);
 		m_pWeakCurAnim.lock()->Draw(hDC);
 
@@ -157,4 +145,249 @@ bool RenderComponent::ChangeAnimation(const Types::tstring & strAnimTag)
 	m_pWeakCurAnim = (*it).second;
 
 	return true;
+}
+
+void RenderComponent::ChangeAnimationCilp()
+{
+
+	//switch (m_ownerState) {
+	//case Types::OS_IDLE:
+	//	if (m_ownerDirection == Types::DIR_LEFT)
+	//		if(m_pOwner->GetActorJumpState() == Types::JS_JUMP)
+	//			ChangeAnimation(TEXT("JumpLeft"));
+	//		else if(m_pOwner->GetActorJumpState() == Types::JS_FALL)
+	//			ChangeAnimation(TEXT("FalldownLeft"));
+	//		else
+	//			ChangeAnimation(TEXT("IdleLeft"));
+	//	else if (m_ownerDirection == Types::DIR_RIGHT)
+	//		if (m_pOwner->GetActorJumpState() == Types::JS_JUMP)
+	//			ChangeAnimation(TEXT("JumpRight"));
+	//		else if (m_pOwner->GetActorJumpState() == Types::JS_FALL)
+	//			ChangeAnimation(TEXT("FalldownRight"));
+	//		else
+	//			ChangeAnimation(TEXT("IdleRight"));
+	//	break;
+	//case Types::OS_WALK:
+	//	if (m_ownerDirection == Types::DIR_LEFT)
+	//		if (m_pOwner->GetActorJumpState() == Types::JS_JUMP)
+	//			ChangeAnimation(TEXT("JumpLeft"));
+	//		else if (m_pOwner->GetActorJumpState() == Types::JS_FALL)
+	//			ChangeAnimation(TEXT("FalldownLeft"));
+	//		else
+	//			ChangeAnimation(TEXT("WalkLeft"));
+	//	else if (m_ownerDirection == Types::DIR_RIGHT)
+	//		if (m_pOwner->GetActorJumpState() == Types::JS_JUMP) {
+	//			ChangeAnimation(TEXT("JumpRight"));
+	//			puts("JUMPLEFT");
+	//		}
+	//		else if (m_pOwner->GetActorJumpState() == Types::JS_FALL)
+	//			ChangeAnimation(TEXT("FalldownRight"));
+	//		else
+	//			ChangeAnimation(TEXT("WalkRight"));
+	//	break;
+	//case Types::OS_RUN:
+	//	if (m_ownerDirection == Types::DIR_LEFT)
+	//		if (m_pOwner->GetActorJumpState() != Types::JS_IDLE)
+	//			ChangeAnimation(TEXT("RunJumpLeft"));
+	//		else
+	//			ChangeAnimation(TEXT("RunLeft"));
+	//	else if (m_ownerDirection == Types::DIR_RIGHT)
+	//		if (m_pOwner->GetActorJumpState() != Types::JS_IDLE)
+	//			ChangeAnimation(TEXT("RunJumpRight"));
+	//		else
+	//			ChangeAnimation(TEXT("RunRight"));
+	//	break;
+	//case Types::OS_LOOKUP:
+	//	if (m_ownerDirection == Types::DIR_LEFT)
+	//		ChangeAnimation(TEXT("LookupLeft"));
+	//	else if (m_ownerDirection == Types::DIR_RIGHT)
+	//		ChangeAnimation(TEXT("LookupRight"));
+	//	break;
+	//case Types::OS_SITDOWN:
+	//	if (m_ownerDirection == Types::DIR_LEFT)
+	//		ChangeAnimation(TEXT("SitdownLeft"));
+	//	else if (m_ownerDirection == Types::DIR_RIGHT)
+	//		ChangeAnimation(TEXT("SitdownRight"));
+	//	break;
+	//case Types::OS_ATTACK:
+	//	if (m_ownerDirection == Types::DIR_LEFT)
+	//		ChangeAnimation(TEXT("AttackLeft"));
+	//	else if (m_ownerDirection == Types::DIR_RIGHT)
+	//		ChangeAnimation(TEXT("AttackRight"));
+	//	break;
+	//case Types::OS_DAMAGED:
+	//	if (m_ownerDirection == Types::DIR_LEFT)
+	//		ChangeAnimation(TEXT("DamagedLeft"));
+	//	else if (m_ownerDirection == Types::DIR_RIGHT)
+	//		ChangeAnimation(TEXT("DamagedRight"));
+	//	break;
+
+	//}
+
+	//if (m_ownerState == Types::OS_RUN)
+	//	puts("RUN");
+
+	if (m_ownerJumpState == Types::JS_JUMP) {
+		switch (m_ownerState) {
+		case Types::OS_IDLE:
+		case Types::OS_WALK:
+			if (m_ownerDirection == Types::DIR_LEFT)
+			{
+				if (m_pOwner->GetActorPreState() == Types::OS_RUN)
+				{
+					ChangeAnimation(TEXT("RunJumpLeft"));
+					break;
+				}
+				ChangeAnimation(TEXT("JumpLeft"));
+			}
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+			{
+				if (m_pOwner->GetActorPreState() == Types::OS_RUN)
+				{
+					ChangeAnimation(TEXT("RunJumpRight"));
+					break;
+				}
+				ChangeAnimation(TEXT("JumpRight"));
+			}
+			break;
+		case Types::OS_RUN:
+			if (m_ownerDirection == Types::DIR_LEFT)
+			{
+				if (m_pOwner->GetActorPreState() == Types::OS_WALK)
+				{
+					ChangeAnimation(TEXT("JumpLeft"));
+					break;
+				}
+				ChangeAnimation(TEXT("RunJumpLeft"));
+			}
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+			{
+				if (m_pOwner->GetActorPreState() == Types::OS_WALK)
+				{
+					ChangeAnimation(TEXT("JumpRight"));
+					break;
+				}
+				ChangeAnimation(TEXT("RunJumpRight"));
+			}
+			break;
+		case Types::OS_ATTACK:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("AttackLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("AttackRight"));
+			break;
+		case Types::OS_DAMAGED:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("DamagedLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("DamagedRight"));
+			break;
+		}
+
+	}
+	else if (m_ownerJumpState == Types::JS_FALL) {
+		switch (m_ownerState) {
+		case Types::OS_IDLE:
+		case Types::OS_WALK:
+			if (m_ownerDirection == Types::DIR_LEFT)
+			{
+				if (m_pOwner->GetActorPreState() == Types::OS_RUN)
+				{
+					ChangeAnimation(TEXT("RunJumpLeft"));
+					break;
+				}
+				ChangeAnimation(TEXT("FalldownLeft"));
+			}
+			else if (m_ownerDirection == Types::DIR_RIGHT) {
+				if (m_pOwner->GetActorPreState() == Types::OS_RUN)
+				{	
+					ChangeAnimation(TEXT("RunJumpRight"));
+					break;
+				}
+				ChangeAnimation(TEXT("FalldownRight"));
+			}
+			break;
+		case Types::OS_RUN:
+			if (m_ownerDirection == Types::DIR_LEFT) {
+				if (m_pOwner->GetActorPreState() == Types::OS_WALK)
+				{
+					ChangeAnimation(TEXT("FalldownLeft"));
+					break;
+				}
+				ChangeAnimation(TEXT("RunJumpLeft"));
+			}
+			else if (m_ownerDirection == Types::DIR_RIGHT) {
+				if (m_pOwner->GetActorPreState() == Types::OS_WALK)
+				{
+					ChangeAnimation(TEXT("FalldownRight"));
+					break;
+				}
+				ChangeAnimation(TEXT("RunJumpRight"));
+			}
+			break;
+		case Types::OS_ATTACK:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("AttackLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("AttackRight"));
+			break;
+		case Types::OS_DAMAGED:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("DamagedLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("DamagedRight"));
+			break;
+		}
+	}
+	else {
+		switch (m_ownerState) {
+		case Types::OS_IDLE:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("IdleLeft"));
+			else if(m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("IdleRight"));
+			break;
+		case Types::OS_WALK:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("WalkLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("WalkRight"));
+			break;
+		case Types::OS_RUN:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("RunLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("RunRight"));
+			break;
+		case Types::OS_LOOKUP:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("LookupLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("LookupRight"));
+			break;
+		case Types::OS_SITDOWN:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("SitdownLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("SitdownRight"));
+			break;
+		case Types::OS_ATTACK:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("AttackLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("AttackRight"));
+			break;
+		case Types::OS_DAMAGED:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("DamagedLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("DamagedRight"));
+			break;
+
+		}
+
+	}
+
+
+
 }
