@@ -1,5 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 //#include "..\..\..\Include\Core\Components\Collider.h"
 
@@ -57,16 +58,39 @@ void PhysicsComponent::RestoreActorPoint()
 
 }
 
-//NOTE(07.30) : 현재 충돌인식은 잘 되고있으나, 그에 따른 반응이 제대로 안되는 상황. 고치자
 void PhysicsComponent::Move(double dDeltaTime)
 {
-	if (m_pOwner->GetActorState() == Types::OS_RUN) {
+	RenderComponent* pRender = static_cast<RenderComponent*>(m_pOwner->GetComponent(TEXT("RenderComponent")));
+
+	if (m_pOwner->GetActorState() == Types::OS_RUN)
+	{
 		if(m_fXSpeed < m_fMaxSpeed)
 			m_fXSpeed += 5;
 	}
-	else if (m_pOwner->GetActorState() == Types::OS_WALK) {
+	else if (m_pOwner->GetActorState() == Types::OS_WALK) 
+	{
 		if (m_fXSpeed > m_fSpeed)
 			m_fXSpeed -= 10;
+		else if (m_fXSpeed < m_fSpeed)
+			m_fXSpeed += 5;
+		else if (m_fXSpeed >= m_fSpeed)
+			m_fXSpeed = m_fSpeed;
+
+		if (m_fXSpeed < m_fSpeed / 3)
+			pRender->SetAnimationPlaySpeed(0.3f);
+		else if(m_fXSpeed < (m_fSpeed / 3) * 2)		
+			pRender->SetAnimationPlaySpeed(0.6f);
+		else
+			pRender->SetAnimationPlaySpeed(1.f);
+
+		//printf("Speed : %lf\n", m_fXSpeed);
+	}
+	else if (m_pOwner->GetActorState() == Types::OS_IDLE)
+	{
+		if (m_fXSpeed > 0.f)
+			m_fXSpeed -= 10;
+		if (m_fXSpeed < 0.f)
+			m_fXSpeed = 0.f;
 	}
 
 	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + m_pOwner->GetActorVector().x * m_fXSpeed * dDeltaTime,
@@ -100,21 +124,5 @@ void PhysicsComponent::Gravity(double dDeltaTime)
 	if(!m_bGrounded)
 		if(m_fYSpeed > -800.f)
 			m_fYSpeed -= m_fGravity * dDeltaTime;
-
-}
-
-void PhysicsComponent::Jump(double dDeltaTime)
-{
-	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().
-		x, m_pOwner->GetActorPoint().y + m_fYSpeed * dDeltaTime);
-
-
-
-}
-
-void PhysicsComponent::Down(double dDeltaTime)
-{
-
-
 
 }

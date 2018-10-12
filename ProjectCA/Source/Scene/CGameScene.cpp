@@ -77,17 +77,21 @@ bool CGameScene::Init()
 	////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 	//Prob 持失
-	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 0.f, 500.f, Types::OT_PROB,
-		Types::OS_IDLE, Types::DIR_DOWN, Types::Point(0.f, 0.f), TEXT("Prob"), this);
-
-	if (pProb == nullptr)
-		return false;
-
-	m_strongActorList.emplace_back(pProb);
-
 	if (!CreateLayer(TEXT("Prob"), 4))
 		return false;
+	
+	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 0.f, 500.f, Types::OT_PROB,
+		Types::OS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	if (pProb == nullptr)
+		return false;
+	m_strongActorList.emplace_back(pProb);
+	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
+	pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::OT_PROB,
+		Types::OS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	if (pProb == nullptr)
+		return false;
+	m_strongActorList.emplace_back(pProb);
 	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 	//Backgorund 持失

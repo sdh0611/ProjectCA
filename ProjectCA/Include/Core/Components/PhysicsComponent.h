@@ -2,12 +2,9 @@
 
 #include "..\..\..\stdafx.h"
 #include "..\Components\ComponentBase.h"
-#include "Collider.h"
-#include "ColliderBox.h"
+
 
 class PhysicsComponent :public ComponentBase {
-	friend void Collider::OnCollision(Types::ObjectType type);
-	friend void Collider::OnCollision(std::shared_ptr<CActor>);
 
 
 public:
@@ -34,21 +31,12 @@ public:
 	void SetJumpForce(float jumpForce) { if (m_fJumpForce >= 0) m_fJumpForce = jumpForce; }
 	const Types::Point& GetLastActorPoint() const { return m_lastActorPoint; }
 	void SetGrounded(bool bGrounded) { m_bGrounded = bGrounded; }
-	const bool IsGrounded() const { return m_bGrounded; }
+	bool IsGrounded() const { return m_bGrounded; }
 
 
 private:
 	void Move(double dDeltaTime);
 	void Gravity(double dDeltaTime);
-	void Jump(double dDeltaTime);
-	void Down(double dDeltaTime);
-
-private:
-	/*
-		NOTE:	컴포넌트간의 상호작용을 위해 정의한 메소드들
-	*/
-	void ResetJumpForce() { m_fYSpeed = m_fJumpForce; }
-	void ResetSpeed() { }
 
 
 private:

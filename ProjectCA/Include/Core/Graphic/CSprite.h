@@ -3,8 +3,6 @@
 
 #include "..\..\..\stdafx.h"
 
-const unsigned int SPRITE_WIDTH = 32;
-const unsigned int SPRITE_HEIGHT = 48;
 
 
 class CSprite {

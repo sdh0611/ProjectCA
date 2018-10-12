@@ -38,7 +38,7 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->Init(this))
 		return false;
 
-	if (!pRender->AddAnim(100.f, TEXT("BackgroundMountain2"), false))
+	if (!pRender->AddAnim(100.f, TEXT("BackgroundMountain2"), MAX_WIDTH, MAX_HEIGHT, false, false))
 		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))

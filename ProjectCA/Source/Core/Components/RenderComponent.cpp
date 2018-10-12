@@ -5,14 +5,20 @@
 #include "..\..\..\Include\Core\Graphic\CAnim.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 
+
+
 RenderComponent::RenderComponent()
-	:m_bVisible(true)
+	:m_bVisible(true), m_bChangeAnim(false)
 {
 }
 
 RenderComponent::~RenderComponent()
 {
-		
+	if (m_hBrush)
+		DeleteObject(m_hBrush);
+	
+	m_animationTable.clear();
+
 }
 
 bool RenderComponent::Init(CActor * pOwner, const Types::tstring & strTag)
@@ -26,6 +32,8 @@ bool RenderComponent::Init(CActor * pOwner, const Types::tstring & strTag)
 	m_ownerJumpState = m_pOwner->GetActorJumpState();
 	m_ownerDirection = m_pOwner->GetActorDirection();
 
+	m_hBrush = (HBRUSH)GetStockObject(NULL_BRUSH);
+
 	return true;
 }
 
@@ -33,14 +41,18 @@ void RenderComponent::Update(double dDeltaTime)
 {
 	if (m_ownerState != m_pOwner->GetActorState()
 		|| m_ownerDirection != m_pOwner->GetActorDirection()
-		|| m_ownerJumpState != m_pOwner->GetActorJumpState()) 
+		|| m_ownerJumpState != m_pOwner->GetActorJumpState())
 	{
 		m_ownerState = m_pOwner->GetActorState();
 		m_ownerDirection = m_pOwner->GetActorDirection();
 		m_ownerJumpState = m_pOwner->GetActorJumpState();
-		ChangeAnimationCilp();
-	}
 
+		//if (m_bChangeAnim)
+		//{
+		ChangeAnimationCilp();
+		//	m_bChangeAnim = false;
+		//}
+	}
 	m_pWeakCurAnim.lock()->Update(dDeltaTime);
 	//for (auto& it : m_animationTable) {
 	//	it.second->Update(fDeltaTime);
@@ -54,9 +66,15 @@ void RenderComponent::Draw(const HDC & hDC)
 {
 	if (m_bVisible) 
 	{
+		m_hOldBrush = (HBRUSH)SelectObject(hDC, m_hBrush);
 		//m_animTable[m_ownerState]->Draw(hDC, hMemDC);
 		m_pWeakCurAnim.lock()->Draw(hDC);
 
+		Rectangle(hDC, m_pOwner->GetActorPoint().x, m_pOwner->GetActorPoint().y,
+			m_pOwner->GetActorPoint().x + m_pOwner->GetActorWidth(),
+			m_pOwner->GetActorPoint().y + m_pOwner->GetActorHeight());
+		m_hBrush = (HBRUSH)SelectObject(hDC, m_hOldBrush);
+	
 	}		
 
 }
@@ -105,22 +123,26 @@ void RenderComponent::Draw(const HDC & hDC)
 //}
 
 
-bool RenderComponent::AddAnim(double dPlayTime, const Types::tstring & strSpriteName
-	, bool bAnimate, const Types::tstring & strAnimTag)
+bool RenderComponent::AddAnim(double dPlayTime, const Types::tstring & strSpriteName,
+	UINT iWidth, UINT iHeight,	bool bLoop, bool bAnimate, const Types::tstring & strAnimTag)
 {
 	std::shared_ptr<CAnim> pAnim = std::make_shared<CAnim>();
 
-	if (!pAnim->Init(m_pOwner, strSpriteName, dPlayTime, bAnimate, strAnimTag))
+	if (!pAnim->Init(m_pOwner, strSpriteName, iWidth, iHeight, dPlayTime, bLoop, bAnimate, strAnimTag))
 		return false;
 
 	if (m_pWeakCurAnim.expired())
 		m_pWeakCurAnim = pAnim;
 
-	if (m_animationTable.find(strAnimTag) != m_animationTable.end()) { //테이블 안에 해당 Key값과 연결된 vector가 있는 경우
+	//테이블 안에 해당 Key값과 연결된 vector가 있는 경우
+	if (m_animationTable.find(strAnimTag) != m_animationTable.end())
+	{ 
 		m_animationTable[strAnimTag] = pAnim;
 	}
-	else {	//테이블 안에 해당 Key값과 연결된 vector가 없는 경우
-			//해당 Key값과 연결된 Vector를 생성한 후, Anim 추가
+	else 
+	{	
+		//테이블 안에 해당 Key값과 연결된 vector가 없는 경우
+		//해당 Key값과 연결된 Vector를 생성한 후, Anim 추가
 		m_animationTable.insert(std::make_pair(strAnimTag, pAnim));
 	}
 
@@ -145,6 +167,11 @@ bool RenderComponent::ChangeAnimation(const Types::tstring & strAnimTag)
 	m_pWeakCurAnim = (*it).second;
 
 	return true;
+}
+
+bool RenderComponent::SetAnimationPlaySpeed(double dSpeed)
+{
+	return m_pWeakCurAnim.lock()->SetPlaySpeed(dSpeed);
 }
 
 void RenderComponent::ChangeAnimationCilp()
@@ -231,42 +258,25 @@ void RenderComponent::ChangeAnimationCilp()
 		switch (m_ownerState) {
 		case Types::OS_IDLE:
 		case Types::OS_WALK:
+		case Types::OS_LOOKUP:
 			if (m_ownerDirection == Types::DIR_LEFT)
 			{
-				if (m_pOwner->GetActorPreState() == Types::OS_RUN)
-				{
-					ChangeAnimation(TEXT("RunJumpLeft"));
-					break;
-				}
 				ChangeAnimation(TEXT("JumpLeft"));
+				//puts("JUMPLEFT");
 			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
 			{
-				if (m_pOwner->GetActorPreState() == Types::OS_RUN)
-				{
-					ChangeAnimation(TEXT("RunJumpRight"));
-					break;
-				}
 				ChangeAnimation(TEXT("JumpRight"));
+				//puts("JUMPRIGHT");
 			}
 			break;
 		case Types::OS_RUN:
 			if (m_ownerDirection == Types::DIR_LEFT)
 			{
-				if (m_pOwner->GetActorPreState() == Types::OS_WALK)
-				{
-					ChangeAnimation(TEXT("JumpLeft"));
-					break;
-				}
 				ChangeAnimation(TEXT("RunJumpLeft"));
 			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
 			{
-				if (m_pOwner->GetActorPreState() == Types::OS_WALK)
-				{
-					ChangeAnimation(TEXT("JumpRight"));
-					break;
-				}
 				ChangeAnimation(TEXT("RunJumpRight"));
 			}
 			break;
@@ -289,39 +299,25 @@ void RenderComponent::ChangeAnimationCilp()
 		switch (m_ownerState) {
 		case Types::OS_IDLE:
 		case Types::OS_WALK:
+		case Types::OS_LOOKUP:
 			if (m_ownerDirection == Types::DIR_LEFT)
 			{
-				if (m_pOwner->GetActorPreState() == Types::OS_RUN)
-				{
-					ChangeAnimation(TEXT("RunJumpLeft"));
-					break;
-				}
 				ChangeAnimation(TEXT("FalldownLeft"));
+				//puts("FALLLEFT");
 			}
-			else if (m_ownerDirection == Types::DIR_RIGHT) {
-				if (m_pOwner->GetActorPreState() == Types::OS_RUN)
-				{	
-					ChangeAnimation(TEXT("RunJumpRight"));
-					break;
-				}
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+			{
 				ChangeAnimation(TEXT("FalldownRight"));
+				//puts("FALLRIGHT");
 			}
 			break;
 		case Types::OS_RUN:
-			if (m_ownerDirection == Types::DIR_LEFT) {
-				if (m_pOwner->GetActorPreState() == Types::OS_WALK)
-				{
-					ChangeAnimation(TEXT("FalldownLeft"));
-					break;
-				}
+			if (m_ownerDirection == Types::DIR_LEFT) 
+			{
 				ChangeAnimation(TEXT("RunJumpLeft"));
 			}
-			else if (m_ownerDirection == Types::DIR_RIGHT) {
-				if (m_pOwner->GetActorPreState() == Types::OS_WALK)
-				{
-					ChangeAnimation(TEXT("FalldownRight"));
-					break;
-				}
+			else if (m_ownerDirection == Types::DIR_RIGHT) 
+			{	
 				ChangeAnimation(TEXT("RunJumpRight"));
 			}
 			break;
@@ -342,6 +338,7 @@ void RenderComponent::ChangeAnimationCilp()
 	else {
 		switch (m_ownerState) {
 		case Types::OS_IDLE:
+			//puts("ChangeIDLE");
 			if (m_ownerDirection == Types::DIR_LEFT)
 				ChangeAnimation(TEXT("IdleLeft"));
 			else if(m_ownerDirection == Types::DIR_RIGHT)

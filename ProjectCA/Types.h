@@ -11,6 +11,10 @@ const unsigned int MAX_WIDTH = 1024;
 const unsigned int MAX_HEIGHT = 720;
 const unsigned int MAX_ACTOR_SIZE = 3000;
 
+const unsigned int SPRITE_WIDTH = 32;
+const unsigned int SPRITE_HEIGHT = 48;
+
+
 namespace Types {
 
 	typedef std::basic_string<TCHAR> tstring;
@@ -23,9 +27,15 @@ namespace Types {
 	//enum ObjectState { OS_IDLE, OS_WALK, OS_RUN, OS_JUMP, OS_RUN_JUMP, OS_FALL,
 	//	OS_LOOKUP, OS_SITDOWN, OS_ATTACK, OS_DAMAGED, OS_DEAD };
 	enum ObjectState {
-		OS_IDLE, OS_WALK, OS_RUN, OS_LOOKUP, OS_SITDOWN, OS_ATTACK, OS_DAMAGED, OS_DEAD
+		OS_IDLE, OS_WALK, OS_RUN, OS_BREAK, OS_LOOKUP, OS_SITDOWN, 
+		OS_ATTACK, OS_DAMAGED, OS_DEAD
 	};
+
+	//Jump 상태를 구분하기 위한 열거체 상수 
 	enum JumpState { JS_JUMP, JS_IDLE, JS_FALL };
+
+	enum AnimationMotion { AM_IDLE, AM_WALK, AM_RUN, AM_LOOKUP, AM_SITDOWN ,AM_JUMP, 
+		AM_FALL, AM_ATTACK, AM_DAMAGED, AM_DEAD};
 
 	//방향 열거체 정의
 	enum Direction { DIR_DOWN = -1, DIR_IDLE, DIR_UP, DIR_LEFT, DIR_RIGHT };

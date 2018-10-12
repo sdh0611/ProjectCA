@@ -83,6 +83,7 @@ public:
 		
 		return true;
 	}
+	const Types::Point& GetActorPivot() const { return m_actorPivot; }
 	const Types::tstring& GetActorTag() const { return m_strActorTag; }
 	void SetActorTag(const Types::tstring& strTag) { m_strActorTag == strTag; }
 	inline Types::ActorID GetActorID() const { return m_actorID; }	
@@ -102,6 +103,7 @@ protected:
 	UINT						m_iActorHeight;
 	Types::Point				m_actorPoint;
 	Types::Point				m_spawnPoint;
+	Types::Point				m_actorPivot;
 	Types::ObjectType		m_actorType;
 	Types::ObjectState		m_actorCurState;
 	Types::ObjectState		m_actorPreState;

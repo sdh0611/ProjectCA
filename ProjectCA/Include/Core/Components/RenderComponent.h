@@ -27,13 +27,16 @@ public:
 	//bool AddSprite(Types::ObjectState state, const Types::tstring& strSpriteName);
 	//bool AddAnim(double dPlayTime, Types::ObjectState state,
 	//	const Types::tstring& strSpriteName, const Types::tstring& strAnimTag);
-	bool AddAnim(double dPlayTime, const Types::tstring& strSpriteName,
-		bool bAnimate = true, const Types::tstring& strAnimTag = TEXT("Default"));
+	bool AddAnim(double dPlayTime, const Types::tstring& strSpriteName, UINT iWidth, UINT iHeight, 
+		bool bLoop, bool bAnimate = true, const Types::tstring& strAnimTag = TEXT("Default"));
 
 
 public:
 	bool IsVisible() const { return m_bVisible; }
 	void SetVisible(bool bVisible) { m_bVisible = bVisible; }
+	bool IsChangeAnim() const { return m_bChangeAnim; }
+	void SetChangeAnim(bool bChange) { m_bChangeAnim = bChange; }
+	bool SetAnimationPlaySpeed(double dSpeed);
 
 
 private:
@@ -47,9 +50,11 @@ private:
 	AnimationTable							m_animationTable;
 	Types::tstring								m_strPreAnimClipName;
 	bool											m_bVisible;
+	bool											m_bChangeAnim;
 	Types::ObjectState							m_ownerState;
 	Types::JumpState							m_ownerJumpState;
 	Types::Direction							m_ownerDirection;
-
+	HBRUSH										m_hBrush;
+	HBRUSH										m_hOldBrush;
 
 };

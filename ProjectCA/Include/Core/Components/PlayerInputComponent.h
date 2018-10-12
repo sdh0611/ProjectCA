@@ -20,7 +20,6 @@ public:
 
 private:
 	void KeyProcess();
-	void JumpKeyProcess();
 
 
 };

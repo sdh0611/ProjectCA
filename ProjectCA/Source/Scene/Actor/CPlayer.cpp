@@ -58,7 +58,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	//PhysicsComponent 초기화
 	PhysicsComponent* pPhysics = new PhysicsComponent;
-	if (!pPhysics->Init(this, 350.f, 600.f, 1300.f, 700.f))
+	if (!pPhysics->Init(this, 300.f, 700.f, 1300.f, 700.f))
 		return false;
 
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
@@ -69,17 +69,18 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pCollider->Init(this))
 		return false;
 
-	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther)->void {
-
+	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther)->void 
+	{
 		ComponentBase* pComponent = nullptr;
 		Types::Point point;
 
-		switch (pOther->GetActorType()) {
+		switch (pOther->GetActorType()) 
+		{
 		case Types::OT_ENEMY:
 			//pComponent = pOwner->GetComponent(TEXT("PhysicsComponent"));
 			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
 			//pOwner->SetActorPoint(point.x, point.y);
-			pOwner->GetOwnerScene()->ResetScene();
+			//pOwner->GetOwnerScene()->ResetScene();
 			break;
 		case Types::OT_PROB:
 			PhysicsComponent* pComponent = static_cast<PhysicsComponent*>(
@@ -91,9 +92,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			pOwner->SetActorJumpState(Types::JS_IDLE);
 			//pOwner->SetActorPoint(point.x, point.y); // 이부분 떄문에 PROB위에서 움직이질못함.
 			break;
-
 		}
-
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
@@ -106,52 +105,52 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->Init(this))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleRight"), true, TEXT("IdleRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("IdleRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleLeft"), true, TEXT("IdleLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("IdleLeft")))
 		return false;
 
-	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkRight"), true, TEXT("WalkRight")))
+	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, true, true, TEXT("WalkRight")))
 		return false;
 
-	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkLeft"), true, TEXT("WalkLeft")))
+	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, true, true, TEXT("WalkLeft")))
 		return false;
 
-	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunRight"), true, TEXT("RunRight")))
+	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, true, true, TEXT("RunRight")))
 		return false;
 
-	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunLeft"), true, TEXT("RunLeft")))
+	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, true, true, TEXT("RunLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupRight"), true, TEXT("LookupRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("LookupRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupLeft"), true, TEXT("LookupLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("LookupLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownRight"), true, TEXT("SitdownRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("SitdownRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownLeft"), true, TEXT("SitdownLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("SitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpRight"), true, TEXT("JumpRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("JumpRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpLeft"), true, TEXT("JumpLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("JumpLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownRight"), true, TEXT("FalldownRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("FalldownRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownLeft"), true, TEXT("FalldownLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("FalldownLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpRight"), true, TEXT("RunJumpRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("RunJumpRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpLeft"), true, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("RunJumpLeft")))
 		return false;
 
 
@@ -183,7 +182,6 @@ void CPlayer::Render(const HDC & hDC)
 	if (it != m_componentTable.end())
 		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
 
-	//Rectangle(hDC, m_actorPoint.x, m_actorPoint.y, m_actorPoint.x + m_iActorWidth, m_actorPoint.y + m_iActorHeight);
 	if (static_cast<Collider*>(GetComponent(TEXT("Collider")))->GetIsCollision()) {
 		TextOut(hDC, m_actorPoint.x, m_actorPoint.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
 	}
@@ -194,12 +192,6 @@ void CPlayer::Render(const HDC & hDC)
 	static TCHAR buf[15];
 	wsprintf(buf, TEXT("Position : (%3ld, %3ld)"), (LONG)m_actorPoint.x, (LONG)m_actorPoint.y);
 	TextOut(hDC, 0, 20, buf, sizeof(buf));
-
-	//if (m_direction == Types::DIR_LEFT)
-	//	TextOut(hDC, 0, 20, TEXT("DIR : LEFT"), sizeof(TEXT("DIR : LEFT")));
-	//else if (m_direction == Types::DIR_RIGHT)
-	//	TextOut(hDC, 0, 20, TEXT("DIR : RIGHT"), sizeof(TEXT("DIR : RIGHT")));
-
 
 }
 
