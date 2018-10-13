@@ -27,13 +27,23 @@ namespace Types {
 	//enum ObjectState { OS_IDLE, OS_WALK, OS_RUN, OS_JUMP, OS_RUN_JUMP, OS_FALL,
 	//	OS_LOOKUP, OS_SITDOWN, OS_ATTACK, OS_DAMAGED, OS_DEAD };
 	enum ObjectState {
-		OS_IDLE, OS_WALK, OS_RUN, OS_BREAK, OS_LOOKUP, OS_SITDOWN, 
-		OS_ATTACK, OS_DAMAGED, OS_DEAD
+		OS_IDLE, OS_WALK, OS_ACCEL, OS_RUN, OS_BREAK, 
+		OS_LOOKUP, OS_SITDOWN, OS_ATTACK, OS_DAMAGED, OS_DEAD
 	};
 
-	//Jump 상태를 구분하기 위한 열거체 상수 
+	//Jump 상태를 구분하기 위한 열거체 상수 (10.13)
 	enum JumpState { JS_JUMP, JS_IDLE, JS_FALL };
 
+	//Actor의 상태를 나타내기 위한 열거체 (10.13)
+	enum ActorState { AS_IDLE, AS_MOVE, AS_SITDOWN, AS_LOOKUP, AS_ATTACK, AS_DAMAGED, AS_DEAD };
+
+	//수직상의 이동 상태를 구분하기 위한 열거체 (10.13)
+	enum VerticalState { VS_IDLE, VS_JUMP, VS_FALL };
+
+	//수평상의 이동 상태를 구분하기 위한 열거체 (10.13)
+	enum HorizonalState{ HS_IDLE, HS_WALK, HS_RUN, HS_TURN };
+
+	//Animation관련 
 	enum AnimationMotion { AM_IDLE, AM_WALK, AM_RUN, AM_LOOKUP, AM_SITDOWN ,AM_JUMP, 
 		AM_FALL, AM_ATTACK, AM_DAMAGED, AM_DEAD};
 

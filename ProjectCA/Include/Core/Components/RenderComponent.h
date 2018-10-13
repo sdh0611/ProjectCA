@@ -37,17 +37,25 @@ public:
 	bool IsChangeAnim() const { return m_bChangeAnim; }
 	void SetChangeAnim(bool bChange) { m_bChangeAnim = bChange; }
 	bool SetAnimationPlaySpeed(double dSpeed);
+	void SetAnimation(Types::AnimationMotion motion);
 
 
-private:
+public:
 	void ChangeAnimationCilp();
+	void ChangeAnimationCilp(Types::ObjectState state);
+	void ChangeAnimationCilp(Types::AnimationMotion motion);
 	bool ChangeAnimation(const Types::tstring& strAnimTag);
+
+	
+private:
+	void UpdateAnimationMotion();
 
 
 private:
 	//AnimTable									m_animTable;
 	std::weak_ptr<CAnim>					m_pWeakCurAnim;
 	AnimationTable							m_animationTable;
+	Types::AnimationMotion					m_animationState;
 	Types::tstring								m_strPreAnimClipName;
 	bool											m_bVisible;
 	bool											m_bChangeAnim;
