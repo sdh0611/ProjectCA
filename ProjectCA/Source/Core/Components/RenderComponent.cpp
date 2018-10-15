@@ -187,10 +187,13 @@ void RenderComponent::UpdateAnimationMotion()
 
 	if (fCurSpeed > 0.f && fCurSpeed < fMaxSpeed)
 	{
+		//if (m_ownerVerticalState == Types::VS_IDLE)
 		m_animationState = Types::AM_WALK;
+		
 	}
 	else if (fCurSpeed >= fMaxSpeed)
 	{
+		//if (m_ownerVerticalState == Types::VS_IDLE)
 		m_animationState = Types::AM_RUN;
 	}
 	else
@@ -198,15 +201,20 @@ void RenderComponent::UpdateAnimationMotion()
 		m_animationState = Types::AM_IDLE;
 	}
 
-	if (pPhysics->GetCurSpeed() < 0.f) 
+	if (m_ownerVerticalState == Types::VS_IDLE)
 	{
-		if (m_ownerDirection == Types::DIR_RIGHT)
-			m_animationState = Types::AM_TURN;
-	}
-	else if (pPhysics->GetCurSpeed() > 0.f)
-	{
-		if (m_ownerDirection == Types::DIR_LEFT)
-			m_animationState = Types::AM_TURN;
+		if (pPhysics->GetCurSpeed() < 0.f)
+		{
+			if (m_ownerDirection == Types::DIR_RIGHT 
+				&& m_pOwner->GetActorHorizonalState() != Types::HS_IDLE)
+				m_animationState = Types::AM_TURN;
+		}
+		else if (pPhysics->GetCurSpeed() > 0.f)
+		{
+			if (m_ownerDirection == Types::DIR_LEFT
+				&& m_pOwner->GetActorHorizonalState() != Types::HS_IDLE)
+				m_animationState = Types::AM_TURN;
+		}
 	}
 
 	if (fCurSpeed < fSpeed / 3)

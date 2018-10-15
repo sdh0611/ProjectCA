@@ -91,9 +91,18 @@ void PhysicsComponent::Move(double dDeltaTime)
 		else if (horizonal == Types::HS_IDLE)
 		{
 			if (m_fXSpeed < 0.f)
+			{
 				m_fXSpeed += 10;
-			if (m_fXSpeed > 0.f)
-				m_fXSpeed = 0.f;
+				if (m_fXSpeed > 0.f)
+					m_fXSpeed = 0.f;
+			}
+			else if (m_fXSpeed > 0.f)
+			{
+				m_fXSpeed -= 10;
+				if (m_fXSpeed < 0.f)
+					m_fXSpeed = 0.f;
+			}
+			//printf("Speed : %f\n", m_fXSpeed);
 		}
 	}
 	else if (dir == Types::DIR_RIGHT)
@@ -115,12 +124,21 @@ void PhysicsComponent::Move(double dDeltaTime)
 		else if (horizonal == Types::HS_IDLE)
 		{
 			if (m_fXSpeed > 0.f)
-				m_fXSpeed -= 10;
-			if (m_fXSpeed < 0.f)
-				m_fXSpeed = 0.f;
+			{
+				printf("Speed : %f\n", m_fXSpeed);
+				m_fXSpeed -= 5;
+				if (m_fXSpeed < 0.f)
+					m_fXSpeed = 0.f;
+			}
+			else if (m_fXSpeed < 0.f)
+			{
+				m_fXSpeed += 5;
+				if (m_fXSpeed > 0.f)
+					m_fXSpeed = 0.f;
+			}
 		}
 	}
-
+	
 
 }
 

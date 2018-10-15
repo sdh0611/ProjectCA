@@ -92,7 +92,7 @@ void PlayerInputComponent::KeyProcess()
 		//{
 
 		//}
-		m_pOwner->SetActorVector(-1.f, 0.f);
+		//m_pOwner->SetActorVector(-1.f, 0.f);
 		//m_pOwner->SetActorState(Types::AS_MOVE);
 		m_pOwner->SetActorDirection(Types::DIR_LEFT);
 	}
@@ -107,7 +107,7 @@ void PlayerInputComponent::KeyProcess()
 			m_pOwner->SetActorHorizonalState(Types::HS_WALK);
 		}
 
-		m_pOwner->SetActorVector(1.f, 0.f);
+		//m_pOwner->SetActorVector(1.f, 0.f);
 		//m_pOwner->SetActorState(Types::AS_MOVE);
 		m_pOwner->SetActorDirection(Types::DIR_RIGHT);
 	}
