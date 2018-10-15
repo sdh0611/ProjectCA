@@ -9,8 +9,8 @@ class CSprite;
 class CAnim;
 
 typedef std::vector<std::weak_ptr<CSprite>> WeakSpritePtrList;
-typedef std::unordered_map<Types::ObjectState, WeakSpritePtrList> SpriteTable;
-typedef std::unordered_map<Types::ObjectState, std::shared_ptr<CAnim>> AnimTable;
+//typedef std::unordered_map<Types::ObjectState, WeakSpritePtrList> SpriteTable;
+//typedef std::unordered_map<Types::ObjectState, std::shared_ptr<CAnim>> AnimTable;
 typedef std::unordered_map<Types::tstring, std::shared_ptr<CAnim>> AnimationTable;
 
 class RenderComponent : public ComponentBase {
@@ -41,8 +41,8 @@ public:
 
 
 public:
-	void ChangeAnimationCilp();
-	void ChangeAnimationCilp(Types::ObjectState state);
+	//void ChangeAnimationCilp();
+	//void ChangeAnimationCilp(Types::ObjectState state);
 	void ChangeAnimationCilp(Types::AnimationMotion motion);
 	bool ChangeAnimation(const Types::tstring& strAnimTag);
 
@@ -59,8 +59,8 @@ private:
 	Types::tstring								m_strPreAnimClipName;
 	bool											m_bVisible;
 	bool											m_bChangeAnim;
-	Types::ObjectState							m_ownerState;
-	Types::JumpState							m_ownerJumpState;
+	Types::ActorState							m_ownerState;
+	Types::VerticalState						m_ownerVerticalState;
 	Types::Direction							m_ownerDirection;
 	HBRUSH										m_hBrush;
 	HBRUSH										m_hOldBrush;

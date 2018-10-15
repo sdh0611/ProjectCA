@@ -47,8 +47,8 @@ bool CGameScene::Init()
 	////	m_pCurWorld = new CWorld;
 
 	//Player 持失
-	m_pPlayer = m_pActorManager->CreateActor<CPlayer>(100, 100, 0, 0, Types::OT_PLAYER, Types::OS_IDLE, 
-		Types::DIR_RIGHT, Types::Point(0.f, 0.f),TEXT("Player"), this);
+	m_pPlayer = m_pActorManager->CreateActor<CPlayer>(100, 100, 0, 0, Types::AT_PLAYER,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_RIGHT, Types::Point(0.f, 0.f),TEXT("Player"), this);
 
 	m_strongActorList.emplace_back(m_pPlayer);
 
@@ -80,23 +80,23 @@ bool CGameScene::Init()
 	if (!CreateLayer(TEXT("Prob"), 4))
 		return false;
 	
-	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 0.f, 500.f, Types::OT_PROB,
-		Types::OS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 0.f, 500.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
 	m_strongActorList.emplace_back(pProb);
 	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
-	pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::OT_PROB,
-		Types::OS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
 	m_strongActorList.emplace_back(pProb);
 	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 	//Backgorund 持失
-	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::OT_BACKGROUND,
-		Types::OS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Background"), this);
+	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::AT_BACKGROUND,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Background"), this);
 
 	if (pBack == nullptr)
 		return false;

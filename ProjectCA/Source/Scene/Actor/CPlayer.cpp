@@ -39,7 +39,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
 	m_actorCurState = m_actorPreState = data.actorState;
-	m_actorPreJumpState = m_actorJumpState = Types::JS_IDLE;
+	m_actorPreVerticalState = m_actorCurVerticalState = data.verticalState;
+	m_actorHorizonalState = data.horizonalState;
 	m_direction = data.direction;
 	m_actorVector = data.vector;
 	m_actorID = data.actorID;
@@ -76,20 +77,20 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 		switch (pOther->GetActorType()) 
 		{
-		case Types::OT_ENEMY:
+		case Types::AT_ENEMY:
 			//pComponent = pOwner->GetComponent(TEXT("PhysicsComponent"));
 			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
 			//pOwner->SetActorPoint(point.x, point.y);
 			//pOwner->GetOwnerScene()->ResetScene();
 			break;
-		case Types::OT_PROB:
+		case Types::AT_PROB:
 			PhysicsComponent* pComponent = static_cast<PhysicsComponent*>(
 				pOwner->GetComponent(TEXT("PhysicsComponent")));
 			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
 			//point = pComponent->GetLastActorPoint();
 			pComponent->SetGrounded(true);
-			pOwner->SetActorState(Types::OS_IDLE);
-			pOwner->SetActorJumpState(Types::JS_IDLE);
+			pOwner->SetActorState(Types::AS_IDLE);
+			pOwner->SetActorVerticalState(Types::VS_IDLE);
 			//pOwner->SetActorPoint(point.x, point.y); // 이부분 떄문에 PROB위에서 움직이질못함.
 			break;
 		}
@@ -151,6 +152,12 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		return false;
 
 	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("RunJumpLeft")))
+		return false;
+
+	if (!pRender->AddAnim(3.f, TEXT("PlayerTurnRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("TurnRight")))
+		return false;
+
+	if (!pRender->AddAnim(3.f, TEXT("PlayerTurnLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("TurnLeft")))
 		return false;
 
 

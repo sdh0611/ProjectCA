@@ -21,7 +21,7 @@ public:
 public:
 	virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("Collider")) = 0;
 	virtual void Update(double fDeltaTime) = 0;
-	virtual void OnCollision(Types::ObjectType type);
+	//virtual void OnCollision(Types::ObjectType type);
 	virtual void OnCollision(std::shared_ptr<CActor> pOther);
 	virtual Delegate SetDelegate(Delegate dele);
 

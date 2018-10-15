@@ -30,7 +30,7 @@ bool RenderComponent::Init(CActor * pOwner, const Types::tstring & strTag)
 	m_strComponentTag = strTag;
 	
 	m_ownerState			= m_pOwner->GetActorState();
-	m_ownerJumpState	= m_pOwner->GetActorJumpState();
+	m_ownerVerticalState	= m_pOwner->GetActorVerticalState();
 	m_ownerDirection		= m_pOwner->GetActorDirection();
 
 	m_hBrush				= (HBRUSH)GetStockObject(NULL_BRUSH);
@@ -47,7 +47,7 @@ void RenderComponent::Update(double dDeltaTime)
 	//{
 		m_ownerState = m_pOwner->GetActorState();
 		m_ownerDirection = m_pOwner->GetActorDirection();
-		m_ownerJumpState = m_pOwner->GetActorJumpState();
+		m_ownerVerticalState = m_pOwner->GetActorVerticalState();
 
 	//}
 	UpdateAnimationMotion();
@@ -170,16 +170,16 @@ void RenderComponent::UpdateAnimationMotion()
 	if (pPhysics == nullptr)
 		return;
 
-	float fCurSpeed = pPhysics->GetCurSpeed();
+	float fCurSpeed = std::fabsf(pPhysics->GetCurSpeed());
 	float fSpeed = pPhysics->GetSpeed();
 	float fMaxSpeed = pPhysics->GetMaxSpeed();
 
-	if (m_ownerState == Types::OS_SITDOWN)
+	if (m_ownerState == Types::AS_SITDOWN)
 	{
 		m_animationState = Types::AM_SITDOWN;
 		return;
 	}
-	else if (m_ownerState == Types::OS_LOOKUP)
+	else if (m_ownerState == Types::AS_LOOKUP)
 	{
 		m_animationState = Types::AM_LOOKUP;
 		return;
@@ -195,25 +195,25 @@ void RenderComponent::UpdateAnimationMotion()
 	}
 	else
 	{
-		//if (m_ownerState == Types::OS_IDLE)
-		//{
-			m_animationState = Types::AM_IDLE;
-		//}
-		//else if (m_ownerState == Types::OS_LOOKUP)
-		//{
-		//	m_animationState = Types::AM_LOOKUP;
-		//}
-		//else if (m_ownerState == Types::OS_SITDOWN)
-		//{
-		//	m_animationState = Types::AM_SITDOWN;
-		//}
+		m_animationState = Types::AM_IDLE;
+	}
+
+	if (pPhysics->GetCurSpeed() < 0.f) 
+	{
+		if (m_ownerDirection == Types::DIR_RIGHT)
+			m_animationState = Types::AM_TURN;
+	}
+	else if (pPhysics->GetCurSpeed() > 0.f)
+	{
+		if (m_ownerDirection == Types::DIR_LEFT)
+			m_animationState = Types::AM_TURN;
 	}
 
 	if (fCurSpeed < fSpeed / 3)
 		SetAnimationPlaySpeed(0.3f);
 	else if (fCurSpeed < (fSpeed / 3) * 2)
 		SetAnimationPlaySpeed(0.6f);
-	else
+	else 
 		SetAnimationPlaySpeed(1.f);
 	
 
@@ -230,283 +230,283 @@ void RenderComponent::SetAnimation(Types::AnimationMotion motion)
 
 }
 
-void RenderComponent::ChangeAnimationCilp()
-{
-
-	if (m_ownerJumpState == Types::JS_JUMP) {
-		switch (m_ownerState) {
-		case Types::OS_IDLE:
-		case Types::OS_WALK:
-		case Types::OS_LOOKUP:
-			if (m_ownerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("JumpLeft"));
-				//puts("JUMPLEFT");
-			}
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("JumpRight"));
-				//puts("JUMPRIGHT");
-			}
-			break;
-		case Types::OS_RUN:
-			if (m_ownerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("RunJumpLeft"));
-			}
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("RunJumpRight"));
-			}
-			break;
-		case Types::OS_ATTACK:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
-			break;
-		case Types::OS_DAMAGED:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
-			break;
-		}
-
-	}
-	else if (m_ownerJumpState == Types::JS_FALL) {
-		switch (m_ownerState) {
-		case Types::OS_IDLE:
-		case Types::OS_WALK:
-		case Types::OS_LOOKUP:
-			if (m_ownerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("FalldownLeft"));
-				//puts("FALLLEFT");
-			}
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("FalldownRight"));
-				//puts("FALLRIGHT");
-			}
-			break;
-		case Types::OS_RUN:
-			if (m_ownerDirection == Types::DIR_LEFT) 
-			{
-				ChangeAnimation(TEXT("RunJumpLeft"));
-			}
-			else if (m_ownerDirection == Types::DIR_RIGHT) 
-			{	
-				ChangeAnimation(TEXT("RunJumpRight"));
-			}
-			break;
-		case Types::OS_ATTACK:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
-			break;
-		case Types::OS_DAMAGED:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
-			break;
-		}
-	}
-	else {
-		switch (m_ownerState) {
-		case Types::OS_IDLE:
-			//puts("ChangeIDLE");
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("IdleLeft"));
-			else if(m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("IdleRight"));
-			break;
-		case Types::OS_WALK:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("WalkLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("WalkRight"));
-			break;
-		case Types::OS_RUN:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("RunLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("RunRight"));
-			break;
-		case Types::OS_LOOKUP:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("LookupLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("LookupRight"));
-			break;
-		case Types::OS_SITDOWN:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("SitdownLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("SitdownRight"));
-			break;
-		case Types::OS_ATTACK:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
-			break;
-		case Types::OS_DAMAGED:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
-			break;
-
-		}
-
-	}
-
-
-
-}
-
-void RenderComponent::ChangeAnimationCilp(Types::ObjectState state)
-{
-
-	if (m_ownerJumpState == Types::JS_JUMP) {
-		switch (state) {
-		case Types::OS_IDLE:
-		case Types::OS_WALK:
-		case Types::OS_LOOKUP:
-			if (m_ownerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("JumpLeft"));
-				//puts("JUMPLEFT");
-			}
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("JumpRight"));
-				//puts("JUMPRIGHT");
-			}
-			break;
-		case Types::OS_RUN:
-			if (m_ownerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("RunJumpLeft"));
-			}
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("RunJumpRight"));
-			}
-			break;
-		case Types::OS_ATTACK:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
-			break;
-		case Types::OS_DAMAGED:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
-			break;
-		}
-
-	}
-	else if (m_ownerJumpState == Types::JS_FALL) {
-		switch (state) {
-		case Types::OS_IDLE:
-		case Types::OS_WALK:
-		case Types::OS_LOOKUP:
-			if (m_ownerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("FalldownLeft"));
-				//puts("FALLLEFT");
-			}
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("FalldownRight"));
-				//puts("FALLRIGHT");
-			}
-			break;
-		case Types::OS_RUN:
-			if (m_ownerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("RunJumpLeft"));
-			}
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("RunJumpRight"));
-			}
-			break;
-		case Types::OS_ATTACK:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
-			break;
-		case Types::OS_DAMAGED:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
-			break;
-		}
-	}
-	else {
-		switch (state) {
-		case Types::OS_IDLE:
-			//puts("ChangeIDLE");
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("IdleLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("IdleRight"));
-			break;
-		case Types::OS_WALK:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("WalkLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("WalkRight"));
-			break;
-		case Types::OS_RUN:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("RunLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("RunRight"));
-			break;
-		case Types::OS_LOOKUP:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("LookupLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("LookupRight"));
-			break;
-		case Types::OS_SITDOWN:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("SitdownLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("SitdownRight"));
-			break;
-		case Types::OS_ATTACK:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
-			break;
-		case Types::OS_DAMAGED:
-			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
-			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
-			break;
-
-		}
-
-	}
-
-}
+//void RenderComponent::ChangeAnimationCilp()
+//{
+//
+//	if (m_ownerJumpState == Types::JS_JUMP) {
+//		switch (m_ownerState) {
+//		case Types::OS_IDLE:
+//		case Types::OS_WALK:
+//		case Types::OS_LOOKUP:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//			{
+//				ChangeAnimation(TEXT("JumpLeft"));
+//				//puts("JUMPLEFT");
+//			}
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//			{
+//				ChangeAnimation(TEXT("JumpRight"));
+//				//puts("JUMPRIGHT");
+//			}
+//			break;
+//		case Types::OS_RUN:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//			{
+//				ChangeAnimation(TEXT("RunJumpLeft"));
+//			}
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//			{
+//				ChangeAnimation(TEXT("RunJumpRight"));
+//			}
+//			break;
+//		case Types::OS_ATTACK:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("AttackLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("AttackRight"));
+//			break;
+//		case Types::OS_DAMAGED:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("DamagedLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("DamagedRight"));
+//			break;
+//		}
+//
+//	}
+//	else if (m_ownerJumpState == Types::JS_FALL) {
+//		switch (m_ownerState) {
+//		case Types::OS_IDLE:
+//		case Types::OS_WALK:
+//		case Types::OS_LOOKUP:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//			{
+//				ChangeAnimation(TEXT("FalldownLeft"));
+//				//puts("FALLLEFT");
+//			}
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//			{
+//				ChangeAnimation(TEXT("FalldownRight"));
+//				//puts("FALLRIGHT");
+//			}
+//			break;
+//		case Types::OS_RUN:
+//			if (m_ownerDirection == Types::DIR_LEFT) 
+//			{
+//				ChangeAnimation(TEXT("RunJumpLeft"));
+//			}
+//			else if (m_ownerDirection == Types::DIR_RIGHT) 
+//			{	
+//				ChangeAnimation(TEXT("RunJumpRight"));
+//			}
+//			break;
+//		case Types::OS_ATTACK:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("AttackLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("AttackRight"));
+//			break;
+//		case Types::OS_DAMAGED:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("DamagedLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("DamagedRight"));
+//			break;
+//		}
+//	}
+//	else {
+//		switch (m_ownerState) {
+//		case Types::OS_IDLE:
+//			//puts("ChangeIDLE");
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("IdleLeft"));
+//			else if(m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("IdleRight"));
+//			break;
+//		case Types::OS_WALK:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("WalkLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("WalkRight"));
+//			break;
+//		case Types::OS_RUN:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("RunLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("RunRight"));
+//			break;
+//		case Types::OS_LOOKUP:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("LookupLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("LookupRight"));
+//			break;
+//		case Types::OS_SITDOWN:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("SitdownLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("SitdownRight"));
+//			break;
+//		case Types::OS_ATTACK:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("AttackLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("AttackRight"));
+//			break;
+//		case Types::OS_DAMAGED:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("DamagedLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("DamagedRight"));
+//			break;
+//
+//		}
+//
+//	}
+//
+//
+//
+//}
+//
+//void RenderComponent::ChangeAnimationCilp(Types::ActorState state)
+//{
+//
+//	if (m_ownerJumpState == Types::JS_JUMP) {
+//		switch (state) {
+//		case Types::OS_IDLE:
+//		case Types::OS_WALK:
+//		case Types::OS_LOOKUP:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//			{
+//				ChangeAnimation(TEXT("JumpLeft"));
+//				//puts("JUMPLEFT");
+//			}
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//			{
+//				ChangeAnimation(TEXT("JumpRight"));
+//				//puts("JUMPRIGHT");
+//			}
+//			break;
+//		case Types::OS_RUN:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//			{
+//				ChangeAnimation(TEXT("RunJumpLeft"));
+//			}
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//			{
+//				ChangeAnimation(TEXT("RunJumpRight"));
+//			}
+//			break;
+//		case Types::OS_ATTACK:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("AttackLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("AttackRight"));
+//			break;
+//		case Types::OS_DAMAGED:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("DamagedLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("DamagedRight"));
+//			break;
+//		}
+//
+//	}
+//	else if (m_ownerJumpState == Types::JS_FALL) {
+//		switch (state) {
+//		case Types::OS_IDLE:
+//		case Types::OS_WALK:
+//		case Types::OS_LOOKUP:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//			{
+//				ChangeAnimation(TEXT("FalldownLeft"));
+//				//puts("FALLLEFT");
+//			}
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//			{
+//				ChangeAnimation(TEXT("FalldownRight"));
+//				//puts("FALLRIGHT");
+//			}
+//			break;
+//		case Types::OS_RUN:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//			{
+//				ChangeAnimation(TEXT("RunJumpLeft"));
+//			}
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//			{
+//				ChangeAnimation(TEXT("RunJumpRight"));
+//			}
+//			break;
+//		case Types::OS_ATTACK:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("AttackLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("AttackRight"));
+//			break;
+//		case Types::OS_DAMAGED:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("DamagedLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("DamagedRight"));
+//			break;
+//		}
+//	}
+//	else {
+//		switch (state) {
+//		case Types::OS_IDLE:
+//			//puts("ChangeIDLE");
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("IdleLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("IdleRight"));
+//			break;
+//		case Types::OS_WALK:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("WalkLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("WalkRight"));
+//			break;
+//		case Types::OS_RUN:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("RunLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("RunRight"));
+//			break;
+//		case Types::OS_LOOKUP:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("LookupLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("LookupRight"));
+//			break;
+//		case Types::OS_SITDOWN:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("SitdownLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("SitdownRight"));
+//			break;
+//		case Types::OS_ATTACK:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("AttackLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("AttackRight"));
+//			break;
+//		case Types::OS_DAMAGED:
+//			if (m_ownerDirection == Types::DIR_LEFT)
+//				ChangeAnimation(TEXT("DamagedLeft"));
+//			else if (m_ownerDirection == Types::DIR_RIGHT)
+//				ChangeAnimation(TEXT("DamagedRight"));
+//			break;
+//
+//		}
+//
+//	}
+//
+//}
 
 void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 {
-	if (m_ownerJumpState == Types::JS_JUMP) {
+	if (m_ownerVerticalState == Types::VS_JUMP) {
 		switch (motion) {
 		case Types::AM_IDLE:
 		case Types::AM_WALK:
@@ -519,6 +519,18 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 			else if (m_ownerDirection == Types::DIR_RIGHT)
 			{
 				ChangeAnimation(TEXT("JumpRight"));
+				//puts("JUMPRIGHT");
+			}
+			break;
+		case Types::AM_SITDOWN:
+			if (m_ownerDirection == Types::DIR_LEFT)
+			{
+				ChangeAnimation(TEXT("SitdownLeft"));
+				//puts("JUMPLEFT");
+			}
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+			{
+				ChangeAnimation(TEXT("SitdownRight"));
 				//puts("JUMPRIGHT");
 			}
 			break;
@@ -547,7 +559,7 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 		}
 
 	}
-	else if (m_ownerJumpState == Types::JS_FALL) {
+	else if (m_ownerVerticalState == Types::VS_FALL) {
 		switch (motion) {
 		case Types::AM_IDLE:
 		case Types::AM_WALK:
@@ -561,6 +573,18 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 			{
 				ChangeAnimation(TEXT("FalldownRight"));
 				//puts("FALLRIGHT");
+			}
+			break;
+		case Types::AM_SITDOWN:
+			if (m_ownerDirection == Types::DIR_LEFT)
+			{
+				ChangeAnimation(TEXT("SitdownLeft"));
+				//puts("JUMPLEFT");
+			}
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+			{
+				ChangeAnimation(TEXT("SitdownRight"));
+				//puts("JUMPRIGHT");
 			}
 			break;
 		case Types::AM_RUN:
@@ -624,6 +648,12 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 				ChangeAnimation(TEXT("RunLeft"));
 			else if (m_ownerDirection == Types::DIR_RIGHT)
 				ChangeAnimation(TEXT("RunRight"));
+			break;
+		case Types::AM_TURN:
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("TurnLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("TurnRight"));
 			break;
 		case Types::AM_LOOKUP:
 			if (m_ownerDirection == Types::DIR_LEFT)

@@ -17,25 +17,25 @@ Collider::~Collider()
 
 //오버로딩된 버전 제공
 //	->CallBack 메소드로 구현해볼까 ?
-void Collider::OnCollision(Types::ObjectType type)
-{
-	if (m_bIsCollision) {
-		ComponentBase* pComponent = nullptr;
-		switch (type) {
-		case Types::OT_PROB:
-			//m_pOwner->SetObjectState(Types::OS_IDLE);
-			pComponent = m_pOwner->GetComponent(TEXT("PhysicsComponent"));
-			PhysicsComponent* physics = static_cast<PhysicsComponent*>(pComponent);
-			physics->RestoreActorPoint();
-			break;
-		}
-	}
-	//else {
-	//	m_pOwner->SetObjectState(Types::OS_MOVE);
-	//}
-	
-
-}
+//void Collider::OnCollision(Types::ObjectType type)
+//{
+//	if (m_bIsCollision) {
+//		ComponentBase* pComponent = nullptr;
+//		switch (type) {
+//		case Types::OT_PROB:
+//			//m_pOwner->SetObjectState(Types::OS_IDLE);
+//			pComponent = m_pOwner->GetComponent(TEXT("PhysicsComponent"));
+//			PhysicsComponent* physics = static_cast<PhysicsComponent*>(pComponent);
+//			physics->RestoreActorPoint();
+//			break;
+//		}
+//	}
+//	//else {
+//	//	m_pOwner->SetObjectState(Types::OS_MOVE);
+//	//}
+//	
+//
+//}
 
 //Collision이 일어났다면 호출하게 될 메소드
 void Collider::OnCollision(std::shared_ptr<CActor> pOther)

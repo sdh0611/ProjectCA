@@ -7,12 +7,14 @@
 #define MAKE_COL_BOX		0b00100
 #define MAKE_COL_CIR		0b01000
 
-const unsigned int MAX_WIDTH = 1024;
-const unsigned int MAX_HEIGHT = 720;
-const unsigned int MAX_ACTOR_SIZE = 3000;
+#define TYPE_ACTION 1
 
-const unsigned int SPRITE_WIDTH = 32;
-const unsigned int SPRITE_HEIGHT = 48;
+const unsigned int MAX_WIDTH			= 1024;
+const unsigned int MAX_HEIGHT			= 720;
+const unsigned int MAX_ACTOR_SIZE	= 3000;
+
+const unsigned int SPRITE_WIDTH		= 32;
+const unsigned int SPRITE_HEIGHT		= 48;
 
 
 namespace Types {
@@ -21,19 +23,11 @@ namespace Types {
 	typedef unsigned long ActorID;
 
 	//오브젝트 타입 정의
-	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROB, OT_PICKUP, OT_MAP, OT_BACKGROUND };
-
+	enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_MAP, AT_BACKGROUND };
+#ifndef TYPE_ACTION 
 	//오브젝트 상태 정의
-	//enum ObjectState { OS_IDLE, OS_WALK, OS_RUN, OS_JUMP, OS_RUN_JUMP, OS_FALL,
-	//	OS_LOOKUP, OS_SITDOWN, OS_ATTACK, OS_DAMAGED, OS_DEAD };
-	enum ObjectState {
-		OS_IDLE, OS_WALK, OS_ACCEL, OS_RUN, OS_BREAK, 
-		OS_LOOKUP, OS_SITDOWN, OS_ATTACK, OS_DAMAGED, OS_DEAD
-	};
-
-	//Jump 상태를 구분하기 위한 열거체 상수 (10.13)
-	enum JumpState { JS_JUMP, JS_IDLE, JS_FALL };
-
+	enum ActorState { AS_IDLE, AS_MOVE, AS_ATTACK, OS_DAMAGED, OS_DEAD };
+#else
 	//Actor의 상태를 나타내기 위한 열거체 (10.13)
 	enum ActorState { AS_IDLE, AS_MOVE, AS_SITDOWN, AS_LOOKUP, AS_ATTACK, AS_DAMAGED, AS_DEAD };
 
@@ -42,10 +36,10 @@ namespace Types {
 
 	//수평상의 이동 상태를 구분하기 위한 열거체 (10.13)
 	enum HorizonalState{ HS_IDLE, HS_WALK, HS_RUN, HS_TURN };
-
+#endif
 	//Animation관련 
-	enum AnimationMotion { AM_IDLE, AM_WALK, AM_RUN, AM_LOOKUP, AM_SITDOWN ,AM_JUMP, 
-		AM_FALL, AM_ATTACK, AM_DAMAGED, AM_DEAD};
+	enum AnimationMotion { AM_IDLE, AM_WALK, AM_RUN, AM_TURN, AM_LOOKUP, AM_SITDOWN 
+		,AM_JUMP, AM_FALL, AM_ATTACK, AM_DAMAGED, AM_DEAD};
 
 	//방향 열거체 정의
 	enum Direction { DIR_DOWN = -1, DIR_IDLE, DIR_UP, DIR_LEFT, DIR_RIGHT };
@@ -217,14 +211,13 @@ namespace Types {
 	struct ActorData {
 		class CGameScene;
 
-		ActorData(UINT iWidth, UINT iHeight, Point point, ObjectType type, ObjectState state, 
-			Direction dir, Point _vector,ActorID id, const tstring& strTag, bool _bActive)
+		ActorData(UINT iWidth, UINT iHeight, Point point, ActorType type, ActorState state, 
+			VerticalState vertical, HorizonalState horizonal, Direction dir, Point _vector,
+			ActorID id, const tstring& strTag, bool _bActive)
 			:iActorWidth(iWidth), iActorHeight(iHeight), actorPoint(point), actorType(type), actorState(state),
-			direction(dir), vector(_vector),actorID(id), strActorTag(strTag),  bActive(_bActive)
-		{
-
-
-
+			verticalState(vertical), horizonalState(horizonal), direction(dir), vector(_vector),
+			actorID(id), strActorTag(strTag),  bActive(_bActive)
+		{			
 		}
 
 		ActorData& operator=(const ActorData& other) {
@@ -234,6 +227,8 @@ namespace Types {
 			actorPoint = other.actorPoint;
 			actorType = other.actorType;
 			actorState = other.actorState;
+			verticalState = other.verticalState;
+			horizonalState = other.horizonalState;
 			direction = other.direction;
 			vector = other.vector;
 			strActorTag = other.strActorTag;
@@ -245,8 +240,10 @@ namespace Types {
 		UINT						iActorWidth;
 		UINT						iActorHeight;
 		Point						actorPoint;
-		ObjectType				actorType;
-		ObjectState				actorState;
+		ActorType				actorType;
+		ActorState				actorState;
+		VerticalState			verticalState;
+		HorizonalState			horizonalState;
 		Direction					direction;
 		Point						vector;			//방향을 표시하기 위한 방법으로써 direction 상수대신 vector로 대체(09.25)
 		ActorID					actorID;
@@ -258,6 +255,6 @@ namespace Types {
 
 	};
 	
-
+	typedef Types::tstring TSTRING;
 
 }

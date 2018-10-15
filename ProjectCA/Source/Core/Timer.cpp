@@ -42,15 +42,14 @@ void Timer::Update()
 
 void Timer::CheckFrameCount()
 {
-	if (m_dTimeElapsed >= 1.f) {
+	if (m_dTimeElapsed >= 1.f) 
+	{
 		m_iFrame = m_frameCount / m_dTimeElapsed;
 		m_frameCount = 0;
 		m_dTimeElapsed = 0.f;
-		//wsprintf(m_strFrame, TEXT("Frame : %d"), m_iFrame);
-		//TextOut(hDC, 0, 0, m_strFrame.c_str(), m_strFrame.length());
-		//Debug::MessageInfo(m_strFrame);
 	}
-	else {
+	else 
+	{
 		++m_frameCount;
 	}
 

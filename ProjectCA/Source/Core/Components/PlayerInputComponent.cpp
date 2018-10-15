@@ -71,150 +71,84 @@ void PlayerInputComponent::UpdateKeyDown()
 
 void PlayerInputComponent::KeyProcess()
 {
-	//Types::ObjectState state = m_pOwner->GetActorState();
 	Types::Direction dir = m_pOwner->GetActorDirection();
 	RenderComponent* pRender = static_cast<RenderComponent*>( m_pOwner->GetComponent(TEXT("RenderComponent")) );	
 	//PhysicsComponent* pPhysics = static_cast<PhysicsComponent*>(m_pOwner->GetComponent(TEXT("PhysicsComponent")));
 
-	//if (KEY_DOWN(VK_LEFT)) {
-	//	if (KEY_DOWN('A'))
-	//	{
-	//		m_pOwner->SetActorState(Types::OS_RUN);
-	//		//pPhysics->SetAcceled(true);
-	//	}
-	//	else
-	//	{
-	//		m_pOwner->SetActorState(Types::OS_WALK);
-	//		//pPhysics->SetAcceled(false);
-	//	}
-	//	
-	//	//if (m_pOwner->GetActorState() != Types::OS_RUN) 
-	//	//{
-	//	//	m_pOwner->SetActorState(Types::OS_WALK);
-	//	//}
-	//	m_pOwner->SetActorVector(-1.f, 0.f);
-	//	m_pOwner->SetActorDirection(Types::DIR_LEFT);
-	//}
-	//else if (KEY_DOWN(VK_RIGHT)) {
-	//	if (KEY_DOWN('A')) 
-	//	{
-	//		m_pOwner->SetActorState(Types::OS_RUN);
-	//		//pPhysics->SetAcceled(true);
-	//	}
-	//	else
-	//	{
-	//		m_pOwner->SetActorState(Types::OS_WALK);
-	//		//pPhysics->SetAcceled(false);
-	//	}
+	if (GetKeyDown(TEXT("LEFT"))) 
+	{
+		//if (m_pOwner->GetActorHorizonalState() != Types::HS_IDLE)
+		//{
+			if (GetKeyDown(TEXT("ACCEL")))
+			{
+				m_pOwner->SetActorHorizonalState(Types::HS_RUN);
+			}
+			else
+			{
+				m_pOwner->SetActorHorizonalState(Types::HS_WALK);
+			}
+		//}
+		//else
+		//{
 
-	//	//if (m_pOwner->GetActorState() != Types::OS_RUN)
-	//	//{
-	//	//	m_pOwner->SetActorState(Types::OS_WALK);
-	//	//}
-	//	m_pOwner->SetActorVector(1.f, 0.f);
-	//	m_pOwner->SetActorDirection(Types::DIR_RIGHT);
-	//}
-	//else {
-	//	//pPhysics->SetAcceled(false);
-	//	m_pOwner->SetActorState(Types::OS_IDLE);			
-	//	//pRender->ChangeAnimationCilp(Types::OS_IDLE);
-	//	//m_pOwner->SetActorVector(0.f, 0.f);
-	//}
-
-	//if (KEY_DOWN(VK_DOWN)) {
-	//	if (m_pOwner->GetActorJumpState() == Types::JS_IDLE)
-	//	{
-	//		m_pOwner->SetActorState(Types::OS_SITDOWN);
-	//		//pRender->ChangeAnimationCilp(Types::OS_SITDOWN);
-	//	}
-	//	//m_pOwner->SetActorVector(0.f, 1.f);
-	//}
-	//else if (KEY_DOWN(VK_UP)) {
-	//	if(m_pOwner->GetActorJumpState() == Types::JS_IDLE)
-	//	{
-	//		m_pOwner->SetActorState(Types::OS_LOOKUP);
-	//		//pRender->ChangeAnimationCilp(Types::OS_LOOKUP);
-	//		//m_pOwner->SetActorVector(0.f, -1.f);
-
-	//	}
-	//}
-
-	//if (KEY_DOWN('X')) {
-	//	if (m_pOwner->GetActorJumpState() == Types::JS_IDLE)
-	//	{
-	//			m_pOwner->SetActorJumpState(Types::JS_JUMP);
-	//	}
-	//}
-	//else if (KEY_UP('X')) {
-	//	if (m_pOwner->GetActorJumpState() == Types::JS_JUMP)
-	//	{
-	//		m_pOwner->SetActorJumpState(Types::JS_FALL);
-	//	}
-	//}
-
-
-	if (GetKeyDown(TEXT("LEFT"))) {
-		if (GetKeyDown(TEXT("ACCEL")))
-		{
-			m_pOwner->SetActorState(Types::OS_RUN);
-		}
-		else
-		{
-			m_pOwner->SetActorState(Types::OS_WALK);
-		}
-
+		//}
 		m_pOwner->SetActorVector(-1.f, 0.f);
+		//m_pOwner->SetActorState(Types::AS_MOVE);
 		m_pOwner->SetActorDirection(Types::DIR_LEFT);
 	}
-	else if (GetKeyDown(TEXT("RIGHT"))) {
+	else if (GetKeyDown(TEXT("RIGHT"))) 
+	{
 		if (GetKeyDown(TEXT("ACCEL")))
 		{
-			m_pOwner->SetActorState(Types::OS_RUN);
+			m_pOwner->SetActorHorizonalState(Types::HS_RUN);
 		}
 		else
 		{
-			m_pOwner->SetActorState(Types::OS_WALK);
+			m_pOwner->SetActorHorizonalState(Types::HS_WALK);
 		}
 
 		m_pOwner->SetActorVector(1.f, 0.f);
+		//m_pOwner->SetActorState(Types::AS_MOVE);
 		m_pOwner->SetActorDirection(Types::DIR_RIGHT);
 	}
-	else {
-		m_pOwner->SetActorState(Types::OS_IDLE);
+	else 
+	{
+		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
+		{
+			m_pOwner->SetActorState(Types::AS_IDLE);
+		}
+		m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
 	}
 
-	if (GetKeyDown(TEXT("DOWN"))) {
-		if (m_pOwner->GetActorJumpState() == Types::JS_IDLE)
+	if (GetKeyDown(TEXT("DOWN"))) 
+	{
+		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			//if (m_pOwner->GetActorState() != Types::OS_WALK ||
-			//	m_pOwner->GetActorState() != Types::OS_RUN)
-			//{
-				m_pOwner->SetActorState(Types::OS_SITDOWN);
-			//}
+			m_pOwner->SetActorState(Types::AS_SITDOWN);
+			m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 	}
-	else if (GetKeyDown(TEXT("UP"))) {
-		if (m_pOwner->GetActorJumpState() == Types::JS_IDLE)
+	else if (GetKeyDown(TEXT("UP"))) 
+	{
+		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			//if (m_pOwner->GetActorState() != Types::OS_WALK ||
-			//	m_pOwner->GetActorState() != Types::OS_RUN)
-			//{
-				m_pOwner->SetActorState(Types::OS_LOOKUP);
-			//}
-
+			m_pOwner->SetActorState(Types::AS_LOOKUP);
+			m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 	}
 
-	if (GetKeyDown(TEXT("JUMP"))) {
-		if (m_pOwner->GetActorJumpState() == Types::JS_IDLE)
+	if (GetKeyDown(TEXT("JUMP"))) 
+	{
+		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			m_pOwner->SetActorJumpState(Types::JS_JUMP);
+			m_pOwner->SetActorVerticalState(Types::VS_JUMP);
 		}
 	}
-	else {
-		if (m_pOwner->GetActorJumpState() == Types::JS_JUMP)
+	else 
+	{
+		if (m_pOwner->GetActorVerticalState() == Types::VS_JUMP)
 		{
-			m_pOwner->SetActorJumpState(Types::JS_FALL);
+			m_pOwner->SetActorVerticalState(Types::VS_FALL);
 		}
 	}
 
@@ -224,7 +158,10 @@ void PlayerInputComponent::KeyProcess()
 		m_pOwner->GetOwnerScene()->ResetScene();
 	}
 
-	if (m_pOwner->GetActorState() == Types::OS_SITDOWN)
-		puts("SITDOWN");
+	//if (m_pOwner->GetActorState() == Types::AS_SITDOWN)
+	//	puts("SITDOWN");
+
+	//if (m_pOwner->GetActorState() == Types::AS_LOOKUP)
+	//	puts("LOOKUP");
 
 }

@@ -8,7 +8,7 @@
 
 
 CActor::CActor()
-	:m_actorVector(0, 0), m_actorJumpState(Types::JS_IDLE)
+	:m_actorVector(0, 0), m_actorCurVerticalState(Types::VS_IDLE), m_actorHorizonalState(Types::HS_IDLE)
 {
 }
 
@@ -43,7 +43,7 @@ void CActor::Update(double fDeltaTime)
 			it.second->Update(fDeltaTime);
 
 		m_actorPreState = m_actorCurState;
-		m_actorPreJumpState = m_actorJumpState;
+		m_actorPreVerticalState = m_actorCurVerticalState;
 	}
 
 }

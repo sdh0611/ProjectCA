@@ -28,8 +28,10 @@ bool PhysicsComponent::Init(CActor* pOwner, float fSpeed, float fMaxSpeed, float
 		return false;
 
 	m_fGravity					= fGravity;
-	m_fXSpeed = m_fSpeed = fSpeed;
+	m_fXSpeed					= 0.f;
+	m_fSpeed					= fSpeed;
 	m_fMaxSpeed				= fMaxSpeed;
+	m_fYSpeed					= 0.f;
 	m_fJumpForce				= fJumpForce;
 	m_strComponentTag		= strTag;
 	m_bGrounded				= false;
@@ -44,8 +46,17 @@ void PhysicsComponent::Update(double dDeltaTime)
 	m_lastActorPoint = m_pOwner->GetActorPoint();
 	Gravity(dDeltaTime);
 	Move(dDeltaTime);
-	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + m_pOwner->GetActorVector().x * m_fXSpeed * dDeltaTime,
-		m_pOwner->GetActorPoint().y - m_fYSpeed * dDeltaTime);
+
+	//if (m_pOwner->GetActorDirection() == Types::DIR_LEFT)
+	//{
+		m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + (m_fXSpeed * dDeltaTime),
+			m_pOwner->GetActorPoint().y - m_fYSpeed * dDeltaTime);
+	//}
+	//else if (m_pOwner->GetActorDirection() == Types::DIR_RIGHT)
+	//{
+	//	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + (m_fXSpeed * dDeltaTime),
+	//		m_pOwner->GetActorPoint().y - m_fYSpeed * dDeltaTime);
+	//}
 	m_bGrounded = false;
 }
 
@@ -57,54 +68,84 @@ void PhysicsComponent::RestoreActorPoint()
 
 void PhysicsComponent::Move(double dDeltaTime)
 {
-	if (m_pOwner->GetActorState() == Types::OS_RUN)
-	{
-		if (m_fXSpeed < m_fMaxSpeed)
-			m_fXSpeed += 5;
-	}
-	else if (m_pOwner->GetActorState() == Types::OS_WALK)
-	{
-		if (m_fXSpeed > m_fSpeed)
-			m_fXSpeed -= 10;
-		else if (m_fXSpeed < m_fSpeed)
-			m_fXSpeed += 5;
-		else if (m_fXSpeed >= m_fSpeed)
-			m_fXSpeed = m_fSpeed;
+	Types::HorizonalState horizonal = m_pOwner->GetActorHorizonalState();
+	Types::Direction dir = m_pOwner->GetActorDirection();
 
-		//printf("Speed : %lf\n", m_fXSpeed);
-	}
-	else
+	if (dir == Types::DIR_LEFT)
 	{
-		if (m_fXSpeed > 0.f)
-			m_fXSpeed -= 10;
-		if (m_fXSpeed < 0.f)
-			m_fXSpeed = 0.f;
+		if (horizonal == Types::HS_RUN)
+		{
+			if (m_fXSpeed > -1*m_fMaxSpeed)
+				m_fXSpeed -= 10;
+		}
+		else if (horizonal == Types::HS_WALK)
+		{
+			if (m_fXSpeed < -1*m_fSpeed)
+				m_fXSpeed += 10;
+			else if (m_fXSpeed > -1*m_fSpeed)
+				m_fXSpeed -= 5;
+			else if (m_fXSpeed <= -1*m_fSpeed)
+				m_fXSpeed = -1*m_fSpeed;
+
+		}
+		else if (horizonal == Types::HS_IDLE)
+		{
+			if (m_fXSpeed < 0.f)
+				m_fXSpeed += 10;
+			if (m_fXSpeed > 0.f)
+				m_fXSpeed = 0.f;
+		}
 	}
+	else if (dir == Types::DIR_RIGHT)
+	{
+		if (horizonal == Types::HS_RUN)
+		{
+			if (m_fXSpeed < m_fMaxSpeed)
+				m_fXSpeed += 10;
+		}
+		else if (horizonal == Types::HS_WALK)
+		{
+			if (m_fXSpeed > m_fSpeed)
+				m_fXSpeed -= 10;
+			else if (m_fXSpeed < m_fSpeed)
+				m_fXSpeed += 5;
+			else if (m_fXSpeed >= m_fSpeed)
+				m_fXSpeed = m_fSpeed;
+		}
+		else if (horizonal == Types::HS_IDLE)
+		{
+			if (m_fXSpeed > 0.f)
+				m_fXSpeed -= 10;
+			if (m_fXSpeed < 0.f)
+				m_fXSpeed = 0.f;
+		}
+	}
+
 
 }
 
 
 void PhysicsComponent::Gravity(double dDeltaTime)
 {
-	Types::JumpState state = m_pOwner->GetActorJumpState();
+	Types::VerticalState state = m_pOwner->GetActorVerticalState();
 
 	if (m_bGrounded)
 		m_fYSpeed = 0.f;
 
-	if (m_pOwner->GetActorPreJumpState() == Types::JS_JUMP)
-		if (state == Types::JS_FALL)
+	if (m_pOwner->GetActorPreVerticalState() == Types::VS_JUMP)
+		if (state == Types::VS_FALL)
 			m_fYSpeed = -50.f;
 
-	if (state != Types::JS_FALL && m_fYSpeed < 0.f)
-		m_pOwner->SetActorJumpState(Types::JS_FALL);
+	if (state != Types::VS_FALL && m_fYSpeed < 0.f)
+		m_pOwner->SetActorVerticalState(Types::VS_FALL);
 	
-	if (state != Types::JS_JUMP && !m_bGrounded) 
+	if (state != Types::VS_JUMP && !m_bGrounded) 
 	{
-		m_pOwner->SetActorJumpState(Types::JS_FALL);
+		m_pOwner->SetActorVerticalState(Types::VS_FALL);
 	}
-	else if (state == Types::JS_JUMP) 
+	else if (state == Types::VS_JUMP) 
 	{
-		if (m_pOwner->GetActorPreJumpState() != Types::JS_JUMP) {
+		if (m_pOwner->GetActorPreVerticalState() != Types::VS_JUMP) {
 			m_fYSpeed = m_fJumpForce;
 		}
 	}

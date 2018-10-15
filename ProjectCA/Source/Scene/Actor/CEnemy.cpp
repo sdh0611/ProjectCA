@@ -38,9 +38,9 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	m_iActorWidth = data.iActorWidth;
 	m_iActorHeight = data.iActorHeight;
 	m_actorPoint = m_spawnPoint = data.actorPoint;
-	m_actorType = Types::OT_ENEMY;
+	m_actorType = Types::AT_ENEMY;
 	m_actorCurState = m_actorPreState = data.actorState;
-	m_actorJumpState = m_actorPreJumpState = Types::JS_IDLE;
+	m_actorCurVerticalState = m_actorPreVerticalState = data.verticalState;
 	m_direction = data.direction;
 	m_actorVector = data.vector;
 	m_actorID = data.actorID;
@@ -91,10 +91,10 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			
 		switch (pOther->GetActorType()) {
 
-		case Types::OT_PLAYER:
+		case Types::AT_PLAYER:
 			pOwner->FlipVector();
 			break;
-		case Types::OT_PROB:
+		case Types::AT_PROB:
 			pOwner->FlipVector();
 			break;
 		}

@@ -72,6 +72,13 @@ bool CResourceManager::Init() {
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_run_jump_left.bmp"), TEXT("PlayerRunJumpLeft")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_turn_right.bmp"), TEXT("PlayerTurnRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_turn_left.bmp"), TEXT("PlayerTurnLeft")))
+		return false;
+
+
 	return true;
 }
 

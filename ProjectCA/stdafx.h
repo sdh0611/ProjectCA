@@ -4,6 +4,7 @@
 
 #define USING_DEBUG
 
+
 #ifdef USING_DEBUG
 	#ifdef UNICODE
 		#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 

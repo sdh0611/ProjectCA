@@ -27,11 +27,11 @@ public:
 	void DrawFPS(const HDC& hDC);
 
 private:
-	double				m_dDeltaTime;
-	double				m_dFPSTime;
-	UINT					m_iFrameMax;
-	double				m_dFrameRate;
-	DWORD				m_iFrame;
+	double											m_dDeltaTime;
+	double											m_dFPSTime;
+	UINT												m_iFrameMax;
+	double											m_dFrameRate;
+	DWORD											m_iFrame;
 	DWORD											m_frameCount;
 	double											m_dTimeElapsed;
 	std::chrono::system_clock::time_point		m_curTime;

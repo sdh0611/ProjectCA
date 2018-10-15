@@ -29,7 +29,8 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
 	m_actorCurState = m_actorPreState = data.actorState;
-	m_actorJumpState = m_actorPreJumpState = Types::JS_IDLE;
+	m_actorCurVerticalState = m_actorPreVerticalState = data.verticalState;
+	m_actorHorizonalState = data.horizonalState;
 	m_direction = data.direction;
 	m_actorVector = data.vector;
 	m_actorID = data.actorID;
