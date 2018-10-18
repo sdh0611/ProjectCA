@@ -19,11 +19,13 @@ public:
 
 
 public:
-	virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("Collider")) = 0;
-	virtual void Update(double fDeltaTime) = 0;
+	virtual bool PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("Collider")) = 0;
+	virtual void Update(double dDeltaTime) = 0;
 	//virtual void OnCollision(Types::ObjectType type);
 	virtual void OnCollision(std::shared_ptr<CActor> pOther);
+	virtual void OnTriggered(std::shared_ptr<CActor> pOther);
 	virtual Delegate SetDelegate(Delegate dele);
+	virtual void DrawCollider(const HDC& hDC) = 0;
 
 
 public:
@@ -34,14 +36,19 @@ public:
 	bool GetIsCollision() const { return m_bIsCollision; }
 	void SetIsCollision(bool isCollision) { m_bIsCollision = isCollision; }
 	const Types::Point& GetColliderPoint() const { return m_ColliderPoint; }
-	void SetColliderPoint(Types::Point point) { if (point.x > 0 && point.y > 0) m_ColliderPoint = point; }
+	void SetColliderPoint(float fx, float fy) { m_ColliderPoint.x = fx; m_ColliderPoint.y = fy; m_CurColliderPoint = m_ColliderPoint; }
+	bool IsTriggered() const { return m_bTriggered; }
+	void SetTriggered(bool bTriggered) { m_bTriggered = bTriggered; }
+	
 
 
 protected:
 	ColliderType				m_Type;
 	Types::Point					m_ColliderPoint;
+	Types::Point					m_CurColliderPoint;
 	//bool						m_bIsTrigger;	//Trigger활성화여부->그냥 따로 상속클래스 만들어서 추가해야되나?
 	bool							m_bIsCollision;
+	bool							m_bTriggered;
 
 
 private:

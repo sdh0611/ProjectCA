@@ -21,7 +21,8 @@ public:
 
 
 public:
-	virtual bool Init(CActor* pOwner, 	const Types::tstring& strTag = TEXT("RenderComponent"));
+	virtual bool PostInit(CActor* pOwner, 	const Types::tstring& strTag = TEXT("RenderComponent"));
+	virtual void Init(){ }
 	virtual void Update(double dDeltaTime);
 	void Draw(const HDC& hDC);
 	//bool AddSprite(Types::ObjectState state, const Types::tstring& strSpriteName);
@@ -34,8 +35,12 @@ public:
 public:
 	bool IsVisible() const { return m_bVisible; }
 	void SetVisible(bool bVisible) { m_bVisible = bVisible; }
+	bool IsUseOffset() const{ return m_bUseOffset; }
+	void SetUseOffset(bool bUseOffset) { m_bUseOffset = bUseOffset; }
 	bool IsChangeAnim() const { return m_bChangeAnim; }
 	void SetChangeAnim(bool bChange) { m_bChangeAnim = bChange; }
+	void SetOffset();
+	void SetOffset(float fx, float fy);
 	bool SetAnimationPlaySpeed(double dSpeed);
 	void SetAnimation(Types::AnimationMotion motion);
 
@@ -53,16 +58,18 @@ private:
 
 private:
 	//AnimTable									m_animTable;
+	Types::Point									m_offset;
 	std::weak_ptr<CAnim>					m_pWeakCurAnim;
 	AnimationTable							m_animationTable;
 	Types::AnimationMotion					m_animationState;
 	Types::tstring								m_strPreAnimClipName;
 	bool											m_bVisible;
 	bool											m_bChangeAnim;
+	bool											m_bUseOffset;
 	Types::ActorState							m_ownerState;
 	Types::VerticalState						m_ownerVerticalState;
 	Types::Direction							m_ownerDirection;
-	HBRUSH										m_hBrush;
-	HBRUSH										m_hOldBrush;
+	//HBRUSH										m_hBrush;
+	//HBRUSH										m_hOldBrush;
 
 };

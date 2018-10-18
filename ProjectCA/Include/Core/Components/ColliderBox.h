@@ -12,31 +12,32 @@ public:
 
 
 public:
-	virtual bool Init(CActor* owner, const Types::tstring& strTag = TEXT("Collider")) override;
-	virtual void Update(double fDeltaTime) override;
+	virtual bool PostInit(CActor* owner, const Types::tstring& strTag = TEXT("Collider")) override;
+	virtual void Init() override;
+	virtual void Update(double dDeltaTime) override;
 	//virtual void ResolveCollision(Types::ObjectType type, CollisionType collision) override;
 
-public:
-	const Types::Rect& GetBoxSize() const { return m_BoxSize; }
-	void SetBoxSize(float left, float top, float right, float bottom) {
-		m_BoxSize.left = left;
-		m_BoxSize.top = top;
-		m_BoxSize.right = right;
-		m_BoxSize.bottom = bottom;
-	}
-	UINT GetProbsWidth() const { return m_iWidth; }
-	void SetProbsWidth(UINT width) { if (width > 0) m_iWidth = width; }
-	UINT GetProbsHeight() const { return m_iHeight; }
-	void SetProbsHeight(UINT height) { if (height > 0) m_iHeight = height; }
 
+public:
+	virtual void DrawCollider(const HDC& hDC) override;
+
+
+public:
+	const Types::Rect& GetRect() const { return m_BoxSize; }
+	float GetWidth() const { return m_fWidth; }
+	void SetWidth(float fWidth) { if (fWidth > 0) m_fWidth = fWidth; }
+	float GetHeight() const { return m_fHeight; }
+	void SetHeight(float fHeight) { if (fHeight > 0) m_fHeight = fHeight; }
+	void SetSize(float fWidth, float fHeight);
+	void SetRect(float left, float top, float right, float bottom);
 
 private:
 
 
 	
 private:
-	UINT			m_iWidth;
-	UINT			m_iHeight;
+	float			m_fWidth;
+	float			m_fHeight;
 	Types::Rect	m_BoxSize;
 
 

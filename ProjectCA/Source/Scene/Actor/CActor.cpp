@@ -136,3 +136,16 @@ void CActor::FlipVector()
 
 	//Debug::MessageInfo(TEXT("FlipVector"));
 }
+
+void CActor::FlipActorDirection()
+{
+	if (m_direction == Types::DIR_LEFT)
+		m_direction = Types::DIR_RIGHT;
+	else if (m_direction == Types::DIR_RIGHT)
+		m_direction = Types::DIR_LEFT;
+	else if (m_direction == Types::DIR_UP)
+		m_direction = Types::DIR_DOWN;
+	else if (m_direction == Types::DIR_DOWN)
+		m_direction = Types::DIR_UP;
+
+}

@@ -5,17 +5,6 @@
 
 //TODO :	 InputManager와 연동해서 조작키 변경할 수 있게끔 만들자.
 
-struct KeyInfo {
-	KeyInfo(const Types::tstring& strKeyname, SHORT iKeyCode, bool bPressed) 
-		:m_strKeyName(strKeyname), m_iKeyKode(iKeyCode), m_bPressed(bPressed)
-	{
-
-	}
-
-	Types::tstring	m_strKeyName;
-	SHORT			m_iKeyKode;
-	bool				m_bPressed;
-};
 
 
 class PlayerInputComponent : public InputComponent {
@@ -26,13 +15,13 @@ public:
 
 	
 public:
-	virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent")) override;
+	virtual bool PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent")) override;
+	virtual void Init(){ }
 	virtual void Update(double fDeltaTime) override;
 
 
 public:
-	bool GetKeyDown(const Types::tstring& steKeyName);
-	//bool GetKeyDown(const Types::tstring& steKeyName);
+	bool GetKeyDown(const Types::tstring& strKeyName);
 
 
 private:
@@ -41,6 +30,6 @@ private:
 
 
 private:
-	std::vector<KeyInfo>	m_keyInfoList;
+	std::vector<Types::KeyInfo>	m_keyInfoList;
 
 };

@@ -22,6 +22,12 @@ MainWindow::~MainWindow()
 	m_pTimer->Destroy();
 	//CActorManager::Destroy();
 
+	if (m_hBrush)
+		DeleteObject(m_hBrush);
+
+	if (m_hOldBrush)
+		DeleteObject(m_hOldBrush);
+
 	ReleaseDC(m_hWnd, m_hDC);
 	//DeleteDC(m_hMemDC);
 
@@ -61,8 +67,8 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	if (m_pBackBuffer == nullptr)
 		m_pBackBuffer = std::make_unique<BackBuffer>(m_hDC);
 
-	//m_hBackground = (HBITMAP)LoadImage(m_hInstance, TEXT("D:/Projects/VIsualStudio17/ProjectCA/ProjectCA/Resources/Sprite/Background/background_mountain1.bmp"),
-	//	IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	m_hBrush					= (HBRUSH)GetStockObject(NULL_BRUSH);
+
 
 	return true;
 }
@@ -84,6 +90,7 @@ void MainWindow::Render()
 	if (!m_pBackBuffer->DrawSet(m_hDC))
 		return ;
 
+	m_hOldBrush = (HBRUSH)SelectObject(m_pBackBuffer->GetMemDC(), m_hBrush);
 	//HDC hMemDC = CreateCompatibleDC(m_pBackBuffer->GetMemDC());
 	//HBITMAP hOldBit = (HBITMAP)SelectObject(hMemDC, m_hBackground);
 	//BitBlt(m_pBackBuffer->GetMemDC(), 0, 0, MAX_WIDTH, MAX_HEIGHT, hMemDC, 0, 0, SRCCOPY);
@@ -92,6 +99,8 @@ void MainWindow::Render()
 	m_pSceneManager->Render(m_pBackBuffer->GetMemDC());
 	m_pTimer->DrawFPS(m_pBackBuffer->GetMemDC());
 	BitBlt(m_hDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, m_pBackBuffer->GetMemDC(), 0, 0, SRCCOPY);
+
+	m_hBrush = (HBRUSH)SelectObject(m_pBackBuffer->GetMemDC() , m_hOldBrush);
 
 	m_pBackBuffer->DrawEnd();
 

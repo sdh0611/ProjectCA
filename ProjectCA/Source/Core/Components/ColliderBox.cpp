@@ -8,24 +8,13 @@
 ColliderBox::ColliderBox()
 	:Collider(CT_BOX), m_BoxSize(0, 0, 0, 0)
 {
-
-	//Debug::MessageInfo(TEXT("Create Box!"));
 }
-
-//ColliderBox::ColliderBox(CObject * owner, const Types::Rect& rect) :
-//	Collider(owner, CT_BOX), m_BoxSize(rect),
-//	m_iWidth(rect.right - rect.left), m_iHeight(rect.bottom - rect.top)
-//{     
-//	//Debug::MessageInfo(TEXT("Create Box2!"));
-//	
-//}
 
 ColliderBox::~ColliderBox()
 {
-	//Debug::MessageInfo(TEXT("Bos Destruct"));
 }
 
-bool ColliderBox::Init(CActor* pOwner, const Types::tstring& strTag)
+bool ColliderBox::PostInit(CActor* pOwner, const Types::tstring& strTag)
 {
 	auto pActor = std::shared_ptr<CActor>(pOwner);
 
@@ -35,14 +24,16 @@ bool ColliderBox::Init(CActor* pOwner, const Types::tstring& strTag)
 	//m_ColliderPoint = point;
 	m_pOwner = pActor;
 	
-	//처음 Init할 때 기본값으로 Object의 너비, 높이를 따라가도록 함.
-	m_iWidth = m_pOwner->GetActorWidth();
-	m_iHeight = m_pOwner->GetActorHeight();
+	//처음 Init할 때 기본값으로 Actor의 너비, 높이를 따라가도록 함.
+	m_fWidth = m_pOwner->GetActorWidth();
+	m_fHeight = m_pOwner->GetActorHeight();
 
-	m_BoxSize.left = m_pOwner->GetActorPoint().x;
-	m_BoxSize.top = m_pOwner->GetActorPoint().y;
-	m_BoxSize.right = m_pOwner->GetActorPoint().x + m_pOwner->GetActorWidth();
-	m_BoxSize.bottom = m_pOwner->GetActorPoint().y + m_pOwner->GetActorHeight();
+	m_ColliderPoint = m_CurColliderPoint = m_pOwner->GetActorPoint();
+
+	m_BoxSize.left = m_CurColliderPoint.x - m_fWidth / 2;
+	m_BoxSize.top = m_CurColliderPoint.y - m_fHeight;
+	m_BoxSize.right = m_CurColliderPoint.x + m_fWidth / 2;
+	m_BoxSize.bottom = m_CurColliderPoint.y;
 
 	m_bIsCollision = false;
 	m_strComponentTag = strTag;
@@ -51,23 +42,50 @@ bool ColliderBox::Init(CActor* pOwner, const Types::tstring& strTag)
 	return true;
 }
 
-//bool ColliderBox::Init(CActor * owner, const Types::tstring & strTag)
-//{
-//	//m_Collide
-//
-//
-//	return true;
-//}
+void ColliderBox::Init()
+{
+	m_CurColliderPoint = m_ColliderPoint;
+
+	m_BoxSize.left = m_ColliderPoint.x - m_fWidth / 2;
+	m_BoxSize.top = m_ColliderPoint.y - m_fHeight;
+	m_BoxSize.right = m_ColliderPoint.x + m_fWidth / 2;
+	m_BoxSize.bottom = m_ColliderPoint.y;
+
+}
+
 
 //물체가 움직임에 따라 CollisionBox의 좌표도 같이 이동해야함.
-//아직 Offset적용 전이라 일단 해놓고, 나중에 Offset 적용할 때 수정할 것.(5.31)
-void ColliderBox::Update(double fDeltaTime)
+void ColliderBox::Update(double dDeltaTime)
 {
 	//물체 위치에 따라 CollisionBox 위치이동
-	m_BoxSize.left = m_pOwner->GetActorPoint().x;
-	m_BoxSize.top = m_pOwner->GetActorPoint().y;
-	m_BoxSize.right = m_pOwner->GetActorPoint().x + (float)m_iWidth;
-	m_BoxSize.bottom = m_pOwner->GetActorPoint().y + (float)m_iHeight;
+	//m_BoxSize.left = m_pOwner->GetActorPoint().x;
+	//m_BoxSize.top = m_pOwner->GetActorPoint().y;
+	//m_BoxSize.right = m_pOwner->GetActorPoint().x + (float)m_iWidth;
+	//m_BoxSize.bottom = m_pOwner->GetActorPoint().y + (float)m_iHeight;
+	auto pComponent = m_pOwner->GetComponent(TEXT("PhysicsComponent"));
+	if (pComponent)
+	{
+		auto pPhysics = static_cast<PhysicsComponent*>(pComponent);
+		
+		float fCurSpeed = pPhysics->GetCurSpeed();
+		float fCurJump = pPhysics->GetCurJumpForce();
+		
+		float fCurWidth = m_fWidth;
+		float fCurHeight = m_fHeight;
+
+		m_CurColliderPoint.x += fCurSpeed * dDeltaTime;
+		m_CurColliderPoint.y -= fCurJump * dDeltaTime;
+
+		if (m_pOwner->GetActorState() == Types::AS_SITDOWN)
+		{
+			fCurHeight /= 2.f;
+		}
+		m_BoxSize.left = m_CurColliderPoint.x - fCurWidth / 2;
+		m_BoxSize.top = m_CurColliderPoint.y - fCurHeight;
+		m_BoxSize.right = m_CurColliderPoint.x + fCurWidth / 2;
+		m_BoxSize.bottom = m_CurColliderPoint.y;
+		
+	}
 
 	if (m_bIsCollision) {
 		//m_bIsCollision = false;
@@ -78,6 +96,29 @@ void ColliderBox::Update(double fDeltaTime)
 		//physics->Update(deltaTime);
 	}
 	
+}
+
+void ColliderBox::DrawCollider(const HDC & hDC)
+{
+	Rectangle(hDC, m_BoxSize.left, m_BoxSize.top, m_BoxSize.right, m_BoxSize.bottom);
+
+}
+
+void ColliderBox::SetSize(float fWidth, float fHeight)
+{
+	if (fWidth < 0.f || fHeight < 0.f)
+		return;
+
+	m_fWidth = fWidth;
+	m_fHeight = fHeight;
+}
+
+void ColliderBox::SetRect(float left, float top, float right, float bottom)
+{
+	m_BoxSize.left = left;
+	m_BoxSize.top = top;
+	m_BoxSize.right = right;
+	m_BoxSize.bottom = bottom;
 }
 
 //void ColliderBox::ResolveCollision(Types::ObjectType type, CollisionType collision)

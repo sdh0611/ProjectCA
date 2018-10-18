@@ -41,7 +41,7 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 	//AIComponent (InputComponent) 초기화
 	AIComponent* pAI = new AIComponent;
-	if (!pAI->Init(this))
+	if (!pAI->PostInit(this))
 		return false;
 
 	if (!AddComponent(pAI, pAI->GetComponentTag()))
@@ -49,15 +49,15 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 	//PhysicsComponent 초기화
 	PhysicsComponent* pPhysics = new PhysicsComponent;
-	if (!pPhysics->Init(this, 0.f, 0.f, 0.f, 0.f))
+	if (!pPhysics->PostInit(this, 0.f, 0.f, 0.f, 0.f))
 		return false;
 
-	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
-		return false;
+	//if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
+	//	return false;
 
 	//Collider 초기화
 	ColliderBox* pCollider = new ColliderBox;
-	if (!pCollider->Init(this))
+	if (!pCollider->PostInit(this))
 		return false;
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
@@ -79,7 +79,12 @@ void CProb::Update(double fDeltaTime)
 
 void CProb::Render(const HDC & hDC)
 {
-	Rectangle(hDC, m_actorPoint.x, m_actorPoint.y, m_actorPoint.x + m_iActorWidth, m_actorPoint.y + m_iActorHeight);
+	Types::Point offset;
+
+	offset.x = m_actorPoint.x - (float)m_iActorWidth / 2.f;
+	offset.y = m_actorPoint.y - (float)m_iActorHeight;
+
+	Rectangle(hDC, offset.x, offset.y, offset.x + m_iActorWidth, offset.y + m_iActorHeight);
 
 }
 

@@ -14,8 +14,9 @@
 
 #include "..\..\stdafx.h"
 
-
 class CActor;
+class CTile;
+
 
 class CWorld {
 	friend class CGameScene;
@@ -26,8 +27,10 @@ private:
 
 
 public:
+	bool PostInit();
 	bool Init();
-	void Update(float fDeltaTime);
+	void Update(double dDeltaTime);
+	void Render(const HDC& hDC);
 
 
 public:
@@ -51,6 +54,5 @@ private:
 	
 private:
 	std::list<std::weak_ptr<CActor>>				m_actorList;
-	std::unique_ptr<class CollisionDetector>		m_pCollisionDetector;
 
 };

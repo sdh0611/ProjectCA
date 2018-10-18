@@ -97,6 +97,12 @@
     <Filter Include="헤더 파일\Scene\Actors\Pickup">
       <UniqueIdentifier>{224b2f3b-67c3-47cf-83f0-70e283d06858}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Scene\World">
+      <UniqueIdentifier>{e93193a0-8b9e-46b0-b22e-395d0bdc750b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene\World">
+      <UniqueIdentifier>{8e0706e5-88c7-406c-a08e-dd855a89604b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -138,9 +144,6 @@
     <ClCompile Include="Source\Core\Debuging\Debug.cpp">
       <Filter>소스 파일\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\CollisionDetector.cpp">
-      <Filter>소스 파일\Core\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\CResourceManager.cpp">
       <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
@@ -161,9 +164,6 @@
     </ClCompile>
     <ClCompile Include="Source\Core\Components\HPComponent.cpp">
       <Filter>소스 파일\Core\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\InputManager.cpp">
-      <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CBomb.cpp">
       <Filter>소스 파일\Scene\Actors</Filter>
@@ -197,6 +197,27 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CBackground.cpp">
       <Filter>소스 파일\Scene\Actors\Prob</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CKoopa.cpp">
+      <Filter>소스 파일\Scene\Actors\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CCamera.cpp">
+      <Filter>소스 파일\Scene\Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\CCameraManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\CWorld.cpp">
+      <Filter>소스 파일\Scene\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\CTile.cpp">
+      <Filter>소스 파일\Scene\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\CInputManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\CCollisionManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -245,9 +266,6 @@
     <ClInclude Include="Include\Core\Debuging\Debug.h">
       <Filter>헤더 파일\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Core\CollisionDetector.h">
-      <Filter>헤더 파일\Core\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\CResourceManager.h">
       <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
@@ -271,9 +289,6 @@
     </ClInclude>
     <ClInclude Include="Include\Core\Components\HPComponent.h">
       <Filter>헤더 파일\Core\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Core\InputManager.h">
-      <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CBomb.h">
       <Filter>헤더 파일\Scene\Actors</Filter>
@@ -304,6 +319,27 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CBackground.h">
       <Filter>헤더 파일\Scene\Actors\Prob</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CKoopa.h">
+      <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CCamera.h">
+      <Filter>헤더 파일\Scene\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CCameraManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CWorld.h">
+      <Filter>헤더 파일\Scene\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CTile.h">
+      <Filter>헤더 파일\Scene\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\CInputManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\CCollisionManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

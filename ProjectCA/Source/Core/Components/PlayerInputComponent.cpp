@@ -9,19 +9,19 @@ PlayerInputComponent::~PlayerInputComponent()
 {
 }
 
-bool PlayerInputComponent::Init(CActor* pOwner, const Types::tstring & strTag)
+bool PlayerInputComponent::PostInit(CActor* pOwner, const Types::tstring & strTag)
 {
 	auto pActor = std::shared_ptr<CActor>(pOwner);
 
 	m_pOwner = pActor;
 	m_strComponentTag = strTag;
 
-	m_keyInfoList.push_back(KeyInfo(TEXT("UP"), VK_UP, false));
-	m_keyInfoList.push_back(KeyInfo(TEXT("DOWN"), VK_DOWN, false));
-	m_keyInfoList.push_back(KeyInfo(TEXT("RIGHT"), VK_RIGHT, false));
-	m_keyInfoList.push_back(KeyInfo(TEXT("LEFT"), VK_LEFT, false));
-	m_keyInfoList.push_back(KeyInfo(TEXT("JUMP"), 'X', false));
-	m_keyInfoList.push_back(KeyInfo(TEXT("ACCEL"), 'A', false));
+	m_keyInfoList.push_back(Types::KeyInfo(TEXT("UP"), VK_UP, false));
+	m_keyInfoList.push_back(Types::KeyInfo(TEXT("DOWN"), VK_DOWN, false));
+	m_keyInfoList.push_back(Types::KeyInfo(TEXT("RIGHT"), VK_RIGHT, false));
+	m_keyInfoList.push_back(Types::KeyInfo(TEXT("LEFT"), VK_LEFT, false));
+	m_keyInfoList.push_back(Types::KeyInfo(TEXT("JUMP"), 'X', false));
+	m_keyInfoList.push_back(Types::KeyInfo(TEXT("ACCEL"), 'A', false));
 	//m_keyInfoList.push_back(KeyInfo(TEXT("RESET"), VK_ESCAPE, false));
 
 	return true;
@@ -34,13 +34,13 @@ void PlayerInputComponent::Update(double fDeltaTime)
 
 }
 
-bool PlayerInputComponent::GetKeyDown(const Types::tstring & steKeyName)
+bool PlayerInputComponent::GetKeyDown(const Types::tstring & strKeyName)
 {
 	bool bPressed = false;
 
 	for (auto& it : m_keyInfoList) 
 	{
-		if (steKeyName == it.m_strKeyName)
+		if (strKeyName == it.m_strKeyName)
 		{
 			bPressed = it.m_bPressed;
 			break;
@@ -60,7 +60,7 @@ void PlayerInputComponent::UpdateKeyDown()
 {
 	for (auto& it : m_keyInfoList)
 	{
-		if (KEY_DOWN(it.m_iKeyKode))
+		if (KEY_DOWN(it.m_iKeyCode))
 			it.m_bPressed = true;
 		else
 			it.m_bPressed = false;

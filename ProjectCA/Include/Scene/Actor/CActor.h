@@ -72,11 +72,11 @@ public:
 	void SetActorHeight(UINT iHeight) { m_iActorHeight = iHeight; }
 	Types::Point GetActorPoint() const { return m_actorPoint; }
 	bool SetActorPoint(float fx, float fy) {
-		if (fx < 0 || fy < 0)
-			return false;
+		//if (fx < 0 || fy < 0)
+		//	return false;
 	
-		if (fx > MAX_WIDTH || fy > MAX_HEIGHT)
-			return false;
+		//if (fx > MAX_WIDTH || fy > MAX_HEIGHT)
+		//	return false;
 
 		m_actorPoint.x = fx;
 		m_actorPoint.y = fy;
@@ -98,6 +98,7 @@ public:
 	void SetOwnerScene(CGameScene* pScene);
 	bool SetLayer(const Types::tstring& strLayerTag);
 	void FlipVector();
+	void FlipActorDirection();
 
 
 protected:

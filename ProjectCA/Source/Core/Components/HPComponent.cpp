@@ -10,7 +10,7 @@ HPComponent::~HPComponent()
 {
 }
 
-bool HPComponent::Init(std::shared_ptr<CActor> pOwner, float fHP, float fMaxHP, 
+bool HPComponent::PostInit(std::shared_ptr<CActor> pOwner, float fHP, float fMaxHP, 
 	const Types::tstring & strTag)
 {
 	m_pOwner = pOwner;

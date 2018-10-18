@@ -51,7 +51,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	//PlayerInputComponent (InputComponent) 초기화
 	PlayerInputComponent* pAI = new PlayerInputComponent;
-	if (!pAI->Init(this))
+	if (!pAI->PostInit(this))
 		return false;
 
 	if (!AddComponent(pAI, pAI->GetComponentTag()))
@@ -59,7 +59,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	//PhysicsComponent 초기화
 	PhysicsComponent* pPhysics = new PhysicsComponent;
-	if (!pPhysics->Init(this, 300.f, 700.f, 1300.f, 700.f))
+	if (!pPhysics->PostInit(this, 300.f, 700.f, 1300.f, 700.f))
 		return false;
 
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
@@ -67,7 +67,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	//Collider 초기화
 	ColliderBox* pCollider = new ColliderBox;
-	if (!pCollider->Init(this))
+	if (!pCollider->PostInit(this))
 		return false;
 
 	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther)->void 
@@ -97,69 +97,71 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
+	pCollider->SetSize(m_iActorWidth*0.45, m_iActorHeight*0.9);
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
 
 	//RenderComponent 추가
 	RenderComponent* pRender = new RenderComponent;
-	if (!pRender->Init(this))
+	if (!pRender->PostInit(this))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("IdleRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleRight"), m_iActorWidth, m_iActorHeight, false, false, TEXT("IdleRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("IdleLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerIdleLeft"), m_iActorWidth, m_iActorHeight, false, false, TEXT("IdleLeft")))
 		return false;
 
-	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, true, true, TEXT("WalkRight")))
+	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkRight"), m_iActorWidth, m_iActorHeight, true, true, TEXT("WalkRight")))
 		return false;
 
-	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, true, true, TEXT("WalkLeft")))
+	if (!pRender->AddAnim(0.2f, TEXT("PlayerWalkLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("WalkLeft")))
 		return false;
 
-	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, true, true, TEXT("RunRight")))
+	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunRight"), m_iActorWidth, m_iActorHeight, true, true, TEXT("RunRight")))
 		return false;
 
-	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, true, true, TEXT("RunLeft")))
+	if (!pRender->AddAnim(0.05f, TEXT("PlayerRunLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("RunLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("LookupRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupRight"), m_iActorWidth, m_iActorHeight, false, false, TEXT("LookupRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("LookupLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerLookupLeft"), m_iActorWidth, m_iActorHeight, false, false, TEXT("LookupLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("SitdownRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownRight"), m_iActorWidth, m_iActorHeight, false, false, TEXT("SitdownRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("SitdownLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerSitdownLeft"), m_iActorWidth, m_iActorHeight, false, false, TEXT("SitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("JumpRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpRight"), m_iActorWidth, m_iActorHeight, false, false, TEXT("JumpRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("JumpLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerJumpLeft"), m_iActorWidth, m_iActorHeight, false, false, TEXT("JumpLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("FalldownRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownRight"), m_iActorWidth, m_iActorHeight, false, false, TEXT("FalldownRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("FalldownLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerFalldownLeft"), m_iActorWidth, m_iActorHeight, false, false, TEXT("FalldownLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("RunJumpRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpRight"), m_iActorWidth, m_iActorHeight, false, false, TEXT("RunJumpRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerRunJumpLeft"), m_iActorWidth, m_iActorHeight, false, false, TEXT("RunJumpLeft")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerTurnRight"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("TurnRight")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerTurnRight"), m_iActorWidth, m_iActorHeight, false, false, TEXT("TurnRight")))
 		return false;
 
-	if (!pRender->AddAnim(3.f, TEXT("PlayerTurnLeft"), SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, false, false, TEXT("TurnLeft")))
+	if (!pRender->AddAnim(3.f, TEXT("PlayerTurnLeft"), m_iActorWidth, m_iActorHeight, false, false, TEXT("TurnLeft")))
 		return false;
 
+	pRender->SetUseOffset(true);
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
@@ -172,22 +174,27 @@ bool CPlayer::Init()
 {
 	m_actorPoint = m_spawnPoint;
 		
+	for (auto& it : m_componentTable)
+		it.second->Init();
 
 	return true;
 }
 
-void CPlayer::Update(double fDeltaTime)
+void CPlayer::Update(double dDeltaTime)
 {
-	CActor::Update(fDeltaTime);
+	CActor::Update(dDeltaTime);
 
 }
 
 void CPlayer::Render(const HDC & hDC)
 {
 	auto it = m_componentTable.find(TEXT("RenderComponent"));
-
 	if (it != m_componentTable.end())
 		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
+
+	auto pColliderIt = m_componentTable.find(TEXT("Collider"));
+	if(pColliderIt != m_componentTable.end())
+		static_cast<Collider*>((*pColliderIt).second)->DrawCollider(hDC);
 
 	if (static_cast<Collider*>(GetComponent(TEXT("Collider")))->GetIsCollision()) {
 		TextOut(hDC, m_actorPoint.x, m_actorPoint.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
@@ -204,4 +211,12 @@ void CPlayer::Render(const HDC & hDC)
 
 void CPlayer::ActorBehavior()
 {
+
+
+
+
+
+
+
+
 }

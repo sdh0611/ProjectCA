@@ -3,12 +3,11 @@
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CLayer.h"
-#include "..\..\Include\Core\CollisionDetector.h"
+#include "..\..\Include\Core\CCollisionManager.h"
 
 
 
 CWorld::CWorld()
-	:m_pCollisionDetector(nullptr)
 {
 
 }
@@ -22,17 +21,21 @@ CWorld::~CWorld()
 
 }
 
+bool CWorld::PostInit()
+{
+	return false;
+}
+
 bool CWorld::Init()
 {
-	m_pCollisionDetector = std::make_unique<CollisionDetector>();
-
+	
 	//m_lastActorID = 0;
 
 	return true;
 }
 
 //CWorld Class에서 관리하는 weak_ptr List중 가리키는 포인터가 소멸됬는지 확인.
-void CWorld::Update(float fDeltaTime)
+void CWorld::Update(double dDeltaTime)
 {
 	for (auto it = m_actorList.begin(); it != m_actorList.end(); ) {
 		if ((*it).expired()) {
@@ -43,9 +46,15 @@ void CWorld::Update(float fDeltaTime)
 		}
 
 	}
-	
+
 
 }
+
+void CWorld::Render(const HDC & hDC)
+{
+}
+
+
 void CWorld::AddActor(std::shared_ptr<CActor> pActor)
 {
 	m_actorList.emplace_back(std::weak_ptr<CActor>(pActor));

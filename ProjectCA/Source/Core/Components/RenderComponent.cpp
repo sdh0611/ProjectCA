@@ -9,47 +9,52 @@
 
 
 RenderComponent::RenderComponent()
-	:m_bVisible(true), m_bChangeAnim(false)
+	:m_bVisible(true), m_bChangeAnim(false), m_bUseOffset(false)
 {
 }
 
 RenderComponent::~RenderComponent()
 {
-	if (m_hBrush)
-		DeleteObject(m_hBrush);
+	//if (m_hBrush)
+	//	DeleteObject(m_hBrush);
 	
 	m_animationTable.clear();
 
 }
 
-bool RenderComponent::Init(CActor * pOwner, const Types::tstring & strTag)
+bool RenderComponent::PostInit(CActor * pOwner, const Types::tstring & strTag)
 {
 	std::shared_ptr<CActor> pActor = std::shared_ptr<CActor>(pOwner);
-	m_pOwner				= pActor;
+	m_pOwner					= pActor;
 
-	m_strComponentTag = strTag;
+	m_strComponentTag		= strTag;
 	
-	m_ownerState			= m_pOwner->GetActorState();
-	m_ownerVerticalState	= m_pOwner->GetActorVerticalState();
-	m_ownerDirection		= m_pOwner->GetActorDirection();
+	m_ownerState				= m_pOwner->GetActorState();
+	m_ownerVerticalState		= m_pOwner->GetActorVerticalState();
+	m_ownerDirection			= m_pOwner->GetActorDirection();
 
-	m_hBrush				= (HBRUSH)GetStockObject(NULL_BRUSH);
-	m_animationState		= Types::AM_IDLE;
+	//m_hBrush					= (HBRUSH)GetStockObject(NULL_BRUSH);
+	m_animationState			= Types::AM_IDLE;
+
+	m_offset.x = 0;
+	m_offset.y = 0;
 
 	return true;
 }
 
 void RenderComponent::Update(double dDeltaTime)
 {
-	//if (m_ownerState != m_pOwner->GetActorState()
-	//	|| m_ownerDirection != m_pOwner->GetActorDirection()
-	//	|| m_ownerJumpState != m_pOwner->GetActorJumpState())
-	//{
-		m_ownerState = m_pOwner->GetActorState();
-		m_ownerDirection = m_pOwner->GetActorDirection();
-		m_ownerVerticalState = m_pOwner->GetActorVerticalState();
 
-	//}
+	if (m_bUseOffset)
+	{
+		m_offset.x = m_pOwner->GetActorPoint().x - m_pWeakCurAnim.lock()->GetDrawWidth() / 2;
+		m_offset.y = m_pOwner->GetActorPoint().y - m_pWeakCurAnim.lock()->GetDrawHeight();
+	}
+
+	m_ownerState = m_pOwner->GetActorState();
+	m_ownerDirection = m_pOwner->GetActorDirection();
+	m_ownerVerticalState = m_pOwner->GetActorVerticalState();
+
 	UpdateAnimationMotion();
 	ChangeAnimationCilp(m_animationState);
 	m_pWeakCurAnim.lock()->Update(dDeltaTime);
@@ -59,16 +64,26 @@ void RenderComponent::Update(double dDeltaTime)
 //DC핸들값은 BackBuffer의 DC를 받아와야 한다.
 void RenderComponent::Draw(const HDC & hDC)
 {
+	Types::Point point;
+	if (m_bUseOffset)
+	{
+		point = m_offset;
+	}
+	else
+	{
+		point = m_pOwner->GetActorPoint();
+	}
+
 	if (m_bVisible) 
 	{
-		m_hOldBrush = (HBRUSH)SelectObject(hDC, m_hBrush);
+		//m_hOldBrush = (HBRUSH)SelectObject(hDC, m_hBrush);
 		//m_animTable[m_ownerState]->Draw(hDC, hMemDC);
-		m_pWeakCurAnim.lock()->Draw(hDC);
+		m_pWeakCurAnim.lock()->Draw(hDC, point);
 
-		Rectangle(hDC, m_pOwner->GetActorPoint().x, m_pOwner->GetActorPoint().y,
-			m_pOwner->GetActorPoint().x + m_pOwner->GetActorWidth(),
-			m_pOwner->GetActorPoint().y + m_pOwner->GetActorHeight());
-		m_hBrush = (HBRUSH)SelectObject(hDC, m_hOldBrush);
+		//Rectangle(hDC, m_offset.x, m_offset.y,
+		//	m_offset.x + m_pOwner->GetActorWidth(),
+		//	m_offset.y + m_pOwner->GetActorHeight());
+		//m_hBrush = (HBRUSH)SelectObject(hDC, m_hOldBrush);
 	
 	}		
 
@@ -225,6 +240,19 @@ void RenderComponent::UpdateAnimationMotion()
 		SetAnimationPlaySpeed(1.f);
 	
 
+}
+
+//나중에 Animation 크기를 owner Actor의 크기로 대체하자.(10.16)
+void RenderComponent::SetOffset()
+{
+	m_offset.x = m_pOwner->GetActorPoint().x - m_pWeakCurAnim.lock()->GetDrawWidth() / 2;
+	m_offset.y = m_pOwner->GetActorPoint().y - m_pWeakCurAnim.lock()->GetDrawHeight();
+}
+
+void RenderComponent::SetOffset(float fx, float fy)
+{
+	m_offset.x = fx;
+	m_offset.y = fy;
 }
 
 bool RenderComponent::SetAnimationPlaySpeed(double dSpeed)

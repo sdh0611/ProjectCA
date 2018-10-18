@@ -13,7 +13,7 @@ public:
 
 	
 public:
-	virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent"));
+	virtual bool PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent"));
 	virtual void Update(double fDeltaTime) = 0;
 
 

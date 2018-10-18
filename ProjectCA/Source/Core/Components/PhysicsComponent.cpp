@@ -16,7 +16,7 @@ PhysicsComponent::~PhysicsComponent()
 {
 }
 
-bool PhysicsComponent::Init(CActor* pOwner, float fSpeed, float fMaxSpeed, float fGravity, 
+bool PhysicsComponent::PostInit(CActor* pOwner, float fSpeed, float fMaxSpeed, float fGravity, 
 	float fJumpForce, const Types::tstring& strTag)
 {
 	auto pActor= std::shared_ptr<CActor>(pOwner);
@@ -36,6 +36,7 @@ bool PhysicsComponent::Init(CActor* pOwner, float fSpeed, float fMaxSpeed, float
 	m_strComponentTag		= strTag;
 	m_bGrounded				= false;
 	m_bAccel					= false;
+	
 
 	return true;
 }
@@ -44,19 +45,13 @@ void PhysicsComponent::Update(double dDeltaTime)
 {
 	m_dTimeElapsed += dDeltaTime;
 	m_lastActorPoint = m_pOwner->GetActorPoint();
+
 	Gravity(dDeltaTime);
 	Move(dDeltaTime);
 
-	//if (m_pOwner->GetActorDirection() == Types::DIR_LEFT)
-	//{
-		m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + (m_fXSpeed * dDeltaTime),
-			m_pOwner->GetActorPoint().y - m_fYSpeed * dDeltaTime);
-	//}
-	//else if (m_pOwner->GetActorDirection() == Types::DIR_RIGHT)
-	//{
-	//	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + (m_fXSpeed * dDeltaTime),
-	//		m_pOwner->GetActorPoint().y - m_fYSpeed * dDeltaTime);
-	//}
+	m_pOwner->SetActorPoint(m_pOwner->GetActorPoint().x + (m_fXSpeed * dDeltaTime),
+		m_pOwner->GetActorPoint().y - m_fYSpeed * dDeltaTime);
+
 	m_bGrounded = false;
 }
 
@@ -102,7 +97,6 @@ void PhysicsComponent::Move(double dDeltaTime)
 				if (m_fXSpeed < 0.f)
 					m_fXSpeed = 0.f;
 			}
-			//printf("Speed : %f\n", m_fXSpeed);
 		}
 	}
 	else if (dir == Types::DIR_RIGHT)
@@ -125,7 +119,6 @@ void PhysicsComponent::Move(double dDeltaTime)
 		{
 			if (m_fXSpeed > 0.f)
 			{
-				printf("Speed : %f\n", m_fXSpeed);
 				m_fXSpeed -= 5;
 				if (m_fXSpeed < 0.f)
 					m_fXSpeed = 0.f;
@@ -147,6 +140,7 @@ void PhysicsComponent::Gravity(double dDeltaTime)
 {
 	Types::VerticalState state = m_pOwner->GetActorVerticalState();
 
+	
 	if (m_bGrounded)
 		m_fYSpeed = 0.f;
 
@@ -157,17 +151,21 @@ void PhysicsComponent::Gravity(double dDeltaTime)
 	if (state != Types::VS_FALL && m_fYSpeed < 0.f)
 		m_pOwner->SetActorVerticalState(Types::VS_FALL);
 	
-	if (state != Types::VS_JUMP && !m_bGrounded) 
+	if (state != Types::VS_JUMP) 
 	{
-		m_pOwner->SetActorVerticalState(Types::VS_FALL);
+		if (!m_bGrounded)
+		{
+			m_pOwner->SetActorVerticalState(Types::VS_FALL);
+		}
 	}
-	else if (state == Types::VS_JUMP) 
+	else 
 	{
-		if (m_pOwner->GetActorPreVerticalState() != Types::VS_JUMP) {
+		if (m_pOwner->GetActorPreVerticalState() != Types::VS_JUMP) 
+		{
 			m_fYSpeed = m_fJumpForce;
 		}
 	}
-
+	
 	if(!m_bGrounded)
 		if(m_fYSpeed > -800.f)
 			m_fYSpeed -= m_fGravity * dDeltaTime;

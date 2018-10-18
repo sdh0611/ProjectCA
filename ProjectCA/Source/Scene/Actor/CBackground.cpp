@@ -36,11 +36,13 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	m_bActive = data.bActive;
 
 	RenderComponent* pRender = new RenderComponent;
-	if (!pRender->Init(this))
+	if (!pRender->PostInit(this))
 		return false;
 
-	if (!pRender->AddAnim(100.f, TEXT("BackgroundMountain2"), MAX_WIDTH, MAX_HEIGHT, false, false))
+	if (!pRender->AddAnim(100.f, TEXT("BackgroundMountain2"), m_iActorWidth, m_iActorHeight, false, false))
 		return false;
+
+	pRender->SetUseOffset(false);
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;

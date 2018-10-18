@@ -13,8 +13,9 @@ public:
 
 
 public:
-	virtual bool Init(CActor* pOwner, float fSpeed, float fMaxSpeed, float fGravity, 
+	virtual bool PostInit(CActor* pOwner, float fSpeed, float fMaxSpeed, float fGravity, 
 		float fJumpForce, const Types::tstring& strTag = TEXT("PhysicsComponent"));
+	virtual void Init() { }
 	virtual void Update(double fDeltaTime) override;
 
 
@@ -27,9 +28,10 @@ public:
 	float GetMaxSpeed() const { return m_fMaxSpeed; }
 	float GetSpeed() const { return m_fSpeed; }
 	void SetSpeed(float speed) { if (speed >= 0) m_fSpeed = speed; }
+	float GetCurJumpForce() const { return m_fYSpeed; }
 	float GetGravity() const { return m_fGravity; }
 	void SetGravity(float gravity) { if (gravity >= 0) m_fGravity = gravity; }
-	const float& GetJumpForce() const { return m_fGravity; }
+	const float& GetJumpForce() const { return m_fJumpForce; }
 	void SetJumpForce(float jumpForce) { if (m_fJumpForce >= 0) m_fJumpForce = jumpForce; }
 	const Types::Point& GetLastActorPoint() const { return m_lastActorPoint; }
 	void SetGrounded(bool bGrounded) { m_bGrounded = bGrounded; }

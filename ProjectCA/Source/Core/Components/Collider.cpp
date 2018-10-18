@@ -46,6 +46,12 @@ void Collider::OnCollision(std::shared_ptr<CActor> pOther)
 	//m_bIsCollision = false;
 }
 
+void Collider::OnTriggered(std::shared_ptr<CActor> pOther)
+{
+	if(m_pDelegate != nullptr)
+		m_pDelegate(m_pOwner, pOther);
+}
+
 Delegate Collider::SetDelegate(Delegate dele)
 {
 	Delegate temp = m_pDelegate;

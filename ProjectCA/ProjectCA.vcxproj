@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Source\Core\CollisionDetector.cpp" />
+    <ClCompile Include="Source\Core\CCollisionManager.cpp" />
     <ClCompile Include="Source\Core\Components\AIComponent.cpp" />
     <ClCompile Include="Source\Core\Components\Collider.cpp" />
     <ClCompile Include="Source\Core\Components\ColliderBox.cpp" />
@@ -154,7 +154,7 @@
     <ClCompile Include="Source\Core\Debuging\Debug.cpp" />
     <ClCompile Include="Source\Core\Graphic\CAnim.cpp" />
     <ClCompile Include="Source\Core\Graphic\CSprite.cpp" />
-    <ClCompile Include="Source\Core\InputManager.cpp" />
+    <ClCompile Include="Source\Core\CInputManager.cpp" />
     <ClCompile Include="Source\Core\Math\CVector.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window\BackBuffer.cpp" />
@@ -164,17 +164,22 @@
     <ClCompile Include="Source\Scene\Actor\CActorManager.cpp" />
     <ClCompile Include="Source\Scene\Actor\CBackground.cpp" />
     <ClCompile Include="Source\Scene\Actor\CBomb.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CCamera.cpp" />
     <ClCompile Include="Source\Scene\Actor\CEnemy.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CKoopa.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPlayer.cpp" />
     <ClCompile Include="Source\Scene\Actor\CProb.cpp" />
+    <ClCompile Include="Source\Scene\CCameraManager.cpp" />
     <ClCompile Include="Source\Scene\CGameScene.cpp" />
     <ClCompile Include="Source\Scene\CLayer.cpp" />
     <ClCompile Include="Source\Scene\CScene.cpp" />
     <ClCompile Include="Source\Scene\CSceneManager.cpp" />
+    <ClCompile Include="Source\Scene\CTile.cpp" />
+    <ClCompile Include="Source\Scene\CWorld.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Core\CollisionDetector.h" />
+    <ClInclude Include="Include\Core\CCollisionManager.h" />
     <ClInclude Include="Include\Core\Components\AIComponent.h" />
     <ClInclude Include="Include\Core\Components\Collider.h" />
     <ClInclude Include="Include\Core\Components\ColliderBox.h" />
@@ -188,7 +193,7 @@
     <ClInclude Include="Include\Core\Debuging\Debug.h" />
     <ClInclude Include="Include\Core\Graphic\CAnim.h" />
     <ClInclude Include="Include\Core\Graphic\CSprite.h" />
-    <ClInclude Include="Include\Core\InputManager.h" />
+    <ClInclude Include="Include\Core\CInputManager.h" />
     <ClInclude Include="Include\Core\Math\CVector.h" />
     <ClInclude Include="Include\Core\Timer.h" />
     <ClInclude Include="Include\Core\Window\BackBuffer.h" />
@@ -199,13 +204,18 @@
     <ClInclude Include="Include\Scene\Actor\CActorManager.h" />
     <ClInclude Include="Include\Scene\Actor\CBackground.h" />
     <ClInclude Include="Include\Scene\Actor\CBomb.h" />
+    <ClInclude Include="Include\Scene\Actor\CCamera.h" />
     <ClInclude Include="Include\Scene\Actor\CEnemy.h" />
+    <ClInclude Include="Include\Scene\Actor\CKoopa.h" />
     <ClInclude Include="Include\Scene\Actor\CPlayer.h" />
     <ClInclude Include="Include\Scene\Actor\CProb.h" />
+    <ClInclude Include="Include\Scene\CCameraManager.h" />
     <ClInclude Include="Include\Scene\CGameScene.h" />
     <ClInclude Include="Include\Scene\CLayer.h" />
     <ClInclude Include="Include\Scene\CScene.h" />
     <ClInclude Include="Include\Scene\CSceneManager.h" />
+    <ClInclude Include="Include\Scene\CTile.h" />
+    <ClInclude Include="Include\Scene\CWorld.h" />
     <ClInclude Include="Include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Types.h" />

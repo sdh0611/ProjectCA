@@ -19,7 +19,7 @@ public:
 	bool Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strSpriteName, UINT iWidth, UINT iHeight,
 		double dPlayTime, bool bLoop, bool bAnimate, const Types::tstring& strAnimTag = TEXT("Default"));
 	void Update(double fDeltaTIme);
-	void Draw(const HDC& hDC);
+	void Draw(const HDC& hDC, const Types::Point& point);
 
 
 public:
@@ -31,13 +31,18 @@ public:
 
 
 public:
+	UINT GetDrawWidth() const { return m_iDrawWidth; }
+	UINT GetDrawHeight() const { return m_iDrawHeight; }
+
+
+public:
 	const Types::tstring GetAnimTag() const { return m_strAnimTag; }
 	void ClearEleapsedTime() { m_dTimeElapsed = 0.f; m_iCurFrame = 0; }
 
 
 private:
-	void DrawAnimation(const HDC& hDC);
-	void DrawImage(const HDC& hDC);
+	void DrawAnimation(const HDC& hDC, const Types::Point& point);
+	void DrawImage(const HDC& hDC, const Types::Point& point);
 
 
 private:

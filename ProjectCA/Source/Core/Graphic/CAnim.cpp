@@ -50,7 +50,7 @@ void CAnim::Update(double fDeltaTIme)
 	m_dTimeElapsed += fDeltaTIme;
 }
 
-void CAnim::Draw(const HDC & hDC)
+void CAnim::Draw(const HDC & hDC, const Types::Point& point)
 {
 	if (!m_pWeakSprite.expired()) 
 	{
@@ -58,14 +58,14 @@ void CAnim::Draw(const HDC & hDC)
 
 		if (m_bAnimate) 
 		{
-			DrawAnimation(hDC);
+			DrawAnimation(hDC, point);
 			//Rectangle(hDC, m_pOwner.lock()->GetActorPoint().x, m_pOwner.lock()->GetActorPoint().y,
 			//	m_pOwner.lock()->GetActorPoint().x + (m_pWeakSprite.lock()->GetBitWidth())/SPRITE_WIDTH,
 			//	m_pOwner.lock()->GetActorPoint().y + (m_pWeakSprite.lock()->GetBitHeight())/SPRITE_HEIGHT);
 		}
 		else 
 		{
-			DrawImage(hDC);
+			DrawImage(hDC, point);
 			//Rectangle(hDC, m_pOwner.lock()->GetActorPoint().x, m_pOwner.lock()->GetActorPoint().y,
 			//	m_pOwner.lock()->GetActorPoint().x + m_pWeakSprite.lock()->GetBitWidth(),
 			//	m_pOwner.lock()->GetActorPoint().y + m_pWeakSprite.lock()->GetBitHeight());
@@ -117,7 +117,7 @@ void CAnim::SetDrawingHeight(UINT iHeight)
 	m_iDrawHeight = iHeight;
 }
 
-void CAnim::DrawAnimation(const HDC & hDC)
+void CAnim::DrawAnimation(const HDC & hDC, const Types::Point& point)
 {
 
 	if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
@@ -141,7 +141,7 @@ void CAnim::DrawAnimation(const HDC & hDC)
 	HDC memDC			= CreateCompatibleDC(hDC);
 	HBITMAP hOldBit		= (HBITMAP)SelectObject(memDC, m_pWeakSprite.lock()->GetBitmap());
 
-	TransparentBlt(hDC, m_pOwner.lock()->GetActorPoint().x, m_pOwner.lock()->GetActorPoint().y,
+	TransparentBlt(hDC, point.x, point.y,
 		m_iDrawWidth, m_iDrawHeight, memDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
 		SPRITE_HEIGHT, m_colorRef);
 
@@ -149,12 +149,12 @@ void CAnim::DrawAnimation(const HDC & hDC)
 	DeleteDC(memDC);
 }
 
-void CAnim::DrawImage(const HDC & hDC)
+void CAnim::DrawImage(const HDC & hDC, const Types::Point& point)
 {
 	HDC memDC = CreateCompatibleDC(hDC);
 	HBITMAP hOldBit = (HBITMAP)SelectObject(memDC, m_pWeakSprite.lock()->GetBitmap());
 
-	TransparentBlt(hDC, m_pOwner.lock()->GetActorPoint().x, m_pOwner.lock()->GetActorPoint().y,
+	TransparentBlt(hDC, point.x, point.y,
 		m_iDrawWidth, m_iDrawHeight, memDC, 0, 0, 
 		m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
 		m_colorRef);

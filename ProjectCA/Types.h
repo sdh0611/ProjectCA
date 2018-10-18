@@ -7,20 +7,26 @@
 #define MAKE_COL_BOX		0b00100
 #define MAKE_COL_CIR		0b01000
 
-#define TYPE_ACTION 1
+#define TYPE_ACTION
 
 const unsigned int MAX_WIDTH			= 1024;
 const unsigned int MAX_HEIGHT			= 720;
 const unsigned int MAX_ACTOR_SIZE	= 3000;
 
 const unsigned int SPRITE_WIDTH		= 32;
-const unsigned int SPRITE_HEIGHT		= 48;
+const unsigned int SPRITE_HEIGHT		= 32;
+
+const unsigned int TILE_WIDTH = 32;
+const unsigned int TILE_HEIGHT = 32;
 
 
 namespace Types {
 
 	typedef std::basic_string<TCHAR> tstring;
+	typedef Types::tstring TSTRING;
+
 	typedef unsigned long ActorID;
+	typedef unsigned long CameraID;
 
 	//오브젝트 타입 정의
 	enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_MAP, AT_BACKGROUND };
@@ -50,8 +56,23 @@ namespace Types {
 	//EventType 정의
 	enum EventType { ET_ATTACK, ET_DAMAGE };
 
+	//KeyType 정의
+	//enum KeyType { KT_LEFT, KT_RIGHT, KT_UP, KT_DOWN, KT_JUMP, KT_FIRE1, KT_FIRE2 };
+
+	struct KeyInfo {
+		KeyInfo(const Types::tstring& strKeyname, SHORT iKeyCode, bool bPressed = false)
+			:m_strKeyName(strKeyname), m_iKeyCode(iKeyCode), m_bPressed(bPressed)
+		{
+		}
+
+		Types::tstring	m_strKeyName;
+		SHORT			m_iKeyCode;
+		bool				m_bPressed;
+	};
+
+
 	//Point구조체 정의
-	struct Point {
+	typedef struct Point {
 
 		float x, y;
 
@@ -90,8 +111,10 @@ namespace Types {
 			return *this;
 		}
 
-	};
+	} POSITION, TRANSFORM;
 	   
+	
+
 	//Rect구조체 정의
 	struct Rect {
 		float left;
@@ -149,6 +172,7 @@ namespace Types {
 		}
 
 	};
+
 
 	//struct ActorData {
 	//	//ObjectData(ObjectType type, Point objectPoint, Direction dir,
@@ -232,7 +256,6 @@ namespace Types {
 			direction = other.direction;
 			vector = other.vector;
 			strActorTag = other.strActorTag;
-			//pOwnerScene = other.pOwnerScene;
 			bActive = other.bActive;
 
 		}
@@ -249,12 +272,10 @@ namespace Types {
 		ActorID					actorID;
 		tstring					strActorTag;
 		//CWorld*					m_pOwnerWorld;
-		//CGameScene*			pOwnerScene;
 		bool						bActive;
 
 
 	};
 	
-	typedef Types::tstring TSTRING;
 
 }

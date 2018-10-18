@@ -1,13 +1,14 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\CLayer.h"
-#include "..\..\Include\Core\CollisionDetector.h"
+#include "..\..\Include\Core\CCollisionManager.h"
 #include "..\..\Include\Core\Components\Collider.h"
 #include "..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\Include\Core\Components\InputComponent.h"
 #include "..\..\Include\Scene\Actor\CActorManager.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\Actor\CEnemy.h"
+#include "..\..\Include\Scene\Actor\CKoopa.h"
 #include "..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\Include\Scene\Actor\CProb.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
@@ -16,8 +17,7 @@
 
 
 CGameScene::CGameScene(Types::SceneType type)
-	:CScene(type), m_pActorManager(nullptr), m_pPlayer(nullptr),
-	m_pCollisionDetector(nullptr)
+	:CScene(type), m_pActorManager(nullptr), m_pPlayer(nullptr)
 {
 	//기본 레이어 생성.
 	//ActorManager에서 Actor를 생성할 경우 기본적으로 default레이어에 들어가게 할 것.
@@ -30,14 +30,15 @@ CGameScene::~CGameScene()
 {
 	//SAFE_DELETE(m_pCurWorld)
 	//SAFE_DELETE(m_pNextWorld)
+	CCollisionManager::GetInstance()->Destroy();
+
 	m_strongActorList.clear();
 }
 
 //Layer우선순위 0번은 추후 UI에 줄 예정임.
 bool CGameScene::Init()
 {
-	if(m_pCollisionDetector == nullptr)
-		m_pCollisionDetector = std::make_unique<CollisionDetector>();
+	CCollisionManager::GetInstance()->Init();
 
 	m_pActorManager = CActorManager::GetInstance();
 	if (!m_pActorManager->Init())
@@ -47,7 +48,7 @@ bool CGameScene::Init()
 	////	m_pCurWorld = new CWorld;
 
 	//Player 생성
-	m_pPlayer = m_pActorManager->CreateActor<CPlayer>(100, 100, 0, 0, Types::AT_PLAYER,
+	m_pPlayer = m_pActorManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 0, 0, Types::AT_PLAYER,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_RIGHT, Types::Point(0.f, 0.f),TEXT("Player"), this);
 
 	m_strongActorList.emplace_back(m_pPlayer);
@@ -63,36 +64,36 @@ bool CGameScene::Init()
 
 	//Enemy 생성
 	//Windows 좌표계에선 y축이 반대방향이므로 Vector의 값도 반대로 전달해줌.
-	////std::shared_ptr<CEnemy> pEnemy = m_pActorManager->CreateActor<CEnemy>(50, 50, 250, 250, Types::OT_ENEMY,
-	////	Types::OS_IDLE, Types::DIR_DOWN, Types::Point(0.f, 1.0f), TEXT("Enemy"), this);
+	std::shared_ptr<CKoopa> pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, Types::Point(0.f, 1.0f), TEXT("KoopaGreen"), this);
 
-	////if (pEnemy == nullptr)
-	////	return false;
+	if (pEnemy == nullptr)
+		return false;
 
-	////m_strongActorList.emplace_back(pEnemy);
+	m_strongActorList.emplace_back(pEnemy);
 
-	////if (!CreateLayer(TEXT("Enemy"), 3))
-	////	return false;
+	if (!CreateLayer(TEXT("Enemy"), 3))
+		return false;
 
-	////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 	//Prob 생성
 	if (!CreateLayer(TEXT("Prob"), 4))
 		return false;
 	
-	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 0.f, 500.f, Types::AT_PROB,
+	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 400.f, 700.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
 	m_strongActorList.emplace_back(pProb);
 	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
-	pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
-	if (pProb == nullptr)
-		return false;
-	m_strongActorList.emplace_back(pProb);
-	FindLayer(TEXT("Prob"))->AddActor(pProb);
+	//pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
+	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	//if (pProb == nullptr)
+	//	return false;
+	//m_strongActorList.emplace_back(pProb);
+	//FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 	//Backgorund 생성
 	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::AT_BACKGROUND,
@@ -153,7 +154,7 @@ void CGameScene::CollisionDetect()
 		for (auto second = first; second != m_strongActorList.end(); ++second) {
 			if (first == second)		
 				continue;
-			m_pCollisionDetector->Update((*first), (*second));
+			CCollisionManager::GetInstance()->Update((*first), (*second));
 		}
 	}
 

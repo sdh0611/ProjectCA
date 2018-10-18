@@ -47,6 +47,9 @@ private:
 	UINT					m_iWidth;
 	UINT					m_iHeight;
 	HBITMAP			m_hBackground;
+	HBRUSH				m_hBrush;
+	HBRUSH				m_hOldBrush;
+
 
 private:
 	class CSceneManager*					m_pSceneManager;
