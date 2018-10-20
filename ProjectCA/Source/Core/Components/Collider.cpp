@@ -40,16 +40,18 @@ Collider::~Collider()
 //Collision이 일어났다면 호출하게 될 메소드
 void Collider::OnCollision(std::shared_ptr<CActor> pOther)
 {
-	if(m_pDelegate != nullptr)
-		m_pDelegate(m_pOwner, pOther);
-	
+	if (m_pDelegate != nullptr)
+	{
+		m_pDelegate(m_pOwner, pOther, m_collisionType);
+		m_collisionType = COLLISION_IDLE;
+	}
 	//m_bIsCollision = false;
 }
 
 void Collider::OnTriggered(std::shared_ptr<CActor> pOther)
 {
 	if(m_pDelegate != nullptr)
-		m_pDelegate(m_pOwner, pOther);
+		m_pDelegate(m_pOwner, pOther, m_collisionType);
 }
 
 Delegate Collider::SetDelegate(Delegate dele)

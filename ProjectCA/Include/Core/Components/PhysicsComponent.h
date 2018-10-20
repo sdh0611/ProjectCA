@@ -24,6 +24,7 @@ public:
 
 	
 public:
+	void SetCurSpeed(float fSpeed) { m_fXSpeed = fSpeed; }
 	float GetCurSpeed() const { return m_fXSpeed; }
 	float GetMaxSpeed() const { return m_fMaxSpeed; }
 	float GetSpeed() const { return m_fSpeed; }

@@ -5,8 +5,12 @@
 
 //ColliderType에 Trigger도 추가해보자.
 
-using Delegate = std::function<void(std::shared_ptr<CActor>, std::shared_ptr<CActor>)>;
+enum CollisionType {
+	COLLISION_IDLE, COLLISION_TOP,
+	COLLISION_BOT, COLLISION_RIGHT, COLLISION_LEFT
+};
 
+using Delegate = std::function<void(std::shared_ptr<CActor>, std::shared_ptr<CActor>, CollisionType type)>;
 
 class Collider : public ComponentBase {
 public:
@@ -31,6 +35,8 @@ public:
 public:
 	ColliderType GetColliderType() const { return m_Type; }
 	void SetColliderType(ColliderType type) { m_Type = type; }
+	CollisionType GetCollisionType() const { return m_collisionType; }
+	void SetCollisionType(CollisionType type) { m_collisionType = type; }
 	//bool GetIsTrigger() const { return m_bIsTrigger; }
 	//void SetIsTrigger(bool bIsTrigger) { m_bIsTrigger = bIsTrigger; }
 	bool GetIsCollision() const { return m_bIsCollision; }
@@ -44,6 +50,7 @@ public:
 
 protected:
 	ColliderType				m_Type;
+	CollisionType				m_collisionType;
 	Types::Point					m_ColliderPoint;
 	Types::Point					m_CurColliderPoint;
 	//bool						m_bIsTrigger;	//Trigger활성화여부->그냥 따로 상속클래스 만들어서 추가해야되나?

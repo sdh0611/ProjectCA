@@ -70,7 +70,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther)->void 
+	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, CollisionType type)->void 
 	{
 		ComponentBase* pComponent = nullptr;
 		Types::Point point;
@@ -84,14 +84,38 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			//pOwner->GetOwnerScene()->ResetScene();
 			break;
 		case Types::AT_PROB:
-			PhysicsComponent* pComponent = static_cast<PhysicsComponent*>(
+			PhysicsComponent* pPhysics= static_cast<PhysicsComponent*>(
 				pOwner->GetComponent(TEXT("PhysicsComponent")));
 			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
 			//point = pComponent->GetLastActorPoint();
-			pComponent->SetGrounded(true);
-			pOwner->SetActorState(Types::AS_IDLE);
-			pOwner->SetActorVerticalState(Types::VS_IDLE);
+			//pComponent->SetGrounded(true);
+			//pOwner->SetActorState(Types::AS_IDLE);
+			//pOwner->SetActorVerticalState(Types::VS_IDLE);
 			//pOwner->SetActorPoint(point.x, point.y); // 이부분 떄문에 PROB위에서 움직이질못함.
+			
+			switch (type) {
+			case COLLISION_BOT:
+				//puts("BOT");
+				pPhysics->SetGrounded(true);
+				pOwner->SetActorState(Types::AS_IDLE);
+				pOwner->SetActorVerticalState(Types::VS_IDLE);
+				pOwner->SetActorPoint(pOwner->GetActorPoint().x, pOther->GetActorPoint().y - pOther->GetActorHeight());
+				break;
+			case COLLISION_TOP:
+				pPhysics->SetGrounded(false);
+				pOwner->SetActorState(Types::AS_IDLE);
+				pOwner->SetActorVerticalState(Types::VS_FALL);
+				break;
+			case COLLISION_LEFT:
+			case COLLISION_RIGHT:
+				//puts("SIDE");
+				//pPhysics->SetGrounded(true);
+				pOwner->SetActorState(Types::AS_IDLE);
+				//pOwner->SetActorVerticalState(Types::VS_IDLE);
+				pPhysics->SetCurSpeed(0.f);
+				break;
+			}
+			
 			break;
 		}
 	};

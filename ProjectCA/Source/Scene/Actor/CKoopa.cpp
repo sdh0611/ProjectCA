@@ -81,12 +81,12 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther)->void {
+	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, CollisionType type)->void {
 
 		switch (pOther->GetActorType()) {
 
 		case Types::AT_PLAYER:
-			puts("Collision with Player");
+			//puts("Collision with Player");
 			pOwner->FlipActorDirection();
 			break;
 		case Types::AT_PROB:

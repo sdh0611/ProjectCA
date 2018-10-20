@@ -62,38 +62,39 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Player"))->AddActor(m_pPlayer);
 	
 
-	//Enemy 생성
-	//Windows 좌표계에선 y축이 반대방향이므로 Vector의 값도 반대로 전달해줌.
-	std::shared_ptr<CKoopa> pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, Types::Point(0.f, 1.0f), TEXT("KoopaGreen"), this);
+	////Enemy 생성
+	////Windows 좌표계에선 y축이 반대방향이므로 Vector의 값도 반대로 전달해줌.
+	//std::shared_ptr<CKoopa> pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
+	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, Types::Point(0.f, 1.0f), TEXT("KoopaGreen"), this);
 
-	if (pEnemy == nullptr)
-		return false;
+	//if (pEnemy == nullptr)
+	//	return false;
 
-	m_strongActorList.emplace_back(pEnemy);
+	//m_strongActorList.emplace_back(pEnemy);
 
-	if (!CreateLayer(TEXT("Enemy"), 3))
-		return false;
+	//if (!CreateLayer(TEXT("Enemy"), 3))
+	//	return false;
 
-	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+	//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
 
 	//Prob 생성
 	if (!CreateLayer(TEXT("Prob"), 4))
 		return false;
 	
-	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(800, 200, 400.f, 700.f, Types::AT_PROB,
+	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(900, 200, 400.f, 700.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
 	m_strongActorList.emplace_back(pProb);
 	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
-	//pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
-	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
-	//if (pProb == nullptr)
-	//	return false;
-	//m_strongActorList.emplace_back(pProb);
-	//FindLayer(TEXT("Prob"))->AddActor(pProb);
+	pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	if (pProb == nullptr)
+		return false;
+	m_strongActorList.emplace_back(pProb);
+	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 	//Backgorund 생성
 	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::AT_BACKGROUND,
