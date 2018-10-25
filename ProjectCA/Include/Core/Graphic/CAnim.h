@@ -31,13 +31,13 @@ public:
 
 
 public:
-	UINT GetDrawWidth() const { return m_iDrawWidth; }
-	UINT GetDrawHeight() const { return m_iDrawHeight; }
+	UINT GetDrawWidth() const;
+	UINT GetDrawHeight() const;
 
 
 public:
-	const Types::tstring GetAnimTag() const { return m_strAnimTag; }
-	void ClearEleapsedTime() { m_dTimeElapsed = 0.f; m_iCurFrame = 0; }
+	const Types::tstring	GetAnimTag() const;
+	void						ClearEleapsedTime();
 
 
 private:

@@ -45,6 +45,6 @@ void CBomb::Destroy()
 
 }
 
-void CBomb::ActorBehavior()
+void CBomb::ActorBehavior(double dDeltaTime)
 {
 }

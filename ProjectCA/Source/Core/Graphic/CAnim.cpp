@@ -117,6 +117,27 @@ void CAnim::SetDrawingHeight(UINT iHeight)
 	m_iDrawHeight = iHeight;
 }
 
+UINT CAnim::GetDrawWidth() const
+{
+	return m_iDrawWidth;
+}
+
+UINT CAnim::GetDrawHeight() const
+{
+	return m_iDrawHeight;
+}
+
+const Types::tstring CAnim::GetAnimTag() const
+{
+	return m_strAnimTag;
+}
+
+void CAnim::ClearEleapsedTime()
+{
+	m_dTimeElapsed = 0.f;
+	m_iCurFrame = 0;
+}
+
 void CAnim::DrawAnimation(const HDC & hDC, const Types::Point& point)
 {
 

@@ -27,7 +27,7 @@ public:
 private:
 	UINT								m_iWidth;
 	UINT								m_iHeight;
-	Types::POSITION				m_cameraPosition;
+	POSITION				m_cameraPosition;
 	std::shared_ptr<CActor>		m_pOwner;
 	Types::CameraID				m_iCameraID;
 

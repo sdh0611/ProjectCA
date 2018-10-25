@@ -16,7 +16,7 @@ public:
 	virtual bool Init() override;
 	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
-	virtual void ActorBehavior() override;
+	virtual void ActorBehavior(double dDeltaTime) override;
 
 private:
 

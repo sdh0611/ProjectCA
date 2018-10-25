@@ -15,47 +15,57 @@ public:
 public:
 	virtual bool PostInit(CActor* pOwner, float fSpeed, float fMaxSpeed, float fGravity, 
 		float fJumpForce, const Types::tstring& strTag = TEXT("PhysicsComponent"));
-	virtual void Init() { }
+	virtual void Init();
 	virtual void Update(double fDeltaTime) override;
-
-
-public:
-	void RestoreActorPoint();
+	virtual void LateUpdate(double dDeltaTime) override;
 
 	
 public:
-	void SetCurSpeed(float fSpeed) { m_fXSpeed = fSpeed; }
-	float GetCurSpeed() const { return m_fXSpeed; }
-	float GetMaxSpeed() const { return m_fMaxSpeed; }
-	float GetSpeed() const { return m_fSpeed; }
-	void SetSpeed(float speed) { if (speed >= 0) m_fSpeed = speed; }
-	float GetCurJumpForce() const { return m_fYSpeed; }
-	float GetGravity() const { return m_fGravity; }
-	void SetGravity(float gravity) { if (gravity >= 0) m_fGravity = gravity; }
-	const float& GetJumpForce() const { return m_fJumpForce; }
-	void SetJumpForce(float jumpForce) { if (m_fJumpForce >= 0) m_fJumpForce = jumpForce; }
-	const Types::Point& GetLastActorPoint() const { return m_lastActorPoint; }
-	void SetGrounded(bool bGrounded) { m_bGrounded = bGrounded; }
-	bool IsGrounded() const { return m_bGrounded; }
-	void SetAcceled(bool bAccel) { m_bAccel = bAccel; }
-	bool IsAcceled() const { return m_bAccel; }
+	void	SetCurSpeed(float fSpeed);
+	void	SetSpeed(float fSpeed);
+	void	SetMass(float fMass);
+	void	SetGravity(float fGravity);
+	void	SetCurJumpForce(float fJumpForce);
+	void	SetJumpForce(float fJumpForce);
+	void	SetGrounded(bool bGrounded);
+	void	SetAcceled(bool bAccel);
+	void	SetStatic(bool bStatic);
+	void	AddForceX(float fForce);
+	void	AddForceY(float fForce);
+
+
+public:
+	bool	IsGrounded() const;
+	bool	IsAcceled() const;
+	bool	IsStatic() const; 
+	float	GetCurSpeed() const;
+	float	GetMaxSpeed() const;
+	float	GetSpeed() const;
+	float	GetMass() const;
+	float	GetCurJumpForce() const;
+	float	GetGravity() const;
+	float	GetJumpForce() const;
 
 
 private:
-	void Move(double dDeltaTime);
 	void Gravity(double dDeltaTime);
 
 
 private:
 	bool					m_bGrounded;
 	bool					m_bAccel;
-	float					m_fGravity;
+	bool					m_bStatic;
 	float					m_fSpeed;
 	float					m_fMaxSpeed;
-	float					m_fJumpForce;
 	float					m_fXSpeed;
+	float					m_fMass;
+	float					m_fGravity;
+	float					m_fJumpForce;
 	float					m_fYSpeed;
 	double				m_dTimeElapsed;
-	Types::Point			m_lastActorPoint;
+
+
+private:
+	const float			m_fMaxYSpeed = 800.f;
 
 };

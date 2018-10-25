@@ -1,16 +1,25 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Core\CInputManager.h"
 
+CInputManager::CInputManager() 
+{
+	//m_keyInfoList.reserve(10);
+}
+
+CInputManager::~CInputManager()
+{
+
+}
 
 bool CInputManager::Init() {
-	m_keyInfoList.reserve(10);
 	
-	m_keyInfoList.emplace_back(Types::KeyInfo(TEXT("LEFT"), VK_LEFT));
-	m_keyInfoList.emplace_back(Types::KeyInfo(TEXT("RIGHT"), VK_RIGHT));
-	m_keyInfoList.emplace_back(Types::KeyInfo(TEXT("UP"), VK_UP));
-	m_keyInfoList.emplace_back(Types::KeyInfo(TEXT("DOWN"), VK_DOWN));
-	m_keyInfoList.emplace_back(Types::KeyInfo(TEXT("JUMP"), 'X'));
-	m_keyInfoList.emplace_back(Types::KeyInfo(TEXT("ACCEL"), 'A'));
+	m_keyInfoList.emplace_back(TEXT("LEFT"), VK_LEFT);
+	m_keyInfoList.emplace_back(TEXT("RIGHT"), VK_RIGHT);
+	m_keyInfoList.emplace_back(TEXT("UP"), VK_UP);
+	m_keyInfoList.emplace_back(TEXT("DOWN"), VK_DOWN);
+	m_keyInfoList.emplace_back(TEXT("JUMP"), 'X');
+	m_keyInfoList.emplace_back(TEXT("ACCEL"), 'A');
+
 
 	return true;
 }
@@ -65,6 +74,7 @@ SHORT CInputManager::FindKeyCode(const Types::tstring & strKeyName)
 		if (it.m_strKeyName == strKeyName)
 			return it.m_iKeyCode;
 	}
+
 
 	return -1;
 }

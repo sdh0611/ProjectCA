@@ -2,6 +2,7 @@
 #include "..\..\..\Include\Scene\Actor\CEnemy.h"
 #include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 
 
@@ -9,6 +10,7 @@
 CEnemy::CEnemy()
 	:CActor()
 {
+
 }
 
 CEnemy::~CEnemy()
@@ -111,7 +113,7 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 bool CEnemy::Init()
 {
-	m_actorPoint = m_spawnPoint;
+	//m_actorPoint = m_spawnPoint;
 	
 
 	return true;
@@ -125,17 +127,19 @@ void CEnemy::Update(double fDeltaTime)
 
 void CEnemy::Render(const HDC & hDC)
 {
-	Rectangle(hDC, m_actorPoint.x, m_actorPoint.y, m_actorPoint.x + m_iActorWidth, m_actorPoint.y + m_iActorHeight);
-	if (static_cast<Collider*>(GetComponent(TEXT("Collider")))->GetIsCollision()) {
-		TextOut(hDC, m_actorPoint.x, m_actorPoint.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+	POSITION position = GetComponent<TransformComponent>()->GetPosition();
+
+	Rectangle(hDC, position.x, position.y, position.x + m_iActorWidth, position.y + m_iActorHeight);
+	if (static_cast<Collider*>(GetComponent(TEXT("Collider")))->IsCollision()) {
+		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
 	}
 	else {
-		TextOut(hDC, m_actorPoint.x, m_actorPoint.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
 	}
 
 }
 
-void CEnemy::ActorBehavior()
+void CEnemy::ActorBehavior(double dDeltaTime)
 {
 
 }

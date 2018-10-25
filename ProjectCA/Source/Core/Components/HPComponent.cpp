@@ -29,6 +29,10 @@ void HPComponent::Update(double fDeltaTime)
 
 }
 
+void HPComponent::LateUpdate(double dDeltaTime)
+{
+}
+
 void HPComponent::IncreaseHP(float fHeal)
 {
 	if (m_fHP < m_fMaxHP) {

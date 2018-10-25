@@ -219,6 +219,9 @@
     <ClCompile Include="Source\Core\CCollisionManager.cpp">
       <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Components\TransformComponent.cpp">
+      <Filter>소스 파일\Core\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -340,6 +343,9 @@
     </ClInclude>
     <ClInclude Include="Include\Core\CCollisionManager.h">
       <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Components\TransformComponent.h">
+      <Filter>헤더 파일\Core\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

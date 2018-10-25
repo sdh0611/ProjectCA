@@ -27,7 +27,7 @@ private:
 
 
 public:
-	bool PostInit();
+	bool PostInit(std::shared_ptr<CActor> pPlayer);
 	bool Init();
 	void Update(double dDeltaTime);
 	void Render(const HDC& hDC);
@@ -39,20 +39,28 @@ public:
 	bool DeleteActor(Types::ActorID actorID);
 	bool DeleteActor(std::weak_ptr<CActor> pActor);
 	bool CollisionUpdate();
+	bool SetWolrdGravity(float fGravity);
 
 
 public:
 	//std::weak_ptr<CActor> GetTarget(ActorID id);	// 일단 나중에 작성
-
+	float GetWorldGravity();
 
 
 
 private:
+	bool BuildWorld();
 	void ResolveCollision();
 	void SimulWorld();
+	bool CheckGrounded();
 
 	
 private:
-	std::list<std::weak_ptr<CActor>>				m_actorList;
+	float													m_fWorldGravity;
+	class CActorManager*							m_pActorManager;
+	std::weak_ptr<CActor>							m_pPlayer;
+	std::list<std::weak_ptr<CActor>>				m_ActorList;
+	std::list<std::weak_ptr<CActor>>				m_GroundList;
+
 
 };

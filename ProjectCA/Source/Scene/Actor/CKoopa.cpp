@@ -1,6 +1,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CKoopa.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
@@ -31,7 +32,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	m_iActorWidth = data.iActorWidth;
 	m_iActorHeight = data.iActorHeight;
-	m_actorPoint = m_spawnPoint = data.actorPoint;
+	//m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
 	m_actorCurState = m_actorPreState = data.actorState;
 	m_actorPreVerticalState = m_actorCurVerticalState = data.verticalState;
@@ -41,7 +42,18 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	m_actorID = data.actorID;
 	m_strActorTag = data.strActorTag;
 	m_bActive = data.bActive;
+	
+	m_pOwnerScene = pScene;
 
+	//TransformComponent 추가
+	TransformComponent* pTransform = new TransformComponent;
+	if (!pTransform->PostInit(this, data.actorPoint))
+		return false;
+	pTransform->SetPivotRatio(0.5f, 1.f);
+
+	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
+		return false;
+	
 	//AIComponent (InputComponent) 초기화
 	AIComponent* pAI = new AIComponent;
 	if (!pAI->PostInit(this))
@@ -81,7 +93,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, CollisionType type)->void {
+	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, Collider::CollisionType type)->void {
 
 		switch (pOther->GetActorType()) {
 
@@ -119,8 +131,6 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("WalkLeft")))
 		return false;
 
-	pRender->SetUseOffset(true);
-
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
@@ -148,4 +158,8 @@ void CKoopa::Render(const HDC & hDC)
 	if (pColliderIt != m_componentTable.end())
 		static_cast<Collider*>((*pColliderIt).second)->DrawCollider(hDC);
 
+}
+
+void CKoopa::ActorBehavior(double dDeltaTime)
+{
 }

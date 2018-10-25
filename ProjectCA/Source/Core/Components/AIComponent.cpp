@@ -23,6 +23,10 @@ void AIComponent::Update(double fDeltaTime)
 	
 }
 
+void AIComponent::LateUpdate(double dDeltaTime)
+{
+}
+
 Delegater AIComponent::SetDelegate(Delegater pDelegater) {
 	Delegater pTemp = m_pDelegate;
 

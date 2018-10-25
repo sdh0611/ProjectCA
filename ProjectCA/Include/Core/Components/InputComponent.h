@@ -15,7 +15,7 @@ public:
 public:
 	virtual bool PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent"));
 	virtual void Update(double fDeltaTime) = 0;
-
+	virtual void LateUpdate(double dDeltaTime) = 0;
 
 
 };

@@ -55,6 +55,7 @@ private:
 	class CSceneManager*					m_pSceneManager;
 	class Timer*									m_pTimer;
 	class CResourceManager*				m_pResourceManager;
-	std::unique_ptr<class BackBuffer>			m_pBackBuffer;
+	class CInputManager*					m_pInputManager;
+	std::unique_ptr<class BackBuffer>		m_pBackBuffer;
 
 };

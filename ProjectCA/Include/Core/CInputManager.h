@@ -37,8 +37,6 @@ private:
 	std::vector<Types::KeyInfo> m_keyInfoList;
 
 
-
-
 };
 
 #define GET_KEY_DOWN(strName) CInputManager::GetInstance()->IsKeyDown(strName);

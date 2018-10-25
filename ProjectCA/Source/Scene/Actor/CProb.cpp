@@ -1,5 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CProb.h" 
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
@@ -26,7 +27,7 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 	m_iActorWidth = data.iActorWidth;
 	m_iActorHeight = data.iActorHeight;
-	m_actorPoint = m_spawnPoint = data.actorPoint;
+	//m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
 	m_actorCurState = m_actorPreState = data.actorState;
 	m_actorCurVerticalState = m_actorPreVerticalState = data.verticalState;
@@ -38,6 +39,16 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	m_bActive = data.bActive;
 
 	m_pOwnerScene = pScene;
+	//TransformComponent 추가
+	TransformComponent* pTransform = new TransformComponent;
+	if (!pTransform->PostInit(this, data.actorPoint))
+		return false;
+	
+	pTransform->SetPivotRatio(0.5f, 1.f);
+	printf("Position : (%f, %f), Pivot : (%f, %f)\n", pTransform->GetPosition().x, pTransform->GetPosition().y, pTransform->GetPivot().x, pTransform->GetPivot().y);
+
+	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
+		return false;
 
 	//AIComponent (InputComponent) 초기화
 	AIComponent* pAI = new AIComponent;
@@ -79,15 +90,12 @@ void CProb::Update(double fDeltaTime)
 
 void CProb::Render(const HDC & hDC)
 {
-	Types::Point offset;
+	POSITION pivot = GetComponent<TransformComponent>()->GetPivot();
 
-	offset.x = m_actorPoint.x - (float)m_iActorWidth / 2.f;
-	offset.y = m_actorPoint.y - (float)m_iActorHeight;
-
-	Rectangle(hDC, offset.x, offset.y, offset.x + m_iActorWidth, offset.y + m_iActorHeight);
+	Rectangle(hDC, pivot.x, pivot.y, pivot.x + m_iActorWidth, pivot.y + m_iActorHeight);
 
 }
 
-void CProb::ActorBehavior()
+void CProb::ActorBehavior(double dDeltaTime)
 {
 }

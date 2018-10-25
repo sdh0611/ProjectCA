@@ -33,7 +33,7 @@ public:
 
 
 protected:
-	virtual void ActorBehavior() override;
+	virtual void ActorBehavior(double dDeltaTime) override;
 
 
 protected:

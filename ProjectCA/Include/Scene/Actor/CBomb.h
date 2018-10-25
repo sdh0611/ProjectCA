@@ -17,7 +17,7 @@ public:
 	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
 	virtual void Destroy() override;
-	virtual void ActorBehavior() override;
+	virtual void ActorBehavior(double dDeltaTime) override;
 
 public:
 	virtual void SetOwnerActor(std::shared_ptr<CActor> pActor) { m_pOwnerActor = pActor; }

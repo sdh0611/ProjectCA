@@ -2,6 +2,7 @@
 #include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\..\Include\Core\CInputManager.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 
@@ -24,14 +25,22 @@ bool PlayerInputComponent::PostInit(CActor* pOwner, const Types::tstring & strTa
 	m_keyInfoList.push_back(Types::KeyInfo(TEXT("ACCEL"), 'A', false));
 	//m_keyInfoList.push_back(KeyInfo(TEXT("RESET"), VK_ESCAPE, false));
 
+	m_pInputManager = CInputManager::GetInstance();
+	if (m_pInputManager == nullptr)
+		return false;
+
 	return true;
 }
 
 void PlayerInputComponent::Update(double fDeltaTime)
 {
-	UpdateKeyDown();
+	//UpdateKeyDown();
 	KeyProcess();
 
+}
+
+void PlayerInputComponent::LateUpdate(double dDeltaTime)
+{
 }
 
 bool PlayerInputComponent::GetKeyDown(const Types::tstring & strKeyName)
@@ -56,18 +65,18 @@ bool PlayerInputComponent::GetKeyDown(const Types::tstring & strKeyName)
 	return bPressed;
 }
 
-void PlayerInputComponent::UpdateKeyDown()
-{
-	for (auto& it : m_keyInfoList)
-	{
-		if (KEY_DOWN(it.m_iKeyCode))
-			it.m_bPressed = true;
-		else
-			it.m_bPressed = false;
-
-	}
-
-}
+//void PlayerInputComponent::UpdateKeyDown()
+//{
+//	for (auto& it : m_keyInfoList)
+//	{
+//		if (KEY_DOWN(it.m_iKeyCode))
+//			it.m_bPressed = true;
+//		else
+//			it.m_bPressed = false;
+//
+//	}
+//
+//}
 
 void PlayerInputComponent::KeyProcess()
 {
@@ -75,11 +84,11 @@ void PlayerInputComponent::KeyProcess()
 	RenderComponent* pRender = static_cast<RenderComponent*>( m_pOwner->GetComponent(TEXT("RenderComponent")) );	
 	//PhysicsComponent* pPhysics = static_cast<PhysicsComponent*>(m_pOwner->GetComponent(TEXT("PhysicsComponent")));
 
-	if (GetKeyDown(TEXT("LEFT"))) 
+	if (m_pInputManager->IsKeyDown(TEXT("LEFT")))
 	{
 		//if (m_pOwner->GetActorHorizonalState() != Types::HS_IDLE)
 		//{
-			if (GetKeyDown(TEXT("ACCEL")))
+			if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
 			{
 				m_pOwner->SetActorHorizonalState(Types::HS_RUN);
 			}
@@ -96,9 +105,9 @@ void PlayerInputComponent::KeyProcess()
 		//m_pOwner->SetActorState(Types::AS_MOVE);
 		m_pOwner->SetActorDirection(Types::DIR_LEFT);
 	}
-	else if (GetKeyDown(TEXT("RIGHT"))) 
+	else if (m_pInputManager->IsKeyDown(TEXT("RIGHT")))
 	{
-		if (GetKeyDown(TEXT("ACCEL")))
+		if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
 		{
 			m_pOwner->SetActorHorizonalState(Types::HS_RUN);
 		}
@@ -120,7 +129,7 @@ void PlayerInputComponent::KeyProcess()
 		m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
 	}
 
-	if (GetKeyDown(TEXT("DOWN"))) 
+	if (m_pInputManager->IsKeyDown(TEXT("DOWN")))
 	{
 		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
@@ -128,7 +137,7 @@ void PlayerInputComponent::KeyProcess()
 			m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 	}
-	else if (GetKeyDown(TEXT("UP"))) 
+	else if (m_pInputManager->IsKeyDown(TEXT("UP")))
 	{
 		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
@@ -137,7 +146,7 @@ void PlayerInputComponent::KeyProcess()
 		}
 	}
 
-	if (GetKeyDown(TEXT("JUMP"))) 
+	if (m_pInputManager->IsKeyDown(TEXT("JUMP")))
 	{
 		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{

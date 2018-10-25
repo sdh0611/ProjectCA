@@ -5,6 +5,7 @@
 #include "..\..\..\Include\Scene\CLayer.h"
 //#include "..\..\..\Include\Scene\Actor\CActorFactory.h"
 #include "..\..\..\Include\Core\Components\ComponentBase.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 
 
 CActor::CActor()
@@ -18,23 +19,6 @@ CActor::~CActor()
 }
 
 
-//bool CActor::Init(const Types::ActorData& data)
-//{
-//	m_fActorPoint = data.fObjectPoint;
-//	m_actorType = data.objectType;
-//	m_actorState = data.objectState;
-//	m_direction = data.objectDirection;
-//	m_iActorWidth = data.iWidth;
-//	m_iActorHeight = data.iHeight;
-//	m_actorID = data.actorID;
-//	m_strActorTag = data.strActorName;
-//	//m_pOwnerScene = reinterpret_cast<CGameScene*>(data.pOwnerScene);
-//
-//	m_bActive = true;
-//
-//	return true;
-//}
-
 void CActor::Update(double fDeltaTime)
 {
 	if (m_bActive) {
@@ -47,26 +31,6 @@ void CActor::Update(double fDeltaTime)
 	}
 
 }
-
-//void CActor::Render(const HDC & hDC)
-//{
-//	if (m_bActive) {
-//		Rectangle(hDC, m_fActorPoint.x, m_fActorPoint.y, m_fActorPoint.x + m_iActorWidth, m_fActorPoint.y + m_iActorHeight);
-//	}
-//
-//}
-
-//bool						m_bActive;
-//UINT						m_iActorWidth;
-//UINT						m_iActorHeight;
-//Types::Point				m_fActorPoint;
-//Types::ObjectType		m_actorType;
-//Types::ObjectState		m_actorState;
-//Types::Direction		m_direction;
-//Types::ActorID			m_actorID;
-//Types::tstring			m_strActorTag;
-////CWorld*					m_pOwnerWorld;
-//CGameScene*			m_pOwnerScene;
 
 //void CActor::LateUpdate(float fDeltaTime)
 //{
@@ -109,6 +73,57 @@ bool CActor::DeleteComponent(const Types::tstring & strTag)
 	return true;
 }
 
+void CActor::SetActive(bool bActive)
+{
+	m_bActive = bActive;
+}
+
+void CActor::SetActorState(Types::ActorState state)
+{
+	m_actorCurState = state;
+}
+
+void CActor::SetActorVector(float fx, float fy)
+{
+	m_actorVector.x = fx;
+	m_actorVector = fy;
+}
+
+void CActor::SetActorDirection(Types::Direction dir)
+{
+	m_direction = dir;
+}
+
+void CActor::SetActorWidth(UINT iWidth)
+{
+	m_iActorWidth = iWidth;
+}
+
+void CActor::SetActorHeight(UINT iHeight)
+{
+	m_iActorHeight = iHeight;
+}
+
+void CActor::SetActorPoint(float fx, float fy)
+{
+	GetComponent<TransformComponent>()->SetPosition(fx, fy);
+}
+
+void CActor::SetActorTag(const Types::tstring & strTag)
+{
+	m_strActorTag = strTag;
+}
+
+void CActor::SetActorVerticalState(Types::VerticalState vertical)
+{
+	m_actorCurVerticalState = vertical;;
+}
+
+void CActor::SetActorHorizonalState(Types::HorizonalState horizonal)
+{
+	m_actorHorizonalState = horizonal;
+}
+
 //CWorld* const CActor::GetOwnerWorld() const { return m_pOwnerWorld; }
 //
 //void CActor::SetOwnerWorld(CWorld* pWorld) { m_pOwnerWorld = pWorld; }
@@ -127,6 +142,81 @@ bool CActor::SetLayer(const Types::tstring & strLayerTag)
 	//pLayer->AddActor(this);
 
 	return true;
+}
+
+bool CActor::IsActive() const
+{
+	return m_bActive;
+}
+
+Types::ActorType CActor::GetActorType() const
+{
+	return m_actorType;
+}
+
+Types::ActorState CActor::GetActorState() const
+{
+	return m_actorCurState;
+}
+
+Types::ActorState CActor::GetActorPreState() const
+{
+	return m_actorPreState;
+}
+
+Types::Direction CActor::GetActorDirection() const
+{
+	return m_direction;
+}
+
+Types::Point CActor::GetActorVector() const
+{
+	return m_actorVector;
+}
+
+UINT CActor::GetActorWidth() const
+{
+	return m_iActorWidth;
+}
+
+UINT CActor::GetActorHeight() const
+{
+	return m_iActorHeight;
+}
+
+Types::Point CActor::GetActorPoint() const
+{
+	return GetComponent<TransformComponent>()->GetPosition();
+}
+
+const Types::Point CActor::GetActorPivot() const
+{
+	return GetComponent<TransformComponent>()->GetPivot();
+}
+
+const Types::tstring & CActor::GetActorTag() const
+{
+	return m_strActorTag;
+}
+
+Types::ActorID CActor::GetActorID() const
+{
+	return m_actorID;
+}
+
+Types::VerticalState CActor::GetActorVerticalState() const
+{
+	return m_actorCurVerticalState;
+}
+
+Types::VerticalState CActor::GetActorPreVerticalState() const
+{
+	return m_actorPreVerticalState;
+}
+
+Types::HorizonalState CActor::GetActorHorizonalState() const
+{
+	return m_actorHorizonalState;
 }
 
 void CActor::FlipVector()

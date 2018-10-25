@@ -1,6 +1,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CBackground.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 
 
@@ -23,7 +24,7 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	m_iActorWidth = data.iActorWidth;
 	m_iActorHeight = data.iActorHeight;
-	m_actorPoint = m_spawnPoint = data.actorPoint;
+	//m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
 	m_actorCurState = m_actorPreState = data.actorState;
 	m_actorCurVerticalState = m_actorPreVerticalState = Types::VS_IDLE;
@@ -35,14 +36,20 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	m_pOwnerScene = pScene;
 	m_bActive = data.bActive;
 
+	//TransformComponent Ãß°¡
+	TransformComponent* pTransform = new TransformComponent;
+	if (!pTransform->PostInit(this, data.actorPoint))
+		return false;
+
+	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
+		return false;
+
 	RenderComponent* pRender = new RenderComponent;
 	if (!pRender->PostInit(this))
 		return false;
 
 	if (!pRender->AddAnim(100.f, TEXT("BackgroundMountain2"), m_iActorWidth, m_iActorHeight, false, false))
 		return false;
-
-	pRender->SetUseOffset(false);
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
@@ -70,5 +77,9 @@ void CBackground::Render(const HDC & hDC)
 		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
 
 
+}
+
+void CBackground::ActorBehavior(double dDeltaTime)
+{
 }
 

@@ -31,6 +31,7 @@ CGameScene::~CGameScene()
 	//SAFE_DELETE(m_pCurWorld)
 	//SAFE_DELETE(m_pNextWorld)
 	CCollisionManager::GetInstance()->Destroy();
+	m_pActorManager->Destroy();
 
 	m_strongActorList.clear();
 }
@@ -38,7 +39,8 @@ CGameScene::~CGameScene()
 //Layer우선순위 0번은 추후 UI에 줄 예정임.
 bool CGameScene::Init()
 {
-	CCollisionManager::GetInstance()->Init();
+	if (!CCollisionManager::GetInstance()->Init())
+		return false;
 
 	m_pActorManager = CActorManager::GetInstance();
 	if (!m_pActorManager->Init())
@@ -82,7 +84,7 @@ bool CGameScene::Init()
 	if (!CreateLayer(TEXT("Prob"), 4))
 		return false;
 	
-	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(900, 200, 400.f, 700.f, Types::AT_PROB,
+	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(700, 200, 400.f, 700.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
@@ -90,6 +92,13 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 	pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	if (pProb == nullptr)
+		return false;
+	m_strongActorList.emplace_back(pProb);
+	FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+	pProb = m_pActorManager->CreateActor<CProb>(50, 50, 200.f, 500.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
@@ -148,52 +157,41 @@ void CGameScene::Render(const HDC& hDC)
 void CGameScene::CollisionDetect()
 {
 	////Scene내의 모든 Actor들에 대한 충돌검사 시행
-
-	//충돌검사를 했던 Actor끼리 다시 검사하게됨.
-	//	-> 고쳐야함.
 	for (auto first = m_strongActorList.begin(); first != m_strongActorList.end(); ++first) {
 		for (auto second = first; second != m_strongActorList.end(); ++second) {
 			if (first == second)		
 				continue;
-			CCollisionManager::GetInstance()->Update((*first), (*second));
+			CCollisionManager::GetInstance()->CheckCollision((*first), (*second));
 		}
 	}
+
+	//m_pPlayer->GetComponent<PhysicsComponent>()->SetGrounded(false);
+
+	//for (auto& prob : FindLayer(TEXT("Prob"))->GetActorList())
+	//{
+	//	CCollisionManager::GetInstance()->CheckCollision(m_pPlayer, prob.lock());
+	//}
+
 
 }
 
 void CGameScene::InputUpdate(double fDeltaTime)
 {
-	if (KEY_DOWN(VK_ESCAPE)) {
-		//ESC를 누를 경우 일시정치 팝업창 출력, 게임 일시정지
 
-	}
-	else {
-		//m_pCurWorld->Update(fDeltaTime);
-		m_pPlayer->GetComponent(TEXT("InputComponent"))->Update(fDeltaTime);
-	}
-	
 
 
 }
 
-//충돌검사 수행 후 처리
 void CGameScene::GameUpdate(double fDeltaTime)
-{
-	//Collsion detect between Actors
-	CollisionDetect();
-	
-	//Component Update
+{	
+
+	//Actor Update
 	for (auto& actor : m_strongActorList) {
 		actor->Update(fDeltaTime);
 	}
 
-	
-	//Collision 후 처리 부분이지만, 테스트용으로 일단 Player의 후처리만 하드코딩.(09.17)
-	//		-> 정상 작동
-	//if (static_cast<Collider*>(m_pPlayer->GetComponent(TEXT("Collider")))->GetIsCollision()) {
-	//	PhysicsComponent* pPhysics = static_cast<PhysicsComponent*>(m_pPlayer->GetComponent(TEXT("PhysicsComponent")));
-	//	pPhysics->RestoreActorPoint();
-	//}
+	//Collsion detect between Actors
+	CollisionDetect();
 
 }
 

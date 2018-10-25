@@ -44,8 +44,8 @@ public:
 
 
 private:
-	UINT													m_iCurScore;
-	UINT													m_iHighScore;
+	UINT														m_iCurScore;
+	UINT														m_iHighScore;
 
 
 private:

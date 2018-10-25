@@ -22,7 +22,7 @@ public:
 	//virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent")) override;
 	virtual void Init(){ }
 	virtual void Update(double fDeltaTime) override;
-	
+	virtual void LateUpdate(double dDeltaTime) override;
 
 public:
 	Delegater SetDelegate(Delegater pDelegater);

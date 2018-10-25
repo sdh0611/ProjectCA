@@ -9,7 +9,7 @@
 
 
 RenderComponent::RenderComponent()
-	:m_bVisible(true), m_bChangeAnim(false), m_bUseOffset(false)
+	:m_bVisible(true), m_bChangeAnim(false)
 {
 }
 
@@ -36,24 +36,20 @@ bool RenderComponent::PostInit(CActor * pOwner, const Types::tstring & strTag)
 	//m_hBrush					= (HBRUSH)GetStockObject(NULL_BRUSH);
 	m_animationState			= Types::AM_IDLE;
 
-	m_offset.x = 0;
-	m_offset.y = 0;
-
 	return true;
 }
 
-void RenderComponent::Update(double dDeltaTime)
+void RenderComponent::Init() 
 {
 
-	if (m_bUseOffset)
-	{
-		m_offset.x = m_pOwner->GetActorPoint().x - m_pWeakCurAnim.lock()->GetDrawWidth() / 2;
-		m_offset.y = m_pOwner->GetActorPoint().y - m_pWeakCurAnim.lock()->GetDrawHeight();
-	}
+}
 
-	m_ownerState = m_pOwner->GetActorState();
-	m_ownerDirection = m_pOwner->GetActorDirection();
-	m_ownerVerticalState = m_pOwner->GetActorVerticalState();
+
+void RenderComponent::Update(double dDeltaTime)
+{
+	m_ownerState				= m_pOwner->GetActorState();
+	m_ownerDirection			= m_pOwner->GetActorDirection();
+	m_ownerVerticalState		= m_pOwner->GetActorVerticalState();
 
 	UpdateAnimationMotion();
 	ChangeAnimationCilp(m_animationState);
@@ -61,24 +57,18 @@ void RenderComponent::Update(double dDeltaTime)
 
 }
 
+void RenderComponent::LateUpdate(double dDeltaTime)
+{
+}
+
 //DC핸들값은 BackBuffer의 DC를 받아와야 한다.
 void RenderComponent::Draw(const HDC & hDC)
 {
-	Types::Point point;
-	if (m_bUseOffset)
-	{
-		point = m_offset;
-	}
-	else
-	{
-		point = m_pOwner->GetActorPoint();
-	}
-
 	if (m_bVisible) 
 	{
 		//m_hOldBrush = (HBRUSH)SelectObject(hDC, m_hBrush);
 		//m_animTable[m_ownerState]->Draw(hDC, hMemDC);
-		m_pWeakCurAnim.lock()->Draw(hDC, point);
+		m_pWeakCurAnim.lock()->Draw(hDC, m_pOwner->GetActorPivot());
 
 		//Rectangle(hDC, m_offset.x, m_offset.y,
 		//	m_offset.x + m_pOwner->GetActorWidth(),
@@ -240,19 +230,6 @@ void RenderComponent::UpdateAnimationMotion()
 		SetAnimationPlaySpeed(1.f);
 	
 
-}
-
-//나중에 Animation 크기를 owner Actor의 크기로 대체하자.(10.16)
-void RenderComponent::SetOffset()
-{
-	m_offset.x = m_pOwner->GetActorPoint().x - m_pWeakCurAnim.lock()->GetDrawWidth() / 2;
-	m_offset.y = m_pOwner->GetActorPoint().y - m_pWeakCurAnim.lock()->GetDrawHeight();
-}
-
-void RenderComponent::SetOffset(float fx, float fy)
-{
-	m_offset.x = fx;
-	m_offset.y = fy;
 }
 
 bool RenderComponent::SetAnimationPlaySpeed(double dSpeed)

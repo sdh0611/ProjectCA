@@ -13,10 +13,10 @@ class CCollisionManager : public Singleton<CCollisionManager> {
 	DECLARE_SINGLETON(CCollisionManager)
 
 public:
-	void Init();
-	void Update(Collider* pCollider, Collider* pOther);
-	void Update(std::shared_ptr<CActor> pActor, std::shared_ptr<CActor> pOther);
-
+	bool Init();
+	void Update(Collider* pCollider, Collider* pOther);	//삭제예정
+	void Update(std::shared_ptr<CActor> pActor, std::shared_ptr<CActor> pOther);	//삭제예정
+	bool CheckCollision(std::shared_ptr<CActor> pActor, std::shared_ptr<CActor> pOther);
 
 private:
 	bool BoxAndBox(ColliderBox* collider1, ColliderBox* colldier2);

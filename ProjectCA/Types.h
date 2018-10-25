@@ -23,7 +23,6 @@ const unsigned int TILE_HEIGHT = 32;
 namespace Types {
 
 	typedef std::basic_string<TCHAR> tstring;
-	typedef Types::tstring TSTRING;
 
 	typedef unsigned long ActorID;
 	typedef unsigned long CameraID;
@@ -65,6 +64,32 @@ namespace Types {
 		{
 		}
 
+		KeyInfo(KeyInfo&& other)
+			:m_strKeyName(std::move(other.m_strKeyName)), m_iKeyCode(other.m_iKeyCode), m_bPressed(other.m_bPressed)
+		{
+		}
+
+		bool operator ==(const KeyInfo& other)
+		{
+			if (m_strKeyName == other.m_strKeyName && m_iKeyCode == other.m_iKeyCode
+				&& m_bPressed == other.m_bPressed)
+				return true;
+
+			return false;
+		}
+
+		KeyInfo& operator =(const KeyInfo& other) 
+		{
+			if (*this == other)
+				return *this;
+
+			this->m_strKeyName = other.m_strKeyName;
+			this->m_iKeyCode = other.m_iKeyCode;
+			this->m_bPressed = other.m_bPressed;
+
+			return *this;
+		}
+
 		Types::tstring	m_strKeyName;
 		SHORT			m_iKeyCode;
 		bool				m_bPressed;
@@ -72,7 +97,7 @@ namespace Types {
 
 
 	//Point구조체 정의
-	typedef struct Point {
+	struct Point {
 
 		float x, y;
 
@@ -111,7 +136,7 @@ namespace Types {
 			return *this;
 		}
 
-	} POSITION, TRANSFORM;
+	};
 	   
 	
 
@@ -279,3 +304,7 @@ namespace Types {
 	
 
 }
+
+typedef Types::tstring TSTRING;
+typedef Types::Point POSITION;
+typedef Types::ActorData ACTORDATA;

@@ -4,6 +4,14 @@
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Core\CCollisionManager.h"
+#include "..\..\Include\Scene\Actor\CActorManager.h"
+#include "..\..\Include\Core\CResourceManager.h"
+#include "..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\Include\Core\Components\PlayerInputComponent.h"
+#include "..\..\Include\Core\Components\AIComponent.h"
+#include "..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\Include\Core\Components\ColliderBox.h"
+#include "..\..\Include\Core\Components\RenderComponent.h"
 
 
 
@@ -16,14 +24,19 @@ CWorld::CWorld()
 
 CWorld::~CWorld()
 {
-	if (!m_actorList.empty())
-		m_actorList.clear();
+	if (!m_ActorList.empty())
+		m_ActorList.clear();
 
 }
 
-bool CWorld::PostInit()
+bool CWorld::PostInit(std::shared_ptr<CActor> pPlayer)
 {
-	return false;
+	m_pPlayer = pPlayer;
+	m_fWorldGravity = 1000.f;
+	
+	m_pActorManager = CActorManager::GetInstance();
+
+	return BuildWorld();
 }
 
 bool CWorld::Init()
@@ -37,11 +50,12 @@ bool CWorld::Init()
 //CWorld Class에서 관리하는 weak_ptr List중 가리키는 포인터가 소멸됬는지 확인.
 void CWorld::Update(double dDeltaTime)
 {
-	for (auto it = m_actorList.begin(); it != m_actorList.end(); ) {
+	for (auto it = m_ActorList.begin(); it != m_ActorList.end(); ) {
 		if ((*it).expired()) {
-			it = m_actorList.erase(it);
+			it = m_ActorList.erase(it);
 		}
 		else {
+			(*it).lock()->Update(dDeltaTime);
 			++it;
 		}
 
@@ -52,12 +66,17 @@ void CWorld::Update(double dDeltaTime)
 
 void CWorld::Render(const HDC & hDC)
 {
+	for (auto& it : m_ActorList)
+	{
+		it.lock()->Render(hDC);
+	}
+
 }
 
 
 void CWorld::AddActor(std::shared_ptr<CActor> pActor)
 {
-	m_actorList.emplace_back(std::weak_ptr<CActor>(pActor));
+	m_ActorList.emplace_back(pActor);
 
 }
 
@@ -65,7 +84,7 @@ void CWorld::AddActor(std::shared_ptr<CActor> pActor)
 // -> lock()메소드 사용시 nullptr 반환
 std::weak_ptr<CActor>  CWorld::GetActor(Types::ActorID actorID)
 {
-	for (auto& it : m_actorList)
+	for (auto& it : m_ActorList)
 		if (it.lock()->GetActorID() == actorID)
 			return it;
 
@@ -78,9 +97,9 @@ bool CWorld::DeleteActor(Types::ActorID actorID)
 	if (pActor.lock() == nullptr)	//
 		return false;
 	
-	for (auto it = m_actorList.begin(); it != m_actorList.end();) {
+	for (auto it = m_ActorList.begin(); it != m_ActorList.end();) {
 		if ((*it).lock() == pActor.lock()) {
-			m_actorList.erase(it);
+			m_ActorList.erase(it);
 			return true;
 		}
 		else
@@ -92,9 +111,9 @@ bool CWorld::DeleteActor(Types::ActorID actorID)
 
 bool CWorld::DeleteActor(std::weak_ptr<CActor> pActor)
 {
-	for (auto it = m_actorList.begin(); it != m_actorList.end();) {
+	for (auto it = m_ActorList.begin(); it != m_ActorList.end();) {
 		if ((*it).lock() == pActor.lock()) {
-			m_actorList.erase(it);
+			m_ActorList.erase(it);
 			return true;
 		}
 		else
@@ -112,6 +131,28 @@ bool CWorld::CollisionUpdate()
 	return true;
 }
 
+bool CWorld::SetWolrdGravity(float fGravity)
+{
+	if (fGravity < 0.f)
+		return false;
+
+	m_fWorldGravity = fGravity;
+	
+	return true;
+}
+
+float CWorld::GetWorldGravity()
+{
+	return m_fWorldGravity;
+}
+
+bool CWorld::BuildWorld()
+{
+
+
+	return true;
+}
+
 void CWorld::ResolveCollision()
 {
 
@@ -121,5 +162,10 @@ void CWorld::ResolveCollision()
 
 void CWorld::SimulWorld()
 {
+}
+
+bool CWorld::CheckGrounded()
+{
+	return false;
 }
 

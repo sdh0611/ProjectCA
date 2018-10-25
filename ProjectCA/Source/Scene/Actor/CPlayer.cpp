@@ -1,5 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
@@ -36,7 +37,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	m_iActorWidth = data.iActorWidth;
 	m_iActorHeight = data.iActorHeight;
-	m_actorPoint = m_spawnPoint = data.actorPoint;
+	//m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
 	m_actorCurState = m_actorPreState = data.actorState;
 	m_actorPreVerticalState = m_actorCurVerticalState = data.verticalState;
@@ -48,7 +49,16 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	m_bActive = data.bActive;
 	
 	m_pOwnerScene = pScene;
+	//TransformComponent 추가
+	TransformComponent* pTransform = new TransformComponent;
+	if (!pTransform->PostInit(this, data.actorPoint))
+		return false;
+	pTransform->SetPivotRatio(0.5f, 1.f);
 
+	printf("Position : (%f, %f), Pivot : (%f, %f)\n", pTransform->GetPosition().x, pTransform->GetPosition().y, pTransform->GetPivot().x, pTransform->GetPivot().y);
+
+	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
+		return false;
 	//PlayerInputComponent (InputComponent) 초기화
 	PlayerInputComponent* pAI = new PlayerInputComponent;
 	if (!pAI->PostInit(this))
@@ -70,10 +80,10 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, CollisionType type)->void 
+	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, Collider::CollisionType type)->void 
 	{
 		ComponentBase* pComponent = nullptr;
-		Types::Point point;
+		POSITION position = pOwner->GetComponent<TransformComponent>()->GetLastPosition();
 
 		switch (pOther->GetActorType()) 
 		{
@@ -84,34 +94,31 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			//pOwner->GetOwnerScene()->ResetScene();
 			break;
 		case Types::AT_PROB:
-			PhysicsComponent* pPhysics= static_cast<PhysicsComponent*>(
-				pOwner->GetComponent(TEXT("PhysicsComponent")));
-			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
-			//point = pComponent->GetLastActorPoint();
-			//pComponent->SetGrounded(true);
-			//pOwner->SetActorState(Types::AS_IDLE);
-			//pOwner->SetActorVerticalState(Types::VS_IDLE);
-			//pOwner->SetActorPoint(point.x, point.y); // 이부분 떄문에 PROB위에서 움직이질못함.
-			
+			PhysicsComponent* pPhysics= pOwner->GetComponent<PhysicsComponent>();
+			if (pPhysics == nullptr)
+				return;
+
 			switch (type) {
-			case COLLISION_BOT:
+			case Collider::COLLISION_BOT:
 				//puts("BOT");
 				pPhysics->SetGrounded(true);
+				pPhysics->SetCurJumpForce(0.f);
 				pOwner->SetActorState(Types::AS_IDLE);
 				pOwner->SetActorVerticalState(Types::VS_IDLE);
 				pOwner->SetActorPoint(pOwner->GetActorPoint().x, pOther->GetActorPoint().y - pOther->GetActorHeight());
 				break;
-			case COLLISION_TOP:
-				pPhysics->SetGrounded(false);
-				pOwner->SetActorState(Types::AS_IDLE);
+			case Collider::COLLISION_TOP:
+				//pPhysics->SetGrounded(false);
+				//pOwner->SetActorState(Types::AS_IDLE);
 				pOwner->SetActorVerticalState(Types::VS_FALL);
 				break;
-			case COLLISION_LEFT:
-			case COLLISION_RIGHT:
+			case Collider::COLLISION_LEFT:
+			case Collider::COLLISION_RIGHT:
 				//puts("SIDE");
 				//pPhysics->SetGrounded(true);
-				pOwner->SetActorState(Types::AS_IDLE);
+				pOwner->SetActorHorizonalState(Types::HS_IDLE);
 				//pOwner->SetActorVerticalState(Types::VS_IDLE);
+				pOwner->SetActorPoint(position.x, pOwner->GetActorPoint().y);
 				pPhysics->SetCurSpeed(0.f);
 				break;
 			}
@@ -185,8 +192,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnim(3.f, TEXT("PlayerTurnLeft"), m_iActorWidth, m_iActorHeight, false, false, TEXT("TurnLeft")))
 		return false;
 
-	pRender->SetUseOffset(true);
-
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
@@ -196,7 +201,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 bool CPlayer::Init()
 {
-	m_actorPoint = m_spawnPoint;
+	//m_actorPoint = m_spawnPoint;
 		
 	for (auto& it : m_componentTable)
 		it.second->Init();
@@ -206,12 +211,28 @@ bool CPlayer::Init()
 
 void CPlayer::Update(double dDeltaTime)
 {
-	CActor::Update(dDeltaTime);
+	InputComponent* pInput = GetComponent<PlayerInputComponent>();
+	if (pInput)
+	{
+		pInput->Update(dDeltaTime);
+	}
 
+	ActorBehavior(dDeltaTime);
+	
+	for (auto& component : m_componentTable)
+	{
+		if (component.first == TEXT("InputComponent"))
+		{
+			continue;
+		}
+		component.second->Update(dDeltaTime);
+	}
 }
 
 void CPlayer::Render(const HDC & hDC)
 {
+	POSITION position = GetComponent<TransformComponent>()->GetPosition();
+
 	auto it = m_componentTable.find(TEXT("RenderComponent"));
 	if (it != m_componentTable.end())
 		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
@@ -220,27 +241,111 @@ void CPlayer::Render(const HDC & hDC)
 	if(pColliderIt != m_componentTable.end())
 		static_cast<Collider*>((*pColliderIt).second)->DrawCollider(hDC);
 
-	if (static_cast<Collider*>(GetComponent(TEXT("Collider")))->GetIsCollision()) {
-		TextOut(hDC, m_actorPoint.x, m_actorPoint.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+	//if (static_cast<Collider*>(GetComponent(TEXT("Collider")))->IsCollision()) {
+	//	TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+	//}
+	//else {
+	//	TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+	//}
+
+	if (GetComponent<PhysicsComponent>()->IsGrounded()) {
+		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
 	}
 	else {
-		TextOut(hDC, m_actorPoint.x, m_actorPoint.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
 	}
 
 	static TCHAR buf[15];
-	wsprintf(buf, TEXT("Position : (%3ld, %3ld)"), (LONG)m_actorPoint.x, (LONG)m_actorPoint.y);
+	wsprintf(buf, TEXT("Position : (%3ld, %3ld)"), (LONG)position.x, (LONG)position.y);
 	TextOut(hDC, 0, 20, buf, sizeof(buf));
 
 }
 
-void CPlayer::ActorBehavior()
+void CPlayer::ActorBehavior(double dDeltaTime)
 {
+	TransformComponent* pTransform = GetComponent<TransformComponent>();
+	PhysicsComponent* pPhysics = GetComponent<PhysicsComponent>();
 
+	float fCurSpeed = pPhysics->GetCurSpeed();
+	float fCurJumpForce = pPhysics->GetCurJumpForce();
+	float fMaxSpeed = pPhysics->GetMaxSpeed();
+	float fWalkSpeed = pPhysics->GetSpeed();
 
+	if (m_direction == Types::DIR_LEFT)
+	{
+		if (m_actorHorizonalState == Types::HS_RUN)
+		{
+			if (fCurSpeed > -1 * fMaxSpeed)
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+		}
+		else if (m_actorHorizonalState == Types::HS_WALK)
+		{
+			if (fCurSpeed < -1 * fWalkSpeed)
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+			else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
+			else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
+				pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
 
+		}
+		else if (m_actorHorizonalState == Types::HS_IDLE)
+		{
+			if (fCurSpeed < 0.f)
+			{
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 5.f);
+				if (pPhysics->GetCurSpeed() > 0.f)
+					pPhysics->SetCurSpeed(0.f);
+			}
+			else if (fCurSpeed > 0.f)
+			{
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
+				if (pPhysics->GetCurSpeed() < 0.f)
+					pPhysics->SetCurSpeed(0.f);
+			}
+		}
+	}
+	else if (m_direction == Types::DIR_RIGHT)
+	{
+		if (m_actorHorizonalState == Types::HS_RUN)
+		{
+			if (fCurSpeed < fMaxSpeed)
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+		}
+		else if (m_actorHorizonalState == Types::HS_WALK)
+		{
+			if (fCurSpeed > fWalkSpeed)
+				pPhysics->SetCurSpeed(fCurSpeed - 10.f);
+			else if (fCurSpeed < fWalkSpeed)
+				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
+			else if (fCurSpeed >= fWalkSpeed)
+				pPhysics->SetCurSpeed(fWalkSpeed);
+		}
+		else if (m_actorHorizonalState == Types::HS_IDLE)
+		{
+			if (fCurSpeed > 0.f)
+			{
+				pPhysics->SetCurSpeed(fCurSpeed - 5.f);
+				if (pPhysics->GetCurSpeed() < 0.f)
+					pPhysics->SetCurSpeed(0.f);
+			}
+			else if (fCurSpeed < 0.f)
+			{
+				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
+				if (pPhysics->GetCurSpeed() > 0.f)
+					pPhysics->SetCurSpeed(0.f);
+			}
+		}
+	}
 
+	if (pPhysics->IsGrounded())
+	{
+		if (m_actorCurVerticalState == Types::VS_JUMP)
+		{
+			pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+			pPhysics->SetGrounded(false);
+		}
+	}
 
-
-
+	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
 }

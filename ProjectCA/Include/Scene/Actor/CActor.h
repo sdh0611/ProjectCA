@@ -15,6 +15,7 @@ class CWorld;
 class CGameScene;
 class ComponentBase;
 
+
 class CActor {
 	////Layer, World Class만 Actor의 생성, 파괴가 가능함.
 	//friend class CWorld;
@@ -34,69 +35,68 @@ public:
 
 public:
 	virtual bool PostInit(const Types::ActorData&, CGameScene*) = 0;
-	//virtual bool Init(const Types::ActorData&);
 	virtual bool Init() = 0;
 	virtual void Update(double fDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
 	//virtual void LateUpdate(float fDeltaTime);
 	virtual void Destroy();
-	virtual void ActorBehavior() { };
+	virtual void ActorBehavior(double dDeltaTime) = 0;
 
 
 public:
 	ComponentBase * GetComponent(const Types::tstring& strTag);
-	bool AddComponent(ComponentBase* pComponent, const Types::tstring& strTag);
-	bool DeleteComponent(const Types::tstring& strTag);
+	bool					AddComponent(ComponentBase* pComponent, const Types::tstring& strTag);
+	bool					DeleteComponent(const Types::tstring& strTag);
+	template<typename T>
+	T*	GetComponent() const
+	{
+		const std::type_info& type = typeid(T);
+		for (auto& it : m_componentTable)
+		{
+			if (typeid(*(it.second)) == type)
+				return static_cast<T*>(it.second);
+		}
+
+		return nullptr;
+	}
+
+public:
+	void SetActive(bool bActive);
+	void SetActorState(Types::ActorState state);
+	void SetActorVector(float fx, float fy);
+	void SetActorDirection(Types::Direction dir);
+	void SetActorWidth(UINT iWidth);
+	void SetActorHeight(UINT iHeight);
+	void SetActorPoint(float fx, float fy);
+	void SetActorTag(const Types::tstring& strTag);
+	void SetActorVerticalState(Types::VerticalState vertical);
+	void SetActorHorizonalState(Types::HorizonalState horizonal);
+	void SetOwnerScene(CGameScene* pScene);
+	//void SetOwnerWorld(CWorld* pWorld);
+	bool SetLayer(const Types::tstring& strLayerTag);
 
 
 public:
-	inline bool IsActive() const { return m_bActive; }
-	inline void SetActive(bool bActive) { m_bActive = bActive; }
-	Types::ActorType	GetActorType() const { return m_actorType; }
-	Types::ActorState GetActorState() const { return m_actorCurState; }
-	void SetActorState(Types::ActorState state) { m_actorCurState = state; }
-	Types::ActorState GetActorPreState() const { return m_actorPreState; }
-	Types::Direction GetActorDirection() const { return m_direction; }
-	Types::Point GetActorVector() const { return m_actorVector; }
-	bool SetActorVector(float fx, float fy) {		//안전하지 않은 코드 -> 추후 Vector2d class 작성하면 
-															//해당 class로 대체하면서 다시 바꿀거임.(09.25)
-		m_actorVector.x = fx;
-		m_actorVector.y = fy;
+	bool						IsActive() const;
+	Types::ActorType		GetActorType() const;
+	Types::ActorState		GetActorState() const;
+	Types::ActorState		GetActorPreState() const;
+	Types::Direction		GetActorDirection() const;
+	Types::Point				GetActorVector() const;
+	UINT						GetActorWidth() const;
+	UINT						GetActorHeight() const;
+	Types::Point				GetActorPoint() const;
+	const Types::Point		GetActorPivot() const;
+	const Types::tstring& GetActorTag() const;
+	Types::ActorID			GetActorID() const;
+	Types::VerticalState	GetActorVerticalState() const;
+	Types::VerticalState	GetActorPreVerticalState() const;
+	Types::HorizonalState GetActorHorizonalState() const;
+	//CWorld* const			GetOwnerWorld() const;
+	CGameScene* const	GetOwnerScene() const;
 
-		return true;
-	}
-	void SetActorDirection(Types::Direction dir) { m_direction = dir; }
-	UINT GetActorWidth() const { return m_iActorWidth; }
-	void SetActorWidth(UINT iWidth) { m_iActorWidth = iWidth; }
-	UINT GetActorHeight() const { return m_iActorHeight; }
-	void SetActorHeight(UINT iHeight) { m_iActorHeight = iHeight; }
-	Types::Point GetActorPoint() const { return m_actorPoint; }
-	bool SetActorPoint(float fx, float fy) {
-		//if (fx < 0 || fy < 0)
-		//	return false;
-	
-		//if (fx > MAX_WIDTH || fy > MAX_HEIGHT)
-		//	return false;
 
-		m_actorPoint.x = fx;
-		m_actorPoint.y = fy;
-		
-		return true;
-	}
-	const Types::Point& GetActorPivot() const { return m_actorPivot; }
-	const Types::tstring& GetActorTag() const { return m_strActorTag; }
-	void SetActorTag(const Types::tstring& strTag) { m_strActorTag == strTag; }
-	inline Types::ActorID GetActorID() const { return m_actorID; }	
-	Types::VerticalState GetActorVerticalState() const { return m_actorCurVerticalState; }
-	void SetActorVerticalState(Types::VerticalState vertical) { m_actorCurVerticalState = vertical; }
-	Types::VerticalState GetActorPreVerticalState() const { return m_actorPreVerticalState; }
-	Types::HorizonalState GetActorHorizonalState() const { return m_actorHorizonalState; }
-	void SetActorHorizonalState(Types::HorizonalState horizonal) { m_actorHorizonalState = horizonal; }
-	//CWorld* const GetOwnerWorld() const;
-	//void SetOwnerWorld(CWorld* pWorld);
-	CGameScene* const GetOwnerScene() const;
-	void SetOwnerScene(CGameScene* pScene);
-	bool SetLayer(const Types::tstring& strLayerTag);
+public:
 	void FlipVector();
 	void FlipActorDirection();
 
@@ -104,9 +104,9 @@ public:
 protected:
 	UINT							m_iActorWidth;
 	UINT							m_iActorHeight;
-	Types::Point					m_actorPoint;
-	Types::Point					m_spawnPoint;
-	Types::Point					m_actorPivot;
+	//POSITION					m_actorPoint;
+	//POSITION					m_spawnPoint;
+	//POSITION					m_actorPivot;
 	Types::ActorType			m_actorType;
 	Types::ActorState			m_actorCurState;
 	Types::ActorState			m_actorPreState;

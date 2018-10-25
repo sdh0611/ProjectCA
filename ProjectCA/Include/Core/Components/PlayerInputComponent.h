@@ -18,6 +18,7 @@ public:
 	virtual bool PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent")) override;
 	virtual void Init(){ }
 	virtual void Update(double fDeltaTime) override;
+	virtual void LateUpdate(double dDeltaTime) override;
 
 
 public:
@@ -25,11 +26,12 @@ public:
 
 
 private:
-	void UpdateKeyDown();
+	//void UpdateKeyDown();
 	void KeyProcess();
 
 
 private:
+	class CInputManager*		m_pInputManager;
 	std::vector<Types::KeyInfo>	m_keyInfoList;
 
 };

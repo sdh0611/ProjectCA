@@ -20,8 +20,9 @@ public:
 public:
 	//virtual bool Init(CActor* pOwner, const Types::tstring& strTag) = 0;
 	virtual void Init() = 0;
-	virtual void Update(double fDeltaTime) = 0;
+	virtual void Update(double dDeltaTime) = 0;
 	//virtual void OnMessage(ComponentMessage msg);
+	virtual void LateUpdate(double dDeltaTime) = 0;
 
 
 public:
@@ -32,7 +33,6 @@ public:
 
 
 protected:
-	//Types::Point				m_point;
 	Types::tstring						m_strComponentTag;
 	std::shared_ptr<CActor>			m_pOwner;
 

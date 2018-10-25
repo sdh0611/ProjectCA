@@ -150,6 +150,7 @@
     <ClCompile Include="Source\Core\Components\PhysicsComponent.cpp" />
     <ClCompile Include="Source\Core\Components\PlayerInputComponent.cpp" />
     <ClCompile Include="Source\Core\Components\RenderComponent.cpp" />
+    <ClCompile Include="Source\Core\Components\TransformComponent.cpp" />
     <ClCompile Include="Source\Core\CResourceManager.cpp" />
     <ClCompile Include="Source\Core\Debuging\Debug.cpp" />
     <ClCompile Include="Source\Core\Graphic\CAnim.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Include\Core\Components\PhysicsComponent.h" />
     <ClInclude Include="Include\Core\Components\PlayerInputComponent.h" />
     <ClInclude Include="Include\Core\Components\RenderComponent.h" />
+    <ClInclude Include="Include\Core\Components\TransformComponent.h" />
     <ClInclude Include="Include\Core\CResourceManager.h" />
     <ClInclude Include="Include\Core\Debuging\Debug.h" />
     <ClInclude Include="Include\Core\Graphic\CAnim.h" />

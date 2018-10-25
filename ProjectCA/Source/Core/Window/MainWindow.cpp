@@ -5,11 +5,13 @@
 #include "..\..\..\Include\Core\Debuging\Debug.h"
 #include "..\..\..\Include\Core\Window\BackBuffer.h"
 #include "..\..\..\Include\Core\CResourceManager.h"
+#include "..\..\..\Include\Core\CInputManager.h"
 
 
 //초기화는 Init() 메소드에서 실시함.
 MainWindow::MainWindow()
-	:m_pSceneManager(nullptr), m_pTimer(nullptr), m_pBackBuffer(nullptr)
+	:m_pSceneManager(nullptr), m_pTimer(nullptr), m_pResourceManager(nullptr),
+	m_pInputManager(nullptr), m_pBackBuffer(nullptr)
 {
 	
 }
@@ -21,6 +23,7 @@ MainWindow::~MainWindow()
 	m_pSceneManager->Destroy();
 	m_pTimer->Destroy();
 	//CActorManager::Destroy();
+	m_pInputManager->Destroy();
 
 	if (m_hBrush)
 		DeleteObject(m_hBrush);
@@ -50,9 +53,10 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 
 
 	//Get Manager Classes Pointer;
-	m_pSceneManager = CSceneManager::GetInstance();
-	m_pTimer = Timer::GetInstance();
-	m_pResourceManager = CResourceManager::GetInstance();
+	m_pSceneManager		= CSceneManager::GetInstance();
+	m_pTimer					= Timer::GetInstance();
+	m_pResourceManager	= CResourceManager::GetInstance();
+	m_pInputManager			= CInputManager::GetInstance();
 
 	if (!m_pResourceManager->Init())
 		return false;
@@ -64,10 +68,13 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	if (!m_pTimer->Init())
 		return false;
 
+	if (!m_pInputManager->Init())
+		return false;
+
 	if (m_pBackBuffer == nullptr)
 		m_pBackBuffer = std::make_unique<BackBuffer>(m_hDC);
 
-	m_hBrush					= (HBRUSH)GetStockObject(NULL_BRUSH);
+	m_hBrush = (HBRUSH)GetStockObject(NULL_BRUSH);
 
 
 	return true;
@@ -76,11 +83,10 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 //DeltaTime값을 넘겨줌.
 void MainWindow::Update()
 {
+	m_pInputManager->Update();
 	m_pTimer->Update();
 	m_pSceneManager->Update(m_pTimer->GetDeltaTime());
 	m_pTimer->CheckFrameCount();
-	//m_pSceneManager->Update(1.f/60.f);
-	//InvalidateRect(m_hWnd, NULL, FALSE);
 }
 
 
