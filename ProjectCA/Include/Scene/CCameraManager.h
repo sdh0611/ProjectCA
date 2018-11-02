@@ -20,11 +20,11 @@ public:
 
 
 public:
-	WeakCameraPtr CreateCamera(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id);
+	WeakCameraPtr CreateCamera(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight);
 	StrongCameraPtr GetCamera(Types::CameraID);
 	void AddCamera(StrongCameraPtr pCamera);
 	bool DeleteCamera(StrongCameraPtr pCamera);
-	WeakCameraPtr GetMainCameara();
+	WeakCameraPtr GetMainCamera();
 	void ChangeMainCamera(StrongCameraPtr pCamera);
 	
 

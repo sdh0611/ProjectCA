@@ -24,15 +24,15 @@ template <class T>
 class Singleton {
 public:
 	static T* GetInstance() {
-		if (mInstance == nullptr)
-			mInstance = new T;
+		if (m_pInstance == nullptr)
+			m_pInstance = new T;
 
-		return mInstance;
+		return m_pInstance;
 	}
 	static void Destroy() {
-		if (mInstance != nullptr) {
-			delete mInstance;
-			mInstance = nullptr;
+		if (m_pInstance != nullptr) {
+			delete m_pInstance;
+			m_pInstance = nullptr;
 		}
 	}
 
@@ -43,8 +43,8 @@ protected:
 
 
 private:
-	static T* mInstance;
+	static T* m_pInstance;
 	
 };
 
-template <class T> T* Singleton<T>::mInstance = nullptr;
+template <class T> T* Singleton<T>::m_pInstance = nullptr;

@@ -3,17 +3,43 @@
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 
+CCameraManager::CCameraManager()
+{
+}
+
+CCameraManager::~CCameraManager()
+{
+	puts("CameraManager Destroy");
+}
+
+
+bool CCameraManager::Init()
+{
+	m_iLastCameraID = 0;
+	
+
+	return true;
+}
+
+
 void CCameraManager::Update(double dDeltaTime)
 {
 }
 
-WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id)
+WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight)
 {
 	StrongCameraPtr pCamera = StrongCameraPtr(new CCamera);
 
-	if (pCamera->PostInit(pOwner, iWidth, iHeight, id))
+	if (!pCamera->PostInit(pOwner, iWidth, iHeight, m_iLastCameraID++))
 	{
 		return StrongCameraPtr();
+	}
+
+	AddCamera(pCamera);
+
+	if (m_pMainCamera.lock() == nullptr)
+	{
+		m_pMainCamera = pCamera;
 	}
 
 	return pCamera;
@@ -52,9 +78,14 @@ bool CCameraManager::DeleteCamera(StrongCameraPtr pCamera)
 	return false;
 }
 
-WeakCameraPtr CCameraManager::GetMainCameara()
+WeakCameraPtr CCameraManager::GetMainCamera()
 {
+	if (m_pMainCamera.expired())
+	{
+		return WeakCameraPtr();
+	}
 	return m_pMainCamera.lock();
+
 }
 
 void CCameraManager::ChangeMainCamera(StrongCameraPtr pCamera)

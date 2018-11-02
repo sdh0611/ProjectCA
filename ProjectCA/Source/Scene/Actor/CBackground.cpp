@@ -26,8 +26,8 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	m_iActorHeight = data.iActorHeight;
 	//m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
-	m_actorCurState = m_actorPreState = data.actorState;
-	m_actorCurVerticalState = m_actorPreVerticalState = Types::VS_IDLE;
+	m_actorCurState = data.actorState;
+	m_actorCurVerticalState = Types::VS_IDLE;
 	m_actorHorizonalState = Types::HS_IDLE;
 	m_direction = data.direction;
 	m_actorVector = data.vector;
@@ -36,7 +36,11 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	m_pOwnerScene = pScene;
 	m_bActive = data.bActive;
 
+
 	//TransformComponent 추가
+	//NOTE(11.01) : TransformComponent에서 ScreenPosition값을 계산하므로 
+	//					다른 컴포넌트들의 동작이 수행 된 뒤 동작해야함.
+	//					떄문에 마지막에 추가하는 것으로 변경함.
 	TransformComponent* pTransform = new TransformComponent;
 	if (!pTransform->PostInit(this, data.actorPoint))
 		return false;
@@ -44,6 +48,8 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
 		return false;
 
+
+	//RenderComponent 추가
 	RenderComponent* pRender = new RenderComponent;
 	if (!pRender->PostInit(this))
 		return false;
@@ -53,6 +59,9 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
+
+
+
 
 	return true;;
 }

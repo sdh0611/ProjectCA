@@ -26,7 +26,7 @@ public:
 	virtual void Update(double dDeltaTime) = 0;
 	virtual void LateUpdate(double dDeltaTime) override;
 	virtual void ResolveCollision(std::shared_ptr<CActor> pOther);
-	virtual void DrawCollider(const HDC& hDC) = 0;
+	virtual void DrawCollider(const HDC& hDC, const POSITION& position) = 0;
 
 
 public:

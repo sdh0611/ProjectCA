@@ -167,9 +167,12 @@
     <ClCompile Include="Source\Scene\Actor\CBomb.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCamera.cpp" />
     <ClCompile Include="Source\Scene\Actor\CEnemy.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CFlower.cpp" />
     <ClCompile Include="Source\Scene\Actor\CKoopa.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CMushroom.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPlayer.cpp" />
     <ClCompile Include="Source\Scene\Actor\CProb.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CShell.cpp" />
     <ClCompile Include="Source\Scene\CCameraManager.cpp" />
     <ClCompile Include="Source\Scene\CGameScene.cpp" />
     <ClCompile Include="Source\Scene\CLayer.cpp" />
@@ -208,9 +211,13 @@
     <ClInclude Include="Include\Scene\Actor\CBomb.h" />
     <ClInclude Include="Include\Scene\Actor\CCamera.h" />
     <ClInclude Include="Include\Scene\Actor\CEnemy.h" />
+    <ClInclude Include="Include\Scene\Actor\CFlower.h" />
+    <ClInclude Include="Include\Scene\Actor\CGround.h" />
     <ClInclude Include="Include\Scene\Actor\CKoopa.h" />
+    <ClInclude Include="Include\Scene\Actor\CMushroom.h" />
     <ClInclude Include="Include\Scene\Actor\CPlayer.h" />
     <ClInclude Include="Include\Scene\Actor\CProb.h" />
+    <ClInclude Include="Include\Scene\Actor\CShell.h" />
     <ClInclude Include="Include\Scene\CCameraManager.h" />
     <ClInclude Include="Include\Scene\CGameScene.h" />
     <ClInclude Include="Include\Scene\CLayer.h" />

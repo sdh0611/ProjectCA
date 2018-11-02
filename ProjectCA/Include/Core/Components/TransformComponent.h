@@ -30,6 +30,7 @@ public:
 	void SetPivotRatio(float fWidthRatio, float fHeightRatio);
 	void SetWidthPivotRatio(float fRatio);
 	void SetHeightPivotRatio(float fRatio);
+	void SetScreenPosition(const POSITION& position);
 
 
 public:
@@ -39,6 +40,13 @@ public:
 	POSITION	GetSpawnPosition() const;
 	POSITION	GetPivot() const;
 	POSITION	GetLastPosition() const;
+	POSITION	GetScreenPosition() const;
+	POSITION	GetScreenPivot() const;
+
+
+public:
+	//카메라상의 좌표 조정
+	void AdjustScreenPosition();
 
 
 private:
@@ -48,6 +56,7 @@ private:
 	POSITION	m_SpawnPosition;
 	POSITION	m_LastPosition;
 	POSITION	m_Pivot;
-	
+	POSITION	m_ScreenPosition;
+	POSITION	m_ScreenPivot;
 
 };

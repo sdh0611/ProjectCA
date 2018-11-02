@@ -4,7 +4,13 @@
 #include "CActor.h"
 
 
+class CCamera;
+
 class CPlayer : public CActor {
+
+	enum PlayerState {
+		PS_SMALL, PS_BIG, PS_FIRE
+	};
 
 public:
 	CPlayer();
@@ -20,8 +26,16 @@ public:
 	virtual void ActorBehavior(double dDeltaTime) override;
 
 
-private:
+public:
+	bool AttachCamera(std::shared_ptr<CCamera> pCamera);
 
+
+public:
+	std::weak_ptr<CCamera> GetCamera();
+
+
+private:
+	std::shared_ptr<CCamera>	m_pCamera;
 
 
 private:

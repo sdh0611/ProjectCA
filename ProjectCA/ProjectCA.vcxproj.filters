@@ -222,6 +222,15 @@
     <ClCompile Include="Source\Core\Components\TransformComponent.cpp">
       <Filter>소스 파일\Core\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CMushroom.cpp">
+      <Filter>소스 파일\Scene\Actors\Pickup</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CFlower.cpp">
+      <Filter>소스 파일\Scene\Actors\Pickup</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CShell.cpp">
+      <Filter>소스 파일\Scene\Actors\Prob</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -346,6 +355,18 @@
     </ClInclude>
     <ClInclude Include="Include\Core\Components\TransformComponent.h">
       <Filter>헤더 파일\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CFlower.h">
+      <Filter>헤더 파일\Scene\Actors\Pickup</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CMushroom.h">
+      <Filter>헤더 파일\Scene\Actors\Pickup</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CGround.h">
+      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CShell.h">
+      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

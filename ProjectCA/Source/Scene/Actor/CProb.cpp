@@ -29,8 +29,8 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	m_iActorHeight = data.iActorHeight;
 	//m_actorPoint = m_spawnPoint = data.actorPoint;
 	m_actorType = data.actorType;
-	m_actorCurState = m_actorPreState = data.actorState;
-	m_actorCurVerticalState = m_actorPreVerticalState = data.verticalState;
+	m_actorCurState = data.actorState;
+	m_actorCurVerticalState = data.verticalState;
 	m_actorHorizonalState = data.horizonalState;
 	m_direction = data.direction;
 	m_actorVector = data.vector;
@@ -39,16 +39,22 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	m_bActive = data.bActive;
 
 	m_pOwnerScene = pScene;
+	
+
 	//TransformComponent 추가
+	//NOTE(11.01) : TransformComponent에서 ScreenPosition값을 계산하므로 
+	//					다른 컴포넌트들의 동작이 수행 된 뒤 동작해야함.
+	//					떄문에 마지막에 추가하는 것으로 변경함.
 	TransformComponent* pTransform = new TransformComponent;
 	if (!pTransform->PostInit(this, data.actorPoint))
 		return false;
-	
+
 	pTransform->SetPivotRatio(0.5f, 1.f);
 	printf("Position : (%f, %f), Pivot : (%f, %f)\n", pTransform->GetPosition().x, pTransform->GetPosition().y, pTransform->GetPivot().x, pTransform->GetPivot().y);
 
 	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
 		return false;
+
 
 	//AIComponent (InputComponent) 초기화
 	AIComponent* pAI = new AIComponent;
@@ -75,6 +81,9 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 		return false;
 	
 
+
+
+
 	return true;
 }
 
@@ -90,7 +99,7 @@ void CProb::Update(double fDeltaTime)
 
 void CProb::Render(const HDC & hDC)
 {
-	POSITION pivot = GetComponent<TransformComponent>()->GetPivot();
+	POSITION pivot = GetComponent<TransformComponent>()->GetScreenPivot();
 
 	Rectangle(hDC, pivot.x, pivot.y, pivot.x + m_iActorWidth, pivot.y + m_iActorHeight);
 

@@ -97,3 +97,8 @@ WeakActorPtr CActorManager::GetTarger(const Types::tstring & strTag)
 
 	return WeakActorPtr();
 }
+
+void CActorManager::Clear()
+{
+	m_strongActorPtrList.clear();
+}

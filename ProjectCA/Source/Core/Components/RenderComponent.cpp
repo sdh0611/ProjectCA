@@ -1,6 +1,8 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\..\Include\Core\Components\Collider.h"
 #include	"..\..\..\Include\Core\CResourceManager.h"
 #include "..\..\..\Include\Core\Graphic\CSprite.h"
 #include "..\..\..\Include\Core\Graphic\CAnim.h"
@@ -66,15 +68,54 @@ void RenderComponent::Draw(const HDC & hDC)
 {
 	if (m_bVisible) 
 	{
+		POSITION pivot = m_pOwner->GetComponent<TransformComponent>()->GetScreenPivot();
+		POSITION position = m_pOwner->GetComponent<TransformComponent>()->GetScreenPosition();
 		//m_hOldBrush = (HBRUSH)SelectObject(hDC, m_hBrush);
 		//m_animTable[m_ownerState]->Draw(hDC, hMemDC);
-		m_pWeakCurAnim.lock()->Draw(hDC, m_pOwner->GetActorPivot());
+		m_pWeakCurAnim.lock()->Draw(hDC, pivot);
 
 		//Rectangle(hDC, m_offset.x, m_offset.y,
 		//	m_offset.x + m_pOwner->GetActorWidth(),
 		//	m_offset.y + m_pOwner->GetActorHeight());
 		//m_hBrush = (HBRUSH)SelectObject(hDC, m_hOldBrush);
 	
+		Collider* pCollider = static_cast<Collider*>(m_pOwner->GetComponent(TEXT("Collider")));
+		PhysicsComponent* pPhysics = m_pOwner->GetComponent<PhysicsComponent>();
+
+		if (pCollider) 
+		{
+			pCollider->DrawCollider(hDC, position);
+
+			if (pCollider->IsCollision()) 
+			{
+				TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+			}
+			else 
+			{	
+				TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+			}
+
+		}
+
+		if (pPhysics)
+		{
+			if (pPhysics->IsGrounded())
+			{
+				TextOut(hDC, position.x, position.y + 20, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+			}
+			else 
+			{
+				TextOut(hDC, position.x, position.y + 20, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+			}
+
+		}
+
+		//BUG(11.02) : 이 부분에서 버그가 발생했었음 -> CameraManager내부 포인터가 가리키는 위치를 변경시켜버림..
+		//static TCHAR buf[15];
+		//wsprintf(buf, TEXT("Position : (%3ld, %3ld)"), (LONG)position.x, (LONG)position.y);
+		//TextOut(hDC, 0, 20, buf, sizeof(buf));
+
+
 	}		
 
 }
@@ -178,6 +219,13 @@ void RenderComponent::UpdateAnimationMotion()
 	float fCurSpeed = std::fabsf(pPhysics->GetCurSpeed());
 	float fSpeed = pPhysics->GetSpeed();
 	float fMaxSpeed = pPhysics->GetMaxSpeed();
+
+	if (m_ownerState == Types::AS_DAMAGED)
+	{
+		//puts("ChangeDamaged");
+		m_animationState = Types::AM_DAMAGED;
+		return;
+	}
 
 	if (m_ownerState == Types::AS_SITDOWN)
 	{
@@ -565,9 +613,19 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 			break;
 		case Types::AM_DAMAGED:
 			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
+			{
+				if (!ChangeAnimation(TEXT("DamagedLeft")))
+				{
+					ChangeAnimation(TEXT("Damaged"));
+				}
+			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
+			{
+				if (!ChangeAnimation(TEXT("DamagedRight")))
+				{
+					ChangeAnimation(TEXT("Damaged"));
+				}
+			}
 			break;
 		}
 
@@ -618,9 +676,19 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 			break;
 		case Types::AM_DAMAGED:
 			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
+			{
+				if (!ChangeAnimation(TEXT("DamagedLeft")))
+				{
+					ChangeAnimation(TEXT("Damaged"));
+				}
+			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
+			{
+				if (!ChangeAnimation(TEXT("DamagedRight")))
+				{
+					ChangeAnimation(TEXT("Damaged"));
+				}
+			}
 			break;
 		}
 	}
@@ -688,9 +756,19 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 			break;
 		case Types::AM_DAMAGED:
 			if (m_ownerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("DamagedLeft"));
+			{
+				if (!ChangeAnimation(TEXT("DamagedLeft")))
+				{
+					ChangeAnimation(TEXT("Damaged"));
+				}
+			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("DamagedRight"));
+			{
+				if (!ChangeAnimation(TEXT("DamagedRight")))
+				{
+					ChangeAnimation(TEXT("Damaged"));
+				}
+			}
 			break;
 
 		}

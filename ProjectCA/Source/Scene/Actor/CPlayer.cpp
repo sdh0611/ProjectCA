@@ -6,6 +6,8 @@
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Scene\CCameraManager.h"
+#include "..\..\..\Include\Scene\Actor\CCamera.h"
 
 
 
@@ -35,21 +37,26 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		data.actorPoint.y < 0 || data.actorPoint.y > MAX_HEIGHT)
 		return false;
 
-	m_iActorWidth = data.iActorWidth;
-	m_iActorHeight = data.iActorHeight;
+	m_iActorWidth					= data.iActorWidth;
+	m_iActorHeight					= data.iActorHeight;
 	//m_actorPoint = m_spawnPoint = data.actorPoint;
-	m_actorType = data.actorType;
-	m_actorCurState = m_actorPreState = data.actorState;
-	m_actorPreVerticalState = m_actorCurVerticalState = data.verticalState;
-	m_actorHorizonalState = data.horizonalState;
-	m_direction = data.direction;
-	m_actorVector = data.vector;
-	m_actorID = data.actorID;
-	m_strActorTag = data.strActorTag;
-	m_bActive = data.bActive;
+	m_actorType					= data.actorType;
+	m_actorCurState				= data.actorState;
+	m_actorCurVerticalState		= data.verticalState;
+	m_actorHorizonalState		= data.horizonalState;
+	m_direction						= data.direction;
+	m_actorVector					= data.vector;
+	m_actorID						= data.actorID;
+	m_strActorTag					= data.strActorTag;
+	m_bActive						= data.bActive;
 	
 	m_pOwnerScene = pScene;
+	
+	
 	//TransformComponent 추가
+	//NOTE(11.01) : TransformComponent에서 ScreenPosition값을 계산하므로 
+	//					다른 컴포넌트들의 동작이 수행 된 뒤 동작해야함.
+	//					떄문에 마지막에 추가하는 것으로 변경함.
 	TransformComponent* pTransform = new TransformComponent;
 	if (!pTransform->PostInit(this, data.actorPoint))
 		return false;
@@ -59,6 +66,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
 		return false;
+
+
 	//PlayerInputComponent (InputComponent) 초기화
 	PlayerInputComponent* pAI = new PlayerInputComponent;
 	if (!pAI->PostInit(this))
@@ -67,6 +76,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!AddComponent(pAI, pAI->GetComponentTag()))
 		return false;
 
+
 	//PhysicsComponent 초기화
 	PhysicsComponent* pPhysics = new PhysicsComponent;
 	if (!pPhysics->PostInit(this, 300.f, 700.f, 1300.f, 700.f))
@@ -74,6 +84,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
 		return false;
+
 
 	//Collider 초기화
 	ColliderBox* pCollider = new ColliderBox;
@@ -84,6 +95,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	{
 		ComponentBase* pComponent = nullptr;
 		POSITION position = pOwner->GetComponent<TransformComponent>()->GetLastPosition();
+		PhysicsComponent* pPhysics = pOwner->GetComponent<PhysicsComponent>();
 
 		switch (pOther->GetActorType()) 
 		{
@@ -92,15 +104,17 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
 			//pOwner->SetActorPoint(point.x, point.y);
 			//pOwner->GetOwnerScene()->ResetScene();
+			switch (type)
+			{
+			case Collider::COLLISION_BOT:
+				pOwner->SetActorVerticalState(Types::VS_JUMP);
+				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+				break;
+			}
 			break;
 		case Types::AT_PROB:
-			PhysicsComponent* pPhysics= pOwner->GetComponent<PhysicsComponent>();
-			if (pPhysics == nullptr)
-				return;
-
 			switch (type) {
 			case Collider::COLLISION_BOT:
-				//puts("BOT");
 				pPhysics->SetGrounded(true);
 				pPhysics->SetCurJumpForce(0.f);
 				pOwner->SetActorState(Types::AS_IDLE);
@@ -108,16 +122,11 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				pOwner->SetActorPoint(pOwner->GetActorPoint().x, pOther->GetActorPoint().y - pOther->GetActorHeight());
 				break;
 			case Collider::COLLISION_TOP:
-				//pPhysics->SetGrounded(false);
-				//pOwner->SetActorState(Types::AS_IDLE);
 				pOwner->SetActorVerticalState(Types::VS_FALL);
 				break;
 			case Collider::COLLISION_LEFT:
 			case Collider::COLLISION_RIGHT:
-				//puts("SIDE");
-				//pPhysics->SetGrounded(true);
 				pOwner->SetActorHorizonalState(Types::HS_IDLE);
-				//pOwner->SetActorVerticalState(Types::VS_IDLE);
 				pOwner->SetActorPoint(position.x, pOwner->GetActorPoint().y);
 				pPhysics->SetCurSpeed(0.f);
 				break;
@@ -132,6 +141,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
+
 
 	//RenderComponent 추가
 	RenderComponent* pRender = new RenderComponent;
@@ -196,6 +206,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		return false;
 
 
+
+
 	return true;
 }
 
@@ -211,53 +223,34 @@ bool CPlayer::Init()
 
 void CPlayer::Update(double dDeltaTime)
 {
-	InputComponent* pInput = GetComponent<PlayerInputComponent>();
-	if (pInput)
-	{
-		pInput->Update(dDeltaTime);
-	}
+	//InputComponent* pInput = GetComponent<PlayerInputComponent>();
+	//if (pInput)
+	//{
+	//	pInput->Update(dDeltaTime);
+	//}
 
-	ActorBehavior(dDeltaTime);
+	//ActorBehavior(dDeltaTime);
+	//
+	//for (auto& component : m_componentTable)
+	//{
+	//	if (component.first == TEXT("InputComponent"))
+	//	{
+	//		continue;
+	//	}
+	//	component.second->Update(dDeltaTime);
+	//}
+	CActor::Update(dDeltaTime);
+	//m_pCamera->Update(dDeltaTime);
 	
-	for (auto& component : m_componentTable)
-	{
-		if (component.first == TEXT("InputComponent"))
-		{
-			continue;
-		}
-		component.second->Update(dDeltaTime);
-	}
 }
 
 void CPlayer::Render(const HDC & hDC)
 {
-	POSITION position = GetComponent<TransformComponent>()->GetPosition();
+	const POSITION& position = GetComponent<TransformComponent>()->GetPosition();
 
 	auto it = m_componentTable.find(TEXT("RenderComponent"));
 	if (it != m_componentTable.end())
 		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
-
-	auto pColliderIt = m_componentTable.find(TEXT("Collider"));
-	if(pColliderIt != m_componentTable.end())
-		static_cast<Collider*>((*pColliderIt).second)->DrawCollider(hDC);
-
-	//if (static_cast<Collider*>(GetComponent(TEXT("Collider")))->IsCollision()) {
-	//	TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
-	//}
-	//else {
-	//	TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
-	//}
-
-	if (GetComponent<PhysicsComponent>()->IsGrounded()) {
-		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
-	}
-	else {
-		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
-	}
-
-	static TCHAR buf[15];
-	wsprintf(buf, TEXT("Position : (%3ld, %3ld)"), (LONG)position.x, (LONG)position.y);
-	TextOut(hDC, 0, 20, buf, sizeof(buf));
 
 }
 
@@ -270,6 +263,8 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	float fCurJumpForce = pPhysics->GetCurJumpForce();
 	float fMaxSpeed = pPhysics->GetMaxSpeed();
 	float fWalkSpeed = pPhysics->GetSpeed();
+
+
 
 	if (m_direction == Types::DIR_LEFT)
 	{
@@ -348,4 +343,19 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 
 	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
+}
+
+bool CPlayer::AttachCamera(std::shared_ptr<CCamera> pCamera)
+{
+	if(m_pCamera)
+		return false;
+
+	m_pCamera = pCamera;
+
+	return true;
+}
+
+std::weak_ptr<CCamera> CPlayer::GetCamera()
+{
+	return m_pCamera;
 }

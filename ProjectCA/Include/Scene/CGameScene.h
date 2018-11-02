@@ -17,6 +17,7 @@
 //추후 구현예정(06.10)
 //class CWorld;
 class CActor;
+class CPlayer;
 
 class CGameScene :public CScene {
 
@@ -33,8 +34,8 @@ public:
 
 private:
 	void CollisionDetect();
-	void InputUpdate(double fDeltaTime);
-	void GameUpdate(double fDeltaTime);
+	void InputUpdate(double dDeltaTime);
+	void GameUpdate(double dDeltaTime);
 	//bool IsWorldChange();
 	//void ChangeWorld();
 
@@ -49,7 +50,7 @@ private:
 
 
 private:
-	std::shared_ptr<CActor>								m_pPlayer;			//나중에 weak_ptr로 바꿀 여지가 있음.
+	std::shared_ptr<CPlayer>								m_pPlayer;			//나중에 weak_ptr로 바꿀 여지가 있음.
 	//class CActorFactory*								m_pActorFactory;
 	class CActorManager*								m_pActorManager;
 	//std::unique_ptr<class CollisionDetector>			m_pCollisionDetector;

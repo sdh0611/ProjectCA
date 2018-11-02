@@ -53,12 +53,17 @@ void PhysicsComponent::Update(double dDeltaTime)
 {
 	m_dTimeElapsed += dDeltaTime;
 
-	Gravity(dDeltaTime);
+	if (!m_bStatic)
+	{
+		Gravity(dDeltaTime);
+	}
 
-	if(m_bGrounded)
+	if (m_bGrounded)
+	{
 		m_bGrounded = false;
-}
+	}
 
+}
 void PhysicsComponent::LateUpdate(double dDeltaTime)
 {
 	if (m_bGrounded)
@@ -176,6 +181,11 @@ float PhysicsComponent::GetJumpForce() const
 void PhysicsComponent::Gravity(double dDeltaTime)
 {
 	Types::VerticalState state = m_pOwner->GetActorVerticalState();
+
+	if (m_bGrounded)
+	{
+		m_fYSpeed = 0.f;
+	}
 
 	if (!m_bGrounded)
 	{

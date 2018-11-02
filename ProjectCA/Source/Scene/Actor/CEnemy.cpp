@@ -114,8 +114,13 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 bool CEnemy::Init()
 {
 	//m_actorPoint = m_spawnPoint;
-	
+	for (auto& it : m_componentTable)
+		it.second->Init();
 
+	m_bActive = true;
+	m_actorCurState = Types::AS_IDLE;
+	m_direction = Types::DIR_LEFT;
+	
 	return true;
 }
 

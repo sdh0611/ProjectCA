@@ -176,7 +176,7 @@ bool CCollisionManager::BoxAndBox(std::shared_ptr<CActor> pActor, std::shared_pt
 					pOther->SetCollisionType(Collider::COLLISION_TOP);
 				}
 			}
-			else if (box1.top < box2.bottom && box1.bottom > box2.bottom)	//아래
+			else if (box1.top <= box2.bottom && box1.bottom > box2.bottom)	//아래
 			{
 				fIntersecRectHeight = box2.bottom - box1.top;
 				if (fIntersecRectHeight > fIntersecRectWidth)

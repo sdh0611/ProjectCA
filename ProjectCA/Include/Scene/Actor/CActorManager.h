@@ -35,6 +35,11 @@ public:
 	WeakActorPtr GetTarget(Types::ActorID id);
 	WeakActorPtr GetTarger(const Types::tstring& strTag);
 	
+
+public:
+	void Clear();
+
+
 public:
 	template<typename T>
 	std::shared_ptr<T> CreateActor(const Types::ActorData& data) {

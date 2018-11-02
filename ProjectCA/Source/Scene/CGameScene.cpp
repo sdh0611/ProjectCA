@@ -2,15 +2,18 @@
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Core\CCollisionManager.h"
+#include "..\..\Include\Scene\Actor\CActorManager.h"
+#include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Core\Components\Collider.h"
 #include "..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\Include\Core\Components\InputComponent.h"
-#include "..\..\Include\Scene\Actor\CActorManager.h"
+#include "..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\Actor\CEnemy.h"
 #include "..\..\Include\Scene\Actor\CKoopa.h"
 #include "..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\Include\Scene\Actor\CProb.h"
+#include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
 //#include "..\..\Include\Scene\CWorld.h"
 
@@ -58,33 +61,41 @@ bool CGameScene::Init()
 	if (m_pPlayer == nullptr)
 		return false;
 
+	StrongCameraPtr pCamera = CCameraManager::GetInstance()->CreateCamera(m_pPlayer, MAX_WIDTH, MAX_HEIGHT).lock();
+	if (pCamera == nullptr)
+	{
+		return false;
+	}
+	//카메라 부착
+	m_pPlayer->AttachCamera(pCamera);
+
 	if (!CreateLayer(TEXT("Player"), 2))
 		return false;
 
 	FindLayer(TEXT("Player"))->AddActor(m_pPlayer);
 	
 
-	////Enemy 생성
-	////Windows 좌표계에선 y축이 반대방향이므로 Vector의 값도 반대로 전달해줌.
-	//std::shared_ptr<CKoopa> pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
-	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, Types::Point(0.f, 1.0f), TEXT("KoopaGreen"), this);
+	//Enemy 생성
+	//Windows 좌표계에선 y축이 반대방향이므로 Vector의 값도 반대로 전달해줌.
+	std::shared_ptr<CKoopa> pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, Types::Point(0.f, 1.0f), TEXT("KoopaGreen"), this);
 
-	//if (pEnemy == nullptr)
-	//	return false;
+	if (pEnemy == nullptr)
+		return false;
 
-	//m_strongActorList.emplace_back(pEnemy);
+	m_strongActorList.emplace_back(pEnemy);
 
-	//if (!CreateLayer(TEXT("Enemy"), 3))
-	//	return false;
+	if (!CreateLayer(TEXT("Enemy"), 3))
+		return false;
 
-	//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
 	//Prob 생성
 	if (!CreateLayer(TEXT("Prob"), 4))
 		return false;
 	
-	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(700, 200, 400.f, 700.f, Types::AT_PROB,
+	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(2000, 200, 400.f, 700.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
@@ -98,7 +109,7 @@ bool CGameScene::Init()
 	m_strongActorList.emplace_back(pProb);
 	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
-	pProb = m_pActorManager->CreateActor<CProb>(50, 50, 200.f, 500.f, Types::AT_PROB,
+	pProb = m_pActorManager->CreateActor<CProb>(50, 50, 200.f, 400.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
@@ -158,10 +169,18 @@ void CGameScene::CollisionDetect()
 {
 	////Scene내의 모든 Actor들에 대한 충돌검사 시행
 	for (auto first = m_strongActorList.begin(); first != m_strongActorList.end(); ++first) {
-		for (auto second = first; second != m_strongActorList.end(); ++second) {
-			if (first == second)		
-				continue;
-			CCollisionManager::GetInstance()->CheckCollision((*first), (*second));
+		if ((*first)->IsActive())
+		{
+			for (auto second = first; second != m_strongActorList.end(); ++second) {
+				if (first == second)
+				{
+					continue;
+				}
+				if ((*second)->IsActive())
+				{
+					CCollisionManager::GetInstance()->CheckCollision((*first), (*second));
+				}
+			}
 		}
 	}
 
@@ -182,16 +201,28 @@ void CGameScene::InputUpdate(double fDeltaTime)
 
 }
 
-void CGameScene::GameUpdate(double fDeltaTime)
+void CGameScene::GameUpdate(double dDeltaTime)
 {	
-
 	//Actor Update
 	for (auto& actor : m_strongActorList) {
-		actor->Update(fDeltaTime);
+		if (actor->IsActive())
+		{
+			actor->Update(dDeltaTime);
+		}
 	}
 
 	//Collsion detect between Actors
 	CollisionDetect();
+	CCameraManager::GetInstance()->GetMainCamera().lock()->Update(dDeltaTime);
+	//std::cout << "Address : " << CCameraManager::GetInstance() << "\n";
+	//Adjust Position on Screen 
+	for (auto& actor : m_strongActorList)
+	{
+		if (actor->IsActive())
+		{
+			actor->GetComponent<TransformComponent>()->AdjustScreenPosition();
+		}
+	}
 
 }
 

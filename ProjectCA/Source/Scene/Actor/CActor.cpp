@@ -4,6 +4,7 @@
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CLayer.h"
 //#include "..\..\..\Include\Scene\Actor\CActorFactory.h"
+#include "..\..\..\Include\Core\Components\InputComponent.h"
 #include "..\..\..\Include\Core\Components\ComponentBase.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 
@@ -19,22 +20,37 @@ CActor::~CActor()
 }
 
 
-void CActor::Update(double fDeltaTime)
+void CActor::Update(double dDeltaTime)
 {
 	if (m_bActive) {
-		//m_componentTable[TEXT("PhysicsComponent")]->Update(fDeltaTime);
-		for (auto& it : m_componentTable)
-			it.second->Update(fDeltaTime);
+		InputComponent* pInput = static_cast<InputComponent*>(GetComponent(TEXT("InputComponent")));
+		if (pInput)
+		{
+			pInput->Update(dDeltaTime);
+		}
 
-		m_actorPreState = m_actorCurState;
-		m_actorPreVerticalState = m_actorCurVerticalState;
+		ActorBehavior(dDeltaTime);
+
+		for (auto& component : m_componentTable)
+		{
+			if (component.first == TEXT("InputComponent"))
+			{
+				continue;
+			}
+			component.second->Update(dDeltaTime);
+		}
 	}
 
 }
 
-//void CActor::LateUpdate(float fDeltaTime)
-//{
-//}
+void CActor::LateUpdate(double dDeltaTime)
+{
+	for (auto& it : m_componentTable)
+	{
+		it.second->LateUpdate(dDeltaTime);
+	}
+
+}
 
 void CActor::Destroy()
 {
@@ -159,11 +175,6 @@ Types::ActorState CActor::GetActorState() const
 	return m_actorCurState;
 }
 
-Types::ActorState CActor::GetActorPreState() const
-{
-	return m_actorPreState;
-}
-
 Types::Direction CActor::GetActorDirection() const
 {
 	return m_direction;
@@ -209,10 +220,6 @@ Types::VerticalState CActor::GetActorVerticalState() const
 	return m_actorCurVerticalState;
 }
 
-Types::VerticalState CActor::GetActorPreVerticalState() const
-{
-	return m_actorPreVerticalState;
-}
 
 Types::HorizonalState CActor::GetActorHorizonalState() const
 {

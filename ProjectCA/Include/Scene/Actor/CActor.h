@@ -36,11 +36,10 @@ public:
 public:
 	virtual bool PostInit(const Types::ActorData&, CGameScene*) = 0;
 	virtual bool Init() = 0;
-	virtual void Update(double fDeltaTime);
+	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
-	//virtual void LateUpdate(float fDeltaTime);
+	virtual void LateUpdate(double dDeltaTime);
 	virtual void Destroy();
-	virtual void ActorBehavior(double dDeltaTime) = 0;
 
 
 public:
@@ -80,7 +79,6 @@ public:
 	bool						IsActive() const;
 	Types::ActorType		GetActorType() const;
 	Types::ActorState		GetActorState() const;
-	Types::ActorState		GetActorPreState() const;
 	Types::Direction		GetActorDirection() const;
 	Types::Point				GetActorVector() const;
 	UINT						GetActorWidth() const;
@@ -90,7 +88,6 @@ public:
 	const Types::tstring& GetActorTag() const;
 	Types::ActorID			GetActorID() const;
 	Types::VerticalState	GetActorVerticalState() const;
-	Types::VerticalState	GetActorPreVerticalState() const;
 	Types::HorizonalState GetActorHorizonalState() const;
 	//CWorld* const			GetOwnerWorld() const;
 	CGameScene* const	GetOwnerScene() const;
@@ -101,17 +98,16 @@ public:
 	void FlipActorDirection();
 
 
+private:
+	virtual void ActorBehavior(double dDeltaTime) = 0;
+
+
 protected:
 	UINT							m_iActorWidth;
 	UINT							m_iActorHeight;
-	//POSITION					m_actorPoint;
-	//POSITION					m_spawnPoint;
-	//POSITION					m_actorPivot;
 	Types::ActorType			m_actorType;
 	Types::ActorState			m_actorCurState;
-	Types::ActorState			m_actorPreState;
 	Types::VerticalState		m_actorCurVerticalState;
-	Types::VerticalState		m_actorPreVerticalState;
 	Types::HorizonalState		m_actorHorizonalState;
 	Types::Direction			m_direction;
 	Types::Point					m_actorVector;

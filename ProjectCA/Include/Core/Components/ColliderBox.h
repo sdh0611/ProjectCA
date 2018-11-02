@@ -19,7 +19,7 @@ public:
 
 
 public:
-	virtual void DrawCollider(const HDC& hDC) override;
+	virtual void DrawCollider(const HDC& hDC, const POSITION& position) override;
 
 
 public:
@@ -38,6 +38,8 @@ private:
 private:
 	float			m_fWidth;
 	float			m_fHeight;
+	float			m_fCurWidth;
+	float			m_fCurHeight;
 	Types::Rect	m_ColliderRect;
 
 

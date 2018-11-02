@@ -92,8 +92,15 @@ void CLayer::Render(const HDC& hDC)
 	//	}
 
 	if (!m_actorList.empty())
+	{
 		for (auto& it : m_actorList)
-			it.lock()->Render(hDC);
+		{
+			if (it.lock()->IsActive())
+			{
+				it.lock()->Render(hDC);
+			}
+		}
+	}
 }
 
 void CLayer::AddActor(std::shared_ptr<CActor> pActor)
