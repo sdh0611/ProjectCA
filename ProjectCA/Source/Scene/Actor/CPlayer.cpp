@@ -214,7 +214,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 bool CPlayer::Init()
 {
 	//m_actorPoint = m_spawnPoint;
-		
+	m_pCamera->Init();
+
 	for (auto& it : m_componentTable)
 		it.second->Init();
 

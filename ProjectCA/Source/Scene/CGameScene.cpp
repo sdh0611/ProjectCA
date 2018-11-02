@@ -122,7 +122,8 @@ bool CGameScene::Init()
 
 	if (pBack == nullptr)
 		return false;
-
+	
+	pBack->SetBackgroundImage(TEXT("BackgroundMountain2"));
 	m_strongActorList.emplace_back(pBack);
 
 	if (!CreateLayer(TEXT("Background"), 99))
@@ -218,9 +219,12 @@ void CGameScene::GameUpdate(double dDeltaTime)
 	//Adjust Position on Screen 
 	for (auto& actor : m_strongActorList)
 	{
-		if (actor->IsActive())
+		//if (actor->GetActorType() != Types::AT_BACKGROUND)
 		{
-			actor->GetComponent<TransformComponent>()->AdjustScreenPosition();
+			if (actor->IsActive())
+			{
+				actor->GetComponent<TransformComponent>()->AdjustScreenPosition();
+			}
 		}
 	}
 

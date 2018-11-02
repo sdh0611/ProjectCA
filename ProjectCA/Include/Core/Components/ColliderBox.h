@@ -23,13 +23,17 @@ public:
 
 
 public:
-	const Types::Rect& GetRect() const { return m_ColliderRect; }
-	float GetWidth() const { return m_fWidth; }
-	void SetWidth(float fWidth) { if (fWidth > 0) m_fWidth = fWidth; }
-	float GetHeight() const { return m_fHeight; }
-	void SetHeight(float fHeight) { if (fHeight > 0) m_fHeight = fHeight; }
+	void SetWidth(float fWidth);
+	void SetHeight(float fHeight);
 	void SetSize(float fWidth, float fHeight);
 	void SetRect(float left, float top, float right, float bottom);
+
+
+
+public:
+	float GetWidth() const;
+	float GetHeight() const;
+	const Types::Rect& GetRect() const;
 
 private:
 

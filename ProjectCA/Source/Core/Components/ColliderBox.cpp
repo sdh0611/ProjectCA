@@ -85,6 +85,24 @@ void ColliderBox::DrawCollider(const HDC & hDC, const POSITION& position)
 
 }
 
+void ColliderBox::SetWidth(float fWidth)
+{
+	if (fWidth < 0.f)
+		return;
+
+	m_fWidth = m_fCurWidth = fWidth;
+
+}
+
+void ColliderBox::SetHeight(float fHeight)
+{
+	if (fHeight < 0.f)
+		return;
+
+	m_fHeight = m_fCurHeight = fHeight;
+
+}
+
 void ColliderBox::SetSize(float fWidth, float fHeight)
 {
 	if (fWidth < 0.f || fHeight < 0.f)
@@ -100,4 +118,19 @@ void ColliderBox::SetRect(float left, float top, float right, float bottom)
 	m_ColliderRect.top		= top;
 	m_ColliderRect.right		= right;
 	m_ColliderRect.bottom	= bottom;
+}
+
+float ColliderBox::GetWidth() const
+{
+	return m_fWidth;
+}
+
+float ColliderBox::GetHeight() const
+{
+	return m_fHeight;
+}
+
+const Types::Rect & ColliderBox::GetRect() const
+{
+	return m_ColliderRect;
 }

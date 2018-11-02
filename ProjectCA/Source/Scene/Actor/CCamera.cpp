@@ -30,7 +30,8 @@ bool CCamera::PostInit(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight
 
 void CCamera::Init()
 {
-	
+	m_CameraPosition.x = 0.f;
+	m_CameraPosition.y = 0.f;
 
 }
 

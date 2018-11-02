@@ -89,6 +89,7 @@ void TransformComponent::SetPositionY(float fy)
 void TransformComponent::SetSpawnPosition(const POSITION & position)
 {
 	m_SpawnPosition = position;
+	AdjustScreenPosition();
 }
 
 void TransformComponent::SetSpawnPosition(float fx, float fy)

@@ -3,6 +3,7 @@
 #include "..\..\..\stdafx.h"
 #include "CActor.h"
 
+class CSprite;
 
 class CBackground : public CActor {
 
@@ -17,5 +18,18 @@ public:
 	virtual void Update(double dDeltaTIme) override;
 	virtual void Render(const HDC& hDC) override;
 	virtual void ActorBehavior(double dDeltaTime) override;
+
+
+public:
+	bool SetBackgroundImage(const TSTRING& strImageName);
+
+
+private:
+	float							m_fScrollSpeed;
+	COLORREF					m_ColorRef;
+	std::weak_ptr<CSprite>	m_pBackgroundImage;
+	UINT							m_iBackgroundWidth;
+	UINT							m_iBackgroundHeight;
+
 
 };
