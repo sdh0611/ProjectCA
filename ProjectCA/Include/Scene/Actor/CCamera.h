@@ -8,6 +8,11 @@ class CActor;
 class CCamera {
 
 public:
+	enum CameraMode {
+		CM_DEFAULT, CM_SCROLL_HOR, CM_SCROLL_VER, CM_AUTO
+	};
+
+public:
 	CCamera();
 	~CCamera();
 
@@ -26,7 +31,14 @@ public:
 	void SetCameraPosition(float fx, float fy);
 	void SetCameraPositionX(float fx);
 	void SetCameraPositionY(float fy);
+	void SetCameraMode(CameraMode mode);
 
+
+private:
+	void ScrollDefault(double dDeltaTime);
+	void ScrollHorizon(double dDeltaTime);
+	void ScrollVertical(double dDeltaTime);
+	void ScrollAuto(double dDeltaTime);
 
 
 public:
@@ -44,11 +56,14 @@ public:
 
 private:
 	bool								m_bActive;
+	float								m_fDestPosition;
+	float								m_fCameraMoveSpeed;
 	UINT								m_iWidth;
 	UINT								m_iHeight;
 	POSITION						m_CameraPosition;
 	std::shared_ptr<CActor>		m_pOwner;
 	Types::CameraID				m_iCameraID;
+	CameraMode					m_CameraMode;
 
 
 };

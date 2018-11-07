@@ -66,6 +66,7 @@ bool CGameScene::Init()
 	{
 		return false;
 	}
+	pCamera->SetCameraMode(CCamera::CM_SCROLL_HOR);
 	//Ä«¸Þ¶ó ºÎÂø
 	m_pPlayer->AttachCamera(pCamera);
 

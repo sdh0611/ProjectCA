@@ -74,7 +74,6 @@ void CBackground::Render(const HDC & hDC)
 	HBITMAP hOldBit = (HBITMAP)SelectObject(memDC, m_pBackgroundImage.lock()->GetBitmap());
 	TransformComponent* pTransform = GetComponent<TransformComponent>();
 	POSITION screenPosition = pTransform->GetScreenPosition();
-	POSITION cameraPosition = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraPosition();
 	UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
 
 	//카메라 좌측 맵출력
