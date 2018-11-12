@@ -147,7 +147,8 @@ namespace Types {
 		float right;
 		float bottom;
 
-		Rect(float _left, float _top, float _right, float _bottom) {
+		Rect(float _left, float _top, float _right, float _bottom) 
+		{
 			left = _left;
 			top = _top;
 			right = _right;
@@ -158,11 +159,6 @@ namespace Types {
 		Rect(const Rect& other) :
 			Rect(other.left, other.top, other.right, other.bottom)
 		{	}
-
-		//Rect(Rect&& other) :
-		//	Rect(other.left, other.top, other.right, other.bottom)
-		//{	}
-
 
 		bool operator ==(const Rect& other) {
 			if ( (left == other.left) && (top = other.top) 
@@ -198,73 +194,14 @@ namespace Types {
 
 	};
 
-
-	//struct ActorData {
-	//	//ObjectData(ObjectType type, Point objectPoint, Direction dir,
-	//	//	ObjectState state, UINT width, UINT height, ActorID id, 
-	//	//	class CWorld* pWorld, class CGameScene* pScene, tstring strTag)
-	//	//	: objectType(type), fObjectPoint(objectPoint), objectDirection(dir), 
-	//	//	objectState(state), iWidth(width), iHeight(height),actorID(id),
-	//	//	pOwnerWorld(pWorld), pOwnerScene(pScene)
-	//	//{
-
-	//	//}
-
-	//	ActorData(ObjectType type, Point objectPoint, Direction dir,
-	//		ObjectState state, UINT width, UINT height, ActorID id,
-	//		tstring strName)
-	//		: objectType(type), fObjectPoint(objectPoint), objectDirection(dir),
-	//		objectState(state), iWidth(width), iHeight(height), actorID(id),
-	//		//pOwnerScene(pScene), 
-	//		strActorName(strName)
-	//	{
-
-	//	}
-
-	//	ActorData(const ActorData& other)
-	//	{
-	//		objectType = other.objectType;
-	//		fObjectPoint = other.fObjectPoint;
-	//		objectDirection = other.objectDirection;
-	//		objectState = other.objectState;
-	//		iWidth = other.iWidth;
-	//		iHeight = other.iHeight;
-	//		//pOwnerScene = other.pOwnerScene;
-	//		strActorName = other.strActorName;
-	//	}
-	//
-	//	ActorData(ActorData&& other)
-	//		: objectType(other.objectType), fObjectPoint(other.fObjectPoint), objectDirection(other.objectDirection),
-	//		objectState(other.objectState), iWidth(other.iWidth), iHeight(other.iHeight), actorID(other.actorID),
-	//		//pOwnerScene(other.pOwnerScene), 
-	//		strActorName(std::move(other.strActorName))
-	//	{
-	//		//other.pOwnerScene = nullptr;
-	//	}
-
-
-
-	//	ObjectType				objectType;
-	//	Point						fObjectPoint;
-	//	Direction					objectDirection;
-	//	ObjectState				objectState;
-	//	UINT						iWidth;
-	//	UINT						iHeight;
-	//	ActorID					actorID;
-	//	//CWorld*					pOwnerWorld;
-	//	//CGameScene*			pOwnerScene;
-	//	tstring					strActorName;
-	//};
-	
-
 	struct ActorData {
 		class CGameScene;
 
 		ActorData(UINT iWidth, UINT iHeight, Point point, ActorType type, ActorState state, 
-			VerticalState vertical, HorizonalState horizonal, Direction dir, Point _vector,
+			VerticalState vertical, HorizonalState horizonal, Direction dir, 
 			ActorID id, const tstring& strTag, bool _bActive)
 			:iActorWidth(iWidth), iActorHeight(iHeight), actorPoint(point), actorType(type), actorState(state),
-			verticalState(vertical), horizonalState(horizonal), direction(dir), vector(_vector),
+			verticalState(vertical), horizonalState(horizonal), direction(dir), 
 			actorID(id), strActorTag(strTag),  bActive(_bActive)
 		{			
 		}
@@ -279,7 +216,6 @@ namespace Types {
 			verticalState = other.verticalState;
 			horizonalState = other.horizonalState;
 			direction = other.direction;
-			vector = other.vector;
 			strActorTag = other.strActorTag;
 			bActive = other.bActive;
 
@@ -293,7 +229,6 @@ namespace Types {
 		VerticalState			verticalState;
 		HorizonalState			horizonalState;
 		Direction					direction;
-		Point						vector;			//방향을 표시하기 위한 방법으로써 direction 상수대신 vector로 대체(09.25)
 		ActorID					actorID;
 		tstring					strActorTag;
 		//CWorld*					m_pOwnerWorld;

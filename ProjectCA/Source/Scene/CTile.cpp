@@ -11,7 +11,7 @@ CTile::~CTile()
 {
 }
 
-bool CTile::PostInit(const Types::tstring& strImage)
+bool CTile::PostInit(const TSTRING& strImage)
 {
 	SetTileImage(strImage);
 
@@ -64,4 +64,12 @@ UINT CTile::GetTileWidth()
 UINT CTile::GetTileHeight()
 {
 	return m_iTileHeight;
+}
+
+std::weak_ptr<CSprite> CTile::GetTileImageInfo()
+{
+	if (m_pTileImage.expired())
+		return std::weak_ptr<CSprite>();
+
+	return m_pTileImage.lock();
 }

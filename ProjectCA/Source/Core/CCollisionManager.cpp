@@ -35,16 +35,9 @@ void CCollisionManager::Update(Collider * pCollider, Collider * pOther)
 
 }
 
-void CCollisionManager::Update(std::shared_ptr<CActor> pActor, std::shared_ptr<CActor> pOther)
+void CCollisionManager::Update()
 {
-	Collider* collider1 = static_cast<Collider*>(pActor->GetComponent(TEXT("Collider")));
-	Collider* collider2 = static_cast<Collider*>(pOther->GetComponent(TEXT("Collider")));
-
-	if (collider1 == nullptr || collider2 == nullptr)
-		return;
-
-	if ((collider1->GetColliderType() == Collider::CT_BOX) && (collider2->GetColliderType() == Collider::CT_BOX))
-		BoxAndBox(pActor, pOther);
+	
 
 
 }
@@ -271,76 +264,6 @@ bool CCollisionManager::BoxAndBox(std::shared_ptr<CActor> pActor, std::shared_pt
 	pOther->ResolveCollision(pActor);
 
 	return true;
-	////аб, ©Л
-	//if (box1.top < box2.bottom && box1.bottom > box2.top)
-	//{
-	//	if (box1.left < box2.left)
-	//	{
-	//		pCollider->SetCollisionType(Collider::COLLISION_RIGHT);
-	//		pOther->SetCollisionType(Collider::COLLISION_LEFT);
-
-	//		pCollider->SetIsCollision(true);
-	//		pOther->SetIsCollision(true);
-	//		pCollider->ResolveCollision(pOtherActor);
-	//		pOther->ResolveCollision(pActor);
-
-	//		return true;
-	//	}
-	//	else if (box1.right > box2.right)
-	//	{
-	//		pCollider->SetCollisionType(Collider::COLLISION_LEFT);
-	//		pOther->SetCollisionType(Collider::COLLISION_RIGHT);
-
-	//		pCollider->SetIsCollision(true);
-	//		pOther->SetIsCollision(true);
-	//		pCollider->ResolveCollision(pOtherActor);
-	//		pOther->ResolveCollision(pActor);
-
-	//		return true;
-	//	}
-
-	//}
-
-	////╩С, го
-	//if (box1.right >= box2.left && box1.left <= box2.right)
-	//{
-	//	if (box1.bottom < box2.bottom)
-	//	{
-	//		pCollider->SetCollisionType(Collider::COLLISION_BOT);
-	//		pOther->SetCollisionType(Collider::COLLISION_TOP);
-	//	
-	//		pCollider->SetIsCollision(true);
-	//		pOther->SetIsCollision(true);
-	//		pCollider->ResolveCollision(pOtherActor);
-	//		pOther->ResolveCollision(pActor);
-
-	//		return true;
-	//	}
-	//	else if (box1.top > box2.top)
-	//	{
-	//		pCollider->SetCollisionType(Collider::COLLISION_TOP);
-	//		pOther->SetCollisionType(Collider::COLLISION_BOT);
-
-	//		pCollider->SetIsCollision(true);
-	//		pOther->SetIsCollision(true);
-	//		pCollider->ResolveCollision(pOtherActor);
-	//		pOther->ResolveCollision(pActor);
-
-	//		return true;
-	//	}
-
-	//}
-
-
-
-	//pCollider->SetIsCollision(true);
-	//pOther->SetIsCollision(true);
-	//pCollider->ResolveCollision(pOtherActor);
-	//pOther->ResolveCollision(pActor);
-
-	return true;
-
-
 
 }
 

@@ -33,14 +33,12 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	m_actorCurVerticalState = data.verticalState;
 	m_actorHorizonalState = data.horizonalState;
 	m_direction = data.direction;
-	m_actorVector = data.vector;
 	m_actorID = data.actorID;
 	m_strActorTag = data.strActorTag;
 	m_bActive = data.bActive;
 
 	m_pOwnerScene = pScene;
 	
-
 	//TransformComponent 추가
 	//NOTE(11.01) : TransformComponent에서 ScreenPosition값을 계산하므로 
 	//					다른 컴포넌트들의 동작이 수행 된 뒤 동작해야함.
@@ -55,23 +53,6 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
 		return false;
 
-
-	//AIComponent (InputComponent) 초기화
-	AIComponent* pAI = new AIComponent;
-	if (!pAI->PostInit(this))
-		return false;
-
-	if (!AddComponent(pAI, pAI->GetComponentTag()))
-		return false;
-
-	//PhysicsComponent 초기화
-	PhysicsComponent* pPhysics = new PhysicsComponent;
-	if (!pPhysics->PostInit(this, 0.f, 0.f, 0.f, 0.f))
-		return false;
-
-	//if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
-	//	return false;
-
 	//Collider 초기화
 	ColliderBox* pCollider = new ColliderBox;
 	if (!pCollider->PostInit(this))
@@ -79,9 +60,6 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
-	
-
-
 
 
 	return true;

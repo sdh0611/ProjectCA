@@ -9,8 +9,6 @@ class CSprite;
 class CAnim;
 
 typedef std::vector<std::weak_ptr<CSprite>> WeakSpritePtrList;
-//typedef std::unordered_map<Types::ObjectState, WeakSpritePtrList> SpriteTable;
-//typedef std::unordered_map<Types::ObjectState, std::shared_ptr<CAnim>> AnimTable;
 typedef std::unordered_map<Types::tstring, std::shared_ptr<CAnim>> AnimationTable;
 
 class RenderComponent : public ComponentBase {
@@ -26,9 +24,9 @@ public:
 	virtual void	Update(double dDeltaTime);
 	virtual void	LateUpdate(double dDeltaTime) override;
 	void			Draw(const HDC& hDC);
-	//bool AddSprite(Types::ObjectState state, const Types::tstring& strSpriteName);
-	//bool AddAnim(double dPlayTime, Types::ObjectState state,
-	//	const Types::tstring& strSpriteName, const Types::tstring& strAnimTag);
+
+
+public:
 	bool AddAnim(double dPlayTime, const Types::tstring& strSpriteName, UINT iWidth, UINT iHeight, 
 		bool bLoop, bool bAnimate = true, const Types::tstring& strAnimTag = TEXT("Default"));
 
@@ -43,8 +41,6 @@ public:
 
 
 public:
-	//void ChangeAnimationCilp();
-	//void ChangeAnimationCilp(Types::ObjectState state);
 	void ChangeAnimationCilp(Types::AnimationMotion motion);
 	bool ChangeAnimation(const Types::tstring& strAnimTag);
 
@@ -54,17 +50,13 @@ private:
 
 
 private:
-	//AnimTable									m_animTable;
 	bool											m_bVisible;
 	bool											m_bChangeAnim;
 	std::weak_ptr<CAnim>					m_pWeakCurAnim;
 	AnimationTable							m_animationTable;
 	Types::AnimationMotion					m_animationState;
-	Types::tstring								m_strPreAnimClipName;
 	Types::ActorState							m_ownerState;
 	Types::VerticalState						m_ownerVerticalState;
 	Types::Direction							m_ownerDirection;
-	//HBRUSH										m_hBrush;
-	//HBRUSH										m_hOldBrush;
 
 };

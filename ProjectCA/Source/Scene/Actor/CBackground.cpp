@@ -33,7 +33,6 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	m_actorCurVerticalState	= Types::VS_IDLE;
 	m_actorHorizonalState	= Types::HS_IDLE;
 	m_direction					= data.direction;
-	m_actorVector				= data.vector;
 	m_actorID					= data.actorID;
 	m_strActorTag				= data.strActorTag;
 	m_pOwnerScene			= pScene;
@@ -107,7 +106,7 @@ void CBackground::ActorBehavior(double dDeltaTime)
 
 bool CBackground::SetBackgroundImage(const TSTRING & strImageName)
 {
-	m_pBackgroundImage = CResourceManager::GetInstance()->GetWeakSprtiePtr(TEXT("BackgroundMountain2"));
+	m_pBackgroundImage = CResourceManager::GetInstance()->GetWeakSprtiePtr(strImageName);
 	if (m_pBackgroundImage.expired())
 	{
 		return false;

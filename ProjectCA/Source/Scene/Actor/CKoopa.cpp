@@ -20,7 +20,6 @@ CKoopa::~CKoopa()
 bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 
-	puts("Init Koopa");
 	//기본 Actor의 속성 초기화
 	if (data.iActorWidth > MAX_ACTOR_SIZE || data.iActorHeight > MAX_ACTOR_SIZE)
 		return false;
@@ -38,7 +37,6 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	m_actorCurVerticalState = data.verticalState;
 	m_actorHorizonalState = data.horizonalState;
 	m_direction = data.direction;
-	m_actorVector = data.vector;
 	m_actorID = data.actorID;
 	m_strActorTag = data.strActorTag;
 	m_bActive = data.bActive;

@@ -142,10 +142,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\Core\CCollisionManager.cpp" />
     <ClCompile Include="Source\Core\Components\AIComponent.cpp" />
+    <ClCompile Include="Source\Core\Components\AnimationRender.cpp" />
     <ClCompile Include="Source\Core\Components\Collider.cpp" />
     <ClCompile Include="Source\Core\Components\ColliderBox.cpp" />
     <ClCompile Include="Source\Core\Components\ComponentBase.cpp" />
     <ClCompile Include="Source\Core\Components\HPComponent.cpp" />
+    <ClCompile Include="Source\Core\Components\ImageRender.cpp" />
     <ClCompile Include="Source\Core\Components\InputComponent.cpp" />
     <ClCompile Include="Source\Core\Components\PhysicsComponent.cpp" />
     <ClCompile Include="Source\Core\Components\PlayerInputComponent.cpp" />
@@ -168,6 +170,7 @@
     <ClCompile Include="Source\Scene\Actor\CCamera.cpp" />
     <ClCompile Include="Source\Scene\Actor\CEnemy.cpp" />
     <ClCompile Include="Source\Scene\Actor\CFlower.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CGround.cpp" />
     <ClCompile Include="Source\Scene\Actor\CKoopa.cpp" />
     <ClCompile Include="Source\Scene\Actor\CMushroom.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPlayer.cpp" />
@@ -185,10 +188,12 @@
   <ItemGroup>
     <ClInclude Include="Include\Core\CCollisionManager.h" />
     <ClInclude Include="Include\Core\Components\AIComponent.h" />
+    <ClInclude Include="Include\Core\Components\AnimationRender.h" />
     <ClInclude Include="Include\Core\Components\Collider.h" />
     <ClInclude Include="Include\Core\Components\ColliderBox.h" />
     <ClInclude Include="Include\Core\Components\ComponentBase.h" />
     <ClInclude Include="Include\Core\Components\HPComponent.h" />
+    <ClInclude Include="Include\Core\Components\ImageRender.h" />
     <ClInclude Include="Include\Core\Components\InputComponent.h" />
     <ClInclude Include="Include\Core\Components\PhysicsComponent.h" />
     <ClInclude Include="Include\Core\Components\PlayerInputComponent.h" />

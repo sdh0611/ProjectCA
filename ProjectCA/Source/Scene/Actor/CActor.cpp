@@ -9,8 +9,8 @@
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 
 
-CActor::CActor()
-	:m_actorVector(0, 0), m_actorCurVerticalState(Types::VS_IDLE), m_actorHorizonalState(Types::HS_IDLE)
+CActor::CActor() 
+	:m_actorCurVerticalState(Types::VS_IDLE), m_actorHorizonalState(Types::HS_IDLE)
 {
 }
 
@@ -99,12 +99,6 @@ void CActor::SetActorState(Types::ActorState state)
 	m_actorCurState = state;
 }
 
-void CActor::SetActorVector(float fx, float fy)
-{
-	m_actorVector.x = fx;
-	m_actorVector = fy;
-}
-
 void CActor::SetActorDirection(Types::Direction dir)
 {
 	m_direction = dir;
@@ -180,11 +174,6 @@ Types::Direction CActor::GetActorDirection() const
 	return m_direction;
 }
 
-Types::Point CActor::GetActorVector() const
-{
-	return m_actorVector;
-}
-
 UINT CActor::GetActorWidth() const
 {
 	return m_iActorWidth;
@@ -220,18 +209,9 @@ Types::VerticalState CActor::GetActorVerticalState() const
 	return m_actorCurVerticalState;
 }
 
-
 Types::HorizonalState CActor::GetActorHorizonalState() const
 {
 	return m_actorHorizonalState;
-}
-
-void CActor::FlipVector()
-{
-	m_actorVector.x *= -1.f;
-	m_actorVector.y *= -1.f;
-
-	//Debug::MessageInfo(TEXT("FlipVector"));
 }
 
 void CActor::FlipActorDirection()

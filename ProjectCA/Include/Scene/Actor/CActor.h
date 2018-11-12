@@ -62,7 +62,6 @@ public:
 public:
 	void SetActive(bool bActive);
 	void SetActorState(Types::ActorState state);
-	void SetActorVector(float fx, float fy);
 	void SetActorDirection(Types::Direction dir);
 	void SetActorWidth(UINT iWidth);
 	void SetActorHeight(UINT iHeight);
@@ -80,7 +79,6 @@ public:
 	Types::ActorType		GetActorType() const;
 	Types::ActorState		GetActorState() const;
 	Types::Direction		GetActorDirection() const;
-	Types::Point				GetActorVector() const;
 	UINT						GetActorWidth() const;
 	UINT						GetActorHeight() const;
 	Types::Point				GetActorPoint() const;
@@ -94,7 +92,6 @@ public:
 
 
 public:
-	void FlipVector();
 	void FlipActorDirection();
 
 
@@ -110,7 +107,6 @@ protected:
 	Types::VerticalState		m_actorCurVerticalState;
 	Types::HorizonalState		m_actorHorizonalState;
 	Types::Direction			m_direction;
-	Types::Point					m_actorVector;
 	Types::ActorID				m_actorID;
 	Types::tstring				m_strActorTag;		 
 	//CWorld*					m_pOwnerWorld;

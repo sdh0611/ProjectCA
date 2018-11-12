@@ -18,7 +18,7 @@ public:
 public:
 	bool Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strSpriteName, UINT iWidth, UINT iHeight,
 		double dPlayTime, bool bLoop, bool bAnimate, const Types::tstring& strAnimTag = TEXT("Default"));
-	void Update(double fDeltaTIme);
+	void Update(double dDeltaTIme);
 	void Draw(const HDC& hDC, const Types::Point& point);
 
 

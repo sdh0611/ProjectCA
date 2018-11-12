@@ -176,7 +176,6 @@ void CCamera::ScrollHorizon(double dDeltaTime)
 			}
 			else if (screenPosition.x <= fUnit * 2.f && screenPosition.x >= fUnit * 1.9f)
 			{
-				puts("2/5");
 				m_CameraPosition.x += fCurSpeed * dDeltaTime;
 			}
 
@@ -189,7 +188,6 @@ void CCamera::ScrollHorizon(double dDeltaTime)
 			}
 			else if (screenPosition.x >= fUnit * 3.f && screenPosition.x <= fUnit * 3.1f)
 			{
-				puts("3/5");
 				m_CameraPosition.x += fCurSpeed * dDeltaTime;
 			}
 

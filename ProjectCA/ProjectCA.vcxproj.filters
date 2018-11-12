@@ -231,6 +231,15 @@
     <ClCompile Include="Source\Scene\Actor\CShell.cpp">
       <Filter>소스 파일\Scene\Actors\Prob</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CGround.cpp">
+      <Filter>소스 파일\Scene\Actors\Prob</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Components\AnimationRender.cpp">
+      <Filter>소스 파일\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Components\ImageRender.cpp">
+      <Filter>소스 파일\Core\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -367,6 +376,12 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CShell.h">
       <Filter>헤더 파일\Scene\Actors\Prob</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Components\AnimationRender.h">
+      <Filter>헤더 파일\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Components\ImageRender.h">
+      <Filter>헤더 파일\Core\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

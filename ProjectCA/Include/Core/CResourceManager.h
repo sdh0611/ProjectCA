@@ -36,8 +36,10 @@ public:
 
 
 private:
-	
-
+	bool LoadPlayerSpriteInfo();
+	bool LoadEnemySpriteInfo();
+	bool LoadGroundTileImageInfo();
+	bool LoadBackgroundImageInfo();
 
 
 private:

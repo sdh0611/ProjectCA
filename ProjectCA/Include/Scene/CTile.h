@@ -3,6 +3,8 @@
 #include "..\..\stdafx.h"
 
 class CSprite;
+class CActor;
+
 
 class CTile {
 
@@ -12,7 +14,7 @@ public:
 
 
 public:
-	bool PostInit(const Types::tstring& strImage);
+	bool PostInit(const TSTRING& strImage);
 	void Init();
 
 
@@ -21,14 +23,19 @@ public:
 	void SetTileHeight(UINT iHeight);
 	void SetTileSize(UINT iWidth, UINT iHeight);
 	bool SetTileImage(const Types::tstring& strImage);
-	UINT GetTileWidth();
-	UINT GetTileHeight();
+	
 
+public:
+	UINT							GetTileWidth();
+	UINT							GetTileHeight();
+	std::weak_ptr<CSprite>	GetTileImageInfo();
+	
 
 private:
 	UINT							m_iTileWidth;
 	UINT							m_iTileHeight;
-	std::weak_ptr<CSprite>	m_pTileImage;
+	std::weak_ptr<CActor>	m_pActor;				//해당 타일에 위치한 Actor를 가리키는 weak_ptr
+	std::weak_ptr<CSprite>	m_pTileImage;			
 
 
 };

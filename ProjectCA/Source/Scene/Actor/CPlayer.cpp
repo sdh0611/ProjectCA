@@ -45,7 +45,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	m_actorCurVerticalState		= data.verticalState;
 	m_actorHorizonalState		= data.horizonalState;
 	m_direction						= data.direction;
-	m_actorVector					= data.vector;
 	m_actorID						= data.actorID;
 	m_strActorTag					= data.strActorTag;
 	m_bActive						= data.bActive;

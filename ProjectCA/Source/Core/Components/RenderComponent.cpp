@@ -17,11 +17,7 @@ RenderComponent::RenderComponent()
 
 RenderComponent::~RenderComponent()
 {
-	//if (m_hBrush)
-	//	DeleteObject(m_hBrush);
-	
 	m_animationTable.clear();
-
 }
 
 bool RenderComponent::PostInit(CActor * pOwner, const Types::tstring & strTag)
@@ -35,7 +31,6 @@ bool RenderComponent::PostInit(CActor * pOwner, const Types::tstring & strTag)
 	m_ownerVerticalState		= m_pOwner->GetActorVerticalState();
 	m_ownerDirection			= m_pOwner->GetActorDirection();
 
-	//m_hBrush					= (HBRUSH)GetStockObject(NULL_BRUSH);
 	m_animationState			= Types::AM_IDLE;
 
 	return true;
@@ -70,15 +65,8 @@ void RenderComponent::Draw(const HDC & hDC)
 	{
 		POSITION pivot = m_pOwner->GetComponent<TransformComponent>()->GetScreenPivot();
 		POSITION position = m_pOwner->GetComponent<TransformComponent>()->GetScreenPosition();
-		//m_hOldBrush = (HBRUSH)SelectObject(hDC, m_hBrush);
-		//m_animTable[m_ownerState]->Draw(hDC, hMemDC);
 		m_pWeakCurAnim.lock()->Draw(hDC, pivot);
 
-		//Rectangle(hDC, m_offset.x, m_offset.y,
-		//	m_offset.x + m_pOwner->GetActorWidth(),
-		//	m_offset.y + m_pOwner->GetActorHeight());
-		//m_hBrush = (HBRUSH)SelectObject(hDC, m_hOldBrush);
-	
 		Collider* pCollider = static_cast<Collider*>(m_pOwner->GetComponent(TEXT("Collider")));
 		PhysicsComponent* pPhysics = m_pOwner->GetComponent<PhysicsComponent>();
 
@@ -119,50 +107,6 @@ void RenderComponent::Draw(const HDC & hDC)
 	}		
 
 }
-
-//bool RenderComponent::AddSprite(Types::ObjectState state, const Types::tstring & strSpriteName)
-//{
-//	m_pWeakSprite = CResourceManager::GetInstance()->GetWeakSprtiePtr(strSpriteName);
-//
-//	//해당 Sprite가 없는 경우
-//	if(m_pWeakSprite.expired())
-//		return false;
-//	
-//	if (m_spriteTable.find(state) != m_spriteTable.end()) { //테이블 안에 해당 Key값과 연결된 vector가 있는 경우
-//		for (auto& it : m_spriteTable[state]) {		//vector에 이미 존재하는 Sprite면 false return
-//			if (it.lock() == m_pWeakSprite.lock())
-//				return false;
-//		}
-//		m_spriteTable[state].emplace_back(m_pWeakSprite);		//vector에 없으면 해당 Sprite 추가
-//	}
-//	else {	//테이블 안에 해당 Key값과 연결된 vector가 없는 경우
-//		//해당 Key값과 연결된 Vector를 생성한 후, Sprite 추가
-//		m_spriteTable.insert(std::make_pair(state, WeakSpritePtrList()));
-//		m_spriteTable[state].emplace_back(m_pWeakSprite);
-//	}	
-//	
-//	return true;
-//}
-
-//bool RenderComponent::AddAnim(double dPlayTime, Types::ObjectState state, const Types::tstring & strSpriteName, 
-//	const Types::tstring& strAnimTag)
-//{
-//	std::shared_ptr<CAnim> pAnim = std::make_shared<CAnim>();
-//
-//	if (!pAnim->Init(m_pOwner, strSpriteName, dPlayTime, strAnimTag))
-//		return false;
-//
-//	if (m_animTable.find(state) != m_animTable.end()) { //테이블 안에 해당 Key값과 연결된 vector가 있는 경우
-//		m_animTable[state] = pAnim;
-//	}
-//	else {	//테이블 안에 해당 Key값과 연결된 vector가 없는 경우
-//			//해당 Key값과 연결된 Vector를 생성한 후, Anim 추가
-//		m_animTable.insert(std::make_pair(state, pAnim));
-//	}
-//
-//	return true;
-//}
-
 
 bool RenderComponent::AddAnim(double dPlayTime, const Types::tstring & strSpriteName,
 	UINT iWidth, UINT iHeight,	bool bLoop, bool bAnimate, const Types::tstring & strAnimTag)
@@ -222,7 +166,6 @@ void RenderComponent::UpdateAnimationMotion()
 
 	if (m_ownerState == Types::AS_DAMAGED)
 	{
-		//puts("ChangeDamaged");
 		m_animationState = Types::AM_DAMAGED;
 		return;
 	}
@@ -240,13 +183,11 @@ void RenderComponent::UpdateAnimationMotion()
 
 	if (fCurSpeed > 0.f && fCurSpeed < fMaxSpeed)
 	{
-		//if (m_ownerVerticalState == Types::VS_IDLE)
 		m_animationState = Types::AM_WALK;
 		
 	}
 	else if (fCurSpeed >= fMaxSpeed)
 	{
-		//if (m_ownerVerticalState == Types::VS_IDLE)
 		m_animationState = Types::AM_RUN;
 	}
 	else
@@ -276,7 +217,6 @@ void RenderComponent::UpdateAnimationMotion()
 		SetAnimationPlaySpeed(0.6f);
 	else 
 		SetAnimationPlaySpeed(1.f);
-	
 
 }
 
@@ -291,279 +231,6 @@ void RenderComponent::SetAnimation(Types::AnimationMotion motion)
 
 }
 
-//void RenderComponent::ChangeAnimationCilp()
-//{
-//
-//	if (m_ownerJumpState == Types::JS_JUMP) {
-//		switch (m_ownerState) {
-//		case Types::OS_IDLE:
-//		case Types::OS_WALK:
-//		case Types::OS_LOOKUP:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//			{
-//				ChangeAnimation(TEXT("JumpLeft"));
-//				//puts("JUMPLEFT");
-//			}
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//			{
-//				ChangeAnimation(TEXT("JumpRight"));
-//				//puts("JUMPRIGHT");
-//			}
-//			break;
-//		case Types::OS_RUN:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//			{
-//				ChangeAnimation(TEXT("RunJumpLeft"));
-//			}
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//			{
-//				ChangeAnimation(TEXT("RunJumpRight"));
-//			}
-//			break;
-//		case Types::OS_ATTACK:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("AttackLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("AttackRight"));
-//			break;
-//		case Types::OS_DAMAGED:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("DamagedLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("DamagedRight"));
-//			break;
-//		}
-//
-//	}
-//	else if (m_ownerJumpState == Types::JS_FALL) {
-//		switch (m_ownerState) {
-//		case Types::OS_IDLE:
-//		case Types::OS_WALK:
-//		case Types::OS_LOOKUP:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//			{
-//				ChangeAnimation(TEXT("FalldownLeft"));
-//				//puts("FALLLEFT");
-//			}
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//			{
-//				ChangeAnimation(TEXT("FalldownRight"));
-//				//puts("FALLRIGHT");
-//			}
-//			break;
-//		case Types::OS_RUN:
-//			if (m_ownerDirection == Types::DIR_LEFT) 
-//			{
-//				ChangeAnimation(TEXT("RunJumpLeft"));
-//			}
-//			else if (m_ownerDirection == Types::DIR_RIGHT) 
-//			{	
-//				ChangeAnimation(TEXT("RunJumpRight"));
-//			}
-//			break;
-//		case Types::OS_ATTACK:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("AttackLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("AttackRight"));
-//			break;
-//		case Types::OS_DAMAGED:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("DamagedLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("DamagedRight"));
-//			break;
-//		}
-//	}
-//	else {
-//		switch (m_ownerState) {
-//		case Types::OS_IDLE:
-//			//puts("ChangeIDLE");
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("IdleLeft"));
-//			else if(m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("IdleRight"));
-//			break;
-//		case Types::OS_WALK:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("WalkLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("WalkRight"));
-//			break;
-//		case Types::OS_RUN:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("RunLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("RunRight"));
-//			break;
-//		case Types::OS_LOOKUP:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("LookupLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("LookupRight"));
-//			break;
-//		case Types::OS_SITDOWN:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("SitdownLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("SitdownRight"));
-//			break;
-//		case Types::OS_ATTACK:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("AttackLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("AttackRight"));
-//			break;
-//		case Types::OS_DAMAGED:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("DamagedLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("DamagedRight"));
-//			break;
-//
-//		}
-//
-//	}
-//
-//
-//
-//}
-//
-//void RenderComponent::ChangeAnimationCilp(Types::ActorState state)
-//{
-//
-//	if (m_ownerJumpState == Types::JS_JUMP) {
-//		switch (state) {
-//		case Types::OS_IDLE:
-//		case Types::OS_WALK:
-//		case Types::OS_LOOKUP:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//			{
-//				ChangeAnimation(TEXT("JumpLeft"));
-//				//puts("JUMPLEFT");
-//			}
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//			{
-//				ChangeAnimation(TEXT("JumpRight"));
-//				//puts("JUMPRIGHT");
-//			}
-//			break;
-//		case Types::OS_RUN:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//			{
-//				ChangeAnimation(TEXT("RunJumpLeft"));
-//			}
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//			{
-//				ChangeAnimation(TEXT("RunJumpRight"));
-//			}
-//			break;
-//		case Types::OS_ATTACK:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("AttackLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("AttackRight"));
-//			break;
-//		case Types::OS_DAMAGED:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("DamagedLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("DamagedRight"));
-//			break;
-//		}
-//
-//	}
-//	else if (m_ownerJumpState == Types::JS_FALL) {
-//		switch (state) {
-//		case Types::OS_IDLE:
-//		case Types::OS_WALK:
-//		case Types::OS_LOOKUP:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//			{
-//				ChangeAnimation(TEXT("FalldownLeft"));
-//				//puts("FALLLEFT");
-//			}
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//			{
-//				ChangeAnimation(TEXT("FalldownRight"));
-//				//puts("FALLRIGHT");
-//			}
-//			break;
-//		case Types::OS_RUN:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//			{
-//				ChangeAnimation(TEXT("RunJumpLeft"));
-//			}
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//			{
-//				ChangeAnimation(TEXT("RunJumpRight"));
-//			}
-//			break;
-//		case Types::OS_ATTACK:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("AttackLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("AttackRight"));
-//			break;
-//		case Types::OS_DAMAGED:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("DamagedLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("DamagedRight"));
-//			break;
-//		}
-//	}
-//	else {
-//		switch (state) {
-//		case Types::OS_IDLE:
-//			//puts("ChangeIDLE");
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("IdleLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("IdleRight"));
-//			break;
-//		case Types::OS_WALK:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("WalkLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("WalkRight"));
-//			break;
-//		case Types::OS_RUN:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("RunLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("RunRight"));
-//			break;
-//		case Types::OS_LOOKUP:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("LookupLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("LookupRight"));
-//			break;
-//		case Types::OS_SITDOWN:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("SitdownLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("SitdownRight"));
-//			break;
-//		case Types::OS_ATTACK:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("AttackLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("AttackRight"));
-//			break;
-//		case Types::OS_DAMAGED:
-//			if (m_ownerDirection == Types::DIR_LEFT)
-//				ChangeAnimation(TEXT("DamagedLeft"));
-//			else if (m_ownerDirection == Types::DIR_RIGHT)
-//				ChangeAnimation(TEXT("DamagedRight"));
-//			break;
-//
-//		}
-//
-//	}
-//
-//}
 
 void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 {
@@ -575,24 +242,20 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 			if (m_ownerDirection == Types::DIR_LEFT)
 			{
 				ChangeAnimation(TEXT("JumpLeft"));
-				//puts("JUMPLEFT");
 			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
 			{
 				ChangeAnimation(TEXT("JumpRight"));
-				//puts("JUMPRIGHT");
 			}
 			break;
 		case Types::AM_SITDOWN:
 			if (m_ownerDirection == Types::DIR_LEFT)
 			{
 				ChangeAnimation(TEXT("SitdownLeft"));
-				//puts("JUMPLEFT");
 			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
 			{
 				ChangeAnimation(TEXT("SitdownRight"));
-				//puts("JUMPRIGHT");
 			}
 			break;
 		case Types::AM_RUN:
@@ -638,24 +301,20 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 			if (m_ownerDirection == Types::DIR_LEFT)
 			{
 				ChangeAnimation(TEXT("FalldownLeft"));
-				//puts("FALLLEFT");
 			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
 			{
 				ChangeAnimation(TEXT("FalldownRight"));
-				//puts("FALLRIGHT");
 			}
 			break;
 		case Types::AM_SITDOWN:
 			if (m_ownerDirection == Types::DIR_LEFT)
 			{
 				ChangeAnimation(TEXT("SitdownLeft"));
-				//puts("JUMPLEFT");
 			}
 			else if (m_ownerDirection == Types::DIR_RIGHT)
 			{
 				ChangeAnimation(TEXT("SitdownRight"));
-				//puts("JUMPRIGHT");
 			}
 			break;
 		case Types::AM_RUN:
@@ -695,28 +354,10 @@ void RenderComponent::ChangeAnimationCilp(Types::AnimationMotion motion)
 	else {
 		switch (motion) {
 		case Types::AM_IDLE:
-			//if (m_pOwner->GetActorState() == Types::OS_IDLE)
-			//{
-				if (m_ownerDirection == Types::DIR_LEFT)
-					ChangeAnimation(TEXT("IdleLeft"));
-				else if (m_ownerDirection == Types::DIR_RIGHT)
-					ChangeAnimation(TEXT("IdleRight"));
-			/*}
-			else if (m_pOwner->GetActorState() == Types::OS_LOOKUP)
-			{
-				if (m_ownerDirection == Types::DIR_LEFT)
-					ChangeAnimation(TEXT("LookupLeft"));
-				else if (m_ownerDirection == Types::DIR_RIGHT)
-					ChangeAnimation(TEXT("LookupRight"));
-				break;
-			}
-			else if (m_pOwner->GetActorState() == Types::OS_SITDOWN) 
-			{
-				if (m_ownerDirection == Types::DIR_LEFT)
-					ChangeAnimation(TEXT("SitdownLeft"));
-				else if (m_ownerDirection == Types::DIR_RIGHT)
-					ChangeAnimation(TEXT("SitdownRight"));
-			}*/
+			if (m_ownerDirection == Types::DIR_LEFT)
+				ChangeAnimation(TEXT("IdleLeft"));
+			else if (m_ownerDirection == Types::DIR_RIGHT)
+				ChangeAnimation(TEXT("IdleRight"));
 			break;
 		case Types::AM_WALK:
 			if (m_ownerDirection == Types::DIR_LEFT)

@@ -13,6 +13,7 @@
 #include "..\..\Include\Scene\Actor\CKoopa.h"
 #include "..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\Include\Scene\Actor\CProb.h"
+#include "..\..\Include\Scene\Actor\CGround.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
 //#include "..\..\Include\Scene\CWorld.h"
@@ -54,7 +55,7 @@ bool CGameScene::Init()
 
 	//Player 생성
 	m_pPlayer = m_pActorManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 0, 0, Types::AT_PLAYER,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_RIGHT, Types::Point(0.f, 0.f),TEXT("Player"), this);
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_RIGHT, TEXT("Player"), this);
 
 	m_strongActorList.emplace_back(m_pPlayer);
 
@@ -79,7 +80,7 @@ bool CGameScene::Init()
 	//Enemy 생성
 	//Windows 좌표계에선 y축이 반대방향이므로 Vector의 값도 반대로 전달해줌.
 	std::shared_ptr<CKoopa> pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, Types::Point(0.f, 1.0f), TEXT("KoopaGreen"), this);
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 
 	if (pEnemy == nullptr)
 		return false;
@@ -96,30 +97,37 @@ bool CGameScene::Init()
 	if (!CreateLayer(TEXT("Prob"), 4))
 		return false;
 	
-	std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(2000, 200, 400.f, 700.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
+	//std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(2000, 200, 400.f, 700.f, Types::AT_PROB,
+	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	//if (pProb == nullptr)
+	//	return false;
+	//m_strongActorList.emplace_back(pProb);
+	//FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+	std::shared_ptr<CGround> pProb = m_pActorManager->CreateActor<CGround>(2048, 256, 400.f, 700.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pProb == nullptr)
 		return false;
-	m_strongActorList.emplace_back(pProb);
+	m_strongActorList.push_back(pProb);
 	FindLayer(TEXT("Prob"))->AddActor(pProb);
 
-	pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
-	if (pProb == nullptr)
-		return false;
-	m_strongActorList.emplace_back(pProb);
-	FindLayer(TEXT("Prob"))->AddActor(pProb);
+	//pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
+	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	//if (pProb == nullptr)
+	//	return false;
+	//m_strongActorList.push_back(pProb);
+	//FindLayer(TEXT("Prob"))->AddActor(pProb);
 
-	pProb = m_pActorManager->CreateActor<CProb>(50, 50, 200.f, 400.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Prob"), this);
-	if (pProb == nullptr)
-		return false;
-	m_strongActorList.emplace_back(pProb);
-	FindLayer(TEXT("Prob"))->AddActor(pProb);
+	//pProb = m_pActorManager->CreateActor<CProb>(50, 50, 200.f, 400.f, Types::AT_PROB,
+	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	//if (pProb == nullptr)
+	//	return false;
+	//m_strongActorList.push_back(pProb);
+	//FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 	//Backgorund 생성
 	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::AT_BACKGROUND,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, Types::Point(0.f, 0.f), TEXT("Background"), this);
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Background"), this);
 
 	if (pBack == nullptr)
 		return false;
