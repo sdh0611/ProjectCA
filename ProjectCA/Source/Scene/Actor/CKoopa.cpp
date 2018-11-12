@@ -6,6 +6,7 @@
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
+#include "..\..\..\Include\Core\Components\AnimationRender.h"
 
 
 CKoopa::CKoopa()
@@ -160,7 +161,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 
 	//RenderComponent ÃÊ±âÈ­
-	RenderComponent* pRender = new RenderComponent;
+	AnimationRender* pRender = new AnimationRender;
 	if (!pRender->PostInit(this))
 		return false;
 
@@ -170,10 +171,10 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("WalkLeft")))
 	//	return false;
 
-	if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, true, TEXT("RunRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"),TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, TEXT("RunRight")))
 		return false;
 
-	if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("RunLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, TEXT("RunLeft")))
 		return false;
 
 	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, true, TEXT("JumpRight")))
@@ -182,19 +183,17 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("JumpLeft")))
 	//	return false;
 
-	if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, true, TEXT("RunJumpRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, TEXT("RunJumpRight")))
 		return false;
 
-	if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, TEXT("RunJumpLeft")))
 		return false;
 
-	if (!pRender->AddAnim(100.f, TEXT("KoopaGreenDamaged"), m_iActorWidth, m_iActorHeight, false, false, TEXT("Damaged")))
+	if (!pRender->AddAnimation(100.f, TEXT("KoopaNormal"), TEXT("KoopaGreenDamaged"), m_iActorWidth, m_iActorHeight, false, TEXT("Damaged")))
 		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
-
-
 
 	
 	return true;
@@ -215,8 +214,6 @@ void CKoopa::Render(const HDC & hDC)
 	auto it = m_componentTable.find(TEXT("RenderComponent"));
 	if (it != m_componentTable.end())
 		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
-
-
 
 }
 

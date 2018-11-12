@@ -16,8 +16,8 @@ public:
 
 
 public:
-	bool Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strSpriteName, UINT iWidth, UINT iHeight,
-		double dPlayTime, bool bLoop, bool bAnimate, const Types::tstring& strAnimTag = TEXT("Default"));
+	bool Init(std::shared_ptr<CActor> pOwner, const TSTRING& strSpriteName, UINT iWidth, UINT iHeight,
+		double dPlayTime, bool bLoop, const TSTRING& strAnimTag = TEXT("Default"));
 	void Update(double dDeltaTIme);
 	void Draw(const HDC& hDC, const Types::Point& point);
 
@@ -46,7 +46,6 @@ private:
 
 
 private:
-	bool							m_bAnimate;
 	bool							m_bLoop;
 	UINT							m_iCurFrame;
 	UINT							m_iMaxFrame;

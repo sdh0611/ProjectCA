@@ -6,7 +6,7 @@
 
 
 CAnim::CAnim()
-	:m_bAnimate(false), m_bLoop(false), m_iCurFrame(0), m_iMaxFrame(0),
+	:m_bLoop(false), m_iCurFrame(0), m_iMaxFrame(0),
 	m_iDrawWidth(0), m_iDrawHeight(0),	m_dPlayTime(0.f), m_dPlaySpeed(0.f), 
 	m_dPlaySectionLength(0.f), m_dTimeElapsed(0.f)
 {
@@ -16,9 +16,8 @@ CAnim::~CAnim()
 {
 }
 
-bool CAnim::Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strSpriteName, 
-	UINT iWidth, UINT iHeight, double dPlayTime, bool bLoop, bool bAnimate, 
-	const Types::tstring& strAnimTag)
+bool CAnim::Init(std::shared_ptr<CActor> pOwner, const TSTRING& strSpriteName, 
+	UINT iWidth, UINT iHeight, double dPlayTime, bool bLoop,const TSTRING& strAnimTag)
 {
 	m_pWeakSprite = CResourceManager::GetInstance()->GetWeakSprtiePtr(strSpriteName);
 	if (m_pWeakSprite.expired())
@@ -39,7 +38,6 @@ bool CAnim::Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strSprite
 	m_strAnimTag				= strAnimTag;
 
 	m_bLoop						= bLoop;
-	m_bAnimate				= bAnimate;
 
 	return true;
 }
@@ -54,22 +52,7 @@ void CAnim::Draw(const HDC & hDC, const Types::Point& point)
 {
 	if (!m_pWeakSprite.expired()) 
 	{
-		//printf("Image : (%d, %d)\n", m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight());
-
-		if (m_bAnimate) 
-		{
-			DrawAnimation(hDC, point);
-			//Rectangle(hDC, m_pOwner.lock()->GetActorPoint().x, m_pOwner.lock()->GetActorPoint().y,
-			//	m_pOwner.lock()->GetActorPoint().x + (m_pWeakSprite.lock()->GetBitWidth())/SPRITE_WIDTH,
-			//	m_pOwner.lock()->GetActorPoint().y + (m_pWeakSprite.lock()->GetBitHeight())/SPRITE_HEIGHT);
-		}
-		else 
-		{
-			DrawImage(hDC, point);
-			//Rectangle(hDC, m_pOwner.lock()->GetActorPoint().x, m_pOwner.lock()->GetActorPoint().y,
-			//	m_pOwner.lock()->GetActorPoint().x + m_pWeakSprite.lock()->GetBitWidth(),
-			//	m_pOwner.lock()->GetActorPoint().y + m_pWeakSprite.lock()->GetBitHeight());
-		}
+		DrawAnimation(hDC, point);
 	}
 }
 
@@ -140,7 +123,6 @@ void CAnim::ClearEleapsedTime()
 
 void CAnim::DrawAnimation(const HDC & hDC, const Types::Point& point)
 {
-
 	if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
 		m_dTimeElapsed = 0.f;
 		if (m_iCurFrame < m_iMaxFrame-1) 
@@ -153,12 +135,10 @@ void CAnim::DrawAnimation(const HDC & hDC, const Types::Point& point)
 			{
 				++m_iCurFrame %= m_iMaxFrame;
 			}
+	
 		}
 
-
 	}
-	//printf("Frame : %d, %d\n", m_iCurFrame, m_iMaxFrame);
-
 	HDC memDC			= CreateCompatibleDC(hDC);
 	HBITMAP hOldBit		= (HBITMAP)SelectObject(memDC, m_pWeakSprite.lock()->GetBitmap());
 

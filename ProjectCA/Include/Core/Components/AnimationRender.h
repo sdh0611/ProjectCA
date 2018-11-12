@@ -3,11 +3,11 @@
 #include "..\..\..\stdafx.h"
 #include "RenderComponent.h"
 
-class CSprite;
 class CActor;
+class CAnim;
 
-typedef std::vector<std::weak_ptr<CSprite>> WeakSpriteTable;
-
+typedef std::unordered_map<TSTRING, std::shared_ptr<CAnim>>	AnimationMap;
+typedef std::unordered_map<TSTRING, AnimationMap>				AnimationTable;
 
 class AnimationRender : public RenderComponent {
 
@@ -17,52 +17,39 @@ public:
 
 
 public:
-	bool Init(std::shared_ptr<CActor> pOwner, const Types::tstring& strSpriteName, UINT iWidth, UINT iHeight,
-		double dPlayTime, bool bLoop, const Types::tstring& strAnimTag = TEXT("Default"));
-	void Update(double dDeltaTIme);
-	void Draw(const HDC& hDC, const Types::Point& point);
+	virtual bool	PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("RenderComponent")) override;
+	virtual void Init() override;
+	virtual void Update(double dDeltaTIme) override;
+	virtual void Draw(const HDC& hDC) override;
 	
 
 public:
-	bool SetSprite(const Types::tstring& strSpriteName);
-	bool SetTotalPlayTime(double dTime);
-	bool SetPlaySpeed(double dSpeed);
-	void SetDrawingWidth(UINT iWidth);
-	void SetDrawingHeight(UINT iHeight);
+	bool AddAnimation(double dPlayTime, const TSTRING& strMapName ,const TSTRING& strSpriteName,
+		UINT iWidth, UINT iHeight, bool bLoop, const Types::tstring & strAnimTag);
 
 
 public:
-	UINT GetDrawWidth() const;
-	UINT GetDrawHeight() const;
+	bool SetAnimationPlaySpeed(double dSpeed);
+	void SetAnimationMotion(Types::AnimationMotion motion);
 
 
 public:
-	void						ClearEleapsedTime();
-	const Types::tstring	GetAnimTag() const;
-
+	const TSTRING	GetAnimTag() const;
 
 
 private:
-	void DrawAnimation(const HDC& hDC, const Types::Point& point);
-	void DrawImage(const HDC& hDC, const Types::Point& point);
-	
+	void UpdateAnimationMotion();
+	bool ChangeAnimation(const TSTRING& strAnimTag);
+	void ChangeAnimationClip(Types::AnimationMotion motion);
+
 
 private:
-	bool								m_bLoop;
-	UINT								m_iCurFrame;
-	UINT								m_iMaxFrame;
-	UINT								m_iDrawWidth;
-	UINT								m_iDrawHeight;
-	COLORREF						m_ColorRef;
-	double							m_dPlaySectionLength;
-	double							m_dPlayTime;		//초 단위로 계산
-	double							m_dPlaySpeed;
-	double							m_dTimeElapsed;
-	Types::tstring					m_strAnimTag;
-	WeakSpriteTable				m_WeakSpriteTable;
-	std::weak_ptr<CSprite>		m_pWeakSprite;
-	std::weak_ptr<CActor>		m_pOwner;
-	std::vector<CAnim>			m_AnimationList;
+	TSTRING							m_strCurTableName;
+	std::weak_ptr<CAnim>		m_pCurAnimation;
+	AnimationTable				m_AnimationTable;
+	Types::ActorState				m_OwnerState;
+	Types::VerticalState			m_OwnerVerticalState;
+	Types::Direction				m_OwnerDirection;
 	Types::AnimationMotion		m_AnimationState;
 
 };
