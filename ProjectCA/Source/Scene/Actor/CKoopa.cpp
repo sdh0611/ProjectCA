@@ -49,7 +49,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	//NOTE(11.01) : TransformComponent에서 ScreenPosition값을 계산하므로 
 	//					다른 컴포넌트들의 동작이 수행 된 뒤 동작해야함.
 	//					떄문에 마지막에 추가하는 것으로 변경함.
-	TransformComponent* pTransform = new TransformComponent;
+	std::shared_ptr<TransformComponent> pTransform = std::make_shared<TransformComponent>();
 	if (!pTransform->PostInit(this, data.actorPoint))
 		return false;
 	pTransform->SetPivotRatio(0.5f, 1.f);
@@ -59,7 +59,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 
 	//AIComponent (InputComponent) 초기화
-	AIComponent* pAI = new AIComponent;
+	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
 	if (!pAI->PostInit(this))
 		return false;
 
@@ -85,7 +85,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 
 	//PhysicsComponent 초기화
-	PhysicsComponent* pPhysics = new PhysicsComponent;
+	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
 	if (!pPhysics->PostInit(this, 200.f, 200.f, 1300.f, 700.f))
 		return false;
 
@@ -95,13 +95,13 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 
 	//Collider 초기화
-	ColliderBox* pCollider = new ColliderBox;
+	std::shared_ptr<ColliderBox> pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
 
 	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, Collider::CollisionType type)->void {
 
-		PhysicsComponent * pPhysics = pOwner->GetComponent<PhysicsComponent>();
+		std::shared_ptr<PhysicsComponent> pPhysics = pOwner->GetComponent<PhysicsComponent>().lock();
 
 		switch (pOther->GetActorType()) {
 
@@ -109,7 +109,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			switch (type)
 			{
 			case Collider::COLLISION_TOP:
-				puts("TOP");
+				//puts("TOP");
 				pOwner->SetActorState(Types::AS_DAMAGED);
 				pPhysics->SetCurSpeed(0.f);
 				//pOwner->SetActive(false);
@@ -135,8 +135,6 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				break;
 			}
 		case Types::AT_PROB:
-			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
-			//point = pComponent->GetLastActorPoint();
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
@@ -161,7 +159,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 
 	//RenderComponent 초기화
-	AnimationRender* pRender = new AnimationRender;
+	std::shared_ptr<AnimationRender> pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
 
@@ -211,16 +209,16 @@ void CKoopa::Update(double dDeltaTime)
 
 void CKoopa::Render(const HDC & hDC)
 {
-	auto it = m_componentTable.find(TEXT("RenderComponent"));
-	if (it != m_componentTable.end())
-		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
+	auto pRender = GetComponent(TEXT("RenderComponent"));
+	if (!pRender.expired())
+		STATIC_POINTER_CAST(RenderComponent, pRender.lock())->Draw(hDC);
 
 }
 
 void CKoopa::ActorBehavior(double dDeltaTime)
 {
-	TransformComponent* pTransform = GetComponent<TransformComponent>();
-	PhysicsComponent* pPhysics = GetComponent<PhysicsComponent>();
+	std::shared_ptr<TransformComponent> pTransform = GetComponent<TransformComponent>().lock();
+	std::shared_ptr<PhysicsComponent> pPhysics = GetComponent<PhysicsComponent>().lock();
 
 	if (m_actorCurState != Types::AS_DAMAGED)
 	{

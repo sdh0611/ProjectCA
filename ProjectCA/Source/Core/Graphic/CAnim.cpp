@@ -48,11 +48,11 @@ void CAnim::Update(double fDeltaTIme)
 	m_dTimeElapsed += fDeltaTIme;
 }
 
-void CAnim::Draw(const HDC & hDC, const Types::Point& point)
+void CAnim::Draw(const HDC & hDC, const HDC& hMemDC,const POSITION& point)
 {
 	if (!m_pWeakSprite.expired()) 
 	{
-		DrawAnimation(hDC, point);
+		DrawAnimation(hDC, hMemDC, point);
 	}
 }
 
@@ -121,7 +121,7 @@ void CAnim::ClearEleapsedTime()
 	m_iCurFrame = 0;
 }
 
-void CAnim::DrawAnimation(const HDC & hDC, const Types::Point& point)
+void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& point)
 {
 	if (m_dPlayTime != 0.f)
 	{
@@ -143,32 +143,13 @@ void CAnim::DrawAnimation(const HDC & hDC, const Types::Point& point)
 		}
 
 	}
-	HDC memDC			= CreateCompatibleDC(hDC);
-	HBITMAP hOldBit		= (HBITMAP)SelectObject(memDC, m_pWeakSprite.lock()->GetBitmap());
+
+	HBITMAP hOldBit		= (HBITMAP)SelectObject(hMemDC, m_pWeakSprite.lock()->GetBitmap());
 
 	TransparentBlt(hDC, point.x, point.y,
-		m_iDrawWidth, m_iDrawHeight, memDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
+		m_iDrawWidth, m_iDrawHeight, hMemDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
 		SPRITE_HEIGHT, m_colorRef);
 
-	SelectObject(memDC, hOldBit);
-	DeleteDC(memDC);
+	SelectObject(hMemDC, hOldBit);
 }
-
-void CAnim::DrawImage(const HDC & hDC, const Types::Point& point)
-{
-	HDC memDC = CreateCompatibleDC(hDC);
-	HBITMAP hOldBit = (HBITMAP)SelectObject(memDC, m_pWeakSprite.lock()->GetBitmap());
-
-	TransparentBlt(hDC, point.x, point.y,
-		m_iDrawWidth, m_iDrawHeight, memDC, 0, 0, 
-		m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
-		m_colorRef);
-
-	SelectObject(memDC, hOldBit);
-	DeleteDC(memDC);
-
-
-}
-
-
 

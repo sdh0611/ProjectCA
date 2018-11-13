@@ -23,10 +23,12 @@ AnimationRender::~AnimationRender()
 
 bool AnimationRender::PostInit(CActor * pOwner, const Types::tstring & strTag)
 {
-	std::shared_ptr<CActor> pActor = std::shared_ptr<CActor>(pOwner);
-	m_pOwner = pActor;
+	//std::shared_ptr<CActor> pActor = std::shared_ptr<CActor>(pOwner);
+	//m_pOwner = pActor;
 
-	m_strComponentTag = strTag;
+	//m_strComponentTag = strTag;
+	if (!RenderComponent::PostInit(pOwner, strTag))
+		return false;
 
 	m_OwnerState = m_pOwner->GetActorState();
 	m_OwnerVerticalState = m_pOwner->GetActorVerticalState();
@@ -58,13 +60,13 @@ void AnimationRender::Draw(const HDC & hDC)
 {
 	if (IsVisible())
 	{
-		POSITION pivot = m_pOwner->GetComponent<TransformComponent>()->GetScreenPivot();
-		POSITION position = m_pOwner->GetComponent<TransformComponent>()->GetScreenPosition();
+		POSITION pivot		= m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
+		POSITION position	= m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 		if (!m_pCurAnimation.expired())
-			m_pCurAnimation.lock()->Draw(hDC, pivot);
+			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, pivot);
 
-		Collider* pCollider = static_cast<Collider*>(m_pOwner->GetComponent(TEXT("Collider")));
-		PhysicsComponent* pPhysics = m_pOwner->GetComponent<PhysicsComponent>();
+		std::shared_ptr<Collider> pCollider					= STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
+		std::shared_ptr<PhysicsComponent> pPhysics		= STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
 
 		if (pCollider)
 		{
@@ -158,7 +160,7 @@ const TSTRING AnimationRender::GetAnimTag() const
 
 void AnimationRender::UpdateAnimationMotion()
 {
-	PhysicsComponent* pPhysics = static_cast<PhysicsComponent*>(m_pOwner->GetComponent(TEXT("PhysicsComponent")));
+	std::shared_ptr<PhysicsComponent> pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
 	if (pPhysics == nullptr)
 		return;
 

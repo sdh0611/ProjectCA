@@ -2,6 +2,7 @@
 #include "..\..\..\Include\Core\Components\Collider.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\..\Include\Core\CCollisionManager.h"
 
 //생성될 때 Collider는 Default로 Collision 검출에 쓰임.
 //Trigger로 사용하고 싶은 경우 SetUseTrigger함수를 이용해 Trigger로 전환
@@ -14,6 +15,19 @@ Collider::Collider(ColliderType type)
 
 Collider::~Collider()
 {
+	CCollisionManager::GetInstance()->DeleteCollider(this);
+}
+
+bool Collider::PostInit(CActor * pOwner, const Types::tstring & strTag)
+{
+	auto pActor = std::shared_ptr<CActor>(pOwner);
+
+	m_pOwner				= pActor;
+	m_strComponentTag = strTag;
+
+	CCollisionManager::GetInstance()->AddCollider(this);
+
+	return true;
 }
 
 void Collider::LateUpdate(double dDeltaTime)

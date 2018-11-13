@@ -15,6 +15,7 @@ class CWorld;
 class CGameScene;
 class ComponentBase;
 
+//typedef std::shared_ptr<ComponentBase> StrongComponentPtr;
 
 class CActor {
 	////Layer, World Class만 Actor의 생성, 파괴가 가능함.
@@ -43,20 +44,20 @@ public:
 
 
 public:
-	ComponentBase * GetComponent(const Types::tstring& strTag);
-	bool					AddComponent(ComponentBase* pComponent, const Types::tstring& strTag);
-	bool					DeleteComponent(const Types::tstring& strTag);
+	std::weak_ptr<ComponentBase>	GetComponent(const TSTRING& strTag);
+	bool										AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag);
+	bool										DeleteComponent(const TSTRING& strTag);
 	template<typename T>
-	T*	GetComponent() const
+	std::weak_ptr<T>	GetComponent() const
 	{
 		const std::type_info& type = typeid(T);
 		for (auto& it : m_componentTable)
 		{
 			if (typeid(*(it.second)) == type)
-				return static_cast<T*>(it.second);
+				return STATIC_POINTER_CAST(T, it.second);
 		}
 
-		return nullptr;
+		return std::weak_ptr<T>();
 	}
 
 public:
@@ -115,7 +116,7 @@ protected:
 
 
 protected:
-	typedef std::unordered_map<Types::tstring, class ComponentBase*> ComponentTable;
+	typedef std::unordered_map<Types::tstring, std::shared_ptr<ComponentBase>> ComponentTable;
 	ComponentTable		m_componentTable;
 
 	

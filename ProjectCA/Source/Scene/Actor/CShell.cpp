@@ -42,7 +42,7 @@ bool CShell::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	m_pOwnerScene = pScene;
 	//TransformComponent 추가
-	TransformComponent* pTransform = new TransformComponent;
+	std::shared_ptr<TransformComponent> pTransform = std::make_shared<TransformComponent>();
 	if (!pTransform->PostInit(this, data.actorPoint))
 		return false;
 
@@ -53,7 +53,7 @@ bool CShell::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 
 	//AIComponent (InputComponent) 초기화
-	AIComponent* pAI = new AIComponent;
+	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
 	if (!pAI->PostInit(this))
 		return false;
 
@@ -61,7 +61,7 @@ bool CShell::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 
 	//PhysicsComponent 초기화
-	PhysicsComponent* pPhysics = new PhysicsComponent;
+	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
 	if (!pPhysics->PostInit(this, 0.f, 0.f, 0.f, 0.f))
 		return false;
 
@@ -69,7 +69,7 @@ bool CShell::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	//	return false;
 
 	//Collider 초기화
-	ColliderBox* pCollider = new ColliderBox;
+	std::shared_ptr<ColliderBox> pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
 
@@ -96,9 +96,9 @@ void CShell::Update(double dDeltaTime)
 void CShell::Render(const HDC & hDC)
 {
 	auto pRender = GetComponent<RenderComponent>();
-	if (pRender)
+	if (!pRender.expired())
 	{
-		pRender->Draw(hDC);
+		pRender.lock()->Draw(hDC);
 	}
 
 }

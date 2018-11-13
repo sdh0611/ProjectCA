@@ -57,6 +57,7 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	m_pTimer					= Timer::GetInstance();
 	m_pResourceManager	= CResourceManager::GetInstance();
 	m_pInputManager			= CInputManager::GetInstance();
+	m_pBackBuffer				= BackBuffer::GetInstance();
 
 	if (!m_pResourceManager->Init())
 		return false;
@@ -71,8 +72,8 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	if (!m_pInputManager->Init())
 		return false;
 
-	if (m_pBackBuffer == nullptr)
-		m_pBackBuffer = std::make_unique<BackBuffer>(m_hDC);
+	if (!m_pBackBuffer->Init(m_hDC))
+		return false;
 
 	m_hBrush = (HBRUSH)GetStockObject(NULL_BRUSH);
 

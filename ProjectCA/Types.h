@@ -9,6 +9,10 @@
 
 #define TYPE_ACTION
 
+
+#define STATIC_POINTER_CAST(type, value)		std::tr1::static_pointer_cast<type>(value)
+#define DYNAMIC_POINTER_CAST(type, value)		std::tr1::dynamic_pointer_cast<T>(value)
+
 const unsigned int MAX_WIDTH			= 1024;
 const unsigned int MAX_HEIGHT			= 720;
 const unsigned int MAX_ACTOR_SIZE	= 3000;
@@ -18,6 +22,7 @@ const unsigned int SPRITE_HEIGHT		= 32;
 
 const unsigned int TILE_WIDTH = 32;
 const unsigned int TILE_HEIGHT = 32;
+
 
 
 namespace Types {

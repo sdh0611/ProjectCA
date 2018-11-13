@@ -144,7 +144,6 @@ bool CResourceManager::LoadPlayerSpriteInfo()
 		return false;
 
 
-
 	return true;
 }
 

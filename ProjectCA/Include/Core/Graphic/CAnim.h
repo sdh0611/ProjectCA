@@ -19,7 +19,7 @@ public:
 	bool Init(std::shared_ptr<CActor> pOwner, const TSTRING& strSpriteName, UINT iWidth, UINT iHeight,
 		double dPlayTime, bool bLoop, const TSTRING& strAnimTag = TEXT("Default"));
 	void Update(double dDeltaTIme);
-	void Draw(const HDC& hDC, const Types::Point& point);
+	void Draw(const HDC& hDC, const HDC& hMemDC, const POSITION& point);
 
 
 public:
@@ -41,8 +41,7 @@ public:
 
 
 private:
-	void DrawAnimation(const HDC& hDC, const Types::Point& point);
-	void DrawImage(const HDC& hDC, const Types::Point& point);
+	void DrawAnimation(const HDC& hDC, const HDC& hMemDC, const Types::Point& point);
 
 
 private:

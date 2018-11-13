@@ -1,7 +1,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CProb.h" 
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
-#include "..\..\..\Include\Core\Components\AIComponent.h"
+#include "..\..\..\Include\Core\Components\ImageRender.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 
@@ -18,12 +18,12 @@ CProb::~CProb()
 bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 {
 	//기본 Actor의 속성 초기화
-	if (data.iActorWidth > MAX_ACTOR_SIZE || data.iActorHeight > MAX_ACTOR_SIZE)
-		return false;
+	//if (data.iActorWidth > MAX_ACTOR_SIZE || data.iActorHeight > MAX_ACTOR_SIZE)
+	//	return false;
 
-	if (data.actorPoint.x < 0 || data.actorPoint.x > MAX_WIDTH ||
-		data.actorPoint.y < 0 || data.actorPoint.y > MAX_HEIGHT)
-		return false;
+	//if (data.actorPoint.x < 0 || data.actorPoint.x > MAX_WIDTH ||
+	//	data.actorPoint.y < 0 || data.actorPoint.y > MAX_HEIGHT)
+	//	return false;
 
 	m_iActorWidth = data.iActorWidth;
 	m_iActorHeight = data.iActorHeight;
@@ -43,7 +43,7 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	//NOTE(11.01) : TransformComponent에서 ScreenPosition값을 계산하므로 
 	//					다른 컴포넌트들의 동작이 수행 된 뒤 동작해야함.
 	//					떄문에 마지막에 추가하는 것으로 변경함.
-	TransformComponent* pTransform = new TransformComponent;
+	std::shared_ptr<TransformComponent> pTransform = std::make_shared<TransformComponent>();
 	if (!pTransform->PostInit(this, data.actorPoint))
 		return false;
 
@@ -54,13 +54,19 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 		return false;
 
 	//Collider 초기화
-	ColliderBox* pCollider = new ColliderBox;
+	std::shared_ptr<ColliderBox> pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
-
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
 
+
+	//ImageRender 추가
+	std::shared_ptr<ImageRender> pRender = std::make_shared<ImageRender>();
+	if (!pRender->PostInit(this))
+		return false;
+	if (!AddComponent(pRender, pRender->GetComponentTag()))
+		return false;
 
 	return true;
 }
@@ -77,7 +83,7 @@ void CProb::Update(double fDeltaTime)
 
 void CProb::Render(const HDC & hDC)
 {
-	POSITION pivot = GetComponent<TransformComponent>()->GetScreenPivot();
+	POSITION pivot = GetComponent<TransformComponent>().lock()->GetScreenPivot();
 
 	Rectangle(hDC, pivot.x, pivot.y, pivot.x + m_iActorWidth, pivot.y + m_iActorHeight);
 

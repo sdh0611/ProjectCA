@@ -6,6 +6,7 @@
 //ColliderType에 Trigger도 추가해보자.
 
 class Collider : public ComponentBase {
+
 public:
 	enum ColliderType { CT_BOX, CT_CIRCLE, CT_BOX_TRIGGER, CT_CIRCLE_TRIGGER };
 	enum CollisionType {
@@ -22,7 +23,7 @@ public:
 
 
 public:
-	virtual bool PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("Collider")) = 0;
+	virtual bool PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("Collider"));
 	virtual void Update(double dDeltaTime) = 0;
 	virtual void LateUpdate(double dDeltaTime) override;
 	virtual void ResolveCollision(std::shared_ptr<CActor> pOther);

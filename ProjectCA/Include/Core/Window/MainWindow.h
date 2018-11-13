@@ -56,6 +56,6 @@ private:
 	class Timer*									m_pTimer;
 	class CResourceManager*				m_pResourceManager;
 	class CInputManager*					m_pInputManager;
-	std::unique_ptr<class BackBuffer>		m_pBackBuffer;
+	class BackBuffer*							m_pBackBuffer;
 
 };

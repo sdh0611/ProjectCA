@@ -4,6 +4,7 @@
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\..\Include\Core\Components\ImageRender.h"
 #include "..\..\..\Include\Core\CResourceManager.h"
 #include "..\..\..\Include\Core\Graphic\CSprite.h"
 
@@ -39,17 +40,24 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	m_bActive					= data.bActive;
 
 	m_fScrollSpeed				= 15.f;
-	m_ColorRef					= RGB(248, 7, 220);
+	//m_ColorRef					= RGB(248, 7, 220);
 
 
 	//TransformComponent 추가
-	TransformComponent* pTransform = new TransformComponent;
+	std::shared_ptr<TransformComponent> pTransform = std::make_shared<TransformComponent>();
 	if (!pTransform->PostInit(this, data.actorPoint))
 		return false;
 
 	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
 		return false;
 
+	//ImageRender 추가
+	std::shared_ptr<ImageRender> pRender = std::make_shared<ImageRender>();
+	if (!pRender->PostInit(this))
+		return false;
+
+	if (!AddComponent(pRender, pRender->GetComponentTag()))
+		return false;
 
 	return true;;
 }
@@ -64,26 +72,29 @@ void CBackground::Update(double dDeltaTIme)
 	for (auto& it : m_componentTable)
 		it.second->Update(dDeltaTIme);
 
-
 }
 
 void CBackground::Render(const HDC & hDC)
 {
-	HDC memDC = CreateCompatibleDC(hDC);
-	HBITMAP hOldBit = (HBITMAP)SelectObject(memDC, m_pBackgroundImage.lock()->GetBitmap());
-	TransformComponent* pTransform = GetComponent<TransformComponent>();
+	//HDC memDC = CreateCompatibleDC(hDC);
+	//HBITMAP hOldBit = (HBITMAP)SelectObject(memDC, m_pBackgroundImage.lock()->GetBitmap());
+	std::shared_ptr<TransformComponent> pTransform = GetComponent<TransformComponent>().lock();
 	POSITION screenPosition = pTransform->GetScreenPosition();
 	UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
 
+	std::shared_ptr<ImageRender> pRender = GetComponent<ImageRender>().lock();
+	
 	//카메라 좌측 맵출력
-	TransparentBlt(hDC, screenPosition.x - m_iActorWidth, screenPosition.y,
-		m_iActorWidth, m_iActorHeight, memDC, 0, 0,
-		m_iBackgroundWidth, m_iBackgroundHeight, m_ColorRef);
-
+	pRender->Draw(hDC, POSITION(screenPosition.x - m_iActorWidth, screenPosition.y));
 	//카메라 출력부분
-	TransparentBlt(hDC, screenPosition.x, screenPosition.y,
-		m_iActorWidth, m_iActorHeight, memDC, 0, 0,
-		m_iBackgroundWidth, m_iBackgroundHeight, m_ColorRef);
+	pRender->Draw(hDC, screenPosition);
+	//TransparentBlt(hDC, screenPosition.x - m_iActorWidth, screenPosition.y,
+	//	m_iActorWidth, m_iActorHeight, memDC, 0, 0,
+	//	m_iBackgroundWidth, m_iBackgroundHeight, m_ColorRef);
+
+	//TransparentBlt(hDC, screenPosition.x, screenPosition.y,
+	//	m_iActorWidth, m_iActorHeight, memDC, 0, 0,
+	//	m_iBackgroundWidth, m_iBackgroundHeight, m_ColorRef);
 
 	if (screenPosition.x > iCameraWidth)
 	{
@@ -95,8 +106,8 @@ void CBackground::Render(const HDC & hDC)
 	}
 
 
-	SelectObject(memDC, hOldBit);
-	DeleteDC(memDC);
+	//SelectObject(memDC, hOldBit);
+	//DeleteDC(memDC);
 
 }
 
@@ -106,13 +117,13 @@ void CBackground::ActorBehavior(double dDeltaTime)
 
 bool CBackground::SetBackgroundImage(const TSTRING & strImageName)
 {
-	m_pBackgroundImage = CResourceManager::GetInstance()->GetWeakSprtiePtr(strImageName);
-	if (m_pBackgroundImage.expired())
+
+	if (!GetComponent<ImageRender>().lock()->SetSprite(strImageName))
 	{
 		return false;
 	}
-	m_iBackgroundWidth = m_pBackgroundImage.lock()->GetBitWidth();
-	m_iBackgroundHeight = m_pBackgroundImage.lock()->GetBitHeight();
+	//m_iBackgroundWidth = m_pBackgroundImage.lock()->GetBitWidth();
+	//m_iBackgroundHeight = m_pBackgroundImage.lock()->GetBitHeight();
 
 	return true;
 }

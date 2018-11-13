@@ -17,11 +17,11 @@ ColliderBox::~ColliderBox()
 
 bool ColliderBox::PostInit(CActor* pOwner, const Types::tstring& strTag)
 {
-	auto pActor = std::shared_ptr<CActor>(pOwner);
 
 	//m_ColliderPoint = point;
-	m_pOwner					= pActor;
-	
+	if (!Collider::PostInit(pOwner, strTag))
+		return false;
+
 	//처음 Init할 때 기본값으로 Actor의 너비, 높이를 따라가도록 함.
 	m_fWidth					= m_fCurWidth = m_pOwner->GetActorWidth();
 	m_fHeight					= m_fCurHeight =m_pOwner->GetActorHeight();
@@ -35,7 +35,6 @@ bool ColliderBox::PostInit(CActor* pOwner, const Types::tstring& strTag)
 
 	m_bCollision				= false;
 	m_bUseTrigger				= false;
-	m_strComponentTag		= strTag;
 
 	return true;
 }
@@ -58,8 +57,8 @@ void ColliderBox::Init()
 void ColliderBox::Update(double dDeltaTime)
 {
 
-	float fPivotWidthRatio	= m_pOwner->GetComponent<TransformComponent>()->GetPivotWidthRatio();
-	float fPivotHeightRatio	= m_pOwner->GetComponent<TransformComponent>()->GetPivotHeightRatio();
+	float fPivotWidthRatio	= m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
+	float fPivotHeightRatio	= m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
 
 	m_CurColliderPoint		= m_pOwner->GetActorPoint();
 

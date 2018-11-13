@@ -26,10 +26,13 @@ public:
 
 public:
 	bool IsVisible() const;
-	
+
+
+protected:
+	HDC											m_hRenderDC;		//Backbuffer의 m_hMemDC에 대한 Compatible DC
+
 
 private:
 	bool											m_bVisible;
-	bool											m_bChangeAnim;
 
 };

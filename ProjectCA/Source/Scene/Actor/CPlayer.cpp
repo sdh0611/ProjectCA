@@ -57,7 +57,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	//NOTE(11.01) : TransformComponent에서 ScreenPosition값을 계산하므로 
 	//					다른 컴포넌트들의 동작이 수행 된 뒤 동작해야함.
 	//					떄문에 마지막에 추가하는 것으로 변경함.
-	TransformComponent* pTransform = new TransformComponent;
+	auto pTransform = std::make_shared<TransformComponent>();
 	if (!pTransform->PostInit(this, data.actorPoint))
 		return false;
 	pTransform->SetPivotRatio(0.5f, 1.f);
@@ -69,16 +69,16 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 
 	//PlayerInputComponent (InputComponent) 초기화
-	PlayerInputComponent* pAI = new PlayerInputComponent;
-	if (!pAI->PostInit(this))
+	std::shared_ptr<PlayerInputComponent> pInput = std::make_shared<PlayerInputComponent>();
+	if (!pInput->PostInit(this))
 		return false;
 
-	if (!AddComponent(pAI, pAI->GetComponentTag()))
+	if (!AddComponent(pInput, pInput->GetComponentTag()))
 		return false;
 
 
 	//PhysicsComponent 초기화
-	PhysicsComponent* pPhysics = new PhysicsComponent;
+	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
 	if (!pPhysics->PostInit(this, 300.f, 700.f, 1300.f, 700.f))
 		return false;
 
@@ -87,15 +87,14 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 
 	//Collider 초기화
-	ColliderBox* pCollider = new ColliderBox;
+	std::shared_ptr<ColliderBox> pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
 
 	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, Collider::CollisionType type)->void 
 	{
-		ComponentBase* pComponent = nullptr;
-		POSITION position = pOwner->GetComponent<TransformComponent>()->GetLastPosition();
-		PhysicsComponent* pPhysics = pOwner->GetComponent<PhysicsComponent>();
+		POSITION position = pOwner->GetComponent<TransformComponent>().lock()->GetLastPosition();
+		std::shared_ptr<PhysicsComponent> pPhysics = pOwner->GetComponent<PhysicsComponent>().lock();
 
 		switch (pOther->GetActorType()) 
 		{
@@ -144,7 +143,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 
 	//RenderComponent 추가
-	AnimationRender* pRender = new AnimationRender;
+	std::shared_ptr<AnimationRender> pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
 
@@ -245,25 +244,21 @@ void CPlayer::Update(double dDeltaTime)
 
 void CPlayer::Render(const HDC & hDC)
 {
-	const POSITION& position = GetComponent<TransformComponent>()->GetPosition();
-
-	auto it = m_componentTable.find(TEXT("RenderComponent"));
-	if (it != m_componentTable.end())
-		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
+	auto pRender = GetComponent(TEXT("RenderComponent"));
+	if (!pRender.expired())
+		STATIC_POINTER_CAST(RenderComponent, pRender.lock())->Draw(hDC);
 
 }
 
 void CPlayer::ActorBehavior(double dDeltaTime)
 {
-	TransformComponent* pTransform = GetComponent<TransformComponent>();
-	PhysicsComponent* pPhysics = GetComponent<PhysicsComponent>();
+	std::shared_ptr<TransformComponent> pTransform = GetComponent<TransformComponent>().lock();
+	std::shared_ptr<PhysicsComponent> pPhysics = GetComponent<PhysicsComponent>().lock();
 
 	float fCurSpeed = pPhysics->GetCurSpeed();
 	float fCurJumpForce = pPhysics->GetCurJumpForce();
 	float fMaxSpeed = pPhysics->GetMaxSpeed();
 	float fWalkSpeed = pPhysics->GetSpeed();
-
-
 
 	if (m_direction == Types::DIR_LEFT)
 	{

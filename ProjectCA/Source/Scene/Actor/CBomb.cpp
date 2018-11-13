@@ -33,10 +33,9 @@ void CBomb::Update(double fDeltaTime)
 
 void CBomb::Render(const HDC & hDC)
 {
-	auto it = m_componentTable.find(TEXT("RenderComponent"));
-
-	if (it != m_componentTable.end())
-		static_cast<RenderComponent*>((*it).second)->Draw(hDC);
+	auto pRender = GetComponent<RenderComponent>();
+	if (!pRender.expired())
+		pRender.lock()->Draw(hDC);
 
 }
 

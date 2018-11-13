@@ -34,10 +34,9 @@ CGameScene::~CGameScene()
 {
 	//SAFE_DELETE(m_pCurWorld)
 	//SAFE_DELETE(m_pNextWorld)
-	CCollisionManager::GetInstance()->Destroy();
 	m_pActorManager->Destroy();
-
 	m_strongActorList.clear();
+	CCollisionManager::GetInstance()->Destroy();
 }
 
 //Layer우선순위 0번은 추후 UI에 줄 예정임.
@@ -78,71 +77,110 @@ bool CGameScene::Init()
 	
 
 	//Enemy 생성
-	//Windows 좌표계에선 y축이 반대방향이므로 Vector의 값도 반대로 전달해줌.
 	std::shared_ptr<CKoopa> pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-
 	if (pEnemy == nullptr)
 		return false;
 
 	m_strongActorList.emplace_back(pEnemy);
-
 	if (!CreateLayer(TEXT("Enemy"), 3))
 		return false;
-
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+	pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 200.f, 250.f, Types::AT_ENEMY,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+	if (pEnemy == nullptr)
+		return false;
+
+	m_strongActorList.emplace_back(pEnemy);
+	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+	pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 150.f, 250.f, Types::AT_ENEMY,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+	if (pEnemy == nullptr)
+		return false;
+
+	m_strongActorList.emplace_back(pEnemy);
+	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+	pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 250.f, Types::AT_ENEMY,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+	if (pEnemy == nullptr)
+		return false;
+
+	m_strongActorList.emplace_back(pEnemy);
+	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
 
 
 	//Prob 생성
 	if (!CreateLayer(TEXT("Prob"), 4))
 		return false;
-	
-	//std::shared_ptr<CProb> pProb = m_pActorManager->CreateActor<CProb>(2000, 200, 400.f, 700.f, Types::AT_PROB,
-	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
-	//if (pProb == nullptr)
-	//	return false;
-	//m_strongActorList.emplace_back(pProb);
-	//FindLayer(TEXT("Prob"))->AddActor(pProb);
 
-	std::shared_ptr<CGround> pProb = m_pActorManager->CreateActor<CGround>(2048, 256, 400.f, 700.f, Types::AT_PROB,
+	std::shared_ptr<CGround> pGround = m_pActorManager->CreateActor<CGround>(8192, 256, 400.f, 700.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
-	if (pProb == nullptr)
+	if (pGround == nullptr)
 		return false;
-	m_strongActorList.push_back(pProb);
-	FindLayer(TEXT("Prob"))->AddActor(pProb);
+	m_strongActorList.push_back(pGround);
+	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	//pProb = m_pActorManager->CreateActor<CProb>(200, 150, 400.f, 350.f, Types::AT_PROB,
-	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
-	//if (pProb == nullptr)
+	pGround = m_pActorManager->CreateActor<CGround>(256, 160, 400.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	if (pGround== nullptr)
+		return false;
+	m_strongActorList.push_back(pGround);
+	FindLayer(TEXT("Prob"))->AddActor(pGround);
+
+	pGround = m_pActorManager->CreateActor<CGround>(256, 160, 800.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	if (pGround == nullptr)
+		return false;
+	m_strongActorList.push_back(pGround);
+	FindLayer(TEXT("Prob"))->AddActor(pGround);
+
+	pGround = m_pActorManager->CreateActor<CGround>(256, 160, 1200.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	if (pGround == nullptr)
+		return false;
+	m_strongActorList.push_back(pGround);
+	FindLayer(TEXT("Prob"))->AddActor(pGround);
+
+	pGround = m_pActorManager->CreateActor<CGround>(256, 160, 0.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	if (pGround == nullptr)
+		return false;
+	m_strongActorList.push_back(pGround);
+	FindLayer(TEXT("Prob"))->AddActor(pGround);
+
+	pGround = m_pActorManager->CreateActor<CGround>(256, 160, -400.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	if (pGround == nullptr)
+		return false;
+	m_strongActorList.push_back(pGround);
+	FindLayer(TEXT("Prob"))->AddActor(pGround);
+
+
+	////Backgorund 생성
+	//std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::AT_BACKGROUND,
+	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Background"), this);
+
+	//if (pBack == nullptr)
 	//	return false;
-	//m_strongActorList.push_back(pProb);
-	//FindLayer(TEXT("Prob"))->AddActor(pProb);
+	//
+	//pBack->SetBackgroundImage(TEXT("BackgroundMountain2"));
+	//m_strongActorList.emplace_back(pBack);
 
-	//pProb = m_pActorManager->CreateActor<CProb>(50, 50, 200.f, 400.f, Types::AT_PROB,
-	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
-	//if (pProb == nullptr)
+	//if (!CreateLayer(TEXT("Background"), 99))
 	//	return false;
-	//m_strongActorList.push_back(pProb);
-	//FindLayer(TEXT("Prob"))->AddActor(pProb);
 
-	//Backgorund 생성
-	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::AT_BACKGROUND,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Background"), this);
+	//FindLayer(TEXT("Background"))->AddActor(pBack);
 
-	if (pBack == nullptr)
-		return false;
-	
-	pBack->SetBackgroundImage(TEXT("BackgroundMountain2"));
-	m_strongActorList.emplace_back(pBack);
-
-	if (!CreateLayer(TEXT("Background"), 99))
-		return false;
-
-	FindLayer(TEXT("Background"))->AddActor(pBack);
 
 
 	CScene::Init();
-
 
 	return true;
 }
@@ -177,30 +215,24 @@ void CGameScene::Render(const HDC& hDC)
 //충돌했을 때 충돌한 Object에 대한 정보도 넘겨줘야한다.
 void CGameScene::CollisionDetect()
 {
-	////Scene내의 모든 Actor들에 대한 충돌검사 시행
-	for (auto first = m_strongActorList.begin(); first != m_strongActorList.end(); ++first) {
-		if ((*first)->IsActive())
-		{
-			for (auto second = first; second != m_strongActorList.end(); ++second) {
-				if (first == second)
-				{
-					continue;
-				}
-				if ((*second)->IsActive())
-				{
-					CCollisionManager::GetInstance()->CheckCollision((*first), (*second));
-				}
-			}
-		}
-	}
-
-	//m_pPlayer->GetComponent<PhysicsComponent>()->SetGrounded(false);
-
-	//for (auto& prob : FindLayer(TEXT("Prob"))->GetActorList())
-	//{
-	//	CCollisionManager::GetInstance()->CheckCollision(m_pPlayer, prob.lock());
+	//////Scene내의 모든 Actor들에 대한 충돌검사 시행
+	//for (auto first = m_strongActorList.begin(); first != m_strongActorList.end(); ++first) {
+	//	if ((*first)->IsActive())
+	//	{
+	//		for (auto second = first; second != m_strongActorList.end(); ++second) {
+	//			if (first == second)
+	//			{
+	//				continue;
+	//			}
+	//			if ((*second)->IsActive())
+	//			{
+	//				CCollisionManager::GetInstance()->CheckCollision((*first), (*second));
+	//			}
+	//		}
+	//	}
 	//}
 
+	CCollisionManager::GetInstance()->CheckCollision();
 
 }
 
@@ -214,7 +246,7 @@ void CGameScene::InputUpdate(double fDeltaTime)
 void CGameScene::GameUpdate(double dDeltaTime)
 {	
 	//Actor Update
-	for (auto& actor : m_strongActorList) {
+	for (const auto& actor : m_strongActorList) {
 		if (actor->IsActive())
 		{
 			actor->Update(dDeltaTime);
@@ -226,13 +258,13 @@ void CGameScene::GameUpdate(double dDeltaTime)
 	CCameraManager::GetInstance()->GetMainCamera().lock()->Update(dDeltaTime);
 	//std::cout << "Address : " << CCameraManager::GetInstance() << "\n";
 	//Adjust Position on Screen 
-	for (auto& actor : m_strongActorList)
+	for (const auto& actor : m_strongActorList)
 	{
 		//if (actor->GetActorType() != Types::AT_BACKGROUND)
 		{
 			if (actor->IsActive())
 			{
-				actor->GetComponent<TransformComponent>()->AdjustScreenPosition();
+				actor->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
 			}
 		}
 	}
@@ -249,7 +281,7 @@ void CGameScene::ResetScene()
 	//	Init();
 	//}
 
-	for (auto& actor : m_strongActorList) {
+	for (const auto& actor : m_strongActorList) {
 		actor->Init();
 	}
 

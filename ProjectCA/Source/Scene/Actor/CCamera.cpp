@@ -19,7 +19,7 @@ bool CCamera::PostInit(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight
 {
 	m_bActive						= true;
 	m_fDestPosition				= 0.f;
-	m_fCameraMoveSpeed		= pOwner->GetComponent<PhysicsComponent>()->GetMaxSpeed() * 2.f;
+	m_fCameraMoveSpeed		= pOwner->GetComponent<PhysicsComponent>().lock()->GetMaxSpeed() * 2.f;
 	m_iWidth						= iWidth;
 	m_iHeight						= iHeight;
 	m_iCameraID					= id;
@@ -133,9 +133,9 @@ void CCamera::ScrollDefault(double dDeltaTime)
 
 void CCamera::ScrollHorizon(double dDeltaTime)
 {
-	POSITION screenPosition = m_pOwner->GetComponent<TransformComponent>()->GetScreenPosition();
-	float fCurSpeed = m_pOwner->GetComponent<PhysicsComponent>()->GetCurSpeed();
-	float fCurJumpForce = m_pOwner->GetComponent<PhysicsComponent>()->GetCurJumpForce();
+	POSITION screenPosition = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
+	float fCurSpeed = m_pOwner->GetComponent<PhysicsComponent>().lock()->GetCurSpeed();
+	float fCurJumpForce = m_pOwner->GetComponent<PhysicsComponent>().lock()->GetCurJumpForce();
 	float fUnit = m_iWidth * (1.f / 5.f);
 
 	if (m_fDestPosition != 0.f)

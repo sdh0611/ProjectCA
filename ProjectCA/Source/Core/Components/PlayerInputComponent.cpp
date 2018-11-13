@@ -81,8 +81,6 @@ bool PlayerInputComponent::GetKeyDown(const Types::tstring & strKeyName)
 void PlayerInputComponent::KeyProcess()
 {
 	Types::Direction dir = m_pOwner->GetActorDirection();
-	RenderComponent* pRender = static_cast<RenderComponent*>( m_pOwner->GetComponent(TEXT("RenderComponent")) );	
-	//PhysicsComponent* pPhysics = static_cast<PhysicsComponent*>(m_pOwner->GetComponent(TEXT("PhysicsComponent")));
 
 	if (m_pInputManager->IsKeyDown(TEXT("LEFT")))
 	{

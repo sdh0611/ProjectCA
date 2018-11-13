@@ -17,6 +17,8 @@ public:
 	virtual void Init() override;
 	virtual void Update(double dDeltaTIme) override;
 	virtual void Draw(const HDC& hDC) override;
+	virtual void Draw(const HDC& hDC, const POSITION& position);
+	virtual void Draw(const HDC& hDC, const POSITION& position, std::weak_ptr<CSprite> pSprite);
 
 
 public:
@@ -33,7 +35,7 @@ private:
 private:
 	UINT							m_iDrawWidth;
 	UINT							m_iDrawHeight;
-	COLORREF					m_colorRef;
+	COLORREF					m_ColorRef;
 	Types::tstring				m_strImageTag;
 	std::weak_ptr<CSprite>	m_pWeakSprite;
 

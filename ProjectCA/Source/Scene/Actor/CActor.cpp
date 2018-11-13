@@ -23,10 +23,10 @@ CActor::~CActor()
 void CActor::Update(double dDeltaTime)
 {
 	if (m_bActive) {
-		InputComponent* pInput = static_cast<InputComponent*>(GetComponent(TEXT("InputComponent")));
-		if (pInput)
+		std::weak_ptr<InputComponent> pInput = std::tr1::static_pointer_cast<InputComponent>(GetComponent(TEXT("InputComponent")).lock());
+		if (!pInput.expired())
 		{
-			pInput->Update(dDeltaTime);
+			pInput.lock()->Update(dDeltaTime);
 		}
 
 		ActorBehavior(dDeltaTime);
@@ -54,30 +54,30 @@ void CActor::LateUpdate(double dDeltaTime)
 
 void CActor::Destroy()
 {
-	if (!m_componentTable.empty())
-		for (auto& it : m_componentTable)
-			SAFE_DELETE(it.second)
+	//if (!m_componentTable.empty())
+	//	for (auto& it : m_componentTable)
+	//		SAFE_DELETE(it.second)
 
 	m_componentTable.clear();
 
 }
 
-ComponentBase * CActor::GetComponent(const Types::tstring & strTag)
+std::weak_ptr<ComponentBase> CActor::GetComponent(const TSTRING& strTag)
 {
 	auto it = m_componentTable.find(strTag);
 
-	if(it == m_componentTable.end())
-		return nullptr;
+	if (it == m_componentTable.end())
+		return std::weak_ptr<ComponentBase>();
 
 	return it->second;
 }
 
-bool CActor::AddComponent(ComponentBase * pComponent, const Types::tstring & strTag)
+bool CActor::AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag)
 {
 	return m_componentTable.insert(std::make_pair(strTag, pComponent)).second;
 }
 
-bool CActor::DeleteComponent(const Types::tstring & strTag)
+bool CActor::DeleteComponent(const TSTRING & strTag)
 {
 	ComponentTable::iterator it = m_componentTable.find(strTag);
 
@@ -116,7 +116,7 @@ void CActor::SetActorHeight(UINT iHeight)
 
 void CActor::SetActorPoint(float fx, float fy)
 {
-	GetComponent<TransformComponent>()->SetPosition(fx, fy);
+	GetComponent<TransformComponent>().lock()->SetPosition(fx, fy);
 }
 
 void CActor::SetActorTag(const Types::tstring & strTag)
@@ -186,12 +186,12 @@ UINT CActor::GetActorHeight() const
 
 Types::Point CActor::GetActorPoint() const
 {
-	return GetComponent<TransformComponent>()->GetPosition();
+	return GetComponent<TransformComponent>().lock()->GetPosition();
 }
 
 const Types::Point CActor::GetActorPivot() const
 {
-	return GetComponent<TransformComponent>()->GetPivot();
+	return GetComponent<TransformComponent>().lock()->GetPivot();
 }
 
 const Types::tstring & CActor::GetActorTag() const

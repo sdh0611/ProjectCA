@@ -26,8 +26,8 @@ public:
 
 private:
 	float							m_fScrollSpeed;
-	COLORREF					m_ColorRef;
-	std::weak_ptr<CSprite>	m_pBackgroundImage;
+	//COLORREF					m_ColorRef;
+	//std::weak_ptr<CSprite>	m_pBackgroundImage;
 	UINT							m_iBackgroundWidth;
 	UINT							m_iBackgroundHeight;
 

@@ -17,7 +17,12 @@ ImageRender::~ImageRender()
 
 bool ImageRender::PostInit(CActor * pOwner, const Types::tstring & strTag)
 {
-	RenderComponent::PostInit(pOwner, strTag);
+	if (!RenderComponent::PostInit(pOwner, strTag))
+		return false;
+
+	m_iDrawWidth = pOwner->GetActorWidth();
+	m_iDrawHeight = pOwner->GetActorHeight();
+	m_ColorRef = RGB(248, 7, 220);
 
 	return true;
 }
@@ -32,17 +37,39 @@ void ImageRender::Update(double dDeltaTIme)
 
 void ImageRender::Draw(const HDC & hDC)
 {
-	POSITION point = m_pOwner->GetComponent<TransformComponent>()->GetScreenPivot();
-	HDC memDC = CreateCompatibleDC(hDC);
-	HBITMAP hOldBit = (HBITMAP)SelectObject(memDC, m_pWeakSprite.lock()->GetBitmap());
+	POSITION point = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
+	HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
 
 	TransparentBlt(hDC, point.x, point.y,
-		m_iDrawWidth, m_iDrawHeight, memDC, 0, 0,
+		m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
 		m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
-		m_colorRef);
+		m_ColorRef);
 
-	SelectObject(memDC, hOldBit);
-	DeleteDC(memDC);
+	SelectObject(m_hRenderDC, hOldBit);
+}
+
+void ImageRender::Draw(const HDC& hDC, const POSITION& position)
+{
+	HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
+
+	TransparentBlt(hDC, position.x, position.y,
+		m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+		m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
+		m_ColorRef);
+
+	SelectObject(m_hRenderDC, hOldBit);
+}
+
+void ImageRender::Draw(const HDC & hDC, const POSITION & position, std::weak_ptr<CSprite> pSprite)
+{
+	HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, pSprite.lock()->GetBitmap());
+
+	TransparentBlt(hDC, position.x, position.y,
+		m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+		pSprite.lock()->GetBitWidth(), pSprite.lock()->GetBitHeight(),
+		m_ColorRef);
+
+	SelectObject(m_hRenderDC, hOldBit);
 
 }
 
