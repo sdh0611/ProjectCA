@@ -189,7 +189,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, TEXT("RunJumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(100.f, TEXT("KoopaNormal"), TEXT("KoopaGreenDamaged"), m_iActorWidth, m_iActorHeight, false, TEXT("Damaged")))
+	if (!pRender->AddAnimation(0.f, TEXT("KoopaNormal"), TEXT("KoopaGreenDamaged"), m_iActorWidth, m_iActorHeight, false, TEXT("Damaged")))
 		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))

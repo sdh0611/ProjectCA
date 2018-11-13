@@ -148,10 +148,10 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->PostInit(this))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"),TEXT("PlayerIdleRight"),m_iActorWidth, m_iActorHeight, false, TEXT("IdleRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"),TEXT("PlayerIdleRight"),m_iActorWidth, m_iActorHeight, false, TEXT("IdleRight")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerIdleLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("IdleLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerIdleLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("IdleLeft")))
 		return false;
 
 	if (!pRender->AddAnimation(0.2f, TEXT("MarioBig"), TEXT("PlayerWalkRight"), m_iActorWidth, m_iActorHeight, true, TEXT("WalkRight")))
@@ -166,40 +166,40 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.05f, TEXT("MarioBig"), TEXT("PlayerRunLeft"), m_iActorWidth, m_iActorHeight, true, TEXT("RunLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerLookupRight"), m_iActorWidth, m_iActorHeight, false, TEXT("LookupRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerLookupRight"), m_iActorWidth, m_iActorHeight, false, TEXT("LookupRight")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerLookupLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("LookupLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerLookupLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("LookupLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerSitdownRight"), m_iActorWidth, m_iActorHeight, false, TEXT("SitdownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerSitdownRight"), m_iActorWidth, m_iActorHeight, false, TEXT("SitdownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerSitdownLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("SitdownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerSitdownLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("SitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerJumpRight"), m_iActorWidth, m_iActorHeight, false, TEXT("JumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerJumpRight"), m_iActorWidth, m_iActorHeight, false, TEXT("JumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerJumpLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("JumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerJumpLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("JumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerFalldownRight"), m_iActorWidth, m_iActorHeight, false, TEXT("FalldownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerFalldownRight"), m_iActorWidth, m_iActorHeight, false, TEXT("FalldownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerFalldownLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("FalldownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerFalldownLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("FalldownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerRunJumpRight"), m_iActorWidth, m_iActorHeight, false, TEXT("RunJumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerRunJumpRight"), m_iActorWidth, m_iActorHeight, false, TEXT("RunJumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerRunJumpLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerRunJumpLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("RunJumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerTurnRight"), m_iActorWidth, m_iActorHeight, false, TEXT("TurnRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerTurnRight"), m_iActorWidth, m_iActorHeight, false, TEXT("TurnRight")))
 		return false;
 
-	if (!pRender->AddAnimation(3.f, TEXT("MarioBig"), TEXT("PlayerTurnLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("TurnLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerTurnLeft"), m_iActorWidth, m_iActorHeight, false, TEXT("TurnLeft")))
 		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))

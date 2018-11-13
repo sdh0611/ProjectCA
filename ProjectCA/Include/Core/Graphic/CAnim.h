@@ -31,13 +31,13 @@ public:
 
 
 public:
-	UINT GetDrawWidth() const;
-	UINT GetDrawHeight() const;
+	UINT						GetDrawWidth() const;
+	UINT						GetDrawHeight() const;
+	const Types::tstring	GetAnimTag() const;
 
 
 public:
-	const Types::tstring	GetAnimTag() const;
-	void						ClearEleapsedTime();
+	void ClearEleapsedTime();
 
 
 private:

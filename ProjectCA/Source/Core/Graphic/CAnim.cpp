@@ -123,19 +123,23 @@ void CAnim::ClearEleapsedTime()
 
 void CAnim::DrawAnimation(const HDC & hDC, const Types::Point& point)
 {
-	if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
-		m_dTimeElapsed = 0.f;
-		if (m_iCurFrame < m_iMaxFrame-1) 
-		{
-			++m_iCurFrame;
-		}
-		else
-		{
-			if (m_bLoop)
+	if (m_dPlayTime != 0.f)
+	{
+		if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
+			m_dTimeElapsed = 0.f;
+			if (m_iCurFrame < m_iMaxFrame - 1)
 			{
-				++m_iCurFrame %= m_iMaxFrame;
+				++m_iCurFrame;
 			}
-	
+			else
+			{
+				if (m_bLoop)
+				{
+					++m_iCurFrame %= m_iMaxFrame;
+				}
+
+			}
+
 		}
 
 	}
