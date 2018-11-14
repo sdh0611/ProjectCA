@@ -17,10 +17,10 @@ PhysicsComponent::~PhysicsComponent()
 {
 }
 
-bool PhysicsComponent::PostInit(CActor* pOwner, float fSpeed, float fMaxSpeed, 
+bool PhysicsComponent::PostInit(CObject* pOwner, float fSpeed, float fMaxSpeed, 
 	float fGravity, float fJumpForce, const Types::tstring& strTag)
 {
-	auto pActor= std::shared_ptr<CActor>(pOwner);
+	auto pActor= std::shared_ptr<CObject>(pOwner);
 
 	m_pOwner = pActor;
 
@@ -180,7 +180,9 @@ float PhysicsComponent::GetJumpForce() const
 
 void PhysicsComponent::Gravity(double dDeltaTime)
 {
-	Types::VerticalState state = m_pOwner->GetActorVerticalState();
+	std::shared_ptr<CActor> pOwner = STATIC_POINTER_CAST(CActor, m_pOwner);
+
+	Types::VerticalState state = pOwner->GetActorVerticalState();
 
 	if (m_bGrounded)
 	{
@@ -194,11 +196,11 @@ void PhysicsComponent::Gravity(double dDeltaTime)
 			m_fYSpeed -= m_fGravity * dDeltaTime;
 			if (m_fYSpeed < 0.f)
 			{
-				m_pOwner->SetActorVerticalState(Types::VS_FALL);
+				pOwner->SetActorVerticalState(Types::VS_FALL);
 			}
 		}
 
-		if (m_pOwner->GetActorVerticalState() == Types::VS_FALL)
+		if (pOwner->GetActorVerticalState() == Types::VS_FALL)
 		{
 			m_bGrounded = false;
 			if (m_fYSpeed > 0.f)

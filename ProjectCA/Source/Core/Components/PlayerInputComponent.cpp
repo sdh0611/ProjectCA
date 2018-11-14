@@ -13,12 +13,11 @@ PlayerInputComponent::~PlayerInputComponent()
 {
 }
 
-bool PlayerInputComponent::PostInit(CActor* pOwner, const Types::tstring & strTag)
+bool PlayerInputComponent::PostInit(CObject* pOwner, const Types::tstring & strTag)
 {
-	auto pActor = std::shared_ptr<CActor>(pOwner);
-
-	m_pOwner = pActor;
-	m_strComponentTag = strTag;
+	
+	if (!InputComponent::PostInit(pOwner, strTag))
+		return false;
 
 	m_pInputManager = CInputManager::GetInstance();
 	if (m_pInputManager == nullptr)
@@ -40,77 +39,79 @@ void PlayerInputComponent::LateUpdate(double dDeltaTime)
 
 void PlayerInputComponent::KeyProcess()
 {
-	Types::Direction dir = m_pOwner->GetActorDirection();
+	std::shared_ptr<CActor> pOwner = STATIC_POINTER_CAST(CActor, m_pOwner);
+
+	Types::Direction dir = pOwner->GetActorDirection();
 
 	if (m_pInputManager->IsKeyDown(TEXT("LEFT")))
 	{
 		if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
 		{
-			m_pOwner->SetActorHorizonalState(Types::HS_RUN);
+			pOwner->SetActorHorizonalState(Types::HS_RUN);
 		}
 		else
 		{
-			m_pOwner->SetActorHorizonalState(Types::HS_WALK);
+			pOwner->SetActorHorizonalState(Types::HS_WALK);
 		}
 
-		m_pOwner->SetActorDirection(Types::DIR_LEFT);
+		pOwner->SetActorDirection(Types::DIR_LEFT);
 
 	}
 	else if (m_pInputManager->IsKeyDown(TEXT("RIGHT")))
 	{
 		if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
 		{
-			m_pOwner->SetActorHorizonalState(Types::HS_RUN);
+			pOwner->SetActorHorizonalState(Types::HS_RUN);
 		}
 		else
 		{
-			m_pOwner->SetActorHorizonalState(Types::HS_WALK);
+			pOwner->SetActorHorizonalState(Types::HS_WALK);
 		}
 
-		m_pOwner->SetActorDirection(Types::DIR_RIGHT);
+		pOwner->SetActorDirection(Types::DIR_RIGHT);
 	}
 	else 
 	{
-		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
+		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			m_pOwner->SetActorState(Types::AS_IDLE);
+			pOwner->SetActorState(Types::AS_IDLE);
 		}
 
-		m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
+		pOwner->SetActorHorizonalState(Types::HS_IDLE);
 
 	}
 
 	if (m_pInputManager->IsKeyDown(TEXT("DOWN")))
 	{
-		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
+		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			m_pOwner->SetActorState(Types::AS_SITDOWN);
-			m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
+			pOwner->SetActorState(Types::AS_SITDOWN);
+			pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 	}
 	else if (m_pInputManager->IsKeyDown(TEXT("UP")))
 	{
-		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
+		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			m_pOwner->SetActorState(Types::AS_LOOKUP);
-			m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
+			pOwner->SetActorState(Types::AS_LOOKUP);
+			pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 
 	}
 
 	if (m_pInputManager->IsKeyDown(TEXT("JUMP")))
 	{
-		if (m_pOwner->GetActorVerticalState() == Types::VS_IDLE)
+		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			m_pOwner->SetActorVerticalState(Types::VS_JUMP);
+			pOwner->SetActorVerticalState(Types::VS_JUMP);
 		}
 
 	}
 	else 
 	{
-		if (m_pOwner->GetActorVerticalState() == Types::VS_JUMP)
+		if (pOwner->GetActorVerticalState() == Types::VS_JUMP)
 		{
-			m_pOwner->SetActorVerticalState(Types::VS_FALL);
+			pOwner->SetActorVerticalState(Types::VS_FALL);
 		}
 
 	}
@@ -118,7 +119,7 @@ void PlayerInputComponent::KeyProcess()
 	if (KEY_ONCE_PRESS(VK_ESCAPE))
 	{
 		puts("reset");
-		m_pOwner->GetOwnerScene()->ResetScene();
+		pOwner->GetOwnerScene()->ResetScene();
 	}
 
 }

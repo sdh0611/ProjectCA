@@ -17,39 +17,12 @@ CBackground::~CBackground()
 {
 }
 
-bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
+bool CBackground::PostInit(const Types::ObjectData & data, CGameScene * pScene)
 {
-	if (data.iActorWidth > MAX_ACTOR_SIZE || data.iActorHeight > MAX_ACTOR_SIZE)
+	if (!CObject::PostInit(data, pScene))
+	{
 		return false;
-
-	if (data.actorPoint.x < 0 || data.actorPoint.x > MAX_WIDTH ||
-		data.actorPoint.y < 0 || data.actorPoint.y > MAX_HEIGHT)
-		return false;
-
-	m_iActorWidth				= data.iActorWidth;
-	m_iActorHeight				= data.iActorHeight;
-	//m_actorPoint = m_spawnPoint = data.actorPoint;
-	m_actorType				= data.actorType;
-	m_actorCurState			= data.actorState;
-	m_actorCurVerticalState	= Types::VS_IDLE;
-	m_actorHorizonalState	= Types::HS_IDLE;
-	m_direction					= data.direction;
-	m_actorID					= data.actorID;
-	m_strActorTag				= data.strActorTag;
-	m_pOwnerScene			= pScene;
-	m_bActive					= data.bActive;
-
-	m_fScrollSpeed				= 15.f;
-	//m_ColorRef					= RGB(248, 7, 220);
-
-
-	//TransformComponent 추가
-	std::shared_ptr<TransformComponent> pTransform = std::make_shared<TransformComponent>();
-	if (!pTransform->PostInit(this, data.actorPoint))
-		return false;
-
-	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
-		return false;
+	}
 
 	//ImageRender 추가
 	std::shared_ptr<ImageRender> pRender = std::make_shared<ImageRender>();
@@ -62,14 +35,13 @@ bool CBackground::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	return true;;
 }
 
-bool CBackground::Init()
+void CBackground::Init()
 {
-	return true;
 }
 
 void CBackground::Update(double dDeltaTIme)
 {
-	for (auto& it : m_componentTable)
+	for (auto& it : m_ComponentTable)
 		it.second->Update(dDeltaTIme);
 
 }
@@ -85,15 +57,15 @@ void CBackground::Render(const HDC & hDC)
 	std::shared_ptr<ImageRender> pRender = GetComponent<ImageRender>().lock();
 	
 	//카메라 좌측 맵출력
-	pRender->Draw(hDC, POSITION(screenPosition.x - m_iActorWidth, screenPosition.y));
+	pRender->Draw(hDC, POSITION(screenPosition.x - m_iObjectWidth, screenPosition.y));
 	//카메라 출력부분
 	pRender->Draw(hDC, screenPosition);
-	//TransparentBlt(hDC, screenPosition.x - m_iActorWidth, screenPosition.y,
-	//	m_iActorWidth, m_iActorHeight, memDC, 0, 0,
+	//TransparentBlt(hDC, screenPosition.x - m_iObjectWidth, screenPosition.y,
+	//	m_iObjectWidth, m_iObjectHeight, memDC, 0, 0,
 	//	m_iBackgroundWidth, m_iBackgroundHeight, m_ColorRef);
 
 	//TransparentBlt(hDC, screenPosition.x, screenPosition.y,
-	//	m_iActorWidth, m_iActorHeight, memDC, 0, 0,
+	//	m_iObjectWidth, m_iObjectHeight, memDC, 0, 0,
 	//	m_iBackgroundWidth, m_iBackgroundHeight, m_ColorRef);
 
 	if (screenPosition.x > iCameraWidth)
@@ -111,9 +83,6 @@ void CBackground::Render(const HDC & hDC)
 
 }
 
-void CBackground::ActorBehavior(double dDeltaTime)
-{
-}
 
 bool CBackground::SetBackgroundImage(const TSTRING & strImageName)
 {

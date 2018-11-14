@@ -18,9 +18,9 @@ Collider::~Collider()
 	CCollisionManager::GetInstance()->DeleteCollider(this);
 }
 
-bool Collider::PostInit(CActor * pOwner, const Types::tstring & strTag)
+bool Collider::PostInit(CObject * pOwner, const Types::tstring & strTag)
 {
-	auto pActor = std::shared_ptr<CActor>(pOwner);
+	auto pActor = std::shared_ptr<CObject>(pOwner);
 
 	m_pOwner				= pActor;
 	m_strComponentTag = strTag;
@@ -38,7 +38,7 @@ void Collider::LateUpdate(double dDeltaTime)
 	}
 }
 
-void Collider::ResolveCollision(std::shared_ptr<CActor> pOther)
+void Collider::ResolveCollision(std::shared_ptr<CObject> pOther)
 {
 	if (m_bUseTrigger)
 	{
@@ -129,7 +129,7 @@ bool Collider::IsTriggered() const
 
 
 //Collision이 일어났다면 호출하게 될 메소드
-void Collider::OnCollision(std::shared_ptr<CActor> pOther)
+void Collider::OnCollision(std::shared_ptr<CObject> pOther)
 {
 	if (m_pOnCollision != nullptr)
 	{
@@ -139,7 +139,7 @@ void Collider::OnCollision(std::shared_ptr<CActor> pOther)
 }
 
 //Trigger상태일 때 호출할 메소드
-void Collider::OnTriggered(std::shared_ptr<CActor> pOther)
+void Collider::OnTriggered(std::shared_ptr<CObject> pOther)
 {
 	if (m_pOnTrigger != nullptr)
 	{

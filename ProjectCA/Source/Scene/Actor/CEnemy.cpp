@@ -30,17 +30,16 @@ bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	return true;
 }
 
-bool CEnemy::Init()
+void CEnemy::Init()
 {
 	//m_actorPoint = m_spawnPoint;
-	for (auto& it : m_componentTable)
+	for (auto& it : m_ComponentTable)
 		it.second->Init();
 
 	m_bActive = true;
-	m_actorCurState = Types::AS_IDLE;
-	m_direction = Types::DIR_LEFT;
+	m_ActorCurState = Types::AS_IDLE;
+	m_Direction = Types::DIR_LEFT;
 	
-	return true;
 }
 
 void CEnemy::Update(double fDeltaTime)
@@ -53,7 +52,7 @@ void CEnemy::Render(const HDC & hDC)
 {
 	POSITION position = GetComponent<TransformComponent>().lock()->GetPosition();
 
-	Rectangle(hDC, position.x, position.y, position.x + m_iActorWidth, position.y + m_iActorHeight);
+	Rectangle(hDC, position.x, position.y, position.x + m_iObjectWidth, position.y + m_iObjectHeight);
 	if (GetComponent<Collider>().lock()->IsCollision()) {
 		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
 	}

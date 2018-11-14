@@ -5,7 +5,7 @@
 
 class CSprite;
 
-class CBackground : public CActor {
+class CBackground : public CObject {
 
 public:
 	CBackground();
@@ -13,11 +13,10 @@ public:
 
 
 public:
-	virtual bool PostInit(const Types::ActorData& data, CGameScene* pScene) override;
-	virtual bool Init() override;
+	virtual bool PostInit(const Types::ObjectData& data, CGameScene* pScene);
+	virtual void Init() override;
 	virtual void Update(double dDeltaTIme) override;
 	virtual void Render(const HDC& hDC) override;
-	virtual void ActorBehavior(double dDeltaTime) override;
 
 
 public:

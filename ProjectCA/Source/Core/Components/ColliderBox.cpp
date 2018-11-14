@@ -15,7 +15,7 @@ ColliderBox::~ColliderBox()
 {
 }
 
-bool ColliderBox::PostInit(CActor* pOwner, const Types::tstring& strTag)
+bool ColliderBox::PostInit(CObject* pOwner, const Types::tstring& strTag)
 {
 
 	//m_ColliderPoint = point;
@@ -23,10 +23,10 @@ bool ColliderBox::PostInit(CActor* pOwner, const Types::tstring& strTag)
 		return false;
 
 	//처음 Init할 때 기본값으로 Actor의 너비, 높이를 따라가도록 함.
-	m_fWidth					= m_fCurWidth = m_pOwner->GetActorWidth();
-	m_fHeight					= m_fCurHeight =m_pOwner->GetActorHeight();
+	m_fWidth					= m_fCurWidth = m_pOwner->GetObjectWidth();
+	m_fHeight					= m_fCurHeight =m_pOwner->GetObjectHeight();
 
-	m_ColliderPoint			= m_CurColliderPoint = m_pOwner->GetActorPoint();
+	m_ColliderPoint			= m_CurColliderPoint = m_pOwner->GetObjectPosition();
 
 	m_ColliderRect.left			= m_CurColliderPoint.x - m_fWidth / 2;
 	m_ColliderRect.top		= m_CurColliderPoint.y - m_fHeight;
@@ -56,17 +56,11 @@ void ColliderBox::Init()
 //물체가 움직임에 따라 CollisionBox의 좌표도 같이 이동해야함.
 void ColliderBox::Update(double dDeltaTime)
 {
-
 	float fPivotWidthRatio	= m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
 	float fPivotHeightRatio	= m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
 
-	m_CurColliderPoint		= m_pOwner->GetActorPoint();
+	m_CurColliderPoint		= m_pOwner->GetObjectPosition();
 
-	m_fCurHeight = m_fHeight;
-	if (m_pOwner->GetActorState() == Types::AS_SITDOWN)
-	{
-		m_fCurHeight /= 2.f;
-	}
 	m_ColliderRect.left			= m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
 	m_ColliderRect.top		= m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
 	m_ColliderRect.right		= m_CurColliderPoint.x + m_fCurWidth * fPivotWidthRatio;
@@ -111,12 +105,44 @@ void ColliderBox::SetSize(float fWidth, float fHeight)
 	m_fHeight	= m_fCurHeight =fHeight;
 }
 
+void ColliderBox::SetCurRectWidth(float fWidth)
+{
+	if (fWidth < 0.f)
+		return;
+
+	m_fCurWidth = fWidth;
+}
+
+void ColliderBox::SetCurRectHeight(float fHeight)
+{
+	if (fHeight < 0.f)
+		return;
+
+	m_fCurHeight = fHeight;
+}
+
+void ColliderBox::SetRectSize(float fWidth, float fHeight)
+{
+	if (fWidth < 0.f || fHeight < 0.f)
+		return;
+
+	m_fCurWidth	= fWidth;
+	m_fCurHeight	= fHeight;
+
+}
+
 void ColliderBox::SetRect(float left, float top, float right, float bottom)
 {
 	m_ColliderRect.left			= left;
 	m_ColliderRect.top		= top;
 	m_ColliderRect.right		= right;
 	m_ColliderRect.bottom	= bottom;
+}
+
+void ColliderBox::ResetRectSize()
+{
+	m_fCurWidth	= m_fWidth;
+	m_fCurHeight	= m_fHeight;
 }
 
 float ColliderBox::GetWidth() const

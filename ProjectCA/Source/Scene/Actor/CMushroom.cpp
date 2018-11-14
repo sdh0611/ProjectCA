@@ -14,9 +14,8 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	return true;
 }
 
-bool CMushroom::Init()
+void CMushroom::Init()
 {
-	return false;
 }
 
 void CMushroom::Update(double dDeltaTime)

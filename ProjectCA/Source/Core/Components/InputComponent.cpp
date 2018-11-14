@@ -15,11 +15,11 @@ InputComponent::InputComponent()
 //
 //}
 
-bool InputComponent::PostInit(CActor* pOwner, const Types::tstring & strTag)
+bool InputComponent::PostInit(CObject* pOwner, const Types::tstring & strTag)
 {
-	auto pStrongOwenr = std::shared_ptr<CActor>(pOwner);
+	auto pActor = std::shared_ptr<CObject>(pOwner);
 
-	m_pOwner = pStrongOwenr;
+	m_pOwner = pActor;
 	m_strComponentTag = strTag;
 
 	return true;

@@ -7,6 +7,7 @@
 */
 
 #include "..\..\..\stdafx.h"
+#include "..\CObject.h"
 //#include "..\"
 //#include "CActorManager.h"
 
@@ -17,7 +18,7 @@ class ComponentBase;
 
 //typedef std::shared_ptr<ComponentBase> StrongComponentPtr;
 
-class CActor {
+class CActor : public CObject{
 	////Layer, World Class만 Actor의 생성, 파괴가 가능함.
 	//friend class CWorld;
 	//friend class CLayer;
@@ -35,8 +36,8 @@ public:
 	
 
 public:
-	virtual bool PostInit(const Types::ActorData&, CGameScene*) = 0;
-	virtual bool Init() = 0;
+	virtual bool PostInit(const Types::ActorData&, CGameScene*);
+	virtual void Init();
 	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
 	virtual void LateUpdate(double dDeltaTime);
@@ -44,52 +45,23 @@ public:
 
 
 public:
-	std::weak_ptr<ComponentBase>	GetComponent(const TSTRING& strTag);
-	bool										AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag);
-	bool										DeleteComponent(const TSTRING& strTag);
-	template<typename T>
-	std::weak_ptr<T>	GetComponent() const
-	{
-		const std::type_info& type = typeid(T);
-		for (auto& it : m_componentTable)
-		{
-			if (typeid(*(it.second)) == type)
-				return STATIC_POINTER_CAST(T, it.second);
-		}
-
-		return std::weak_ptr<T>();
-	}
-
-public:
-	void SetActive(bool bActive);
 	void SetActorState(Types::ActorState state);
 	void SetActorDirection(Types::Direction dir);
-	void SetActorWidth(UINT iWidth);
-	void SetActorHeight(UINT iHeight);
-	void SetActorPoint(float fx, float fy);
-	void SetActorTag(const Types::tstring& strTag);
 	void SetActorVerticalState(Types::VerticalState vertical);
 	void SetActorHorizonalState(Types::HorizonalState horizonal);
-	void SetOwnerScene(CGameScene* pScene);
 	//void SetOwnerWorld(CWorld* pWorld);
-	bool SetLayer(const Types::tstring& strLayerTag);
 
 
 public:
-	bool						IsActive() const;
 	Types::ActorType		GetActorType() const;
 	Types::ActorState		GetActorState() const;
 	Types::Direction		GetActorDirection() const;
 	UINT						GetActorWidth() const;
 	UINT						GetActorHeight() const;
-	Types::Point				GetActorPoint() const;
-	const Types::Point		GetActorPivot() const;
-	const Types::tstring& GetActorTag() const;
 	Types::ActorID			GetActorID() const;
 	Types::VerticalState	GetActorVerticalState() const;
 	Types::HorizonalState GetActorHorizonalState() const;
 	//CWorld* const			GetOwnerWorld() const;
-	CGameScene* const	GetOwnerScene() const;
 
 
 public:
@@ -101,23 +73,13 @@ private:
 
 
 protected:
-	UINT							m_iActorWidth;
-	UINT							m_iActorHeight;
-	Types::ActorType			m_actorType;
-	Types::ActorState			m_actorCurState;
-	Types::VerticalState		m_actorCurVerticalState;
-	Types::HorizonalState		m_actorHorizonalState;
-	Types::Direction			m_direction;
-	Types::ActorID				m_actorID;
-	Types::tstring				m_strActorTag;		 
+	Types::ActorType			m_ActorType;
+	Types::ActorState			m_ActorCurState;
+	Types::VerticalState		m_ActorCurVerticalState;
+	Types::HorizonalState		m_ActorHorizonalState;
+	Types::Direction			m_Direction;
+	Types::ActorID				m_ActorID;
 	//CWorld*					m_pOwnerWorld;
-	CGameScene*				m_pOwnerScene;
-	bool							m_bActive;
-
-
-protected:
-	typedef std::unordered_map<Types::tstring, std::shared_ptr<ComponentBase>> ComponentTable;
-	ComponentTable		m_componentTable;
 
 	
 };

@@ -13,7 +13,7 @@ public:
 
 
 public:
-	virtual bool PostInit(CActor* pOwner, float fSpeed, float fMaxSpeed, float fGravity, 
+	virtual bool PostInit(CObject* pOwner, float fSpeed, float fMaxSpeed, float fGravity, 
 		float fJumpForce, const Types::tstring& strTag = TEXT("PhysicsComponent"));
 	virtual void Init();
 	virtual void Update(double fDeltaTime) override;

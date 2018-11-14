@@ -17,7 +17,7 @@ public:
 
 
 public:
-	virtual bool	PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("RenderComponent")) override;
+	virtual bool	PostInit(CObject* pOwner, const Types::tstring& strTag = TEXT("RenderComponent")) override;
 	virtual void Init() override;
 	virtual void Update(double dDeltaTIme) override;
 	virtual void Draw(const HDC& hDC) override;
@@ -30,7 +30,7 @@ public:
 
 public:
 	bool SetAnimationPlaySpeed(double dSpeed);
-	void SetAnimationMotion(Types::AnimationMotion motion);
+	void SetAnimationMotion(ANIM_MOTION motion);
 
 
 public:
@@ -40,16 +40,18 @@ public:
 private:
 	void UpdateAnimationMotion();
 	bool ChangeAnimation(const TSTRING& strAnimTag);
-	void ChangeAnimationClip(Types::AnimationMotion motion);
+	void ChangeAnimationClip(ANIM_MOTION motion);
 
 
 private:
-	TSTRING							m_strCurTableName;
+	ACTOR_STATE					m_OwnerState;
+	VER_STATE						m_OwnerVerticalState;
+	HOR_STATE						m_OwnerHorizonalState;
+	DIRECTION						m_OwnerDirection;
+	ANIM_MOTION				m_AnimationState;
+	std::weak_ptr<CActor>		m_pActor;
 	std::weak_ptr<CAnim>		m_pCurAnimation;
 	AnimationTable				m_AnimationTable;
-	Types::ActorState				m_OwnerState;
-	Types::VerticalState			m_OwnerVerticalState;
-	Types::Direction				m_OwnerDirection;
-	Types::AnimationMotion		m_AnimationState;
+	TSTRING							m_strCurTableName;
 
 };

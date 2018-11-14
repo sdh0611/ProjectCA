@@ -1,6 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
-#include "..\..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\..\Include\Scene\CObject.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 
@@ -14,12 +14,15 @@ TransformComponent::~TransformComponent()
 {
 }
 
-bool TransformComponent::PostInit(CActor * pOwner, const POSITION& position, const TSTRING & strTag)
+bool TransformComponent::PostInit(CObject * pOwner, const POSITION& position, const TSTRING & strTag)
 {
-	m_pOwner					= std::shared_ptr<CActor>(pOwner);
+	m_pOwner					= std::shared_ptr<CObject>(pOwner);
 	m_Pivot						= m_LastPosition = m_SpawnPosition 
 									= m_ScreenPosition = m_Position = position;
 	
+	m_fPivotWidthRatio		= 0.f;
+	m_fPivotHeightRatio		= 0.f;
+
 	m_strComponentTag		= strTag;
 
 	return true;
@@ -47,8 +50,8 @@ void TransformComponent::Move(float fx, float fy)
 	m_Position.x		+= fx;
 	m_Position.y	-= fy;
 
-	m_Pivot.x		= m_Position.x - m_pOwner->GetActorWidth() * m_fPivotWidthRatio;
-	m_Pivot.y		= m_Position.y - m_pOwner->GetActorHeight() * m_fPivotHeightRatio;
+	m_Pivot.x		= m_Position.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
+	m_Pivot.y		= m_Position.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
 
 	//printf("LastPosition : (%f, %f), CurPosition : (%f, %f)\n", m_LastPosition.x, m_LastPosition.y, m_Position.x, m_Position.y);
 }
@@ -59,8 +62,8 @@ void TransformComponent::SetPosition(const POSITION & position)
 
 	m_Position = position;
 
-	m_Pivot.x = m_Position.x - m_pOwner->GetActorWidth() * m_fPivotWidthRatio;
-	m_Pivot.y = m_Position.y - m_pOwner->GetActorHeight() * m_fPivotHeightRatio;
+	m_Pivot.x = m_Position.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
+	m_Pivot.y = m_Position.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
 }
 
 void TransformComponent::SetPosition(float fx, float fy)
@@ -74,7 +77,7 @@ void TransformComponent::SetPositionX(float fx)
 
 	m_Position.x			= fx;
 
-	m_Pivot.x			= m_Position.x - m_pOwner->GetActorWidth() * m_fPivotWidthRatio;
+	m_Pivot.x			= m_Position.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
 }
 
 void TransformComponent::SetPositionY(float fy)
@@ -83,7 +86,7 @@ void TransformComponent::SetPositionY(float fy)
 
 	m_Position.y		= fy;
 
-	m_Pivot.y			= m_Position.y - m_pOwner->GetActorHeight() * m_fPivotHeightRatio;
+	m_Pivot.y			= m_Position.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
 }
 
 void TransformComponent::SetSpawnPosition(const POSITION & position)
@@ -102,22 +105,22 @@ void TransformComponent::SetPivotRatio(float fWidthRatio, float fHeightRatio)
 	m_fPivotWidthRatio	= fWidthRatio;
 	m_fPivotHeightRatio	= fHeightRatio;
 
-	m_Pivot.x				= m_Position.x - m_pOwner->GetActorWidth() * m_fPivotWidthRatio;
-	m_Pivot.y				= m_Position.y - m_pOwner->GetActorHeight() * m_fPivotHeightRatio;
+	m_Pivot.x				= m_Position.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
+	m_Pivot.y				= m_Position.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
 }
 
 void TransformComponent::SetWidthPivotRatio(float fRatio)
 {
 	m_fPivotWidthRatio	 = fRatio;
 
-	m_Pivot.x				 = m_Position.x - m_pOwner->GetActorWidth() * m_fPivotWidthRatio;
+	m_Pivot.x				 = m_Position.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
 }
 
 void TransformComponent::SetHeightPivotRatio(float fRatio)
 {
 	m_fPivotHeightRatio	= fRatio;
 
-	m_Pivot.y				= m_Position.y - m_pOwner->GetActorHeight() * m_fPivotHeightRatio;
+	m_Pivot.y				= m_Position.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
 }
 
 void TransformComponent::SetScreenPosition(const POSITION & position)
@@ -172,8 +175,8 @@ void TransformComponent::AdjustScreenPosition()
 	m_ScreenPosition.x = m_Position.x - cameraPosition.x;
 	m_ScreenPosition.y = m_Position.y + cameraPosition.y;
 
-	m_ScreenPivot.x = m_ScreenPosition.x - m_pOwner->GetActorWidth() * m_fPivotWidthRatio;
-	m_ScreenPivot.y = m_ScreenPosition.y - m_pOwner->GetActorHeight() * m_fPivotHeightRatio;
+	m_ScreenPivot.x = m_ScreenPosition.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
+	m_ScreenPivot.y = m_ScreenPosition.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
 }
 
 

@@ -8,14 +8,13 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\Singleton.hpp"
 
-class CActor;
+class CObject;
 class CWorld;
 class CGameScene;
 
-typedef std::weak_ptr<CActor> WeakActorPtr;
-typedef std::shared_ptr<CActor> StrongActorPtr;
+typedef std::weak_ptr<CObject> WeakObjectPtr;
+typedef std::shared_ptr<CObject> StrongObjectPtr;
 
-using GenerateActor = std::function<StrongActorPtr(Types::ActorType)>;
 
 class CActorManager : public Singleton<CActorManager> {
 
@@ -26,14 +25,14 @@ public:
 
 
 public:
-	WeakActorPtr GetTarget(Types::ActorID id);
-	WeakActorPtr GetTarger(const Types::tstring& strTag);
-	
-
-public:
-	void Clear();
-
-
+//	WeakObjectPtr GetTarget(Types::ActorID id);
+//	WeakObjectPtr GetTarger(const Types::tstring& strTag);
+//	
+//
+//public:
+//	void Clear();
+//
+//
 public:
 	template<typename T>
 	std::shared_ptr<T> CreateActor(const Types::ActorData& data) {
@@ -51,12 +50,26 @@ public:
 	template<typename T>
 	std::shared_ptr<T> CreateActor(UINT iWidth, UINT iHeight, float fx, float fy, Types::ActorType type, 
 		Types::ActorState state, Types::VerticalState vertical, Types::HorizonalState horizonal, Types::Direction dir,
-		const Types::tstring& strTag, CGameScene* pScene, bool _bActive = true) {
+		const Types::tstring& strTag, CGameScene* pScene) {
 
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
 		Types::ActorData data(iWidth, iHeight, Types::Point(fx, fy), type, state, 
-			vertical, horizonal, dir, m_lastActorID++,strTag, _bActive);
+			vertical, horizonal, dir, m_lastActorID++,strTag);
+
+		if (!pActor->PostInit(data, pScene))
+			return std::shared_ptr<T>();
+
+
+		return pActor;
+	}
+
+	template<typename T>
+	std::shared_ptr<T> CreateObject(UINT iWidth, UINT iHeight, float fx, float fy, const Types::tstring& strTag, CGameScene* pScene) {
+
+		std::shared_ptr<T> pActor = std::make_shared<T>();
+
+		Types::ObjectData data(iWidth, iHeight, Types::Point(fx, fy), strTag);
 
 		if (!pActor->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -71,9 +84,8 @@ private:
 
 
 private:
-	GenerateActor					m_genrateActor;
-	std::list<StrongActorPtr>		m_strongActorPtrList;
-	static Types::ActorID			m_lastActorID;
+	//std::list<StrongObjectPtr>		m_strongActorPtrList;
+	static Types::ActorID				m_lastActorID;
 	
 };
 

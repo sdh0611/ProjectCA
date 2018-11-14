@@ -14,9 +14,8 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	return true;
 }
 
-bool CFlower::Init()
+void CFlower::Init()
 {
-	return false;
 }
 
 void CFlower::Update(double dDeltaTime)

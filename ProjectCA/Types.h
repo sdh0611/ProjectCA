@@ -32,7 +32,13 @@ namespace Types {
 	typedef unsigned long ActorID;
 	typedef unsigned long CameraID;
 
-	//오브젝트 타입 정의
+	//Object 타입 정의
+	enum ObjectType { OT_ACTOR, OT_UI };
+
+	//UI 타입 정의
+	enum UIType { UT_BUTTON, UT_FONT };
+
+	//Actor 타입 정의
 	enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_MAP, AT_BACKGROUND };
 #ifndef TYPE_ACTION 
 	//오브젝트 상태 정의
@@ -158,52 +164,76 @@ namespace Types {
 
 	};
 
-	struct ActorData {
+	struct ObjectData {
 		class CGameScene;
 
-		ActorData(UINT iWidth, UINT iHeight, Point point, ActorType type, ActorState state, 
-			VerticalState vertical, HorizonalState horizonal, Direction dir, 
-			ActorID id, const tstring& strTag, bool _bActive)
-			:iActorWidth(iWidth), iActorHeight(iHeight), actorPoint(point), actorType(type), actorState(state),
-			verticalState(vertical), horizonalState(horizonal), direction(dir), 
-			actorID(id), strActorTag(strTag),  bActive(_bActive)
+		UINT			m_iObjectWidth;
+		UINT			m_iObjectHeight;
+		Point			m_ObjectPoint;
+		tstring		m_strObjectName;
+
+		ObjectData(UINT iWidth, UINT iHeight, Point point, const tstring& strName)
+			: m_iObjectWidth(iWidth), m_iObjectHeight(iHeight), m_ObjectPoint(point), m_strObjectName(strName)
+		{
+		}
+
+		ObjectData& operator=(const ObjectData& other)
+		{
+			m_iObjectWidth		= other.m_iObjectWidth;
+			m_iObjectHeight		= other.m_iObjectHeight;
+			m_ObjectPoint			= other.m_ObjectPoint;
+			m_strObjectName		= other.m_strObjectName;
+		}
+
+
+	};
+
+	struct ActorData : public ObjectData {
+		class CGameScene;
+
+		ActorType				m_ActorType;
+		ActorState				m_ActorState;
+		VerticalState			m_VerticalState;
+		HorizonalState			m_HorizonalState;
+		Direction					m_Direction;
+		ActorID					m_iActorID;
+
+		ActorData(UINT iWidth, UINT iHeight, Point point, ActorType type, ActorState state,
+			VerticalState vertical, HorizonalState horizonal, Direction dir,
+			ActorID id, const tstring& strName)
+			:ObjectData(iWidth, iHeight, point, strName),
+			m_ActorType(type), m_ActorState(state), m_VerticalState(vertical), m_HorizonalState(horizonal),
+			m_Direction(dir), m_iActorID(id)
 		{			
 		}
 
 		ActorData& operator=(const ActorData& other) {
-
-			iActorWidth = other.iActorWidth;
-			iActorHeight = other.iActorHeight;
-			actorPoint = other.actorPoint;
-			actorType = other.actorType;
-			actorState = other.actorState;
-			verticalState = other.verticalState;
-			horizonalState = other.horizonalState;
-			direction = other.direction;
-			strActorTag = other.strActorTag;
-			bActive = other.bActive;
-
+			m_iObjectWidth		= other.m_iObjectWidth;
+			m_iObjectHeight		= other.m_iObjectHeight;
+			m_ObjectPoint			= other.m_ObjectPoint;
+			m_strObjectName		= other.m_strObjectName;
+			m_ActorType			= other.m_ActorType;
+			m_ActorState			= other.m_ActorState;
+			m_VerticalState			= other.m_VerticalState;
+			m_HorizonalState		= other.m_HorizonalState;
+			m_Direction				= other.m_Direction;
+			m_iActorID				= other.m_iActorID;
 		}
-
-		UINT						iActorWidth;
-		UINT						iActorHeight;
-		Point						actorPoint;
-		ActorType				actorType;
-		ActorState				actorState;
-		VerticalState			verticalState;
-		HorizonalState			horizonalState;
-		Direction					direction;
-		ActorID					actorID;
-		tstring					strActorTag;
 		//CWorld*					m_pOwnerWorld;
-		bool						bActive;
-
-
 	};
 	
 
 }
 
-typedef Types::tstring TSTRING;
-typedef Types::Point POSITION;
-typedef Types::ActorData ACTORDATA;
+typedef Types::tstring					TSTRING;
+typedef Types::ObjectType			OBEJCT_TYPE;
+typedef Types::UIType				UI_TYPE;
+typedef Types::ActorType			ACTOR_TYPE;
+typedef Types::Point					POSITION;
+typedef Types::ObjectData			OBJECT_DATA;
+typedef Types::ActorData			ACTOR_DATA;
+typedef Types::ActorState			ACTOR_STATE;
+typedef Types::VerticalState			VER_STATE;
+typedef Types::HorizonalState		HOR_STATE;
+typedef Types::Direction				DIRECTION;
+typedef Types::AnimationMotion	ANIM_MOTION;

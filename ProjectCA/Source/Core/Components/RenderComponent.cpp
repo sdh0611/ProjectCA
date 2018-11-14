@@ -22,9 +22,9 @@ RenderComponent::~RenderComponent()
 		DeleteObject(m_hRenderDC);
 }
 
-bool RenderComponent::PostInit(CActor * pOwner, const Types::tstring & strTag)
+bool RenderComponent::PostInit(CObject * pOwner, const Types::tstring & strTag)
 {
-	std::shared_ptr<CActor> pActor = std::shared_ptr<CActor>(pOwner);
+	auto pActor					= std::shared_ptr<CObject>(pOwner);
 	m_pOwner					= pActor;
 
 	m_strComponentTag		= strTag;

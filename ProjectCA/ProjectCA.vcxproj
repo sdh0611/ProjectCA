@@ -179,6 +179,7 @@
     <ClCompile Include="Source\Scene\CCameraManager.cpp" />
     <ClCompile Include="Source\Scene\CGameScene.cpp" />
     <ClCompile Include="Source\Scene\CLayer.cpp" />
+    <ClCompile Include="Source\Scene\CObject.cpp" />
     <ClCompile Include="Source\Scene\CScene.cpp" />
     <ClCompile Include="Source\Scene\CSceneManager.cpp" />
     <ClCompile Include="Source\Scene\CTile.cpp" />

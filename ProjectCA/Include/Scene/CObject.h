@@ -3,7 +3,10 @@
 #include "..\..\stdafx.h"
 
 
+class CLayer;
+class CGameScene;
 class ComponentBase;
+class TransformComponent;
 
 class CObject 
 {
@@ -13,6 +16,67 @@ public:
 
 
 public:
+	virtual bool PostInit(const OBJECT_DATA& objectData, CGameScene* pScene);
+	virtual void Init();
+	virtual void Update(double dDeltaTime);
+	virtual void Render(const HDC& hDC) = 0;
+
+
+public:
+	std::weak_ptr<ComponentBase>	GetComponent(const TSTRING& strTag);
+	bool										AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag);
+	bool										DeleteComponent(const TSTRING& strTag);
+	template<typename T>
+	std::weak_ptr<T>	GetComponent() const
+	{
+		const std::type_info& type = typeid(T);
+		for (auto& it : m_ComponentTable)
+		{
+			if (typeid(*(it.second)) == type)
+				return STATIC_POINTER_CAST(T, it.second);
+		}
+
+		return std::weak_ptr<T>();
+	}
+
+
+public:
+	void SetActive(bool bActive);
+	void SetObjectSize(UINT iWidth, UINT iHeight);
+	void SetObjectWidth(UINT iWidth);
+	void SetObjectHeight(UINT iHeight);
+	void SetObjectPosition(POSITION position);
+	void SetObjectPosition(float fx, float fy);
+	void SetObjectName(const TSTRING& strName);
+	void SetOwnerLayer(CLayer* pLayer);
+	void SetOwnerScene(CGameScene* pScene);
+
+
+public:
+	bool												IsActive();
+	UINT												GetObjectWidth() const;
+	UINT												GetObjectHeight() const;
+	POSITION										GetObjectPosition();
+	CLayer* const									GetOwnerLayer() const;
+	CGameScene* const							GetOwnerScene() const;
+	const TSTRING&								GetObjectName();
+	std::weak_ptr<TransformComponent>	GetTransform();
 	
+protected:
+	bool					m_bActive;
+	UINT					m_iObjectWidth;
+	UINT					m_iObjectHeight;
+	TSTRING				m_strObjectName;
+	TSTRING				m_strLayerTag;
+	CGameScene*		m_pOwnerScene;
+	
+protected:
+	typedef std::unordered_map<Types::tstring, std::shared_ptr<ComponentBase>> ComponentTable;
+	ComponentTable	m_ComponentTable;
+
+
+private:
+	CLayer*				m_pOwnerLayer;
+
 
 };

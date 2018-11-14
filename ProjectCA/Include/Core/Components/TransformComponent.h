@@ -3,7 +3,6 @@
 #include "..\..\..\stdafx.h"
 #include "ComponentBase.h"
 
-
 class TransformComponent : public ComponentBase {
 
 
@@ -13,7 +12,7 @@ public:
 
 
 public:
-	bool			PostInit(CActor* pOwner, const POSITION& position, const TSTRING& strTag = TEXT("TransformComponent"));
+	bool			PostInit(CObject* pOwner, const POSITION& position, const TSTRING& strTag = TEXT("TransformComponent"));
 	virtual void	Init() override;
 	virtual void	Update(double dDeltaTime) override;
 	virtual void	LateUpdate(double dDeltaTime) override;

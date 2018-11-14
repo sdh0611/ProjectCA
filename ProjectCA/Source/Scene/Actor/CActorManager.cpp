@@ -29,28 +29,28 @@ bool CActorManager::Init() {
 	return true;
 }
 
-
-WeakActorPtr CActorManager::GetTarget(Types::ActorID id)
-{
-	for (auto& it : m_strongActorPtrList) {
-		if (it->GetActorID() == id)
-			return WeakActorPtr(it);
-	}
-
-	return WeakActorPtr();	//return nullptr
-}
-
-WeakActorPtr CActorManager::GetTarger(const Types::tstring & strTag)
-{
-	for (auto& it : m_strongActorPtrList) {
-		if (it->GetActorTag() == strTag)
-			return WeakActorPtr(it);
-	}
-
-	return WeakActorPtr();
-}
-
-void CActorManager::Clear()
-{
-	m_strongActorPtrList.clear();
-}
+//
+//WeakActorPtr CActorManager::GetTarget(Types::ActorID id)
+//{
+//	for (auto& it : m_strongActorPtrList) {
+//		if (it->GetActorID() == id)
+//			return WeakActorPtr(it);
+//	}
+//
+//	return WeakActorPtr();	//return nullptr
+//}
+//
+//WeakActorPtr CActorManager::GetTarger(const Types::tstring & strTag)
+//{
+//	for (auto& it : m_strongActorPtrList) {
+//		if (it->GetObjectTag() == strTag)
+//			return WeakActorPtr(it);
+//	}
+//
+//	return WeakActorPtr();
+//}
+//
+//void CActorManager::Clear()
+//{
+//	m_strongActorPtrList.clear();
+//}

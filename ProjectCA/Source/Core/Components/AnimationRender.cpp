@@ -21,18 +21,17 @@ AnimationRender::~AnimationRender()
 }
 
 
-bool AnimationRender::PostInit(CActor * pOwner, const Types::tstring & strTag)
+bool AnimationRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
 {
-	//std::shared_ptr<CActor> pActor = std::shared_ptr<CActor>(pOwner);
-	//m_pOwner = pActor;
-
-	//m_strComponentTag = strTag;
 	if (!RenderComponent::PostInit(pOwner, strTag))
 		return false;
 
-	m_OwnerState = m_pOwner->GetActorState();
-	m_OwnerVerticalState = m_pOwner->GetActorVerticalState();
-	m_OwnerDirection = m_pOwner->GetActorDirection();
+	m_pActor = STATIC_POINTER_CAST(CActor, m_pOwner);
+
+	m_OwnerState = m_pActor.lock()->GetActorState();
+	m_OwnerVerticalState = m_pActor.lock()->GetActorVerticalState();
+	m_OwnerHorizonalState = m_pActor.lock()->GetActorHorizonalState();
+	m_OwnerDirection = m_pActor.lock()->GetActorDirection();
 
 	m_AnimationState = Types::AM_IDLE;
 
@@ -46,9 +45,10 @@ void AnimationRender::Init()
 
 void AnimationRender::Update(double dDeltaTime)
 {
-	m_OwnerState = m_pOwner->GetActorState();
-	m_OwnerDirection = m_pOwner->GetActorDirection();
-	m_OwnerVerticalState = m_pOwner->GetActorVerticalState();
+	m_OwnerState = m_pActor.lock()->GetActorState();
+	m_OwnerVerticalState = m_pActor.lock()->GetActorVerticalState();
+	m_OwnerHorizonalState = m_pActor.lock()->GetActorHorizonalState();
+	m_OwnerDirection = m_pActor.lock()->GetActorDirection();
 
 	UpdateAnimationMotion();
 	ChangeAnimationClip(m_AnimationState);
@@ -103,9 +103,9 @@ void AnimationRender::Draw(const HDC & hDC)
 bool AnimationRender::AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName, 
 	UINT iWidth, UINT iHeight, bool bLoop, const Types::tstring & strAnimTag)
 {
-	std::shared_ptr<CAnim> pAnim = std::make_shared<CAnim>();
+	auto pAnim = std::make_shared<CAnim>();
 
-	if (!pAnim->Init(m_pOwner, strSpriteName, iWidth, iHeight, dPlayTime, bLoop, strAnimTag))
+	if (!pAnim->Init(m_pActor.lock(), strSpriteName, iWidth, iHeight, dPlayTime, bLoop, strAnimTag))
 		return false;
 
 	if (m_pCurAnimation.expired())
@@ -146,7 +146,7 @@ bool AnimationRender::SetAnimationPlaySpeed(double dSpeed)
 	return m_pCurAnimation.lock()->SetPlaySpeed(dSpeed);
 }
 
-void AnimationRender::SetAnimationMotion(Types::AnimationMotion motion)
+void AnimationRender::SetAnimationMotion(ANIM_MOTION motion)
 {
 	m_AnimationState = motion;
 }
@@ -160,7 +160,7 @@ const TSTRING AnimationRender::GetAnimTag() const
 
 void AnimationRender::UpdateAnimationMotion()
 {
-	std::shared_ptr<PhysicsComponent> pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
+	auto pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
 	if (pPhysics == nullptr)
 		return;
 
@@ -203,14 +203,12 @@ void AnimationRender::UpdateAnimationMotion()
 	{
 		if (pPhysics->GetCurSpeed() < 0.f)
 		{
-			if (m_OwnerDirection == Types::DIR_RIGHT
-				&& m_pOwner->GetActorHorizonalState() != Types::HS_IDLE)
+			if (m_OwnerDirection == Types::DIR_RIGHT && m_OwnerHorizonalState != Types::HS_IDLE)
 				m_AnimationState = Types::AM_TURN;
 		}
 		else if (pPhysics->GetCurSpeed() > 0.f)
 		{
-			if (m_OwnerDirection == Types::DIR_LEFT
-				&& m_pOwner->GetActorHorizonalState() != Types::HS_IDLE)
+			if (m_OwnerDirection == Types::DIR_LEFT && m_OwnerHorizonalState != Types::HS_IDLE)
 				m_AnimationState = Types::AM_TURN;
 		}
 	}
@@ -245,7 +243,7 @@ bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTag)
 	return true;
 }
 
-void AnimationRender::ChangeAnimationClip(Types::AnimationMotion motion)
+void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
 {
 	if (m_OwnerVerticalState == Types::VS_JUMP) {
 		switch (motion) {

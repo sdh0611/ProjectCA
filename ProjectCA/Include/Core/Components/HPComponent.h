@@ -12,7 +12,7 @@ public:
 
 
 public:
-	bool PostInit(std::shared_ptr<CActor> pOwner, float fHP, float fMaxHP, 
+	bool PostInit(CObject* pOwner, float fHP, float fMaxHP, 
 		const Types::tstring& strTag = TEXT("HPComponent"));
 	virtual void Init() { }
 	virtual void Update(double dDeltaTime) override;

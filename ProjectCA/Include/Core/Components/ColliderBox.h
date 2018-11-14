@@ -12,7 +12,7 @@ public:
 
 
 public:
-	virtual bool PostInit(CActor* owner, const Types::tstring& strTag = TEXT("Collider")) override;
+	virtual bool PostInit(CObject* owner, const Types::tstring& strTag = TEXT("Collider")) override;
 	virtual void Init() override;
 	virtual void Update(double dDeltaTime) override;
 	virtual void LateUpdate(double dDeltaTime) override;
@@ -26,8 +26,11 @@ public:
 	void SetWidth(float fWidth);
 	void SetHeight(float fHeight);
 	void SetSize(float fWidth, float fHeight);
+	void SetCurRectWidth(float fWidth);
+	void SetCurRectHeight(float fHeight);
+	void SetRectSize(float fWidth, float fHeight);
 	void SetRect(float left, float top, float right, float bottom);
-
+	void ResetRectSize();
 
 
 public:

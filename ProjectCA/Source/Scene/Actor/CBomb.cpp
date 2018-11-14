@@ -21,9 +21,8 @@ bool CBomb::PostInit(const Types::ActorData &, CGameScene* pScene)
 	return true;
 }
 
-bool CBomb::Init()
+void CBomb::Init()
 {
-	return true;
 }
 
 void CBomb::Update(double fDeltaTime)

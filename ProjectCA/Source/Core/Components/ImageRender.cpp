@@ -15,13 +15,13 @@ ImageRender::~ImageRender()
 {
 }
 
-bool ImageRender::PostInit(CActor * pOwner, const Types::tstring & strTag)
+bool ImageRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
 {
 	if (!RenderComponent::PostInit(pOwner, strTag))
 		return false;
 
-	m_iDrawWidth = pOwner->GetActorWidth();
-	m_iDrawHeight = pOwner->GetActorHeight();
+	m_iDrawWidth = pOwner->GetObjectWidth();
+	m_iDrawHeight = pOwner->GetObjectHeight();
 	m_ColorRef = RGB(248, 7, 220);
 
 	return true;

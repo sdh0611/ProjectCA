@@ -11,6 +11,7 @@
 #include "CScene.h"
 
 class CActor;
+class CObject;
 
 class CLayer {
 	//Scene Class에서만 Layer 생성, 파괴 가능.
@@ -29,19 +30,20 @@ public:
 	bool Init(const Types::tstring& strTag, UINT iOrder);
 	void Update(double fDeltaTime);
 	void Render(const HDC& hDC);
+	void Destroy();
 
 
 public:
-	void AddActor(std::shared_ptr<CActor> pActor);
+	void AddActor(std::shared_ptr<CObject> pActor);
 	//Actor삭제 메소드는 2가지의 오버로딩 버전 제공.
-	bool DeleteActor(Types::ActorID actorID);
-	bool DeleteActor(std::shared_ptr<CActor>& pActor);
+	//bool DeleteActor(Types::ActorID actorID);
+	bool DeleteActor(std::shared_ptr<CObject>& pActor);
 
 
 public:
-	inline const std::list<std::weak_ptr<CActor>>& GetActorList() const { return m_actorList; }
-	std::weak_ptr<CActor> FindActor(Types::ActorID actorID);
-	std::weak_ptr<CActor> FindActor(const std::shared_ptr<CActor>& pActor);
+	//std::weak_ptr<CObject> FindObject(Types::ActorID actorID);
+	std::weak_ptr<CObject> FindObject(const std::shared_ptr<CObject>& pActor);
+	const std::list<std::weak_ptr<CObject>>& GetActorList() const;
 
 
 public:
@@ -56,7 +58,7 @@ private:
 	int												m_iOrder;
 	UINT											m_iActorNumber;	//안쓰게될 것 같음.(08.14)
 	Types::tstring								m_strLayerTag;
-	std::list<std::weak_ptr<CActor>>		m_actorList;
+	std::list<std::weak_ptr<CObject>>		m_ObjectList;
 
 
 };

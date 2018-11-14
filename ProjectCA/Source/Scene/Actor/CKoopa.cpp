@@ -22,42 +22,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 
 	//기본 Actor의 속성 초기화
-	if (data.iActorWidth > MAX_ACTOR_SIZE || data.iActorHeight > MAX_ACTOR_SIZE)
-		return false;
-
-	if (data.actorPoint.x < 0 || data.actorPoint.x > MAX_WIDTH ||
-		data.actorPoint.y < 0 || data.actorPoint.y > MAX_HEIGHT)
-		return false;
-
-
-	m_iActorWidth = data.iActorWidth;
-	m_iActorHeight = data.iActorHeight;
-	//m_actorPoint = m_spawnPoint = data.actorPoint;
-	m_actorType = data.actorType;
-	m_actorCurState = data.actorState;
-	m_actorCurVerticalState = data.verticalState;
-	m_actorHorizonalState = data.horizonalState;
-	m_direction = data.direction;
-	m_actorID = data.actorID;
-	m_strActorTag = data.strActorTag;
-	m_bActive = data.bActive;
-	
-	m_pOwnerScene = pScene;
-
-
-	//TransformComponent 추가
-	//NOTE(11.01) : TransformComponent에서 ScreenPosition값을 계산하므로 
-	//					다른 컴포넌트들의 동작이 수행 된 뒤 동작해야함.
-	//					떄문에 마지막에 추가하는 것으로 변경함.
-	std::shared_ptr<TransformComponent> pTransform = std::make_shared<TransformComponent>();
-	if (!pTransform->PostInit(this, data.actorPoint))
-		return false;
-	pTransform->SetPivotRatio(0.5f, 1.f);
-
-	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
-		return false;
-
-
+	CActor::PostInit(data, pScene);
 	//AIComponent (InputComponent) 초기화
 	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
 	if (!pAI->PostInit(this))
@@ -70,11 +35,11 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 		auto pTemp = pActor.lock();
 
-		if (pTemp->GetActorPoint().x < 100.f) 
+		if (pTemp->GetObjectPosition().x < 100.f) 
 		{
 			pTemp->SetActorDirection(Types::DIR_RIGHT);
 		}
-		else if (pTemp->GetActorPoint().x > 1000.f)
+		else if (pTemp->GetObjectPosition().x > 1000.f)
 		{
 			pTemp->SetActorDirection(Types::DIR_LEFT);
 		}
@@ -99,24 +64,25 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](std::shared_ptr<CActor> pOwner, std::shared_ptr<CActor> pOther, Collider::CollisionType type)->void {
+	auto onCollisionDelegater = [](std::shared_ptr<CObject> pOwner, std::shared_ptr<CObject> pOther, Collider::CollisionType type)->void {
 
-		std::shared_ptr<PhysicsComponent> pPhysics = pOwner->GetComponent<PhysicsComponent>().lock();
+		auto pPhysics = pOwner->GetComponent<PhysicsComponent>().lock();
+		auto pOwnerActor = STATIC_POINTER_CAST(CActor, pOwner);
 
-		switch (pOther->GetActorType()) {
+		switch (STATIC_POINTER_CAST(CActor, pOther)->GetActorType()) {
 
 		case Types::AT_PLAYER:
 			switch (type)
 			{
 			case Collider::COLLISION_TOP:
 				//puts("TOP");
-				pOwner->SetActorState(Types::AS_DAMAGED);
+				pOwnerActor->SetActorState(Types::AS_DAMAGED);
 				pPhysics->SetCurSpeed(0.f);
-				//pOwner->SetActive(false);
+				//pOwnerActor->SetActive(false);
 				break;
 			case Collider::COLLISION_RIGHT:
 			case Collider::COLLISION_LEFT:
-				if (pOwner->GetActorState() == Types::AS_DAMAGED)
+				if (pOwnerActor->GetActorState() == Types::AS_DAMAGED)
 				{
 					if (type == Collider::COLLISION_RIGHT)
 					{
@@ -129,7 +95,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				}
 				else
 				{
-					pOwner->FlipActorDirection();
+					pOwnerActor->FlipActorDirection();
 				}
 
 				break;
@@ -139,13 +105,13 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			{
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
-				pOwner->SetActorPoint(pOwner->GetActorPoint().x, pOther->GetActorPoint().y - pOther->GetActorHeight());
-				//pOwner->SetActorState(Types::AS_IDLE);
-				pOwner->SetActorVerticalState(Types::VS_IDLE);
+				pOwnerActor->SetObjectPosition(pOwnerActor->GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
+				//pOwnerActor->SetActorState(Types::AS_IDLE);
+				pOwnerActor->SetActorVerticalState(Types::VS_IDLE);
 				break;
 			case Collider::COLLISION_LEFT:
 			case Collider::COLLISION_RIGHT:
-				pOwner->FlipActorDirection();
+				pOwnerActor->FlipActorDirection();
 				break;
 			}
 		}
@@ -153,7 +119,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
-	pCollider->SetSize(m_iActorWidth*0.45, m_iActorHeight*0.8);
+	pCollider->SetSize(m_iObjectWidth*0.45, m_iObjectHeight*0.8);
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
@@ -163,31 +129,31 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->PostInit(this))
 		return false;
 
-	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, true, TEXT("WalkRight")))
+	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, true, TEXT("WalkRight")))
 	//	return false;
 
-	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("WalkLeft")))
+	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, true, TEXT("WalkLeft")))
 	//	return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"),TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, TEXT("RunRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"),TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, TEXT("RunLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
 		return false;
 
-	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, true, TEXT("JumpRight")))
+	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, true, TEXT("JumpRight")))
 	//	return false;
 
-	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, true, TEXT("JumpLeft")))
+	//if (!pRender->AddAnim(0.25f, TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, true, TEXT("JumpLeft")))
 	//	return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkRight"), m_iActorWidth, m_iActorHeight, true, TEXT("RunJumpRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunJumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iActorWidth, m_iActorHeight, true, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunJumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("KoopaNormal"), TEXT("KoopaGreenDamaged"), m_iActorWidth, m_iActorHeight, false, TEXT("Damaged")))
+	if (!pRender->AddAnimation(0.f, TEXT("KoopaNormal"), TEXT("KoopaGreenDamaged"), m_iObjectWidth, m_iObjectHeight, false, TEXT("Damaged")))
 		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
@@ -197,9 +163,9 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	return true;
 }
 
-bool CKoopa::Init()
+void CKoopa::Init()
 {
-	return CEnemy::Init();
+	CEnemy::Init();
 }
 
 void CKoopa::Update(double dDeltaTime)
@@ -220,15 +186,15 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 	std::shared_ptr<TransformComponent> pTransform = GetComponent<TransformComponent>().lock();
 	std::shared_ptr<PhysicsComponent> pPhysics = GetComponent<PhysicsComponent>().lock();
 
-	if (m_actorCurState != Types::AS_DAMAGED)
+	if (m_ActorCurState != Types::AS_DAMAGED)
 	{
 		float fWalkSpeed = pPhysics->GetSpeed();
 
-		if (m_direction == Types::DIR_LEFT)
+		if (m_Direction == Types::DIR_LEFT)
 		{
 			pPhysics->SetCurSpeed(-1 * fWalkSpeed);
 		}
-		else if (m_direction == Types::DIR_RIGHT)
+		else if (m_Direction == Types::DIR_RIGHT)
 		{
 			pPhysics->SetCurSpeed(fWalkSpeed);
 		}

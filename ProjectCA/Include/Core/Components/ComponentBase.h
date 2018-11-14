@@ -8,7 +8,7 @@
 #include "..\..\..\stdafx.h"
 #include "Message\ComponentMessage.h"
 
-class CActor;
+class CObject;
 
 class ComponentBase {
 
@@ -26,14 +26,14 @@ public:
 
 
 public:
-	inline std::weak_ptr<CActor> GetOwner() { return m_pOwner; }
-	inline void SetOwner(std::shared_ptr<CActor> owner) { m_pOwner = owner; }
+	inline std::weak_ptr<CObject> GetOwner() { return m_pOwner; }
+	inline void SetOwner(std::shared_ptr<CObject> owner) { m_pOwner = owner; }
 	inline const Types::tstring& GetComponentTag() const { return m_strComponentTag; }
 	inline void SetComponentName(const Types::tstring& tag) { m_strComponentTag = tag; }
 
 
 protected:
 	Types::tstring						m_strComponentTag;
-	std::shared_ptr<CActor>			m_pOwner;
+	std::shared_ptr<CObject>		m_pOwner;
 
 };

@@ -19,11 +19,9 @@ bool CGround::PostInit(const Types::ActorData &data, CGameScene *pScene)
 	return LoadTileImage();
 }
 
-bool CGround::Init()
+void CGround::Init()
 {
-	
 
-	return true;
 }
 
 void CGround::Update(double dDeltaTime)
@@ -77,10 +75,10 @@ bool CGround::LoadTileImage()
 	m_TileSpriteTable.push_back(pResourceMgr->GetWeakSprtiePtr(TEXT("GroundLineRight")));
 
 
-	for (int row = 0; row < m_iActorHeight / TILE_HEIGHT; ++row)
+	for (int row = 0; row < m_iObjectHeight / TILE_HEIGHT; ++row)
 	{
 		m_TileInfoList.emplace_back();
-		for (int tileIndex = 0; tileIndex < m_iActorWidth / TILE_WIDTH; ++tileIndex)
+		for (int tileIndex = 0; tileIndex < m_iObjectWidth / TILE_WIDTH; ++tileIndex)
 		{
 			if (row == 0)
 			{
@@ -88,7 +86,7 @@ bool CGround::LoadTileImage()
 				{
 					m_TileInfoList[row].push_back(GI_EDGE_LEFT_TOP);
 				}
-				else if (tileIndex == m_iActorWidth / TILE_WIDTH - 1)
+				else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
 				{
 					m_TileInfoList[row].push_back(GI_EDGE_RIGHT_TOP);
 				}
@@ -97,13 +95,13 @@ bool CGround::LoadTileImage()
 					m_TileInfoList[row].push_back(GI_LINE_TOP);
 				}
 			}
-			else if (row == m_iActorHeight / TILE_HEIGHT - 1)
+			else if (row == m_iObjectHeight / TILE_HEIGHT - 1)
 			{
 				if (tileIndex == 0)
 				{
 					m_TileInfoList[row].push_back(GI_EDGE_LEFT_BOT);
 				}
-				else if (tileIndex == m_iActorWidth / TILE_WIDTH - 1)
+				else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
 				{
 					m_TileInfoList[row].push_back(GI_EDGE_RIGHT_BOT);
 				}
@@ -118,7 +116,7 @@ bool CGround::LoadTileImage()
 				{
 					m_TileInfoList[row].push_back(GI_LINE_LEFT);
 				}
-				else if (tileIndex == m_iActorWidth / TILE_WIDTH - 1)
+				else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
 				{
 					m_TileInfoList[row].push_back(GI_LINE_RIGHT);
 				}

@@ -21,36 +21,7 @@ CShell::~CShell()
 bool CShell::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 	//기본 Actor의 속성 초기화
-	if (data.iActorWidth > MAX_ACTOR_SIZE || data.iActorHeight > MAX_ACTOR_SIZE)
-		return false;
-
-	if (data.actorPoint.x < 0 || data.actorPoint.x > MAX_WIDTH ||
-		data.actorPoint.y < 0 || data.actorPoint.y > MAX_HEIGHT)
-		return false;
-
-	m_iActorWidth = data.iActorWidth;
-	m_iActorHeight = data.iActorHeight;
-	//m_actorPoint = m_spawnPoint = data.actorPoint;
-	m_actorType = data.actorType;
-	m_actorCurState = data.actorState;
-	m_actorCurVerticalState = data.verticalState;
-	m_actorHorizonalState = data.horizonalState;
-	m_direction = data.direction;
-	m_actorID = data.actorID;
-	m_strActorTag = data.strActorTag;
-	m_bActive = data.bActive;
-
-	m_pOwnerScene = pScene;
-	//TransformComponent 추가
-	std::shared_ptr<TransformComponent> pTransform = std::make_shared<TransformComponent>();
-	if (!pTransform->PostInit(this, data.actorPoint))
-		return false;
-
-	pTransform->SetPivotRatio(0.5f, 1.f);
-	printf("Position : (%f, %f), Pivot : (%f, %f)\n", pTransform->GetPosition().x, pTransform->GetPosition().y, pTransform->GetPivot().x, pTransform->GetPivot().y);
-
-	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
-		return false;
+	CActor::PostInit(data, pScene);
 
 	//AIComponent (InputComponent) 초기화
 	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
@@ -80,9 +51,8 @@ bool CShell::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	return true;
 }
 
-bool CShell::Init()
+void CShell::Init()
 {
-	return false;
 }
 
 void CShell::Update(double dDeltaTime)

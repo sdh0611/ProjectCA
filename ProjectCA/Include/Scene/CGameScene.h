@@ -17,6 +17,7 @@
 //추후 구현예정(06.10)
 //class CWorld;
 class CActor;
+class CObject;
 class CPlayer;
 
 class CGameScene :public CScene {
@@ -57,8 +58,8 @@ private:
 
 
 private:
-	typedef std::list<std::shared_ptr<CActor>>	StrongPtrActorList;
-	StrongPtrActorList										m_strongActorList;
+	typedef std::list<std::shared_ptr<CObject>>	StrongPtrObjectList;
+	StrongPtrObjectList									m_ObjectPtrList;
 	//CWorld*												m_pCurWorld;
 	//CWorld*												m_pNextWorld;
 

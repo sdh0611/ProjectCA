@@ -13,7 +13,7 @@ public:
 
 
 public:
-	virtual bool	PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("RenderComponent")) override;
+	virtual bool	PostInit(CObject* pOwner, const Types::tstring& strTag = TEXT("RenderComponent")) override;
 	virtual void Init() override;
 	virtual void Update(double dDeltaTIme) override;
 	virtual void Draw(const HDC& hDC) override;

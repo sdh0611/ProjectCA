@@ -14,7 +14,7 @@ public:
 		COLLISION_BOT, COLLISION_RIGHT, COLLISION_LEFT
 	};
 
-	using Delegate = std::function<void(std::shared_ptr<CActor>, std::shared_ptr<CActor>, CollisionType type)>;
+	using Delegate = std::function<void(std::shared_ptr<CObject>, std::shared_ptr<CObject>, CollisionType type)>;
 
 
 public:
@@ -23,10 +23,10 @@ public:
 
 
 public:
-	virtual bool PostInit(CActor* pOwner, const Types::tstring& strTag = TEXT("Collider"));
+	virtual bool PostInit(CObject* pOwner, const Types::tstring& strTag = TEXT("Collider"));
 	virtual void Update(double dDeltaTime) = 0;
 	virtual void LateUpdate(double dDeltaTime) override;
-	virtual void ResolveCollision(std::shared_ptr<CActor> pOther);
+	virtual void ResolveCollision(std::shared_ptr<CObject> pOther);
 	virtual void DrawCollider(const HDC& hDC, const POSITION& position) = 0;
 
 
@@ -51,8 +51,8 @@ public:
 	
 
 private:
-	virtual void OnCollision(std::shared_ptr<CActor> pOther);
-	virtual void OnTriggered(std::shared_ptr<CActor> pOther);
+	virtual void OnCollision(std::shared_ptr<CObject> pOther);
+	virtual void OnTriggered(std::shared_ptr<CObject> pOther);
 
 
 protected:

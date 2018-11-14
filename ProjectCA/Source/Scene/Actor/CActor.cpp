@@ -10,7 +10,7 @@
 
 
 CActor::CActor() 
-	:m_actorCurVerticalState(Types::VS_IDLE), m_actorHorizonalState(Types::HS_IDLE)
+	:m_ActorCurVerticalState(Types::VS_IDLE), m_ActorHorizonalState(Types::HS_IDLE)
 {
 }
 
@@ -20,10 +20,31 @@ CActor::~CActor()
 }
 
 
+bool CActor::PostInit(const Types::ActorData & data, CGameScene *pScene)
+{
+	//기본 Actor의 속성 초기화
+	m_ActorType = data.m_ActorType;
+	m_ActorCurState = data.m_ActorState;
+	m_ActorCurVerticalState = data.m_VerticalState;
+	m_ActorHorizonalState = data.m_HorizonalState;
+	m_Direction = data.m_Direction;
+	m_ActorID = data.m_iActorID;
+	
+	if (!CObject::PostInit(data, pScene))
+		return false;	
+	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);		//Actor들의 기본 PivotRatio는 0.5, 1.0으로 설정
+
+	return true;
+}
+
+void CActor::Init()
+{
+}
+
 void CActor::Update(double dDeltaTime)
 {
 	if (m_bActive) {
-		std::weak_ptr<InputComponent> pInput = std::tr1::static_pointer_cast<InputComponent>(GetComponent(TEXT("InputComponent")).lock());
+		std::weak_ptr<InputComponent> pInput =STATIC_POINTER_CAST(InputComponent, (GetComponent(TEXT("InputComponent")).lock()));
 		if (!pInput.expired())
 		{
 			pInput.lock()->Update(dDeltaTime);
@@ -31,7 +52,7 @@ void CActor::Update(double dDeltaTime)
 
 		ActorBehavior(dDeltaTime);
 
-		for (auto& component : m_componentTable)
+		for (auto& component : m_ComponentTable)
 		{
 			if (component.first == TEXT("InputComponent"))
 			{
@@ -45,7 +66,7 @@ void CActor::Update(double dDeltaTime)
 
 void CActor::LateUpdate(double dDeltaTime)
 {
-	for (auto& it : m_componentTable)
+	for (auto& it : m_ComponentTable)
 	{
 		it.second->LateUpdate(dDeltaTime);
 	}
@@ -54,175 +75,88 @@ void CActor::LateUpdate(double dDeltaTime)
 
 void CActor::Destroy()
 {
-	//if (!m_componentTable.empty())
-	//	for (auto& it : m_componentTable)
+	//if (!m_ComponentTable.empty())
+	//	for (auto& it : m_ComponentTable)
 	//		SAFE_DELETE(it.second)
 
-	m_componentTable.clear();
+	m_ComponentTable.clear();
 
-}
-
-std::weak_ptr<ComponentBase> CActor::GetComponent(const TSTRING& strTag)
-{
-	auto it = m_componentTable.find(strTag);
-
-	if (it == m_componentTable.end())
-		return std::weak_ptr<ComponentBase>();
-
-	return it->second;
-}
-
-bool CActor::AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag)
-{
-	return m_componentTable.insert(std::make_pair(strTag, pComponent)).second;
-}
-
-bool CActor::DeleteComponent(const TSTRING & strTag)
-{
-	ComponentTable::iterator it = m_componentTable.find(strTag);
-
-	if (it == m_componentTable.end())
-		return false;
-
-	m_componentTable.erase(strTag);
-
-	return true;
-}
-
-void CActor::SetActive(bool bActive)
-{
-	m_bActive = bActive;
 }
 
 void CActor::SetActorState(Types::ActorState state)
 {
-	m_actorCurState = state;
+	m_ActorCurState = state;
 }
 
 void CActor::SetActorDirection(Types::Direction dir)
 {
-	m_direction = dir;
+	m_Direction = dir;
 }
 
-void CActor::SetActorWidth(UINT iWidth)
-{
-	m_iActorWidth = iWidth;
-}
-
-void CActor::SetActorHeight(UINT iHeight)
-{
-	m_iActorHeight = iHeight;
-}
-
-void CActor::SetActorPoint(float fx, float fy)
-{
-	GetComponent<TransformComponent>().lock()->SetPosition(fx, fy);
-}
-
-void CActor::SetActorTag(const Types::tstring & strTag)
-{
-	m_strActorTag = strTag;
-}
 
 void CActor::SetActorVerticalState(Types::VerticalState vertical)
 {
-	m_actorCurVerticalState = vertical;;
+	m_ActorCurVerticalState = vertical;;
 }
 
 void CActor::SetActorHorizonalState(Types::HorizonalState horizonal)
 {
-	m_actorHorizonalState = horizonal;
+	m_ActorHorizonalState = horizonal;
 }
 
 //CWorld* const CActor::GetOwnerWorld() const { return m_pOwnerWorld; }
 //
 //void CActor::SetOwnerWorld(CWorld* pWorld) { m_pOwnerWorld = pWorld; }
 
-CGameScene* const CActor::GetOwnerScene() const { return m_pOwnerScene; }
-
-void CActor::SetOwnerScene(CGameScene* pScene) { m_pOwnerScene = pScene; }
-
-bool CActor::SetLayer(const Types::tstring & strLayerTag)
-{
-	//CLayer* pLayer = m_pOwnerScene->FindLayer(strLayerTag);
-
-	//if (pLayer == nullptr)
-	//	return false;
-
-	//pLayer->AddActor(this);
-
-	return true;
-}
-
-bool CActor::IsActive() const
-{
-	return m_bActive;
-}
-
 Types::ActorType CActor::GetActorType() const
 {
-	return m_actorType;
+	return m_ActorType;
 }
 
 Types::ActorState CActor::GetActorState() const
 {
-	return m_actorCurState;
+	return m_ActorCurState;
 }
 
 Types::Direction CActor::GetActorDirection() const
 {
-	return m_direction;
+	return m_Direction;
 }
 
 UINT CActor::GetActorWidth() const
 {
-	return m_iActorWidth;
+	return m_iObjectWidth;
 }
 
 UINT CActor::GetActorHeight() const
 {
-	return m_iActorHeight;
-}
-
-Types::Point CActor::GetActorPoint() const
-{
-	return GetComponent<TransformComponent>().lock()->GetPosition();
-}
-
-const Types::Point CActor::GetActorPivot() const
-{
-	return GetComponent<TransformComponent>().lock()->GetPivot();
-}
-
-const Types::tstring & CActor::GetActorTag() const
-{
-	return m_strActorTag;
+	return m_iObjectHeight;
 }
 
 Types::ActorID CActor::GetActorID() const
 {
-	return m_actorID;
+	return m_ActorID;
 }
 
 Types::VerticalState CActor::GetActorVerticalState() const
 {
-	return m_actorCurVerticalState;
+	return m_ActorCurVerticalState;
 }
 
 Types::HorizonalState CActor::GetActorHorizonalState() const
 {
-	return m_actorHorizonalState;
+	return m_ActorHorizonalState;
 }
 
 void CActor::FlipActorDirection()
 {
-	if (m_direction == Types::DIR_LEFT)
-		m_direction = Types::DIR_RIGHT;
-	else if (m_direction == Types::DIR_RIGHT)
-		m_direction = Types::DIR_LEFT;
-	else if (m_direction == Types::DIR_UP)
-		m_direction = Types::DIR_DOWN;
-	else if (m_direction == Types::DIR_DOWN)
-		m_direction = Types::DIR_UP;
+	if (m_Direction == Types::DIR_LEFT)
+		m_Direction = Types::DIR_RIGHT;
+	else if (m_Direction == Types::DIR_RIGHT)
+		m_Direction = Types::DIR_LEFT;
+	else if (m_Direction == Types::DIR_UP)
+		m_Direction = Types::DIR_DOWN;
+	else if (m_Direction == Types::DIR_DOWN)
+		m_Direction = Types::DIR_UP;
 
 }

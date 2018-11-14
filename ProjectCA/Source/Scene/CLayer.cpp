@@ -1,4 +1,5 @@
 #include "..\..\Include\Scene\CLayer.h"
+#include "..\..\Include\Scene\CObject.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CWorld.h"
 //#include "..\..\Include\Scene\Object\CObject.h"
@@ -22,11 +23,12 @@ CLayer::~CLayer()
 
 	//m_ObjectList.clear();
 
-	//if (!m_actorList.empty())
-	//	for (auto& it : m_actorList)
+	//if (!m_ObjectList.empty())
+	//	for (auto& it : m_ObjectList)
 	//		SAFE_DELETE(it)
 
-	m_actorList.clear();
+	Destroy();
+	m_ObjectList.clear();
 
 }
 
@@ -67,18 +69,18 @@ void CLayer::Update(double fDeltaTime)
 	//		(*m_it)->Update(fDeltaTime);
 	//	}
 	
-	//if (!m_actorList.empty()) {
-	//	for (auto& it : m_actorList)
+	//if (!m_ObjectList.empty()) {
+	//	for (auto& it : m_ObjectList)
 	//		it->Update(fDeltaTime);
 
-	//	for (auto& it : m_actorList)
+	//	for (auto& it : m_ObjectList)
 	//		it->LateUpdate(fDeltaTime);
 	//}
 
-	if (!m_actorList.empty())
-		for (auto it = m_actorList.begin(); it != m_actorList.end(); ++it) {
+	if (!m_ObjectList.empty())
+		for (auto it = m_ObjectList.begin(); it != m_ObjectList.end(); ++it) {
 			if ((*it).expired()) {
-				m_actorList.erase(it);
+				m_ObjectList.erase(it);
 				break;
 			}
 		}
@@ -91,9 +93,9 @@ void CLayer::Render(const HDC& hDC)
 	//		(*m_it)->Render(hDC);
 	//	}
 
-	if (!m_actorList.empty())
+	if (!m_ObjectList.empty())
 	{
-		for (auto& it : m_actorList)
+		for (auto& it : m_ObjectList)
 		{
 			if (it.lock()->IsActive())
 			{
@@ -103,38 +105,51 @@ void CLayer::Render(const HDC& hDC)
 	}
 }
 
-void CLayer::AddActor(std::shared_ptr<CActor> pActor)
+void CLayer::Destroy()
 {
-	m_actorList.emplace_back(pActor);
-
-}
-
-bool CLayer::DeleteActor(Types::ActorID actorID)
-{
-	std::weak_ptr<CActor> pActor = FindActor(actorID);
-	if (FindActor(actorID).lock() == nullptr)
-		return false;
-
-	for (auto it = m_actorList.begin(); it != m_actorList.end(); ) {
-		if ((*it).lock() == pActor.lock()) {
-			m_actorList.erase(it);
-			break;
+	for(auto it = m_ObjectList.begin(); it != m_ObjectList.end(); ++it)
+	{
+		if (!it->expired())
+		{
+			it->lock()->SetOwnerLayer(nullptr);
 		}
-		else
-			++it;
+			
 	}
-
-	return true;
 }
 
-bool CLayer::DeleteActor(std::shared_ptr<CActor>& pActor)
+void CLayer::AddActor(std::shared_ptr<CObject> pObject)
 {
-	if (FindActor(pActor).lock() == nullptr)
+
+	m_ObjectList.emplace_back(pObject);
+
+}
+
+//bool CLayer::DeleteActor(Types::ActorID actorID)
+//{
+//	std::weak_ptr<CActor> pActor = FindObject(actorID);
+//	if (FindObject(actorID).lock() == nullptr)
+//		return false;
+//
+//	for (auto it = m_ObjectList.begin(); it != m_ObjectList.end(); ) {
+//		if ((*it).lock() == pActor.lock()) {
+//			m_ObjectList.erase(it);
+//			break;
+//		}
+//		else
+//			++it;
+//	}
+//
+//	return true;
+//}
+
+bool CLayer::DeleteActor(std::shared_ptr<CObject>& pObject)
+{
+	if (FindObject(pObject).lock() == nullptr)
 		return false;
 
-	for (auto it = m_actorList.begin(); it != m_actorList.end(); ) {
-		if ((*it).lock() == pActor) {
-			m_actorList.erase(it);
+	for (auto it = m_ObjectList.begin(); it != m_ObjectList.end(); ) {
+		if (it->lock() == pObject) {
+			m_ObjectList.erase(it);
 			break;
 		}
 		else
@@ -148,31 +163,36 @@ bool CLayer::DeleteActor(std::shared_ptr<CActor>& pActor)
 	//	return false;
 	//};
 	//
-	//m_actorList.remove_if(func);
+	//m_ObjectList.remove_if(func);
 
 	return true;
 }
 
 
+//
+//std::weak_ptr<CObject> CLayer::FindObject(Types::ActorID actorID)
+//{
+//	for (const auto& it : m_ObjectList) {
+//		if (it.lock()->GetActorID() == actorID)
+//			return it;
+//	}
+//
+//	return std::weak_ptr<CActor>();	//return nullptr
+//}
 
-std::weak_ptr<CActor> CLayer::FindActor(Types::ActorID actorID)
+std::weak_ptr<CObject> CLayer::FindObject(const std::shared_ptr<CObject>& pObject)
 {
-	for (auto& it : m_actorList) {
-		if (it.lock()->GetActorID() == actorID)
+	for (const auto& it : m_ObjectList) {
+		if (it.lock() == pObject)
 			return it;
 	}
 
 	return std::weak_ptr<CActor>();	//return nullptr
 }
 
-std::weak_ptr<CActor> CLayer::FindActor(const std::shared_ptr<CActor>& pActor)
+const std::list<std::weak_ptr<CObject>>& CLayer::GetActorList() const
 {
-	for (auto& it : m_actorList) {
-		if (it.lock() == pActor)
-			return it;
-	}
-
-	return std::weak_ptr<CActor>();	//return nullptr
+	return m_ObjectList;
 }
 
 //void CLayer::AddObjectToLayer(CObject * object)
