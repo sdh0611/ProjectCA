@@ -18,7 +18,7 @@ bool TransformComponent::PostInit(CObject * pOwner, const POSITION& position, co
 {
 	m_pOwner					= std::shared_ptr<CObject>(pOwner);
 	m_Pivot						= m_LastPosition = m_SpawnPosition 
-									= m_ScreenPosition = m_Position = position;
+									= m_ScreenPosition = m_ScreenPivot = m_Position = position;
 	
 	m_fPivotWidthRatio		= 0.f;
 	m_fPivotHeightRatio		= 0.f;
@@ -92,7 +92,8 @@ void TransformComponent::SetPositionY(float fy)
 void TransformComponent::SetSpawnPosition(const POSITION & position)
 {
 	m_SpawnPosition = position;
-	AdjustScreenPosition();
+	if (!CCameraManager::GetInstance()->GetMainCamera().expired())
+		AdjustScreenPosition();
 }
 
 void TransformComponent::SetSpawnPosition(float fx, float fy)

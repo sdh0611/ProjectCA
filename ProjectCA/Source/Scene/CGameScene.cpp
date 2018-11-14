@@ -35,8 +35,8 @@ CGameScene::~CGameScene()
 {
 	//SAFE_DELETE(m_pCurWorld)
 	//SAFE_DELETE(m_pNextWorld)
-	m_pActorManager->Destroy();
-	m_ObjectPtrList.clear();
+	//m_pActorManager->Destroy();
+	//m_ObjectPtrList.clear();
 	CCollisionManager::GetInstance()->Destroy();
 }
 
@@ -45,10 +45,6 @@ bool CGameScene::Init()
 {
 	if (!CCollisionManager::GetInstance()->Init())
 		return false;
-
-	m_pActorManager = CActorManager::GetInstance();
-	if (!m_pActorManager->Init())
-		return false; 
 
 	////if(m_pCurWorld == nullptr)
 	////	m_pCurWorld = new CWorld;
@@ -271,19 +267,5 @@ void CGameScene::GameUpdate(double dDeltaTime)
 
 }
 
-//해당 Scene을 리셋할 때 호출하는 메소드.
 
-void CGameScene::ResetScene()
-{
-	////Reset키 검사
-	//if (KEY_DOWN(VK_BACK)) {
-
-	//	Init();
-	//}
-
-	for (const auto& actor : m_ObjectPtrList) {
-		actor->Init();
-	}
-
-}
 

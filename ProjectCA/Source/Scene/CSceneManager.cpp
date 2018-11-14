@@ -1,36 +1,52 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CSceneManager.h"
 #include "..\..\Include\Scene\CCameraManager.h"
+#include "..\..\Include\Scene\Actor\CActorManager.h"
 #include "..\..\Include\Scene\CScene.h"
 #include "..\..\Include\Scene\CGameScene.h"
+#include "..\..\Include\Scene\CTitleScene.h"
 
 
 
-CSceneManager::CSceneManager() :m_pScene(nullptr), m_pNextScene(nullptr) { }
+CSceneManager::CSceneManager() :m_pScene(nullptr), m_pNextScene(nullptr) 
+{ 
+}
 
 CSceneManager::~CSceneManager() {
 	
 	SAFE_DELETE(m_pScene)
 	SAFE_DELETE(m_pNextScene);
+	CActorManager::GetInstance()->Destroy();
 	CCameraManager::GetInstance()->Destroy();
 
 }
 
-bool CSceneManager::Init(Types::SceneType type) {
+bool CSceneManager::Init(Types::SceneType type) 
+{
 
-	CreateScene(type);
-
+	if (!CreateScene(type))
+		return false;
 	if (!m_pScene->Init())
+		return false;
+
+	if (!CActorManager::GetInstance()->Init())
 		return false;
 
 	if (!CCameraManager::GetInstance()->Init())
 		return false;
+
+	m_bReadyToChageScene = false;
 
 	return true;
 }
 
 void CSceneManager::Update(double fDeltaTime)
 {
+	if (m_bReadyToChageScene)
+	{
+		ChangeScene(Types::ST_TITLE);
+	}
+
 	m_pScene->Update(fDeltaTime);
 }
 
@@ -45,7 +61,7 @@ bool CSceneManager::CreateScene(Types::SceneType type)
 
 	switch (type) {
 	case Types::ST_TITLE:
-
+		m_pScene = new CTitleScene();
 		break;
 	case Types::ST_GAME:
 		m_pScene = new CGameScene(type);
@@ -68,10 +84,10 @@ bool CSceneManager::CreateNextScene(Types::SceneType type)
 
 	switch (type) {
 	case Types::ST_TITLE:
-
+		m_pNextScene = new CTitleScene();
 		break;
 	case Types::ST_GAME:
-		m_pScene = new CGameScene(type);
+		m_pNextScene = new CGameScene(type);
 		break;
 	case Types::ST_SELECT:
 
@@ -83,7 +99,7 @@ bool CSceneManager::CreateNextScene(Types::SceneType type)
 	return true;
 }
 
-bool CSceneManager::ChangeScene()
+bool CSceneManager::ChangeScene(Types::SceneType nextSceneType)
 {
 	if (m_pNextScene == nullptr)
 		return false;
@@ -91,7 +107,15 @@ bool CSceneManager::ChangeScene()
 	SAFE_DELETE(m_pScene)
 	m_pScene = m_pNextScene;
 
-	m_pNextScene = nullptr;
+	return CreateNextScene(nextSceneType);
+}
 
-	return true;
+void CSceneManager::SetReadyToChangeScene(bool bReady)
+{
+	m_bReadyToChageScene = bReady;
+}
+
+CScene * CSceneManager::GetCurScene()
+{
+	return m_pScene;
 }

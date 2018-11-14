@@ -96,6 +96,11 @@ void CCollisionManager::DeleteCollider(Collider * pCollider)
 
 }
 
+void CCollisionManager::Clear()
+{
+	m_ColliderList.clear();
+}
+
 
 void CCollisionManager::CheckCollisionType(std::shared_ptr<Collider> pCollider, std::shared_ptr<Collider> pOther)
 {
@@ -408,4 +413,3 @@ bool CCollisionManager::BoxAndBox(std::shared_ptr<ColliderBox> pCollider, std::s
 	return true;
 
 }
-

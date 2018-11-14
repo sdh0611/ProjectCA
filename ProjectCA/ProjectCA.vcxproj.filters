@@ -114,9 +114,6 @@
     <ClCompile Include="Source\Core\Window\MyWindow.cpp">
       <Filter>소스 파일\Core\Window</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\CSceneManager.cpp">
-      <Filter>소스 파일\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Window\MainWindow.cpp">
       <Filter>소스 파일\Core\Window</Filter>
     </ClCompile>
@@ -176,9 +173,6 @@
     </ClCompile>
     <ClCompile Include="Source\Core\Math\CVector.cpp">
       <Filter>소스 파일\Core\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Window\BackBuffer.cpp">
-      <Filter>소스 파일\Core\Window</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Components\RenderComponent.cpp">
       <Filter>소스 파일\Core\Components</Filter>
@@ -249,6 +243,15 @@
     <ClCompile Include="Source\Scene\CObject.cpp">
       <Filter>소스 파일\Scene\Actors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\UI\CButton.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\CSceneManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Window\BackBuffer.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -262,9 +265,6 @@
     </ClInclude>
     <ClInclude Include="Include\Core\Window\MyWindow.h">
       <Filter>헤더 파일\Core\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene\CSceneManager.h">
-      <Filter>헤더 파일\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Include\Core\Window\MainWindow.h">
       <Filter>헤더 파일\Core\Window</Filter>
@@ -335,9 +335,6 @@
     <ClInclude Include="Include\Core\Math\CVector.h">
       <Filter>헤더 파일\Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Core\Window\BackBuffer.h">
-      <Filter>헤더 파일\Core\Window</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\Components\RenderComponent.h">
       <Filter>헤더 파일\Core\Components</Filter>
     </ClInclude>
@@ -400,6 +397,15 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\CObject.h">
       <Filter>헤더 파일\Scene\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\UI\CButton.h">
+      <Filter>헤더 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CSceneManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Window\BackBuffer.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

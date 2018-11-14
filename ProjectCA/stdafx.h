@@ -2,6 +2,8 @@
 
 #pragma comment(lib, "msimg32.lib")
 
+#define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
+
 #define USING_DEBUG
 
 

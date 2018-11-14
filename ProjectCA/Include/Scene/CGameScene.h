@@ -42,7 +42,6 @@ private:
 
 
 public:
-	void ResetScene();		
 
 
 private:
@@ -58,8 +57,6 @@ private:
 
 
 private:
-	typedef std::list<std::shared_ptr<CObject>>	StrongPtrObjectList;
-	StrongPtrObjectList									m_ObjectPtrList;
 	//CWorld*												m_pCurWorld;
 	//CWorld*												m_pNextWorld;
 

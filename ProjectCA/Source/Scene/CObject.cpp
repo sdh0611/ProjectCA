@@ -2,7 +2,7 @@
 #include "..\..\Include\Scene\CObject.h"
 #include "..\..\Include\Core\Components\ComponentBase.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
-
+#include "..\..\Include\Scene\CLayer.h"
 
 
 CObject::CObject()
@@ -11,9 +11,14 @@ CObject::CObject()
 
 CObject::~CObject()
 {
+	for (const auto& component : m_ComponentTable)
+	{
+		component.second->Destroy();
+	}
+	m_ComponentTable.clear();
 }
 
-bool CObject::PostInit(const OBJECT_DATA & objectData, CGameScene* pScene)
+bool CObject::PostInit(const OBJECT_DATA & objectData, CScene* pScene)
 {
 	//Object 속성 초기화 및 Transform 컴포넌트 추가
 	//Pivot ratio는 외부에서 따로 지정해줄 것.
@@ -118,9 +123,17 @@ void CObject::SetObjectName(const TSTRING & strName)
 void CObject::SetOwnerLayer(CLayer * pLayer)
 {
 	m_pOwnerLayer = pLayer;
+	if (pLayer)
+	{
+		m_strLayerTag = pLayer->GetLayerTag();
+	}
+	else
+	{
+		m_strLayerTag = TEXT("Default");
+	}
 }
 
-void CObject::SetOwnerScene(CGameScene * pScene)
+void CObject::SetOwnerScene(CScene * pScene)
 {
 	m_pOwnerScene = pScene;
 }
@@ -150,7 +163,7 @@ CLayer * const CObject::GetOwnerLayer() const
 	return m_pOwnerLayer;
 }
 
-CGameScene * const CObject::GetOwnerScene() const
+CScene * const CObject::GetOwnerScene() const
 {
 	return m_pOwnerScene;
 }

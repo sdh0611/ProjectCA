@@ -23,6 +23,8 @@ public:
 public:
 	void AddCollider(Collider* pCollider);
 	void DeleteCollider(Collider* pCollider);
+	void Clear();
+
 
 private:
 	void CheckCollisionType(std::shared_ptr<Collider> pCollider, std::shared_ptr<Collider> pOther);

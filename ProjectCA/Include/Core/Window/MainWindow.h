@@ -28,6 +28,10 @@ public:
 	const HINSTANCE& GetWindowInstance() const { return m_hInstance; }
 
 
+public:
+	const HWND& GetWindowHandle() const;
+
+
 private:
 	bool CreateMyWindow(const Types::tstring& wndClassName,
 		const Types::tstring& wndName, BOOL bIsVisible);

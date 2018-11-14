@@ -1,9 +1,10 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "CActor.h"
+#include "..\CObject.h"
 
 class CSprite;
+class CScene;
 
 class CBackground : public CObject {
 
@@ -13,7 +14,7 @@ public:
 
 
 public:
-	virtual bool PostInit(const Types::ObjectData& data, CGameScene* pScene);
+	virtual bool PostInit(const Types::ObjectData& data, CScene* pScene);
 	virtual void Init() override;
 	virtual void Update(double dDeltaTIme) override;
 	virtual void Render(const HDC& hDC) override;

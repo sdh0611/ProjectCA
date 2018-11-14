@@ -17,7 +17,7 @@ CBackground::~CBackground()
 {
 }
 
-bool CBackground::PostInit(const Types::ObjectData & data, CGameScene * pScene)
+bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
 {
 	if (!CObject::PostInit(data, pScene))
 	{
@@ -48,25 +48,16 @@ void CBackground::Update(double dDeltaTIme)
 
 void CBackground::Render(const HDC & hDC)
 {
-	//HDC memDC = CreateCompatibleDC(hDC);
-	//HBITMAP hOldBit = (HBITMAP)SelectObject(memDC, m_pBackgroundImage.lock()->GetBitmap());
-	std::shared_ptr<TransformComponent> pTransform = GetComponent<TransformComponent>().lock();
+	auto pTransform = GetComponent<TransformComponent>().lock();
 	POSITION screenPosition = pTransform->GetScreenPosition();
 	UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
 
-	std::shared_ptr<ImageRender> pRender = GetComponent<ImageRender>().lock();
+	auto pRender = GetComponent<ImageRender>().lock();
 	
 	//카메라 좌측 맵출력
 	pRender->Draw(hDC, POSITION(screenPosition.x - m_iObjectWidth, screenPosition.y));
 	//카메라 출력부분
 	pRender->Draw(hDC, screenPosition);
-	//TransparentBlt(hDC, screenPosition.x - m_iObjectWidth, screenPosition.y,
-	//	m_iObjectWidth, m_iObjectHeight, memDC, 0, 0,
-	//	m_iBackgroundWidth, m_iBackgroundHeight, m_ColorRef);
-
-	//TransparentBlt(hDC, screenPosition.x, screenPosition.y,
-	//	m_iObjectWidth, m_iObjectHeight, memDC, 0, 0,
-	//	m_iBackgroundWidth, m_iBackgroundHeight, m_ColorRef);
 
 	if (screenPosition.x > iCameraWidth)
 	{

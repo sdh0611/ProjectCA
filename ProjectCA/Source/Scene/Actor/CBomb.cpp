@@ -38,10 +38,6 @@ void CBomb::Render(const HDC & hDC)
 
 }
 
-void CBomb::Destroy()
-{
-
-}
 
 void CBomb::ActorBehavior(double dDeltaTime)
 {

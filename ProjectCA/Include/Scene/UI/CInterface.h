@@ -1,9 +1,10 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
+#include "..\..\..\Include\Scene\CObject.h"
 
 
-class CInterface
+class CInterface : public CObject
 {
 public:
 	CInterface();
@@ -11,5 +12,7 @@ public:
 
 
 public:
+
+
 
 };

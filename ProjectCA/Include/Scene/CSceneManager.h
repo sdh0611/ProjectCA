@@ -26,13 +26,24 @@ public:
 public:
 	bool CreateScene(Types::SceneType type);
 	bool CreateNextScene(Types::SceneType type);
-	bool ChangeScene();
+	bool ChangeScene(Types::SceneType nextSceneType);
+	
+
+public:
+	void SetReadyToChangeScene(bool bReady);
+
+
+
+public:
+	CScene * GetCurScene();
 
 
 private:
 
 
+
 private:
+	bool			m_bReadyToChageScene;
 	CScene *		m_pScene;
 	CScene*		m_pNextScene;
 

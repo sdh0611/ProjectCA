@@ -16,7 +16,7 @@ CActor::CActor()
 
 CActor::~CActor()
 {
-	Destroy();
+	//Destroy();
 }
 
 
@@ -73,15 +73,15 @@ void CActor::LateUpdate(double dDeltaTime)
 
 }
 
-void CActor::Destroy()
-{
-	//if (!m_ComponentTable.empty())
-	//	for (auto& it : m_ComponentTable)
-	//		SAFE_DELETE(it.second)
-
-	m_ComponentTable.clear();
-
-}
+//void CActor::Destroy()
+//{
+//	//if (!m_ComponentTable.empty())
+//	//	for (auto& it : m_ComponentTable)
+//	//		SAFE_DELETE(it.second)
+//
+//	m_ComponentTable.clear();
+//
+//}
 
 void CActor::SetActorState(Types::ActorState state)
 {

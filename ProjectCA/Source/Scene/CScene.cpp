@@ -1,5 +1,6 @@
 #include "..\..\Include\Scene\CScene.h"
 #include "..\..\Include\Scene\CLayer.h"
+#include "..\..\Include\Scene\CObject.h"
 
 
 CScene::CScene(Types::SceneType type):
@@ -13,11 +14,11 @@ CScene::~CScene()
 	if(!m_LayerList.empty())
 		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
 			SAFE_DELETE((*m_it))
-
 		}
 
 	m_LayerList.clear();
 
+	//m_ObjectPtrList.clear();
 }
 
 bool CScene::Init()
@@ -85,6 +86,22 @@ CLayer * CScene::FindLayer(const Types::tstring & tag)
 	}
 
 	return nullptr;
+}
+
+//해당 Scene을 리셋할 때 호출하는 메소드.
+
+void CScene::ResetScene()
+{
+	////Reset키 검사
+	//if (KEY_DOWN(VK_BACK)) {
+
+	//	Init();
+	//}
+
+	for (const auto& actor : m_ObjectPtrList) {
+		actor->Init();
+	}
+
 }
 
 //LayerOrder가 클수록 먼저 출력됨.

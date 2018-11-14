@@ -4,7 +4,7 @@
 
 
 class CLayer;
-class CGameScene;
+class CScene;
 class ComponentBase;
 class TransformComponent;
 
@@ -16,7 +16,7 @@ public:
 
 
 public:
-	virtual bool PostInit(const OBJECT_DATA& objectData, CGameScene* pScene);
+	virtual bool PostInit(const OBJECT_DATA& objectData, CScene* pScene);
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
@@ -49,7 +49,7 @@ public:
 	void SetObjectPosition(float fx, float fy);
 	void SetObjectName(const TSTRING& strName);
 	void SetOwnerLayer(CLayer* pLayer);
-	void SetOwnerScene(CGameScene* pScene);
+	void SetOwnerScene(CScene* pScene);
 
 
 public:
@@ -58,7 +58,7 @@ public:
 	UINT												GetObjectHeight() const;
 	POSITION										GetObjectPosition();
 	CLayer* const									GetOwnerLayer() const;
-	CGameScene* const							GetOwnerScene() const;
+	CScene* const									GetOwnerScene() const;
 	const TSTRING&								GetObjectName();
 	std::weak_ptr<TransformComponent>	GetTransform();
 	
@@ -68,8 +68,9 @@ protected:
 	UINT					m_iObjectHeight;
 	TSTRING				m_strObjectName;
 	TSTRING				m_strLayerTag;
-	CGameScene*		m_pOwnerScene;
+	CScene*				m_pOwnerScene;
 	
+
 protected:
 	typedef std::unordered_map<Types::tstring, std::shared_ptr<ComponentBase>> ComponentTable;
 	ComponentTable	m_ComponentTable;

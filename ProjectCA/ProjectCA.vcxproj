@@ -185,6 +185,7 @@
     <ClCompile Include="Source\Scene\CTile.cpp" />
     <ClCompile Include="Source\Scene\CTitleScene.cpp" />
     <ClCompile Include="Source\Scene\CWorld.cpp" />
+    <ClCompile Include="Source\Scene\UI\CButton.cpp" />
     <ClCompile Include="Source\Scene\UI\CInterface.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
@@ -235,6 +236,7 @@
     <ClInclude Include="Include\Scene\CTile.h" />
     <ClInclude Include="Include\Scene\CTitleScene.h" />
     <ClInclude Include="Include\Scene\CWorld.h" />
+    <ClInclude Include="Include\Scene\UI\CButton.h" />
     <ClInclude Include="Include\Scene\UI\CInterface.h" />
     <ClInclude Include="Include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />

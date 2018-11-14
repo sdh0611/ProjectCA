@@ -23,7 +23,7 @@ public:
 	virtual void Update(double dDeltaTime) = 0;
 	//virtual void OnMessage(ComponentMessage msg);
 	virtual void LateUpdate(double dDeltaTime) = 0;
-
+	void Destroy();
 
 public:
 	inline std::weak_ptr<CObject> GetOwner() { return m_pOwner; }

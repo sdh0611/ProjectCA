@@ -41,7 +41,7 @@ public:
 	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
 	virtual void LateUpdate(double dDeltaTime);
-	virtual void Destroy();
+	//virtual void Destroy();
 
 
 public:

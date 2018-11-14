@@ -63,7 +63,9 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 		return false;
 
 	//Initializing Manager Classes
-	if (!m_pSceneManager->Init(Types::ST_GAME))		//Test용으로 GameScene 생성.
+	if (!m_pSceneManager->Init(Types::ST_TITLE))
+		return false;
+	if (!m_pSceneManager->CreateNextScene(Types::ST_GAME))
 		return false;
 
 	if (!m_pTimer->Init())
@@ -122,6 +124,11 @@ void MainWindow::DeadtimeLogic()
 }
 
 
+const HWND & MainWindow::GetWindowHandle() const
+{
+	return m_hWnd;
+}
+
 bool MainWindow::CreateMyWindow(const Types::tstring& wndClassName,
 	const Types::tstring& wndName, BOOL bIsVisible)
 {
@@ -134,7 +141,7 @@ bool MainWindow::CreateMyWindow(const Types::tstring& wndClassName,
 	m_WndClass.lpfnWndProc = WndProc;
 	m_WndClass.lpszClassName = wndClassName.c_str();
 	m_WndClass.lpszMenuName = NULL;
-	m_WndClass.style = CS_HREDRAW | CS_VREDRAW;
+	m_WndClass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 
 	if (!RegisterClass(&m_WndClass))
 		return false;
@@ -197,11 +204,12 @@ LRESULT MainWindow::WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 	//마우스 입력 검출을 위한 switch문 분리
 	switch (iMsg) {
-	case WM_LBUTTONDBLCLK:
+	case WM_LBUTTONDBLCLK :
 		CInputManager::GetInstance()->SetMouseInput(TEXT("LBUTTON_DBCLK"), true);
 		break;
 	default:
 		CInputManager::GetInstance()->ClearMouseInputState();
+		break;
 	}
 
 	switch (iMsg) {

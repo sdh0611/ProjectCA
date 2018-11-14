@@ -40,7 +40,7 @@ private:
 	bool LoadEnemySpriteInfo();
 	bool LoadGroundTileImageInfo();
 	bool LoadBackgroundImageInfo();
-
+	bool LoadUIImageInfo();
 
 private:
 	typedef std::unordered_map<Types::tstring, std::list<Types::tstring>>	ResourcePathTable;

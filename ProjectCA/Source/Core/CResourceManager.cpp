@@ -30,6 +30,9 @@ bool CResourceManager::Init() {
 	if (!LoadBackgroundImageInfo())
 		return false;
 
+	if (!LoadUIImageInfo())
+		return false;
+
 	return true;
 }
 
@@ -206,6 +209,14 @@ bool CResourceManager::LoadBackgroundImageInfo()
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Background/background_mountain2.bmp"), TEXT("BackgroundMountain2")))
+		return false;
+
+	return true;
+}
+
+bool CResourceManager::LoadUIImageInfo()
+{
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/button.bmp"), TEXT("TestButton")))
 		return false;
 
 	return true;

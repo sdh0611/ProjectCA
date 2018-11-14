@@ -66,12 +66,12 @@ public:
 
 
 public:
-	void ClearMouseInputState();
 	void SetMouseInput(const TSTRING& strInputName, bool bPressed);
 	void SetMouseInput(const SHORT mouseCode, bool bPressed);
 	bool IsMouseDown(const TSTRING& strInputName);
 	bool IsMouseDown(const SHORT& mouseCode);
-
+	void ClearMouseInputState();
+	
 
 private:
 	void KeyProcess();

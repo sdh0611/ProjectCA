@@ -10,6 +10,7 @@
 
 class CObject;
 class CWorld;
+class CScene;
 class CGameScene;
 
 typedef std::weak_ptr<CObject> WeakObjectPtr;
@@ -65,17 +66,17 @@ public:
 	}
 
 	template<typename T>
-	std::shared_ptr<T> CreateObject(UINT iWidth, UINT iHeight, float fx, float fy, const Types::tstring& strTag, CGameScene* pScene) {
+	std::shared_ptr<T> CreateObject(UINT iWidth, UINT iHeight, float fx, float fy, const Types::tstring& strTag, CScene* pScene) {
 
-		std::shared_ptr<T> pActor = std::make_shared<T>();
+		std::shared_ptr<T> pObject = std::make_shared<T>();
 
 		Types::ObjectData data(iWidth, iHeight, Types::Point(fx, fy), strTag);
 
-		if (!pActor->PostInit(data, pScene))
+		if (!pObject->PostInit(data, pScene))
 			return std::shared_ptr<T>();
 
 
-		return pActor;
+		return pObject;
 	}
 
 

@@ -10,6 +10,7 @@
 //TODO(09.15) : Layer 개념 없애버리고 일단 빌드부터 되게끔 만들자.
 #include "..\..\stdafx.h"
 
+class CObject;
 class CLayer;
 
 class CScene {
@@ -31,6 +32,10 @@ public:
 	CLayer* FindLayer(const Types::tstring& tag);
 
 
+public:
+	void ResetScene();
+
+
 private:
 	static bool CompareLayer(CLayer* first, CLayer* second);
 	void SortLayer() { m_LayerList.sort(CompareLayer); }
@@ -41,5 +46,9 @@ protected:
 	std::list<CLayer*>					m_LayerList;
 	std::list<CLayer*>::iterator		m_it;
 
+
+protected:
+	typedef std::list<std::shared_ptr<CObject>>	StrongPtrObjectList;
+	StrongPtrObjectList									m_ObjectPtrList;
 
 };

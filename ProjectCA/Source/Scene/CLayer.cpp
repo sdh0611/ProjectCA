@@ -119,7 +119,7 @@ void CLayer::Destroy()
 
 void CLayer::AddActor(std::shared_ptr<CObject> pObject)
 {
-
+	pObject->SetOwnerLayer(this);
 	m_ObjectList.emplace_back(pObject);
 
 }
@@ -148,7 +148,9 @@ bool CLayer::DeleteActor(std::shared_ptr<CObject>& pObject)
 		return false;
 
 	for (auto it = m_ObjectList.begin(); it != m_ObjectList.end(); ) {
-		if (it->lock() == pObject) {
+		if (it->lock() == pObject) 
+		{
+			it->lock()->SetOwnerLayer(nullptr);
 			m_ObjectList.erase(it);
 			break;
 		}
