@@ -182,7 +182,9 @@
     <ClCompile Include="Source\Scene\CScene.cpp" />
     <ClCompile Include="Source\Scene\CSceneManager.cpp" />
     <ClCompile Include="Source\Scene\CTile.cpp" />
+    <ClCompile Include="Source\Scene\CTitleScene.cpp" />
     <ClCompile Include="Source\Scene\CWorld.cpp" />
+    <ClCompile Include="Source\Scene\UI\CInterface.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -226,10 +228,13 @@
     <ClInclude Include="Include\Scene\CCameraManager.h" />
     <ClInclude Include="Include\Scene\CGameScene.h" />
     <ClInclude Include="Include\Scene\CLayer.h" />
+    <ClInclude Include="Include\Scene\CObject.h" />
     <ClInclude Include="Include\Scene\CScene.h" />
     <ClInclude Include="Include\Scene\CSceneManager.h" />
     <ClInclude Include="Include\Scene\CTile.h" />
+    <ClInclude Include="Include\Scene\CTitleScene.h" />
     <ClInclude Include="Include\Scene\CWorld.h" />
+    <ClInclude Include="Include\Scene\UI\CInterface.h" />
     <ClInclude Include="Include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Types.h" />

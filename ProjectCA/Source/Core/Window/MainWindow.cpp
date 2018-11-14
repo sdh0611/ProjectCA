@@ -195,21 +195,25 @@ LRESULT MainWindow::WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	//PAINTSTRUCT ps;
 	//HDC hDC;
 
+	//마우스 입력 검출을 위한 switch문 분리
 	switch (iMsg) {
-	case WM_CREATE:
-		SetTimer(hWnd, 1, 10, NULL);
-		return 0;
+	case WM_LBUTTONDBLCLK:
+		CInputManager::GetInstance()->SetMouseInput(TEXT("LBUTTON_DBCLK"), true);
+		break;
+	default:
+		CInputManager::GetInstance()->ClearMouseInputState();
+	}
+
+	switch (iMsg) {
 	case WM_TIMER:
 		InvalidateRect(hWnd, nullptr, FALSE);
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
-	//case WM_PAINT:
-	//	hDC = BeginPaint(hWnd, &ps);
-	//	EndPaint(hWnd, &ps);
-	//	ReleaseDC(hWnd, hDC);
-	//	return 0;
+	case WM_CREATE:
+		SetTimer(hWnd, 1, 10, NULL);
+		return 0;
 	}
 
 	return DefWindowProc(hWnd, iMsg, wParam, lParam);

@@ -60,47 +60,6 @@ namespace Types {
 	//EventType 정의
 	enum EventType { ET_ATTACK, ET_DAMAGE };
 
-	//KeyType 정의
-	//enum KeyType { KT_LEFT, KT_RIGHT, KT_UP, KT_DOWN, KT_JUMP, KT_FIRE1, KT_FIRE2 };
-
-	struct KeyInfo {
-		KeyInfo(const Types::tstring& strKeyname, SHORT iKeyCode, bool bPressed = false)
-			:m_strKeyName(strKeyname), m_iKeyCode(iKeyCode), m_bPressed(bPressed)
-		{
-		}
-
-		KeyInfo(KeyInfo&& other)
-			:m_strKeyName(std::move(other.m_strKeyName)), m_iKeyCode(other.m_iKeyCode), m_bPressed(other.m_bPressed)
-		{
-		}
-
-		bool operator ==(const KeyInfo& other)
-		{
-			if (m_strKeyName == other.m_strKeyName && m_iKeyCode == other.m_iKeyCode
-				&& m_bPressed == other.m_bPressed)
-				return true;
-
-			return false;
-		}
-
-		KeyInfo& operator =(const KeyInfo& other) 
-		{
-			if (*this == other)
-				return *this;
-
-			this->m_strKeyName = other.m_strKeyName;
-			this->m_iKeyCode = other.m_iKeyCode;
-			this->m_bPressed = other.m_bPressed;
-
-			return *this;
-		}
-
-		Types::tstring	m_strKeyName;
-		SHORT			m_iKeyCode;
-		bool				m_bPressed;
-	};
-
-
 	//Point구조체 정의
 	struct Point {
 

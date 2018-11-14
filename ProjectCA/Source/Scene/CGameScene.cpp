@@ -163,20 +163,20 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
 
-	////Backgorund 持失
-	//std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::AT_BACKGROUND,
-	//	Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Background"), this);
+	//Backgorund 持失
+	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateActor<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::AT_BACKGROUND,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Background"), this);
 
-	//if (pBack == nullptr)
-	//	return false;
-	//
-	//pBack->SetBackgroundImage(TEXT("BackgroundMountain2"));
-	//m_strongActorList.emplace_back(pBack);
+	if (pBack == nullptr)
+		return false;
+	
+	pBack->SetBackgroundImage(TEXT("BackgroundMountain2"));
+	m_strongActorList.emplace_back(pBack);
 
-	//if (!CreateLayer(TEXT("Background"), 99))
-	//	return false;
+	if (!CreateLayer(TEXT("Background"), 99))
+		return false;
 
-	//FindLayer(TEXT("Background"))->AddActor(pBack);
+	FindLayer(TEXT("Background"))->AddActor(pBack);
 
 
 

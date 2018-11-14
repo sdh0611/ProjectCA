@@ -21,10 +21,6 @@ public:
 	virtual void LateUpdate(double dDeltaTime) override;
 
 
-public:
-	bool GetKeyDown(const Types::tstring& strKeyName);
-
-
 private:
 	//void UpdateKeyDown();
 	void KeyProcess();
@@ -32,6 +28,5 @@ private:
 
 private:
 	class CInputManager*		m_pInputManager;
-	std::vector<Types::KeyInfo>	m_keyInfoList;
 
 };

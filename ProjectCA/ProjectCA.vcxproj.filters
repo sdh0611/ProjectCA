@@ -174,9 +174,6 @@
     <ClCompile Include="Source\Scene\Actor\CProb.cpp">
       <Filter>소스 파일\Scene\Actors\Prob</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Components\AIComponent.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Math\CVector.cpp">
       <Filter>소스 파일\Core\Math</Filter>
     </ClCompile>
@@ -239,6 +236,15 @@
     </ClCompile>
     <ClCompile Include="Source\Core\Components\ImageRender.cpp">
       <Filter>소스 파일\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Components\AIComponent.cpp">
+      <Filter>소스 파일\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\CTitleScene.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\UI\CInterface.cpp">
+      <Filter>소스 파일\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -382,6 +388,15 @@
     </ClInclude>
     <ClInclude Include="Include\Core\Components\ImageRender.h">
       <Filter>헤더 파일\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CTitleScene.h">
+      <Filter>헤더 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\UI\CInterface.h">
+      <Filter>헤더 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CObject.h">
+      <Filter>헤더 파일\Scene\Actors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

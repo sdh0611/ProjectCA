@@ -6,6 +6,9 @@
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 
+
+
+
 PlayerInputComponent::~PlayerInputComponent()
 {
 }
@@ -17,14 +20,6 @@ bool PlayerInputComponent::PostInit(CActor* pOwner, const Types::tstring & strTa
 	m_pOwner = pActor;
 	m_strComponentTag = strTag;
 
-	m_keyInfoList.push_back(Types::KeyInfo(TEXT("UP"), VK_UP, false));
-	m_keyInfoList.push_back(Types::KeyInfo(TEXT("DOWN"), VK_DOWN, false));
-	m_keyInfoList.push_back(Types::KeyInfo(TEXT("RIGHT"), VK_RIGHT, false));
-	m_keyInfoList.push_back(Types::KeyInfo(TEXT("LEFT"), VK_LEFT, false));
-	m_keyInfoList.push_back(Types::KeyInfo(TEXT("JUMP"), 'X', false));
-	m_keyInfoList.push_back(Types::KeyInfo(TEXT("ACCEL"), 'A', false));
-	//m_keyInfoList.push_back(KeyInfo(TEXT("RESET"), VK_ESCAPE, false));
-
 	m_pInputManager = CInputManager::GetInstance();
 	if (m_pInputManager == nullptr)
 		return false;
@@ -34,7 +29,6 @@ bool PlayerInputComponent::PostInit(CActor* pOwner, const Types::tstring & strTa
 
 void PlayerInputComponent::Update(double fDeltaTime)
 {
-	//UpdateKeyDown();
 	KeyProcess();
 
 }
@@ -43,40 +37,6 @@ void PlayerInputComponent::LateUpdate(double dDeltaTime)
 {
 }
 
-bool PlayerInputComponent::GetKeyDown(const Types::tstring & strKeyName)
-{
-	bool bPressed = false;
-
-	for (auto& it : m_keyInfoList) 
-	{
-		if (strKeyName == it.m_strKeyName)
-		{
-			bPressed = it.m_bPressed;
-			break;
-		}
-
-	}
-	//printf("%s : ", steKeyName.c_str());
-	//if (bPressed)
-	//	printf("true\n");
-	//else
-	//	printf("false\n");
-
-	return bPressed;
-}
-
-//void PlayerInputComponent::UpdateKeyDown()
-//{
-//	for (auto& it : m_keyInfoList)
-//	{
-//		if (KEY_DOWN(it.m_iKeyCode))
-//			it.m_bPressed = true;
-//		else
-//			it.m_bPressed = false;
-//
-//	}
-//
-//}
 
 void PlayerInputComponent::KeyProcess()
 {
@@ -84,24 +44,17 @@ void PlayerInputComponent::KeyProcess()
 
 	if (m_pInputManager->IsKeyDown(TEXT("LEFT")))
 	{
-		//if (m_pOwner->GetActorHorizonalState() != Types::HS_IDLE)
-		//{
-			if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
-			{
-				m_pOwner->SetActorHorizonalState(Types::HS_RUN);
-			}
-			else
-			{
-				m_pOwner->SetActorHorizonalState(Types::HS_WALK);
-			}
-		//}
-		//else
-		//{
+		if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
+		{
+			m_pOwner->SetActorHorizonalState(Types::HS_RUN);
+		}
+		else
+		{
+			m_pOwner->SetActorHorizonalState(Types::HS_WALK);
+		}
 
-		//}
-		//m_pOwner->SetActorVector(-1.f, 0.f);
-		//m_pOwner->SetActorState(Types::AS_MOVE);
 		m_pOwner->SetActorDirection(Types::DIR_LEFT);
+
 	}
 	else if (m_pInputManager->IsKeyDown(TEXT("RIGHT")))
 	{
@@ -114,8 +67,6 @@ void PlayerInputComponent::KeyProcess()
 			m_pOwner->SetActorHorizonalState(Types::HS_WALK);
 		}
 
-		//m_pOwner->SetActorVector(1.f, 0.f);
-		//m_pOwner->SetActorState(Types::AS_MOVE);
 		m_pOwner->SetActorDirection(Types::DIR_RIGHT);
 	}
 	else 
@@ -124,7 +75,9 @@ void PlayerInputComponent::KeyProcess()
 		{
 			m_pOwner->SetActorState(Types::AS_IDLE);
 		}
+
 		m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
+
 	}
 
 	if (m_pInputManager->IsKeyDown(TEXT("DOWN")))
@@ -142,6 +95,7 @@ void PlayerInputComponent::KeyProcess()
 			m_pOwner->SetActorState(Types::AS_LOOKUP);
 			m_pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
+
 	}
 
 	if (m_pInputManager->IsKeyDown(TEXT("JUMP")))
@@ -150,6 +104,7 @@ void PlayerInputComponent::KeyProcess()
 		{
 			m_pOwner->SetActorVerticalState(Types::VS_JUMP);
 		}
+
 	}
 	else 
 	{
@@ -157,6 +112,7 @@ void PlayerInputComponent::KeyProcess()
 		{
 			m_pOwner->SetActorVerticalState(Types::VS_FALL);
 		}
+
 	}
 
 	if (KEY_ONCE_PRESS(VK_ESCAPE))
@@ -164,11 +120,5 @@ void PlayerInputComponent::KeyProcess()
 		puts("reset");
 		m_pOwner->GetOwnerScene()->ResetScene();
 	}
-
-	//if (m_pOwner->GetActorState() == Types::AS_SITDOWN)
-	//	puts("SITDOWN");
-
-	//if (m_pOwner->GetActorState() == Types::AS_LOOKUP)
-	//	puts("LOOKUP");
 
 }

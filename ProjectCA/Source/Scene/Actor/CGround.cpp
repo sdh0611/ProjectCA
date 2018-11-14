@@ -33,27 +33,25 @@ void CGround::Update(double dDeltaTime)
 
 void CGround::Render(const HDC & hDC)
 {
-	std::shared_ptr<CCamera> pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
 	std::shared_ptr<ImageRender> pRender = GetComponent<ImageRender>().lock();
 	POSITION outputPosition = GetComponent<TransformComponent>().lock()->GetScreenPivot();
-	float originPositionX = outputPosition.x;
+	UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
+	float fOriginPositionX = outputPosition.x;
 
 	for (const auto& row : m_TileInfoList)
 	{
 		for (const auto& tile : row)
 		{
+			//Tile culling Àû¿ë
 			if (outputPosition.x + TILE_WIDTH >= 0.f 
-				&& outputPosition.x - TILE_WIDTH <= pCamera->GetCameraWidth())
+				&& outputPosition.x - TILE_WIDTH <= iCameraWidth)
 			{
 				pRender->Draw(hDC, outputPosition, m_TileSpriteTable[tile]);
-				//SelectObject(memDC, m_TileSpriteTable[tile].lock()->GetBitmap());
-				//TransparentBlt(hDC, outputPosition.x, outputPosition.y,
-				//	TILE_WIDTH, TILE_HEIGHT, memDC, 0, 0, 16, 16, RGB(248, 7, 220));
 			}
 			outputPosition.x += TILE_WIDTH;
 		}
 		outputPosition.y += TILE_HEIGHT;
-		outputPosition.x = originPositionX;
+		outputPosition.x = fOriginPositionX;
 	}
 
 }
