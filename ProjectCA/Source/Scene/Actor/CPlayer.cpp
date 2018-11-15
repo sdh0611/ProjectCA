@@ -288,18 +288,23 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerTurnLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackLeft")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackLeft")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackLeft")))
 		return false;
 
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackLeft")))
+		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
 
-	m_PlayerState = PS_FLOWER;
+	m_PlayerState = PS_SMALL;
 
 	return true;
 }
@@ -311,6 +316,8 @@ void CPlayer::Init()
 
 	for (auto& it : m_ComponentTable)
 		it.second->Init();
+
+	SetPlayerState(PS_SMALL);
 }
 
 void CPlayer::Update(double dDeltaTime)
@@ -331,9 +338,15 @@ void CPlayer::Update(double dDeltaTime)
 	//	}
 	//	component.second->Update(dDeltaTime);
 	//}
+
+	if (m_ActorCurState == Types::AS_ATTACK)
+	{
+		puts("ATTACK!");
+	}
+
 	CActor::Update(dDeltaTime);
 	//m_pCamera->Update(dDeltaTime);
-	
+
 }
 
 void CPlayer::Render(const HDC & hDC)
@@ -341,18 +354,6 @@ void CPlayer::Render(const HDC & hDC)
 	auto pRender = GetComponent<AnimationRender>();
 	if (!pRender.expired())
 	{
-		switch (m_PlayerState)
-		{
-		case PS_SMALL:
-			pRender.lock()->SetCurAnimationTable(TEXT("MarioSmall"));
-			break;
-		case PS_BIG:
-			pRender.lock()->SetCurAnimationTable(TEXT("MarioBig"));
-			break;
-		case PS_FLOWER:
-			pRender.lock()->SetCurAnimationTable(TEXT("MarioFlower"));
-			break;
-		}
 		pRender.lock()->Draw(hDC);
 	}
 }
@@ -463,6 +464,40 @@ bool CPlayer::AttachCamera(std::shared_ptr<CCamera> pCamera)
 	m_pCamera = pCamera;
 
 	return true;
+}
+
+void CPlayer::SetPlayerState(PlayerState state)
+{
+	auto pRender = GetComponent<AnimationRender>();
+	m_PlayerState = state;
+	switch (m_PlayerState)
+	{
+	case PS_SMALL:
+		pRender.lock()->SetCurAnimationTable(TEXT("MarioSmall"));
+		break;
+	case PS_BIG:
+		pRender.lock()->SetCurAnimationTable(TEXT("MarioBig"));
+		break;
+	case PS_FLOWER:
+		pRender.lock()->SetCurAnimationTable(TEXT("MarioFlower"));
+		break;
+	}
+
+}
+
+void CPlayer::SetAttack(bool bAttack)
+{
+	m_bAttack = bAttack;
+}
+
+bool CPlayer::IsAttack()
+{
+	return m_bAttack;
+}
+
+CPlayer::PlayerState CPlayer::GetPlayerState()
+{
+	return m_PlayerState;
 }
 
 std::weak_ptr<CCamera> CPlayer::GetCamera()

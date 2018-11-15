@@ -5,6 +5,7 @@
 #include "..\..\..\Include\Core\CInputManager.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\..\Include\Scene\Actor\CPlayer.h"
 
 
 
@@ -81,6 +82,16 @@ void PlayerInputComponent::KeyProcess()
 
 	}
 
+	if (KEY_ONCE_PRESS('C'))
+	{
+		puts("Attack");
+		pOwner->SetActorState(Types::AS_ATTACK);
+	}
+	else
+	{
+		pOwner->SetActorState(Types::AS_IDLE);
+	}
+
 	if (m_pInputManager->IsKeyDown(TEXT("DOWN")))
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
@@ -88,6 +99,7 @@ void PlayerInputComponent::KeyProcess()
 			pOwner->SetActorState(Types::AS_SITDOWN);
 			pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
+
 	}
 	else if (m_pInputManager->IsKeyDown(TEXT("UP")))
 	{
@@ -116,11 +128,11 @@ void PlayerInputComponent::KeyProcess()
 
 	}
 
-	if (KEY_ONCE_PRESS('C'))
-	{
-		puts("Attack");
-		pOwner->SetActorState(Types::AS_ATTACK);
-	}
+
+	//else
+	//{
+	//	static_cast<CPlayer*>(pOwner)->SetAttack(false);
+	//}
 
 	if (KEY_ONCE_PRESS(VK_ESCAPE))
 	{

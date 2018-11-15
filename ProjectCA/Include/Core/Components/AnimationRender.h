@@ -45,11 +45,13 @@ private:
 
 
 private:
+	bool								m_bTableChange;
 	ACTOR_STATE					m_OwnerState;
 	VER_STATE						m_OwnerVerticalState;
 	HOR_STATE						m_OwnerHorizonalState;
 	DIRECTION						m_OwnerDirection;
 	ANIM_MOTION				m_AnimationState;
+	ANIM_MOTION				m_PreAnimationState;
 	CActor*							m_pActor;
 	std::weak_ptr<CAnim>		m_pCurAnimation;
 	AnimationTable				m_AnimationTable;

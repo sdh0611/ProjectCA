@@ -17,6 +17,8 @@
 #include "..\..\Include\Scene\Actor\CGround.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
+#include "..\..\Include\Scene\Actor\CMushroom.h"
+#include "..\..\Include\Scene\Actor\CFlower.h"
 //#include "..\..\Include\Scene\CWorld.h"
 
 
@@ -81,7 +83,7 @@ bool CGameScene::Init()
 		return false;
 
 	m_ObjectPtrList.emplace_back(pEnemy);
-	if (!CreateLayer(TEXT("Enemy"), 3))
+	if (!CreateLayer(TEXT("Enemy"), 4))
 		return false;
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
@@ -113,9 +115,26 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
+	//테스트용 Mushroom 생성
+	std::shared_ptr<CActor> pPickup = m_pActorManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::AT_PICKUP,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
+	if (pPickup == nullptr)
+		return false;
+	if (!CreateLayer(TEXT("Pickup"), 3))
+		return false;
+	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+	m_ObjectPtrList.emplace_back(pPickup);
+
+	//테스트용 Flower 생성
+	pPickup = m_pActorManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::AT_PICKUP,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
+	if (pPickup == nullptr)
+		return false;
+	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+	m_ObjectPtrList.emplace_back(pPickup);
 
 	//Prob 생성
-	if (!CreateLayer(TEXT("Prob"), 4))
+	if (!CreateLayer(TEXT("Prob"), 10))
 		return false;
 
 	std::shared_ptr<CGround> pGround = m_pActorManager->CreateActor<CGround>(8192, 256, 400.f, 700.f, Types::AT_PROB,

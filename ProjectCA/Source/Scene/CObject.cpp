@@ -41,6 +41,8 @@ void CObject::Init()
 	{
 		component.second->Init();
 	}
+	
+	m_bActive = true;
 }
 
 

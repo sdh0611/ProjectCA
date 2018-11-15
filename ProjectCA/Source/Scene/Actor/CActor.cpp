@@ -39,6 +39,7 @@ bool CActor::PostInit(const Types::ActorData & data, CGameScene *pScene)
 
 void CActor::Init()
 {
+	CObject::Init();
 }
 
 void CActor::Update(double dDeltaTime)

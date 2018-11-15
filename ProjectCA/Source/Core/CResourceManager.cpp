@@ -33,6 +33,13 @@ bool CResourceManager::Init() {
 	if (!LoadUIImageInfo())
 		return false;
 
+	if (!LoadPickupImageInfo())
+		return false;
+
+	if (!LoadBlockImageInfo())
+		return false;
+
+
 	return true;
 }
 
@@ -271,6 +278,12 @@ bool CResourceManager::LoadPlayerSpriteInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_attack_left.bmp"), TEXT("PlayerFlowerAttackLeft")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_jump_attack_right.bmp"), TEXT("PlayerFlowerJumpAttackRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_jump_attack_left.bmp"), TEXT("PlayerFlowerJumpAttackLeft")))
+		return false;
+
 
 
 	return true;
@@ -355,6 +368,13 @@ bool CResourceManager::LoadPickupImageInfo()
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/mushroom_green.bmp"), TEXT("MushroomGreen")))
 		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/flower_animation.bmp"), TEXT("FlowerAnimation")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/flower_image.bmp"), TEXT("FlowerImage")))
+		return false;
+
 
 	return true;
 }

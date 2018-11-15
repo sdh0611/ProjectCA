@@ -8,6 +8,7 @@ class CCamera;
 
 class CPlayer : public CActor {
 
+public:
 	enum PlayerState {
 		PS_SMALL, PS_BIG, PS_FLOWER
 	};
@@ -23,15 +24,21 @@ public:
 	virtual void Init() override;
 	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
-	virtual void ActorBehavior(double dDeltaTime) override;
 
 
 public:
 	bool AttachCamera(std::shared_ptr<CCamera> pCamera);
-
+	void SetPlayerState(PlayerState state);
+	void SetAttack(bool bAttack);
 
 public:
-	std::weak_ptr<CCamera> GetCamera();
+	bool								IsAttack();
+	PlayerState						GetPlayerState();
+	std::weak_ptr<CCamera>	GetCamera();
+
+
+private:
+	virtual void ActorBehavior(double dDeltaTime) override;
 
 
 private:
@@ -39,6 +46,7 @@ private:
 
 
 private:
+	bool				m_bAttack;
 	PlayerState		m_PlayerState;
 
 

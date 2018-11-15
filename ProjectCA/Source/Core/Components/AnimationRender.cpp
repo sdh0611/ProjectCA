@@ -33,7 +33,7 @@ bool AnimationRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
 	m_OwnerHorizonalState = m_pActor->GetActorHorizonalState();
 	m_OwnerDirection = m_pActor->GetActorDirection();
 
-	m_AnimationState = Types::AM_IDLE;
+	m_AnimationState = m_PreAnimationState = Types::AM_IDLE;
 
 	return true;
 }
@@ -41,6 +41,8 @@ bool AnimationRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
 void AnimationRender::Init()
 {
 	RenderComponent::Init();
+
+	m_AnimationState = m_PreAnimationState = Types::AM_IDLE;
 }
 
 void AnimationRender::Update(double dDeltaTime)
@@ -154,14 +156,13 @@ void AnimationRender::SetAnimationMotion(ANIM_MOTION motion)
 void AnimationRender::SetCurAnimationTable(const TSTRING & strTableName)
 {
 	m_strCurTableName = strTableName;
+	m_pCurAnimation = m_AnimationTable.at(strTableName).at(m_pCurAnimation.lock()->GetAnimTag());
 }
-
 
 const TSTRING AnimationRender::GetAnimTag() const
 {
 	return m_pCurAnimation.lock()->GetAnimTag();
 }
-
 
 void AnimationRender::UpdateAnimationMotion()
 {
@@ -176,6 +177,12 @@ void AnimationRender::UpdateAnimationMotion()
 	if (m_OwnerState == Types::AS_DAMAGED)
 	{
 		m_AnimationState = Types::AM_DAMAGED;
+		return;
+	}
+
+	if (m_OwnerState == Types::AS_ATTACK)
+	{
+		m_AnimationState = Types::AM_ATTACK;
 		return;
 	}
 
@@ -237,7 +244,7 @@ bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTag)
 	//같은 animation인지 판별
 	if (!m_pCurAnimation.expired())
 	{
-		if (m_pCurAnimation.lock()->GetAnimTag() == strAnimTag)
+		if (m_pCurAnimation.lock()->GetAnimTag() == strAnimTag )
 			return true;
 
 		m_pCurAnimation.lock()->ClearEleapsedTime();
@@ -286,9 +293,9 @@ void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
 			break;
 		case Types::AM_ATTACK:
 			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
+				ChangeAnimation(TEXT("JumpAttackLeft"));
 			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
+				ChangeAnimation(TEXT("JumpAttackRight"));
 			break;
 		case Types::AM_DAMAGED:
 			if (m_OwnerDirection == Types::DIR_LEFT)
@@ -345,9 +352,9 @@ void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
 			break;
 		case Types::AM_ATTACK:
 			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
+				ChangeAnimation(TEXT("JumpAttackLeft"));
 			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
+				ChangeAnimation(TEXT("JumpAttackRight"));
 			break;
 		case Types::AM_DAMAGED:
 			if (m_OwnerDirection == Types::DIR_LEFT)

@@ -195,6 +195,6 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 		}
 	}
 
- 	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
 }

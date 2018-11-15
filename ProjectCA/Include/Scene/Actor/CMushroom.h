@@ -19,7 +19,7 @@ public:
 
 	
 private:
-	
+	virtual void ActorBehavior(double dDeltaTime) override;
 
 
 };

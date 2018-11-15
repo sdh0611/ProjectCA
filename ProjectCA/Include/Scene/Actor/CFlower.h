@@ -18,4 +18,9 @@ public:
 	virtual void Render(const HDC& hDC);
 
 
+private:
+	virtual void ActorBehavior(double dDeltaTime) override;
+
+
+
 };
