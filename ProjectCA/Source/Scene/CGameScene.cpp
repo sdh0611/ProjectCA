@@ -37,6 +37,7 @@ CGameScene::~CGameScene()
 	//SAFE_DELETE(m_pNextWorld)
 	//m_pActorManager->Destroy();
 	//m_ObjectPtrList.clear();
+	puts("Destroy Game");
 	CCollisionManager::GetInstance()->Destroy();
 }
 

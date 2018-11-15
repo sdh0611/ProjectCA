@@ -16,7 +16,7 @@ TransformComponent::~TransformComponent()
 
 bool TransformComponent::PostInit(CObject * pOwner, const POSITION& position, const TSTRING & strTag)
 {
-	m_pOwner					= std::shared_ptr<CObject>(pOwner);
+	m_pOwner					= pOwner;
 	m_Pivot						= m_LastPosition = m_SpawnPosition 
 									= m_ScreenPosition = m_ScreenPivot = m_Position = position;
 	

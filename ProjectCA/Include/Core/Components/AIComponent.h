@@ -9,7 +9,7 @@
 #include "..\..\..\stdafx.h"
 #include "InputComponent.h"
 
-using Delegater = std::function<void(std::weak_ptr<CActor> pActor)>;
+using Delegater = std::function<void(CActor* pActor)>;
 
 class AIComponent : public InputComponent {
 

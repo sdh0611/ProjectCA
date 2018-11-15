@@ -18,7 +18,7 @@ CScene::~CScene()
 
 	m_LayerList.clear();
 
-	//m_ObjectPtrList.clear();
+	m_ObjectPtrList.clear();
 }
 
 bool CScene::Init()

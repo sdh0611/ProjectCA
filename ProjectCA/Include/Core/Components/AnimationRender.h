@@ -49,7 +49,7 @@ private:
 	HOR_STATE						m_OwnerHorizonalState;
 	DIRECTION						m_OwnerDirection;
 	ANIM_MOTION				m_AnimationState;
-	std::weak_ptr<CActor>		m_pActor;
+	CActor*							m_pActor;
 	std::weak_ptr<CAnim>		m_pCurAnimation;
 	AnimationTable				m_AnimationTable;
 	TSTRING							m_strCurTableName;

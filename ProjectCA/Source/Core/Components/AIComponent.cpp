@@ -38,7 +38,7 @@ Delegater AIComponent::SetDelegate(Delegater pDelegater) {
 void AIComponent::BehaviorUpdate()
 {
 	if(m_pDelegate != nullptr)
-		m_pDelegate(STATIC_POINTER_CAST(CActor, m_pOwner));
+		m_pDelegate(static_cast<CActor*>(m_pOwner));
 	//auto pTemp = m_pOwner;
 
 	//if (pTemp->GetActorPoint().y >= MAX_HEIGHT - pTemp->GetActorHeight())

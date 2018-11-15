@@ -28,20 +28,15 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pAI->PostInit(this))
 		return false;
 
-	auto enemyBehavior = [](std::weak_ptr<CActor> pActor) ->void {
+	auto enemyBehavior = [](CActor* pActor) ->void {
 
-		if (pActor.expired())
-			return;
-
-		auto pTemp = pActor.lock();
-
-		if (pTemp->GetObjectPosition().x < 100.f) 
+		if (pActor->GetObjectPosition().x < 100.f) 
 		{
-			pTemp->SetActorDirection(Types::DIR_RIGHT);
+			pActor->SetActorDirection(Types::DIR_RIGHT);
 		}
-		else if (pTemp->GetObjectPosition().x > 1000.f)
+		else if (pActor->GetObjectPosition().x > 1000.f)
 		{
-			pTemp->SetActorDirection(Types::DIR_LEFT);
+			pActor->SetActorDirection(Types::DIR_LEFT);
 		}
 
 	};
@@ -64,12 +59,12 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](std::shared_ptr<CObject> pOwner, std::shared_ptr<CObject> pOther, Collider::CollisionType type)->void {
+	auto onCollisionDelegater = [](CObject* pOwner, CObject* pOther, Collider::CollisionType type)->void {
 
 		auto pPhysics = pOwner->GetComponent<PhysicsComponent>().lock();
-		auto pOwnerActor = STATIC_POINTER_CAST(CActor, pOwner);
+		auto pOwnerActor = static_cast<CActor*>(pOwner);
 
-		switch (STATIC_POINTER_CAST(CActor, pOther)->GetActorType()) {
+		switch (static_cast<CActor*>(pOther)->GetActorType()) {
 
 		case Types::AT_PLAYER:
 			switch (type)
@@ -200,6 +195,6 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 		}
 	}
 
-	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+ 	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
 }

@@ -16,7 +16,7 @@ public:
 
 
 public:
-	bool Init(std::shared_ptr<CActor> pOwner, const TSTRING& strSpriteName, UINT iWidth, UINT iHeight,
+	bool Init(const TSTRING& strSpriteName, UINT iWidth, UINT iHeight,
 		double dPlayTime, bool bLoop, const TSTRING& strAnimTag = TEXT("Default"));
 	void Update(double dDeltaTIme);
 	void Draw(const HDC& hDC, const HDC& hMemDC, const POSITION& point);
@@ -58,6 +58,5 @@ private:
 	Types::tstring				m_strAnimTag;
 	WeakSpriteTable			m_weakSpriteTable;
 	std::weak_ptr<CSprite>	m_pWeakSprite;
-	std::weak_ptr<CActor>	m_pOwner;
 
 };

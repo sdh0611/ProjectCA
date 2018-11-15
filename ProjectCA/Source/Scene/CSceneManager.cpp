@@ -26,8 +26,6 @@ bool CSceneManager::Init(Types::SceneType type)
 
 	if (!CreateScene(type))
 		return false;
-	if (!m_pScene->Init())
-		return false;
 
 	if (!CActorManager::GetInstance()->Init())
 		return false;
@@ -46,8 +44,11 @@ void CSceneManager::Update(double fDeltaTime)
 	{
 		ChangeScene(Types::ST_TITLE);
 	}
+	else
+	{
+		m_pScene->Update(fDeltaTime);
+	}
 
-	m_pScene->Update(fDeltaTime);
 }
 
 void CSceneManager::Render(const HDC& hDC)
@@ -73,9 +74,7 @@ bool CSceneManager::CreateScene(Types::SceneType type)
 		return false;
 	}
 
-
-
-	return true;
+	return m_pScene->Init();
 }
 
 bool CSceneManager::CreateNextScene(Types::SceneType type)
@@ -96,7 +95,7 @@ bool CSceneManager::CreateNextScene(Types::SceneType type)
 		return false;
 	}
 	
-	return true;
+	return m_pNextScene->Init();
 }
 
 bool CSceneManager::ChangeScene(Types::SceneType nextSceneType)
@@ -106,6 +105,9 @@ bool CSceneManager::ChangeScene(Types::SceneType nextSceneType)
 
 	SAFE_DELETE(m_pScene)
 	m_pScene = m_pNextScene;
+	m_pNextScene = nullptr;
+
+	m_bReadyToChageScene = false;
 
 	return CreateNextScene(nextSceneType);
 }

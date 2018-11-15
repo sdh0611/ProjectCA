@@ -14,6 +14,7 @@ CTitleScene::CTitleScene()
 
 CTitleScene::~CTitleScene()
 {
+	puts("Destroy Title");
 }
 
 bool CTitleScene::Init()

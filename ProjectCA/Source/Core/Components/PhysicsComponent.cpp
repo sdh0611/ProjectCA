@@ -20,9 +20,8 @@ PhysicsComponent::~PhysicsComponent()
 bool PhysicsComponent::PostInit(CObject* pOwner, float fSpeed, float fMaxSpeed, 
 	float fGravity, float fJumpForce, const Types::tstring& strTag)
 {
-	auto pActor= std::shared_ptr<CObject>(pOwner);
 
-	m_pOwner = pActor;
+	m_pOwner = pOwner;
 
 	if (fSpeed < 0.f || fMaxSpeed < 0.f || fGravity < 0.f)
 		return false;
@@ -180,7 +179,7 @@ float PhysicsComponent::GetJumpForce() const
 
 void PhysicsComponent::Gravity(double dDeltaTime)
 {
-	std::shared_ptr<CActor> pOwner = STATIC_POINTER_CAST(CActor, m_pOwner);
+	CActor* pOwner = static_cast<CActor*>(m_pOwner);
 
 	Types::VerticalState state = pOwner->GetActorVerticalState();
 

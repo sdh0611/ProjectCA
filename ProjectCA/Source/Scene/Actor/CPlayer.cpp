@@ -58,13 +58,13 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](std::shared_ptr<CObject> pOwner, std::shared_ptr<CObject> pOther, Collider::CollisionType type)->void 
+	auto onCollisionDelegater = [](CObject* pOwner, CObject* pOther, Collider::CollisionType type)->void 
 	{
 		POSITION position = pOwner->GetComponent<TransformComponent>().lock()->GetLastPosition();
 		auto pPhysics = pOwner->GetComponent<PhysicsComponent>().lock();
-		auto pOwnerActor = STATIC_POINTER_CAST(CActor, pOwner);
+		auto pOwnerActor = static_cast<CActor*>(pOwner);
 
-		switch (STATIC_POINTER_CAST(CActor, pOther)->GetActorType()) 
+		switch (static_cast<CActor*>(pOther)->GetActorType()) 
 		{
 		case Types::AT_ENEMY:
 			//pComponent = pOwnerActor->GetComponent(TEXT("PhysicsComponent"));

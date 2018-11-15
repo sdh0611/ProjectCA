@@ -39,7 +39,7 @@ void PlayerInputComponent::LateUpdate(double dDeltaTime)
 
 void PlayerInputComponent::KeyProcess()
 {
-	std::shared_ptr<CActor> pOwner = STATIC_POINTER_CAST(CActor, m_pOwner);
+	CActor* pOwner = static_cast<CActor*>(m_pOwner);
 
 	Types::Direction dir = pOwner->GetActorDirection();
 

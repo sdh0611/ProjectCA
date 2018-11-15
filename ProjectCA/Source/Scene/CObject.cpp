@@ -11,10 +11,6 @@ CObject::CObject()
 
 CObject::~CObject()
 {
-	for (const auto& component : m_ComponentTable)
-	{
-		component.second->Destroy();
-	}
 	m_ComponentTable.clear();
 }
 

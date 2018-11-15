@@ -16,14 +16,12 @@ CAnim::~CAnim()
 {
 }
 
-bool CAnim::Init(std::shared_ptr<CActor> pOwner, const TSTRING& strSpriteName, 
+bool CAnim::Init(const TSTRING& strSpriteName, 
 	UINT iWidth, UINT iHeight, double dPlayTime, bool bLoop,const TSTRING& strAnimTag)
 {
 	m_pWeakSprite = CResourceManager::GetInstance()->GetWeakSprtiePtr(strSpriteName);
 	if (m_pWeakSprite.expired())
 		return false;
-
-	m_pOwner					= pOwner;
 
 	m_iMaxFrame				= m_pWeakSprite.lock()->GetBitWidth()/SPRITE_WIDTH;
 	m_iDrawWidth				= iWidth;

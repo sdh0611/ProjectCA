@@ -57,15 +57,15 @@ void CCollisionManager::CheckCollision()
 {
 	for (auto first = m_ColliderList.cbegin(); first != m_ColliderList.cend(); ++first)
 	{
-		if ((*first)->GetOwner().lock()->IsActive())
+		if ((*first)->GetOwner()->IsActive())
 		{
 			for (auto second = first; second != m_ColliderList.cend(); ++second)
 			{
 				if (second == first)
 					continue;
 
-				if ((*second)->GetOwner().lock()->IsActive())
-					CheckCollisionType(*first, *second);
+				if ((*second)->GetOwner()->IsActive())
+					CheckCollisionType((*first), (*second));
 
 			}
 	
@@ -82,11 +82,9 @@ void CCollisionManager::AddCollider(Collider * pCollider)
 
 void CCollisionManager::DeleteCollider(Collider * pCollider)
 {
-	std::shared_ptr<Collider> pStrongCollider = std::shared_ptr<Collider>(pCollider);
-
 	for (auto it = m_ColliderList.cbegin(); it != m_ColliderList.cend(); ++it)
 	{
-		if ((*it) == pStrongCollider)
+		if ((*it) == pCollider)
 		{
 			m_ColliderList.erase(it);
 			break;
@@ -102,13 +100,13 @@ void CCollisionManager::Clear()
 }
 
 
-void CCollisionManager::CheckCollisionType(std::shared_ptr<Collider> pCollider, std::shared_ptr<Collider> pOther)
+void CCollisionManager::CheckCollisionType(Collider* pCollider, Collider* pOther)
 {
 	Collider::ColliderType colliderType			= pCollider->GetColliderType();
 	Collider::ColliderType otherColliderType = pOther->GetColliderType();
 
 	if ((colliderType == Collider::CT_BOX) && (otherColliderType == Collider::CT_BOX))
-		BoxAndBox(STATIC_POINTER_CAST(ColliderBox, pCollider), STATIC_POINTER_CAST(ColliderBox, pOther));
+		BoxAndBox(static_cast<ColliderBox*>(pCollider), static_cast<ColliderBox*>(pOther));
 
 }
 //
@@ -266,7 +264,7 @@ void CCollisionManager::CheckCollisionType(std::shared_ptr<Collider> pCollider, 
 //}
 
 
-bool CCollisionManager::BoxAndBox(std::shared_ptr<ColliderBox> pCollider, std::shared_ptr<ColliderBox> pOther)
+bool CCollisionManager::BoxAndBox(ColliderBox* pCollider, ColliderBox* pOther)
 {
 	const Types::Rect& box1 = pCollider->GetRect();
 	const Types::Rect& box2 = pOther->GetRect();
@@ -407,8 +405,8 @@ bool CCollisionManager::BoxAndBox(std::shared_ptr<ColliderBox> pCollider, std::s
 
 	pCollider->SetIsCollision(true);
 	pOther->SetIsCollision(true);
-	pCollider->ResolveCollision(pOther->GetOwner().lock());
-	pOther->ResolveCollision(pCollider->GetOwner().lock());
+	pCollider->ResolveCollision(pOther->GetOwner());
+	pOther->ResolveCollision(pCollider->GetOwner());
 
 	return true;
 

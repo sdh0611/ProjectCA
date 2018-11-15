@@ -13,8 +13,7 @@ HPComponent::~HPComponent()
 bool HPComponent::PostInit(CObject* pOwner, float fHP, float fMaxHP, 
 	const Types::tstring & strTag)
 {
-	auto pActor = std::shared_ptr<CObject>(pOwner);
-	m_pOwner = pActor;
+	m_pOwner = pOwner;
 	m_strComponentTag = strTag;
 	
 	m_bIsDead = false;
