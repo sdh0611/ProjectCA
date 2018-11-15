@@ -151,6 +151,11 @@ void AnimationRender::SetAnimationMotion(ANIM_MOTION motion)
 	m_AnimationState = motion;
 }
 
+void AnimationRender::SetCurAnimationTable(const TSTRING & strTableName)
+{
+	m_strCurTableName = strTableName;
+}
+
 
 const TSTRING AnimationRender::GetAnimTag() const
 {

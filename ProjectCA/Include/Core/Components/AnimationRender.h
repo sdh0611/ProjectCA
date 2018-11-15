@@ -31,6 +31,7 @@ public:
 public:
 	bool SetAnimationPlaySpeed(double dSpeed);
 	void SetAnimationMotion(ANIM_MOTION motion);
+	void SetCurAnimationTable(const TSTRING& strTableName);
 
 
 public:

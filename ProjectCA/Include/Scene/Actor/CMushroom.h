@@ -18,8 +18,8 @@ public:
 	virtual void Render(const HDC& hDC);
 
 	
-public:
-
+private:
+	
 
 
 };

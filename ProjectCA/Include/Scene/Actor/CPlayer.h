@@ -9,7 +9,7 @@ class CCamera;
 class CPlayer : public CActor {
 
 	enum PlayerState {
-		PS_SMALL, PS_BIG, PS_FIRE
+		PS_SMALL, PS_BIG, PS_FLOWER
 	};
 
 public:
@@ -39,7 +39,7 @@ private:
 
 
 private:
-
+	PlayerState		m_PlayerState;
 
 
 };

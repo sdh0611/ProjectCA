@@ -116,6 +116,12 @@ void PlayerInputComponent::KeyProcess()
 
 	}
 
+	if (KEY_ONCE_PRESS('C'))
+	{
+		puts("Attack");
+		pOwner->SetActorState(Types::AS_ATTACK);
+	}
+
 	if (KEY_ONCE_PRESS(VK_ESCAPE))
 	{
 		puts("reset");

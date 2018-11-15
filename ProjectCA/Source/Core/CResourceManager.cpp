@@ -92,59 +92,185 @@ bool CResourceManager::AddSpriteUsePath(const Types::tstring & strPath, const Ty
 
 bool CResourceManager::LoadPlayerSpriteInfo()
 {
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_idle_right.bmp"), TEXT("PlayerIdleRight")))
+	//Small state image
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_idle_right.bmp"), TEXT("PlayerSmallIdleRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_idle_left.bmp"), TEXT("PlayerIdleLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_idle_left.bmp"), TEXT("PlayerSmallIdleLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_walk_right.bmp"), TEXT("PlayerWalkRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_walk_right.bmp"), TEXT("PlayerSmallWalkRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_walk_left.bmp"), TEXT("PlayerWalkLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_walk_left.bmp"), TEXT("PlayerSmallWalkLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_lookup_right.bmp"), TEXT("PlayerLookupRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_lookup_right.bmp"), TEXT("PlayerSmallLookupRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_lookup_left.bmp"), TEXT("PlayerLookupLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_lookup_left.bmp"), TEXT("PlayerSmallLookupLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_sitdown_right.bmp"), TEXT("PlayerSitdownRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_sitdown_right.bmp"), TEXT("PlayerSmallSitdownRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_sitdown_left.bmp"), TEXT("PlayerSitdownLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_sitdown_left.bmp"), TEXT("PlayerSmallSitdownLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_run_right.bmp"), TEXT("PlayerRunRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_run_right.bmp"), TEXT("PlayerSmallRunRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_run_left.bmp"), TEXT("PlayerRunLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_run_left.bmp"), TEXT("PlayerSmallRunLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_jump_right.bmp"), TEXT("PlayerJumpRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_jump_right.bmp"), TEXT("PlayerSmallJumpRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_jump_left.bmp"), TEXT("PlayerJumpLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_jump_left.bmp"), TEXT("PlayerSmallJumpLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_falldown_right.bmp"), TEXT("PlayerFalldownRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_falldown_right.bmp"), TEXT("PlayerSmallFalldownRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_falldown_left.bmp"), TEXT("PlayerFalldownLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_falldown_left.bmp"), TEXT("PlayerSmallFalldownLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_run_jump_right.bmp"), TEXT("PlayerRunJumpRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_run_jump_right.bmp"), TEXT("PlayerSmallRunJumpRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_run_jump_left.bmp"), TEXT("PlayerRunJumpLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_run_jump_left.bmp"), TEXT("PlayerSmallRunJumpLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_turn_right.bmp"), TEXT("PlayerTurnRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_turn_right.bmp"), TEXT("PlayerSmallTurnRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/mario_big_turn_left.bmp"), TEXT("PlayerTurnLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_turn_left.bmp"), TEXT("PlayerSmallTurnLeft")))
 		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_dead_image.bmp"), TEXT("PlayerDeadImage")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_dead_animation.bmp"), TEXT("PlayerDeadAnimation")))
+		return false;
+
+
+	//Big state image
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_idle_right.bmp"), TEXT("PlayerBigIdleRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_idle_left.bmp"), TEXT("PlayerBigIdleLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_walk_right.bmp"), TEXT("PlayerBigWalkRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_walk_left.bmp"), TEXT("PlayerBigWalkLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_lookup_right.bmp"), TEXT("PlayerBigLookupRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_lookup_left.bmp"), TEXT("PlayerBigLookupLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_sitdown_right.bmp"), TEXT("PlayerBigSitdownRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_sitdown_left.bmp"), TEXT("PlayerBigSitdownLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_run_right.bmp"), TEXT("PlayerBigRunRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_run_left.bmp"), TEXT("PlayerBigRunLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_jump_right.bmp"), TEXT("PlayerBigJumpRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_jump_left.bmp"), TEXT("PlayerBigJumpLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_falldown_right.bmp"), TEXT("PlayerBigFalldownRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_falldown_left.bmp"), TEXT("PlayerBigFalldownLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_run_jump_right.bmp"), TEXT("PlayerBigRunJumpRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_run_jump_left.bmp"), TEXT("PlayerBigRunJumpLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_turn_right.bmp"), TEXT("PlayerBigTurnRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_turn_left.bmp"), TEXT("PlayerBigTurnLeft")))
+		return false;
+
+
+	//Flower state image
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_idle_right.bmp"), TEXT("PlayerFlowerIdleRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_idle_left.bmp"), TEXT("PlayerFlowerIdleLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_walk_right.bmp"), TEXT("PlayerFlowerWalkRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_walk_left.bmp"), TEXT("PlayerFlowerWalkLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_lookup_right.bmp"), TEXT("PlayerFlowerLookupRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_lookup_left.bmp"), TEXT("PlayerFlowerLookupLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_sitdown_right.bmp"), TEXT("PlayerFlowerSitdownRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_sitdown_left.bmp"), TEXT("PlayerFlowerSitdownLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_run_right.bmp"), TEXT("PlayerFlowerRunRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_run_left.bmp"), TEXT("PlayerFlowerRunLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_jump_right.bmp"), TEXT("PlayerFlowerJumpRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_jump_left.bmp"), TEXT("PlayerFlowerJumpLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_falldown_right.bmp"), TEXT("PlayerFlowerFalldownRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_falldown_left.bmp"), TEXT("PlayerFlowerFalldownLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_run_jump_right.bmp"), TEXT("PlayerFlowerRunJumpRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_run_jump_left.bmp"), TEXT("PlayerFlowerRunJumpLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_turn_right.bmp"), TEXT("PlayerFlowerTurnRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_turn_left.bmp"), TEXT("PlayerFlowerTurnLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_attack_right.bmp"), TEXT("PlayerFlowerAttackRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_attack_left.bmp"), TEXT("PlayerFlowerAttackLeft")))
+		return false;
+
 
 
 	return true;
@@ -219,5 +345,21 @@ bool CResourceManager::LoadUIImageInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/button.bmp"), TEXT("TestButton")))
 		return false;
 
+	return true;
+}
+
+bool CResourceManager::LoadPickupImageInfo()
+{
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/mushroom.bmp"), TEXT("Mushroom")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/mushroom_green.bmp"), TEXT("MushroomGreen")))
+		return false;
+
+	return true;
+}
+
+bool CResourceManager::LoadBlockImageInfo()
+{
 	return true;
 }

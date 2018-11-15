@@ -19,7 +19,7 @@ CActor::~CActor()
 	//Destroy();
 }
 
-
+//기본 Actor들의 속성 초기화 및 TranformComponent 생성, 기본PivotRatio은 0.5, 1.0으로
 bool CActor::PostInit(const Types::ActorData & data, CGameScene *pScene)
 {
 	//기본 Actor의 속성 초기화

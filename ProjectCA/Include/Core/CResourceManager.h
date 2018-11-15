@@ -41,6 +41,9 @@ private:
 	bool LoadGroundTileImageInfo();
 	bool LoadBackgroundImageInfo();
 	bool LoadUIImageInfo();
+	bool LoadPickupImageInfo();
+	bool LoadBlockImageInfo();
+
 
 private:
 	typedef std::unordered_map<Types::tstring, std::list<Types::tstring>>	ResourcePathTable;
