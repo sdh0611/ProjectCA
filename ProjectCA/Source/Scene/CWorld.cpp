@@ -4,7 +4,7 @@
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Core\CCollisionManager.h"
-#include "..\..\Include\Scene\Actor\CActorManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\Include\Core\CResourceManager.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\Include\Core\Components\PlayerInputComponent.h"
@@ -34,7 +34,7 @@ bool CWorld::PostInit(std::shared_ptr<CActor> pPlayer)
 	m_pPlayer = pPlayer;
 	m_fWorldGravity = 1000.f;
 	
-	m_pActorManager = CActorManager::GetInstance();
+	m_pObjectManager = CObjectManager::GetInstance();
 
 	return BuildWorld();
 }

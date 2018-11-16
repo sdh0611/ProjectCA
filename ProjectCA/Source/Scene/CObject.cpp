@@ -2,6 +2,7 @@
 #include "..\..\Include\Scene\CObject.h"
 #include "..\..\Include\Core\Components\ComponentBase.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\CLayer.h"
 
 
@@ -42,7 +43,6 @@ void CObject::Init()
 		component.second->Init();
 	}
 	
-	m_bActive = true;
 }
 
 
@@ -52,6 +52,13 @@ void CObject::Update(double dDeltaTime)
 	{
 		component.second->Update(dDeltaTime);
 	}
+}
+
+void CObject::LateUpdate()
+{
+	if (CCameraManager::GetInstance()->GetMainCamera().expired())
+		return;
+	GetTransform().lock()->AdjustScreenPosition();
 }
 
 
@@ -80,6 +87,13 @@ bool CObject::DeleteComponent(const TSTRING & strTag)
 	m_ComponentTable.erase(strTag);
 
 	return true;
+}
+
+CObject * CObject::Clone()
+{
+	CObject* pClone(this);
+
+	return pClone;
 }
 
 void CObject::SetActive(bool bActive)

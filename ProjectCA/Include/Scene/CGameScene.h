@@ -52,7 +52,7 @@ private:
 private:
 	std::shared_ptr<CPlayer>								m_pPlayer;			//나중에 weak_ptr로 바꿀 여지가 있음.
 	//class CActorFactory*								m_pActorFactory;
-	class CActorManager*								m_pActorManager;
+	class CObjectManager*								m_pObjectManager;
 	//std::unique_ptr<class CollisionDetector>			m_pCollisionDetector;
 
 

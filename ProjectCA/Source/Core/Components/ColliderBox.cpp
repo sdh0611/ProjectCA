@@ -28,9 +28,9 @@ bool ColliderBox::PostInit(CObject* pOwner, const Types::tstring& strTag)
 
 	m_ColliderPoint			= m_CurColliderPoint = m_pOwner->GetObjectPosition();
 
-	m_ColliderRect.left			= m_CurColliderPoint.x - m_fWidth / 2;
-	m_ColliderRect.top		= m_CurColliderPoint.y - m_fHeight;
-	m_ColliderRect.right		= m_CurColliderPoint.x + m_fWidth / 2;
+	m_ColliderRect.left			= m_CurColliderPoint.x - m_fCurWidth / 2;
+	m_ColliderRect.top		= m_CurColliderPoint.y - m_fCurHeight;
+	m_ColliderRect.right		= m_CurColliderPoint.x + m_fCurWidth / 2;
 	m_ColliderRect.bottom	= m_CurColliderPoint.y;
 
 	m_bCollision				= false;
@@ -43,7 +43,7 @@ void ColliderBox::Init()
 {
 	m_CurColliderPoint = m_ColliderPoint;
 	m_fCurWidth = m_fWidth;
-	m_fCurHeight = m_fCurHeight;
+	m_fCurHeight = m_fHeight;
 	
 	m_ColliderRect.left = m_ColliderPoint.x - m_fWidth / 2;
 	m_ColliderRect.top = m_ColliderPoint.y - m_fHeight;
@@ -139,12 +139,6 @@ void ColliderBox::SetRect(float left, float top, float right, float bottom)
 	m_ColliderRect.bottom	= bottom;
 }
 
-void ColliderBox::ResetRectSize()
-{
-	m_fCurWidth	= m_fWidth;
-	m_fCurHeight	= m_fHeight;
-}
-
 float ColliderBox::GetWidth() const
 {
 	return m_fWidth;
@@ -153,6 +147,16 @@ float ColliderBox::GetWidth() const
 float ColliderBox::GetHeight() const
 {
 	return m_fHeight;
+}
+
+float ColliderBox::GetCurRectWidth() const
+{
+	return m_fCurWidth;
+}
+
+float ColliderBox::GetCurRectHeight() const
+{
+	return m_fCurHeight;
 }
 
 const Types::Rect & ColliderBox::GetRect() const

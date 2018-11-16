@@ -57,7 +57,7 @@ private:
 	
 private:
 	float													m_fWorldGravity;
-	class CActorManager*							m_pActorManager;
+	class CObjectManager*							m_pObjectManager;
 	std::weak_ptr<CActor>							m_pPlayer;
 	std::list<std::weak_ptr<CActor>>				m_ActorList;
 	std::list<std::weak_ptr<CActor>>				m_GroundList;

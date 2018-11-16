@@ -187,8 +187,7 @@ void PhysicsComponent::Gravity(double dDeltaTime)
 	{
 		m_fYSpeed = 0.f;
 	}
-
-	if (!m_bGrounded)
+	else
 	{
 		if (m_fYSpeed > -1 * m_fMaxYSpeed)
 		{
@@ -199,14 +198,13 @@ void PhysicsComponent::Gravity(double dDeltaTime)
 			}
 		}
 
-		if (pOwner->GetActorVerticalState() == Types::VS_FALL)
-		{
-			m_bGrounded = false;
-			if (m_fYSpeed > 0.f)
-			{
-				m_fYSpeed = 0.f;
-			}
-		}
+		//if (pOwner->GetActorVerticalState() == Types::VS_FALL)
+		//{
+		//	if (m_fYSpeed > 0.f)
+		//	{
+		//		m_fYSpeed = 0.f;
+		//	}
+		//}
 	}
 
 }

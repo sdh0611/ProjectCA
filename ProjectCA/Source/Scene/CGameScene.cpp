@@ -2,7 +2,7 @@
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Core\CCollisionManager.h"
-#include "..\..\Include\Scene\Actor\CActorManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Core\Components\Collider.h"
 #include "..\..\Include\Core\Components\PhysicsComponent.h"
@@ -24,7 +24,7 @@
 
 
 CGameScene::CGameScene(Types::SceneType type)
-	:CScene(type), m_pActorManager(nullptr), m_pPlayer(nullptr)
+	:CScene(type), m_pObjectManager(nullptr), m_pPlayer(nullptr)
 {
 	//기본 레이어 생성.
 	//ActorManager에서 Actor를 생성할 경우 기본적으로 default레이어에 들어가게 할 것.
@@ -37,7 +37,7 @@ CGameScene::~CGameScene()
 {
 	//SAFE_DELETE(m_pCurWorld)
 	//SAFE_DELETE(m_pNextWorld)
-	//m_pActorManager->Destroy();
+	//m_pObjectManager->Destroy();
 	//m_ObjectPtrList.clear();
 	puts("Destroy Game");
 	CCollisionManager::GetInstance()->Destroy();
@@ -53,7 +53,7 @@ bool CGameScene::Init()
 	////	m_pCurWorld = new CWorld;
 
 	//Player 생성
-	m_pPlayer = m_pActorManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 0, 0, Types::AT_PLAYER,
+	m_pPlayer = m_pObjectManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 0, 0, Types::AT_PLAYER,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_RIGHT, TEXT("Player"), this);
 
 	m_ObjectPtrList.emplace_back(m_pPlayer);
@@ -77,7 +77,7 @@ bool CGameScene::Init()
 	
 
 	//Enemy 생성
-	std::shared_ptr<CKoopa> pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
+	std::shared_ptr<CKoopa> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 	if (pEnemy == nullptr)
 		return false;
@@ -88,7 +88,7 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-	pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 200.f, 250.f, Types::AT_ENEMY,
+	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 200.f, 250.f, Types::AT_ENEMY,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 	if (pEnemy == nullptr)
 		return false;
@@ -97,7 +97,7 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-	pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 150.f, 250.f, Types::AT_ENEMY,
+	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 150.f, 250.f, Types::AT_ENEMY,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 	if (pEnemy == nullptr)
 		return false;
@@ -106,7 +106,7 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-	pEnemy = m_pActorManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 250.f, Types::AT_ENEMY,
+	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 250.f, Types::AT_ENEMY,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 	if (pEnemy == nullptr)
 		return false;
@@ -116,7 +116,7 @@ bool CGameScene::Init()
 
 
 	//테스트용 Mushroom 생성
-	std::shared_ptr<CActor> pPickup = m_pActorManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::AT_PICKUP,
+	std::shared_ptr<CActor> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::AT_PICKUP,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
 	if (pPickup == nullptr)
 		return false;
@@ -126,53 +126,54 @@ bool CGameScene::Init()
 	m_ObjectPtrList.emplace_back(pPickup);
 
 	//테스트용 Flower 생성
-	pPickup = m_pActorManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::AT_PICKUP,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
+	pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::AT_PICKUP,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
 	if (pPickup == nullptr)
 		return false;
 	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 	m_ObjectPtrList.emplace_back(pPickup);
 
+
 	//Prob 생성
 	if (!CreateLayer(TEXT("Prob"), 10))
 		return false;
 
-	std::shared_ptr<CGround> pGround = m_pActorManager->CreateActor<CGround>(8192, 256, 400.f, 700.f, Types::AT_PROB,
+	std::shared_ptr<CGround> pGround = m_pObjectManager->CreateActor<CGround>(8192, 256, 400.f, 700.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pActorManager->CreateActor<CGround>(256, 160, 400.f, 350.f, Types::AT_PROB,
+	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 400.f, 350.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pGround== nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pActorManager->CreateActor<CGround>(256, 160, 800.f, 350.f, Types::AT_PROB,
+	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 800.f, 350.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pActorManager->CreateActor<CGround>(256, 160, 1200.f, 350.f, Types::AT_PROB,
+	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 1200.f, 350.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pActorManager->CreateActor<CGround>(256, 160, 0.f, 350.f, Types::AT_PROB,
+	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 0.f, 350.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pActorManager->CreateActor<CGround>(256, 160, -400.f, 350.f, Types::AT_PROB,
+	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, -400.f, 350.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
@@ -181,7 +182,7 @@ bool CGameScene::Init()
 
 
 	//Backgorund 생성
-	std::shared_ptr<CBackground> pBack = m_pActorManager->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, TEXT("Background"), this);
+	std::shared_ptr<CBackground> pBack = m_pObjectManager->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, TEXT("Background"), this);
 
 	if (pBack == nullptr)
 		return false;
@@ -274,13 +275,14 @@ void CGameScene::GameUpdate(double dDeltaTime)
 	CCameraManager::GetInstance()->GetMainCamera().lock()->Update(dDeltaTime);
 	//std::cout << "Address : " << CCameraManager::GetInstance() << "\n";
 	//Adjust Position on Screen 
-	for (const auto& actor : m_ObjectPtrList)
+	for (const auto& object : m_ObjectPtrList)
 	{
 		//if (actor->GetActorType() != Types::AT_BACKGROUND)
 		{
-			if (actor->IsActive())
+			if (object->IsActive())
 			{
-				actor->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
+				object->LateUpdate();
+				//actor->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
 			}
 		}
 	}

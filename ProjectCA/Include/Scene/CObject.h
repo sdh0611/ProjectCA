@@ -20,6 +20,7 @@ public:
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
+	virtual void LateUpdate();
 
 
 public:
@@ -38,6 +39,10 @@ public:
 
 		return std::weak_ptr<T>();
 	}
+
+
+public:
+	CObject * Clone();
 
 
 public:
@@ -62,6 +67,7 @@ public:
 	const TSTRING&								GetObjectName();
 	std::weak_ptr<TransformComponent>	GetTransform();
 	
+
 protected:
 	bool					m_bActive;
 	UINT					m_iObjectWidth;
@@ -79,5 +85,8 @@ protected:
 private:
 	CLayer*				m_pOwnerLayer;
 
+private:
+	//대입연산자 막아놓음.
+	CObject & operator=(CObject* other) = delete;
 
 };

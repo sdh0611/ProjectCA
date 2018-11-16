@@ -1,5 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
+#include "..\..\..\Include\Scene\Actor\CFireBall.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
@@ -8,6 +9,7 @@
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
+#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 
 
@@ -21,19 +23,15 @@ CPlayer::~CPlayer()
 {
 }
 
-//bool CPlayer::Init(const Types::ActorData &)
-//{
-//	
-//
-//	return true;
-//}
 
 bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 {
 
 	//TransformComponent 추가
 	CActor::PostInit(data, pScene);
-	//printf("Position : (%f, %f), Pivot : (%f, %f)\n", pTransform->GetPosition().x, pTransform->GetPosition().y, pTransform->GetPivot().x, pTransform->GetPivot().y);
+
+	m_iSmallStateWidth = m_iObjectWidth;
+	m_iSmallStateHeight = m_iObjectHeight * 0.6;
 
 	//PlayerInputComponent (InputComponent) 초기화
 	std::shared_ptr<PlayerInputComponent> pInput = std::make_shared<PlayerInputComponent>();
@@ -58,26 +56,30 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [&](CObject* pOther, Collider::CollisionType type)->void 
+	auto onCollisionDelegater = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void 
 	{
-		//POSITION position = pOwner->GetComponent<TransformComponent>().lock()->GetLastPosition();
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
-		//auto pOwnerActor = static_cast<CActor*>(pOwner);
-		//auto pPhysics = pOther->GetComponent<PhysicsComponent>().lock();
 		auto pOtherActor = static_cast<CActor*>(pOther);
 
 		switch (static_cast<CActor*>(pOther)->GetActorType()) 
 		{
 		case Types::AT_ENEMY:
-			//pComponent = pOwnerActor->GetComponent(TEXT("PhysicsComponent"));
-			//point = static_cast<PhysicsComponent*>(pComponent)->GetLastActorPoint();
-			//pOwnerActor->SetActorPoint(point.x, point.y);
-			//pOwnerActor->GetOwnerScene()->ResetScene();
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
 				SetActorVerticalState(Types::VS_JUMP);
 				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+				break;
+			default:
+				if (m_PlayerState != PS_SMALL)
+				{
+					SetPlayerState(PS_SMALL);
+				}
+				else //Player die
+				{
+					
+				}
+
 				break;
 			}
 			break;
@@ -87,15 +89,20 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				pPhysics->SetGrounded(true);
 				pPhysics->SetCurJumpForce(0.f);
 				SetActorVerticalState(Types::VS_IDLE);
-				SetObjectPosition(GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
+				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				break;
 			case Collider::COLLISION_TOP:
 				SetActorVerticalState(Types::VS_FALL);
+				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 				break;
 			case Collider::COLLISION_LEFT:
+				SetActorHorizonalState(Types::HS_IDLE);
+				SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
+				pPhysics->SetCurSpeed(0.f);
+				break;
 			case Collider::COLLISION_RIGHT:
 				SetActorHorizonalState(Types::HS_IDLE);
-				SetObjectPosition(GetTransform().lock()->GetLastPosition().x, GetObjectPosition().y);
+				SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 				pPhysics->SetCurSpeed(0.f);
 				break;
 			}
@@ -304,9 +311,13 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
+	//Fireball 생성
+	if (!GenerateFireball())
+		return false;
 
 	m_PlayerState = PS_SMALL;
-
+	pRender->SetCurAnimationTable(TEXT("MarioSmall"));
+	pCollider->SetHeight(m_iSmallStateHeight);
 	return true;
 }
 
@@ -315,21 +326,26 @@ void CPlayer::Init()
 	//m_ActorPoint = m_spawnPoint;
 	m_pCamera->Init();
 
-	for (auto& it : m_ComponentTable)
+	for (const auto& it : m_ComponentTable)
 		it.second->Init();
 
 	SetPlayerState(PS_SMALL);
+
+	for (const auto& fire : m_FireballPool)
+	{
+		fire->Init();
+	}
 }
 
 void CPlayer::Update(double dDeltaTime)
 {
 	m_ActorCurState = Types::AS_IDLE;
-
 	CActor::Update(dDeltaTime);
-	if (m_ActorCurState == Types::AS_SITDOWN)
+	for (const auto& fire : m_FireballPool)
 	{
-		puts("SIT");
+		fire->Update(dDeltaTime);
 	}
+
 }
 
 void CPlayer::Render(const HDC & hDC)
@@ -340,6 +356,52 @@ void CPlayer::Render(const HDC & hDC)
 		pRender.lock()->Draw(hDC);
 	}
 
+	for (const auto& fire : m_FireballPool)
+	{
+		fire->Render(hDC);
+	}
+
+}
+
+void CPlayer::LateUpdate()
+{
+	CObject::LateUpdate();
+	for (const auto& fire : m_FireballPool)
+	{
+		fire->GetTransform().lock()->AdjustScreenPosition();
+	}
+
+}
+
+void CPlayer::Attack()
+{
+	for (const auto& fire : m_FireballPool)
+	{
+		if (!fire->IsActive())
+		{
+			fire->SetFireballActive();
+			break;
+		}
+	}
+
+}
+
+bool CPlayer::GenerateFireball()
+{
+	m_iAvailableFireballCount = 5;
+
+	std::shared_ptr<CFireball> pFire;
+	for (int i = 0; i < m_iAvailableFireballCount; ++i)
+	{
+		pFire = CObjectManager::GetInstance()->CreateActor<CFireball>(SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, GetObjectPosition().x, GetObjectPosition().y,
+			Types::AT_THROWN, Types::AS_ATTACK, Types::VS_IDLE, Types::HS_IDLE, m_Direction, TEXT("Fireball"), static_cast<CGameScene*>(m_pOwnerScene));
+		if (pFire == nullptr)
+			return false;
+		pFire->SetOwnerActor(this);
+		m_FireballPool.emplace_back(std::move(pFire));
+	}
+
+	return true;
 }
 
 void CPlayer::ActorBehavior(double dDeltaTime)
@@ -429,6 +491,17 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 
 	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
+	if (!pPhysics->IsGrounded())
+	{
+		if (m_ActorCurVerticalState == Types::VS_FALL)
+		{
+			//m_bGrounded = false;
+			if (pPhysics->GetCurJumpForce() > 0.f)
+			{
+				pPhysics->SetCurJumpForce(0.f);
+			}
+		}
+	}
 	auto pCollider = GetComponent<ColliderBox>().lock();
 	if (m_ActorCurState == Types::AS_SITDOWN)
 	{
@@ -438,10 +511,14 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	{
 		pCollider->SetCurRectHeight(pCollider->GetHeight());
 	}
-}
 
-void CPlayer::Attack()
-{
+	if (m_PlayerState == PS_FLOWER)
+	{
+		if (m_ActorCurState == Types::AS_ATTACK && m_iAvailableFireballCount > 0)
+		{
+			Attack();
+		}
+	}
 
 }
 
@@ -457,20 +534,43 @@ bool CPlayer::AttachCamera(std::shared_ptr<CCamera> pCamera)
 
 void CPlayer::SetPlayerState(PlayerState state)
 {
-	auto pRender = GetComponent<AnimationRender>();
-	m_PlayerState = state;
-	switch (m_PlayerState)
+	auto pRender = GetComponent<AnimationRender>().lock();
+	auto pCollider = GetComponent<ColliderBox>().lock();
+	switch (state)
 	{
 	case PS_SMALL:
-		pRender.lock()->SetCurAnimationTable(TEXT("MarioSmall"));
+		if (m_PlayerState != PS_SMALL)
+		{
+			pRender->SetCurAnimationTable(TEXT("MarioSmall"));
+			pCollider->SetHeight(m_iSmallStateHeight);
+		}
 		break;
 	case PS_BIG:
-		pRender.lock()->SetCurAnimationTable(TEXT("MarioBig"));
+		if (m_PlayerState == PS_SMALL)
+		{
+			pCollider->SetHeight(m_iObjectHeight*0.8);
+		}
+
+		if (m_PlayerState != PS_BIG)
+		{
+			pRender->SetCurAnimationTable(TEXT("MarioBig"));
+		}
 		break;
 	case PS_FLOWER:
-		pRender.lock()->SetCurAnimationTable(TEXT("MarioFlower"));
+		if (m_PlayerState == PS_SMALL)
+		{
+			pCollider->SetHeight(m_iObjectHeight*0.8);
+		}
+
+		if (m_PlayerState != PS_BIG)
+		{
+			pRender->SetCurAnimationTable(TEXT("MarioFlower"));
+		}
 		break;
 	}
+	
+	m_PlayerState = state;
+
 
 }
 

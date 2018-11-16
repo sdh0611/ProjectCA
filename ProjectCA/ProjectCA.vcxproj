@@ -164,9 +164,9 @@
     <ClCompile Include="Source\Core\Window\MainWindow.cpp" />
     <ClCompile Include="Source\Core\Window\MyWindow.cpp" />
     <ClCompile Include="Source\Scene\Actor\CActor.cpp" />
-    <ClCompile Include="Source\Scene\Actor\CActorManager.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CFireball.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CObjectManager.cpp" />
     <ClCompile Include="Source\Scene\Actor\CBackground.cpp" />
-    <ClCompile Include="Source\Scene\Actor\CBomb.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCamera.cpp" />
     <ClCompile Include="Source\Scene\Actor\CEnemy.cpp" />
     <ClCompile Include="Source\Scene\Actor\CFlower.cpp" />
@@ -215,9 +215,9 @@
     <ClInclude Include="Include\Core\Window\MyWindow.h" />
     <ClInclude Include="Include\Event.h" />
     <ClInclude Include="Include\Scene\Actor\CActor.h" />
-    <ClInclude Include="Include\Scene\Actor\CActorManager.h" />
+    <ClInclude Include="Include\Scene\Actor\CFireball.h" />
+    <ClInclude Include="Include\Scene\Actor\CObjectManager.h" />
     <ClInclude Include="Include\Scene\Actor\CBackground.h" />
-    <ClInclude Include="Include\Scene\Actor\CBomb.h" />
     <ClInclude Include="Include\Scene\Actor\CCamera.h" />
     <ClInclude Include="Include\Scene\Actor\CEnemy.h" />
     <ClInclude Include="Include\Scene\Actor\CFlower.h" />

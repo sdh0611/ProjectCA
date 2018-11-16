@@ -20,5 +20,11 @@ public:
 
 private:
 	virtual void ActorBehavior(double dDeltaTime) override;
+	
+
+private:
+	UINT			m_iDamagedStateWidth;
+	UINT			m_iDamagedStateHeight;
+
 
 };

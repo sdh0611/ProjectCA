@@ -39,7 +39,7 @@ namespace Types {
 	enum UIType { UT_BUTTON, UT_FONT };
 
 	//Actor 타입 정의
-	enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_MAP, AT_BACKGROUND };
+	enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_THROWN, AT_BACKGROUND };
 #ifndef TYPE_ACTION 
 	//오브젝트 상태 정의
 	enum ActorState { AS_IDLE, AS_MOVE, AS_ATTACK, OS_DAMAGED, OS_DEAD };

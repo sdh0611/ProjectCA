@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "ComponentBase.h"
 
+class CObject;
+
 
 class HPComponent : public ComponentBase {
 
@@ -34,6 +36,5 @@ private:
 	bool		m_bIsDead;
 	float		m_fHP;
 	float		m_fMaxHP;
-
 
 };

@@ -43,6 +43,7 @@ private:
 	bool LoadUIImageInfo();
 	bool LoadPickupImageInfo();
 	bool LoadBlockImageInfo();
+	bool LoadEffectImageInfo();
 
 
 private:

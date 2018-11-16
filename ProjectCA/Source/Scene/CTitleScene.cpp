@@ -2,7 +2,7 @@
 #include "..\..\Include\Scene\CTitleScene.h"
 #include "..\..\Include\Core\CInputManager.h"
 #include "..\..\Include\Scene\CSceneManager.h"
-#include "..\..\Include\Scene\Actor\CActorManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\Include\Scene\UI\CButton.h"
 #include "..\..\Include\Scene\CLayer.h"
 
@@ -19,7 +19,7 @@ CTitleScene::~CTitleScene()
 
 bool CTitleScene::Init()
 {
-	CActorManager* objMgr = CActorManager::GetInstance();
+	CObjectManager* objMgr = CObjectManager::GetInstance();
 
 	//Test용 버튼 생성
 	auto pButton = objMgr->CreateObject<CButton>(256, 96, 300, 300, TEXT("Button"), this);

@@ -23,7 +23,7 @@ bool HPComponent::PostInit(CObject* pOwner, float fHP, float fMaxHP,
 	return true;
 }
 
-void HPComponent::Update(double fDeltaTime)
+void HPComponent::Update(double dDeltaTime)
 {
 
 

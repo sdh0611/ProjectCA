@@ -147,9 +147,6 @@
     <ClCompile Include="Source\Scene\Actor\CActor.cpp">
       <Filter>소스 파일\Scene\Actors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Actor\CActorManager.cpp">
-      <Filter>소스 파일\Core\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene\CLayer.cpp">
       <Filter>소스 파일\Scene</Filter>
     </ClCompile>
@@ -161,9 +158,6 @@
     </ClCompile>
     <ClCompile Include="Source\Core\Components\HPComponent.cpp">
       <Filter>소스 파일\Core\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\Actor\CBomb.cpp">
-      <Filter>소스 파일\Scene\Actors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CEnemy.cpp">
       <Filter>소스 파일\Scene\Actors\Enemy</Filter>
@@ -252,6 +246,12 @@
     <ClCompile Include="Source\Core\Window\BackBuffer.cpp">
       <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CObjectManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CFireball.cpp">
+      <Filter>소스 파일\Scene\Actors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -305,9 +305,6 @@
     <ClInclude Include="Include\Event.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Actor\CActorManager.h">
-      <Filter>헤더 파일\Core\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene\CLayer.h">
       <Filter>헤더 파일\Scene</Filter>
     </ClInclude>
@@ -319,9 +316,6 @@
     </ClInclude>
     <ClInclude Include="Include\Core\Components\HPComponent.h">
       <Filter>헤더 파일\Core\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene\Actor\CBomb.h">
-      <Filter>헤더 파일\Scene\Actors</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CEnemy.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
@@ -406,6 +400,12 @@
     </ClInclude>
     <ClInclude Include="Include\Core\Window\BackBuffer.h">
       <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CObjectManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CFireball.h">
+      <Filter>헤더 파일\Scene\Actors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

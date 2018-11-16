@@ -1,7 +1,7 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CSceneManager.h"
 #include "..\..\Include\Scene\CCameraManager.h"
-#include "..\..\Include\Scene\Actor\CActorManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\Include\Scene\CScene.h"
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\CTitleScene.h"
@@ -16,7 +16,7 @@ CSceneManager::~CSceneManager() {
 	
 	SAFE_DELETE(m_pScene)
 	SAFE_DELETE(m_pNextScene);
-	CActorManager::GetInstance()->Destroy();
+	CObjectManager::GetInstance()->Destroy();
 	CCameraManager::GetInstance()->Destroy();
 
 }
@@ -27,7 +27,7 @@ bool CSceneManager::Init(Types::SceneType type)
 	if (!CreateScene(type))
 		return false;
 
-	if (!CActorManager::GetInstance()->Init())
+	if (!CObjectManager::GetInstance()->Init())
 		return false;
 
 	if (!CCameraManager::GetInstance()->Init())

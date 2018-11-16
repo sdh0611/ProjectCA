@@ -6,6 +6,7 @@
 
 class CCamera;
 
+
 class CPlayer : public CActor {
 
 public:
@@ -24,7 +25,7 @@ public:
 	virtual void Init() override;
 	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
-
+	virtual void LateUpdate() override;
 
 public:
 	bool AttachCamera(std::shared_ptr<CCamera> pCamera);
@@ -37,16 +38,24 @@ public:
 
 
 private:
-	virtual void ActorBehavior(double dDeltaTime) override;
 	void Attack();
+	bool GenerateFireball();
+	virtual void ActorBehavior(double dDeltaTime) override;
 
 
 private:
+	UINT				m_iSmallStateWidth;
+	UINT				m_iSmallStateHeight;
+	PlayerState		m_PlayerState;
+
+
+private:
+	typedef std::vector<std::shared_ptr<class CFireball>> FireballPool;
+	FireballPool						m_FireballPool;
+	UINT								m_iAvailableFireballCount;
+
 	std::shared_ptr<CCamera>	m_pCamera;
 
-
-private:
-	PlayerState		m_PlayerState;
 
 
 };

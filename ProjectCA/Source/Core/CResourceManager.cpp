@@ -284,6 +284,11 @@ bool CResourceManager::LoadPlayerSpriteInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_jump_attack_left.bmp"), TEXT("PlayerFlowerJumpAttackLeft")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/fireball_right.bmp"), TEXT("FireballRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/fireball_Left.bmp"), TEXT("FireballLeft")))
+		return false;
 
 
 	return true;

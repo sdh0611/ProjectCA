@@ -33,7 +33,7 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	auto pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
-	auto colliderCallback = [&](CObject* pOther, Collider::CollisionType type)->void {
+	auto colliderCallback = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
 
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
 		//auto pOwnerActor = static_cast<CActor*>(pObject);
@@ -89,6 +89,7 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 void CFlower::Init()
 {
 	CActor::Init();
+	m_bActive = true;
 }
 
 void CFlower::Update(double dDeltaTime)

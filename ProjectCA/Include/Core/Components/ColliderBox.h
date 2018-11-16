@@ -30,12 +30,13 @@ public:
 	void SetCurRectHeight(float fHeight);
 	void SetRectSize(float fWidth, float fHeight);
 	void SetRect(float left, float top, float right, float bottom);
-	void ResetRectSize();
 
 
 public:
 	float GetWidth() const;
 	float GetHeight() const;
+	float GetCurRectWidth() const;
+	float GetCurRectHeight() const;
 	const Types::Rect& GetRect() const;
 
 private:

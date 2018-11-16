@@ -39,15 +39,15 @@ void Collider::LateUpdate(double dDeltaTime)
 	}
 }
 
-void Collider::ResolveCollision(CObject* pOther)
+void Collider::ResolveCollision(CObject* pOther, float fintersectLength)
 {
 	if (m_bUseTrigger)
 	{
-		OnTriggered(pOther);
+		OnTriggered(pOther, fintersectLength);
 	}
 	else
 	{
-		OnCollision(pOther);
+		OnCollision(pOther, fintersectLength);
 	}
 }
 
@@ -130,20 +130,20 @@ bool Collider::IsTriggered() const
 
 
 //Collision이 일어났다면 호출하게 될 메소드
-void Collider::OnCollision(CObject*pOther)
+void Collider::OnCollision(CObject*pOther, float fintersectLength)
 {
 	if (m_pOnCollision != nullptr)
 	{
-		m_pOnCollision(pOther, m_CollisionType);
+		m_pOnCollision(pOther, m_CollisionType, fintersectLength);
 		m_CollisionType = COLLISION_IDLE;
 	}
 }
 
 //Trigger상태일 때 호출할 메소드
-void Collider::OnTriggered(CObject* pOther)
+void Collider::OnTriggered(CObject* pOther, float fintersectLength)
 {
 	if (m_pOnTrigger != nullptr)
 	{
-		m_pOnTrigger(pOther, m_CollisionType);
+		m_pOnTrigger(pOther, m_CollisionType, fintersectLength);
 	}
 }
