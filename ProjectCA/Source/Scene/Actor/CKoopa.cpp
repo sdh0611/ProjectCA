@@ -59,10 +59,12 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](CObject* pOwner, CObject* pOther, Collider::CollisionType type)->void {
+	auto onCollisionDelegater = [&](CObject* pOther, Collider::CollisionType type)->void {
 
-		auto pPhysics = pOwner->GetComponent<PhysicsComponent>().lock();
-		auto pOwnerActor = static_cast<CActor*>(pOwner);
+		auto pPhysics = GetComponent<PhysicsComponent>().lock();
+		//auto pOwnerActor = static_cast<CActor*>(pOwner);
+		//auto pPhysics = pOther->GetComponent<PhysicsComponent>().lock();
+		auto pOtherActor = static_cast<CActor*>(pOther);
 
 		switch (static_cast<CActor*>(pOther)->GetActorType()) {
 
@@ -71,44 +73,44 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			{
 			case Collider::COLLISION_TOP:
 				//puts("TOP");
-				pOwnerActor->SetActorState(Types::AS_DAMAGED);
+				SetActorState(Types::AS_DAMAGED);
 				pPhysics->SetCurSpeed(0.f);
 				//pOwnerActor->SetActive(false);
 				break;
 			case Collider::COLLISION_RIGHT:
-			case Collider::COLLISION_LEFT:
-				if (pOwnerActor->GetActorState() == Types::AS_DAMAGED)
+				if (GetActorState() == Types::AS_DAMAGED)
 				{
-					if (type == Collider::COLLISION_RIGHT)
-					{
-						pPhysics->AddForceX(-600.f);
-					}
-					else if (type == Collider::COLLISION_LEFT)
-					{
-						pPhysics->AddForceX(600.f);
-					}
+					pPhysics->AddForceX(-600.f);
+				}
+				break;
+			case Collider::COLLISION_LEFT:
+				if (GetActorState() == Types::AS_DAMAGED)
+				{
+					pPhysics->AddForceX(600.f);
 				}
 				else
 				{
-					pOwnerActor->FlipActorDirection();
+					FlipActorDirection();
 				}
-
 				break;
+			
 			}
+			break;
 		case Types::AT_PROB:
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
-				pOwnerActor->SetObjectPosition(pOwnerActor->GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
+				SetObjectPosition(GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
 				//pOwnerActor->SetActorState(Types::AS_IDLE);
-				pOwnerActor->SetActorVerticalState(Types::VS_IDLE);
+				SetActorVerticalState(Types::VS_IDLE);
 				break;
 			case Collider::COLLISION_LEFT:
 			case Collider::COLLISION_RIGHT:
-				pOwnerActor->FlipActorDirection();
+				FlipActorDirection();
 				break;
 			}
+			break;
 		}
 
 	};

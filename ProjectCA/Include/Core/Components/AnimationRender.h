@@ -24,8 +24,8 @@ public:
 	
 
 public:
-	bool AddAnimation(double dPlayTime, const TSTRING& strMapName ,const TSTRING& strSpriteName,
-		UINT iWidth, UINT iHeight, bool bLoop, const Types::tstring & strAnimTag);
+	bool AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName,
+		UINT iWidth, UINT iHeight, bool bLoop, const Types::tstring & strAnimTag, bool bInterrupt = true);
 
 
 public:

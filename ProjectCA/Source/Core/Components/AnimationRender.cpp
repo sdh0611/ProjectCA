@@ -53,7 +53,9 @@ void AnimationRender::Update(double dDeltaTime)
 	m_OwnerDirection = m_pActor->GetActorDirection();
 
 	UpdateAnimationMotion();
-	ChangeAnimationClip(m_AnimationState);
+	if(m_pCurAnimation.lock()->IsReadyToChange())
+		ChangeAnimationClip(m_AnimationState);
+	
 	m_pCurAnimation.lock()->Update(dDeltaTime);
 
 }
@@ -103,11 +105,11 @@ void AnimationRender::Draw(const HDC & hDC)
 }
 
 bool AnimationRender::AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName, 
-	UINT iWidth, UINT iHeight, bool bLoop, const Types::tstring & strAnimTag)
+	UINT iWidth, UINT iHeight, bool bLoop, const Types::tstring & strAnimTag, bool bInterrupt)
 {
 	auto pAnim = std::make_shared<CAnim>();
 
-	if (!pAnim->Init(strSpriteName, iWidth, iHeight, dPlayTime, bLoop, strAnimTag))
+	if (!pAnim->Init(strSpriteName, iWidth, iHeight, dPlayTime, bLoop, strAnimTag, bInterrupt))
 		return false;
 
 	if (m_pCurAnimation.expired())

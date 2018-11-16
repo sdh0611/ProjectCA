@@ -14,7 +14,7 @@ public:
 		COLLISION_BOT, COLLISION_RIGHT, COLLISION_LEFT
 	};
 
-	using Delegate = std::function<void(CObject*, CObject*, CollisionType type)>;
+	using Delegate = std::function<void(CObject*, CollisionType type)>;
 
 
 public:

@@ -7,13 +7,25 @@
 #include "..\..\..\Include\Core\CResourceManager.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
-
+#include "..\..\..\Include\Core\Components\ColliderBox.h"
 
 bool CGround::PostInit(const Types::ActorData &data, CGameScene *pScene)
 {
 	if (!CProb::PostInit(data, pScene))
 		return false;
 
+	//auto onCollision = [](CObject* pOther, Collider::CollisionType type)->void {
+
+
+
+	//	switch (type)
+	//	{
+
+	//	}
+
+	//};
+
+	//GetComponent<ColliderBox>().lock()->SetOnCollision(onCollision);
 	GetComponent<ImageRender>().lock()->SetDrawSize(TILE_WIDTH, TILE_HEIGHT);
 
 	return LoadTileImage();

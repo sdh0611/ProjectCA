@@ -17,13 +17,23 @@ CAnim::~CAnim()
 }
 
 bool CAnim::Init(const TSTRING& strSpriteName, 
-	UINT iWidth, UINT iHeight, double dPlayTime, bool bLoop,const TSTRING& strAnimTag)
+	UINT iWidth, UINT iHeight, double dPlayTime, bool bLoop,const TSTRING& strAnimTag, bool bInterrupt)
 {
 	m_pWeakSprite = CResourceManager::GetInstance()->GetWeakSprtiePtr(strSpriteName);
 	if (m_pWeakSprite.expired())
 		return false;
 
-	m_iMaxFrame				= m_pWeakSprite.lock()->GetBitWidth()/SPRITE_WIDTH;
+	m_bInterrupt				= bInterrupt;
+	if (m_bInterrupt)
+	{
+		m_bReadyToChange	= true;
+	}
+	else
+	{
+		m_bReadyToChange	= false;
+	}
+
+	m_iMaxFrame				= m_pWeakSprite.lock()->GetBitWidth() / SPRITE_WIDTH;
 	m_iDrawWidth				= iWidth;
 	m_iDrawHeight				= iHeight;
 
@@ -52,6 +62,16 @@ void CAnim::Draw(const HDC & hDC, const HDC& hMemDC,const POSITION& point)
 	{
 		DrawAnimation(hDC, hMemDC, point);
 	}
+}
+
+void CAnim::SetCanInterrupt(bool bInterrupt)
+{
+	m_bInterrupt = bInterrupt;
+}
+
+void CAnim::SetReadyToChange(bool bReady)
+{
+	m_bReadyToChange = bReady;
 }
 
 bool CAnim::SetSprite(const Types::tstring & strSpriteName)
@@ -98,6 +118,16 @@ void CAnim::SetDrawingHeight(UINT iHeight)
 	m_iDrawHeight = iHeight;
 }
 
+bool CAnim::IsCanInterrupt() const
+{
+	return m_bInterrupt;
+}
+
+bool CAnim::IsReadyToChange() const
+{
+	return m_bReadyToChange;
+}
+
 UINT CAnim::GetDrawWidth() const
 {
 	return m_iDrawWidth;
@@ -117,6 +147,11 @@ void CAnim::ClearEleapsedTime()
 {
 	m_dTimeElapsed = 0.f;
 	m_iCurFrame = 0;
+	if (!m_bInterrupt)
+	{
+		m_bReadyToChange = false;
+	}
+
 }
 
 void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& point)
@@ -135,7 +170,8 @@ void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& po
 				{
 					++m_iCurFrame %= m_iMaxFrame;
 				}
-
+				m_bReadyToChange = true;
+				
 			}
 
 		}

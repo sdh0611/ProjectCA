@@ -29,16 +29,16 @@ public:
 public:
 	bool AttachCamera(std::shared_ptr<CCamera> pCamera);
 	void SetPlayerState(PlayerState state);
-	void SetAttack(bool bAttack);
+
 
 public:
-	bool								IsAttack();
 	PlayerState						GetPlayerState();
 	std::weak_ptr<CCamera>	GetCamera();
 
 
 private:
 	virtual void ActorBehavior(double dDeltaTime) override;
+	void Attack();
 
 
 private:
@@ -46,7 +46,6 @@ private:
 
 
 private:
-	bool				m_bAttack;
 	PlayerState		m_PlayerState;
 
 

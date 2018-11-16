@@ -134,7 +134,7 @@ void Collider::OnCollision(CObject*pOther)
 {
 	if (m_pOnCollision != nullptr)
 	{
-		m_pOnCollision(m_pOwner, pOther, m_CollisionType);
+		m_pOnCollision(pOther, m_CollisionType);
 		m_CollisionType = COLLISION_IDLE;
 	}
 }
@@ -144,6 +144,6 @@ void Collider::OnTriggered(CObject* pOther)
 {
 	if (m_pOnTrigger != nullptr)
 	{
-		m_pOnTrigger(m_pOwner, pOther, m_CollisionType);
+		m_pOnTrigger(pOther, m_CollisionType);
 	}
 }

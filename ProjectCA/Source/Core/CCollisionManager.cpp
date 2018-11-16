@@ -384,8 +384,8 @@ bool CCollisionManager::BoxAndBox(ColliderBox* pCollider, ColliderBox* pOther)
 			}
 			else   //Áß°£
 			{
-				pCollider->SetCollisionType(Collider::COLLISION_RIGHT);
-				pOther->SetCollisionType(Collider::COLLISION_LEFT);
+				pCollider->SetCollisionType(Collider::COLLISION_LEFT);
+				pOther->SetCollisionType(Collider::COLLISION_RIGHT);
 			}
 		}
 		else

@@ -17,12 +17,14 @@ public:
 
 public:
 	bool Init(const TSTRING& strSpriteName, UINT iWidth, UINT iHeight,
-		double dPlayTime, bool bLoop, const TSTRING& strAnimTag = TEXT("Default"));
+		double dPlayTime, bool bLoop, const TSTRING& strAnimTag = TEXT("Default"), bool bInterrupt = true);
 	void Update(double dDeltaTIme);
 	void Draw(const HDC& hDC, const HDC& hMemDC, const POSITION& point);
 
 
 public:
+	void SetCanInterrupt(bool bInterrupt);
+	void SetReadyToChange(bool bReady);
 	bool SetSprite(const Types::tstring& strSpriteName);
 	bool SetTotalPlayTime(double dTime);
 	bool SetPlaySpeed(double dSpeed);
@@ -31,6 +33,8 @@ public:
 
 
 public:
+	bool						IsCanInterrupt() const;
+	bool						IsReadyToChange() const;
 	UINT						GetDrawWidth() const;
 	UINT						GetDrawHeight() const;
 	const Types::tstring	GetAnimTag() const;
@@ -45,6 +49,8 @@ private:
 
 
 private:
+	bool							m_bInterrupt;
+	bool							m_bReadyToChange;
 	bool							m_bLoop;
 	UINT							m_iCurFrame;
 	UINT							m_iMaxFrame;

@@ -32,10 +32,10 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	auto pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
-	auto colliderCallback = [](CObject* pObject, CObject* pOther, Collider::CollisionType type)->void {
+	auto colliderCallback = [&](CObject* pOther, Collider::CollisionType type)->void {
 
-		auto pPhysics = pObject->GetComponent<PhysicsComponent>().lock();
-		auto pOwnerActor = static_cast<CActor*>(pObject);
+		auto pPhysics = GetComponent<PhysicsComponent>().lock();
+		//auto pOwnerActor = static_cast<CActor*>(pObject);
 
 		switch (static_cast<CActor*>(pOther)->GetActorType())
 		{
@@ -44,13 +44,13 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			{
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
-				pOwnerActor->SetObjectPosition(pOwnerActor->GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
+				SetObjectPosition(GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
 				//pOwnerActor->SetActorState(Types::AS_IDLE);
-				pOwnerActor->SetActorVerticalState(Types::VS_IDLE);
+				SetActorVerticalState(Types::VS_IDLE);
 				break;
 			case Collider::COLLISION_LEFT:
 			case Collider::COLLISION_RIGHT:
-				pOwnerActor->FlipActorDirection();
+				FlipActorDirection();
 				break;
 			}
 			break;
@@ -60,7 +60,7 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			{
 				pPlayer->SetPlayerState(CPlayer::PS_BIG);
 			}
-			pObject->SetActive(false);
+			SetActive(false);
 			break;
 		}
 

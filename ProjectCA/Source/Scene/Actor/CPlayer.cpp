@@ -58,11 +58,13 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pCollider->PostInit(this))
 		return false;
 
-	auto onCollisionDelegater = [](CObject* pOwner, CObject* pOther, Collider::CollisionType type)->void 
+	auto onCollisionDelegater = [&](CObject* pOther, Collider::CollisionType type)->void 
 	{
-		POSITION position = pOwner->GetComponent<TransformComponent>().lock()->GetLastPosition();
-		auto pPhysics = pOwner->GetComponent<PhysicsComponent>().lock();
-		auto pOwnerActor = static_cast<CActor*>(pOwner);
+		//POSITION position = pOwner->GetComponent<TransformComponent>().lock()->GetLastPosition();
+		auto pPhysics = GetComponent<PhysicsComponent>().lock();
+		//auto pOwnerActor = static_cast<CActor*>(pOwner);
+		//auto pPhysics = pOther->GetComponent<PhysicsComponent>().lock();
+		auto pOtherActor = static_cast<CActor*>(pOther);
 
 		switch (static_cast<CActor*>(pOther)->GetActorType()) 
 		{
@@ -74,7 +76,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
-				pOwnerActor->SetActorVerticalState(Types::VS_JUMP);
+				SetActorVerticalState(Types::VS_JUMP);
 				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 				break;
 			}
@@ -84,17 +86,16 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
 				pPhysics->SetCurJumpForce(0.f);
-				pOwnerActor->SetActorState(Types::AS_IDLE);
-				pOwnerActor->SetActorVerticalState(Types::VS_IDLE);
-				pOwnerActor->SetObjectPosition(pOwnerActor->GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
+				SetActorVerticalState(Types::VS_IDLE);
+				SetObjectPosition(GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
 				break;
 			case Collider::COLLISION_TOP:
-				pOwnerActor->SetActorVerticalState(Types::VS_FALL);
+				SetActorVerticalState(Types::VS_FALL);
 				break;
 			case Collider::COLLISION_LEFT:
 			case Collider::COLLISION_RIGHT:
-				pOwnerActor->SetActorHorizonalState(Types::HS_IDLE);
-				pOwnerActor->SetObjectPosition(position.x, pOwnerActor->GetObjectPosition().y);
+				SetActorHorizonalState(Types::HS_IDLE);
+				SetObjectPosition(GetTransform().lock()->GetLastPosition().x, GetObjectPosition().y);
 				pPhysics->SetCurSpeed(0.f);
 				break;
 			}
@@ -288,16 +289,16 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerTurnLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackRight")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackRight"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackLeft")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackLeft"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackRight")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackRight"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackLeft")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackLeft"), false))
 		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
@@ -322,31 +323,13 @@ void CPlayer::Init()
 
 void CPlayer::Update(double dDeltaTime)
 {
-	//InputComponent* pInput = GetComponent<PlayerInputComponent>();
-	//if (pInput)
-	//{
-	//	pInput->Update(dDeltaTime);
-	//}
-
-	//ActorBehavior(dDeltaTime);
-	//
-	//for (auto& component : m_ComponentTable)
-	//{
-	//	if (component.first == TEXT("InputComponent"))
-	//	{
-	//		continue;
-	//	}
-	//	component.second->Update(dDeltaTime);
-	//}
-
-	if (m_ActorCurState == Types::AS_ATTACK)
-	{
-		puts("ATTACK!");
-	}
+	m_ActorCurState = Types::AS_IDLE;
 
 	CActor::Update(dDeltaTime);
-	//m_pCamera->Update(dDeltaTime);
-
+	if (m_ActorCurState == Types::AS_SITDOWN)
+	{
+		puts("SIT");
+	}
 }
 
 void CPlayer::Render(const HDC & hDC)
@@ -356,6 +339,7 @@ void CPlayer::Render(const HDC & hDC)
 	{
 		pRender.lock()->Draw(hDC);
 	}
+
 }
 
 void CPlayer::ActorBehavior(double dDeltaTime)
@@ -456,6 +440,11 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	}
 }
 
+void CPlayer::Attack()
+{
+
+}
+
 bool CPlayer::AttachCamera(std::shared_ptr<CCamera> pCamera)
 {
 	if(m_pCamera)
@@ -483,16 +472,6 @@ void CPlayer::SetPlayerState(PlayerState state)
 		break;
 	}
 
-}
-
-void CPlayer::SetAttack(bool bAttack)
-{
-	m_bAttack = bAttack;
-}
-
-bool CPlayer::IsAttack()
-{
-	return m_bAttack;
 }
 
 CPlayer::PlayerState CPlayer::GetPlayerState()

@@ -40,10 +40,11 @@ void PlayerInputComponent::LateUpdate(double dDeltaTime)
 
 void PlayerInputComponent::KeyProcess()
 {
-	CActor* pOwner = static_cast<CActor*>(m_pOwner);
+	CPlayer* pOwner = static_cast<CPlayer*>(m_pOwner);
 
 	Types::Direction dir = pOwner->GetActorDirection();
 
+	//수평상의 움직임에 대한 입력
 	if (m_pInputManager->IsKeyDown(TEXT("LEFT")))
 	{
 		if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
@@ -73,25 +74,22 @@ void PlayerInputComponent::KeyProcess()
 	}
 	else 
 	{
-		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
-		{
-			pOwner->SetActorState(Types::AS_IDLE);
-		}
+		//if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
+		//{
+		//	pOwner->SetActorState(Types::AS_IDLE);
+		//}
 
 		pOwner->SetActorHorizonalState(Types::HS_IDLE);
 
 	}
 
+	//공격키
 	if (KEY_ONCE_PRESS('C'))
 	{
-		puts("Attack");
 		pOwner->SetActorState(Types::AS_ATTACK);
 	}
-	else
-	{
-		pOwner->SetActorState(Types::AS_IDLE);
-	}
 
+	//위, 아래키에 대한 입력
 	if (m_pInputManager->IsKeyDown(TEXT("DOWN")))
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
@@ -111,6 +109,8 @@ void PlayerInputComponent::KeyProcess()
 
 	}
 
+
+	//수직상의 움직임에 대한 입력
 	if (m_pInputManager->IsKeyDown(TEXT("JUMP")))
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
