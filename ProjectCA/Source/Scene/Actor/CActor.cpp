@@ -63,6 +63,8 @@ void CActor::Update(double dDeltaTime)
 		}
 	}
 
+
+
 }
 
 void CActor::LateUpdate(double dDeltaTime)

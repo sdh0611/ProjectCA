@@ -61,6 +61,10 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			{
 				pPlayer->SetPlayerState(CPlayer::PS_FLOWER);
 			}
+			for (const auto& component : m_ComponentTable)
+			{
+				component.second->SetActive(false);
+			}
 			SetActive(false);
 			break;
 		}

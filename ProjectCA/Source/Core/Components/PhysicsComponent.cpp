@@ -48,6 +48,7 @@ void PhysicsComponent::Init()
 	m_fXSpeed			= 0.f;
 	m_fYSpeed			= 0.f;
 	m_dTimeElapsed	= 0.f;
+	m_bActive			= true;
 }
 
 void PhysicsComponent::Update(double dDeltaTime)

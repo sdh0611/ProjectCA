@@ -9,7 +9,7 @@
 #include "..\..\..\stdafx.h"
 #include "InputComponent.h"
 
-using Delegater = std::function<void(CActor* pActor)>;
+using Callback = std::function<void(CActor* pActor)>;
 
 class AIComponent : public InputComponent {
 
@@ -19,13 +19,12 @@ public:
 
 
 public:
-	//virtual bool Init(CActor* pOwner, const Types::tstring& strTag = TEXT("InputComponent")) override;
-	virtual void Init(){ }
+	virtual void Init();
 	virtual void Update(double fDeltaTime) override;
 	virtual void LateUpdate(double dDeltaTime) override;
 
 public:
-	Delegater SetDelegate(Delegater pDelegater);
+	Callback SetDelegate(Callback pDelegater);
 
 
 private:
@@ -33,6 +32,6 @@ private:
 
 
 private:
-	Delegater m_pDelegate;
+	Callback m_pDelegate;
 
 };

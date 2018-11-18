@@ -9,6 +9,10 @@ typedef std::vector<std::weak_ptr<CSprite>> WeakSpriteTable;
 
 class CAnim {
 
+public:
+	enum AnimMode {
+		ANIM_DEFAULT, ANIM_BLEND
+	};
 
 public:
 	CAnim();
@@ -30,6 +34,7 @@ public:
 	bool SetPlaySpeed(double dSpeed);
 	void SetDrawingWidth(UINT iWidth);
 	void SetDrawingHeight(UINT iHeight);
+	void SetAnimMode(AnimMode mode);
 
 
 public:
@@ -38,6 +43,7 @@ public:
 	UINT						GetDrawWidth() const;
 	UINT						GetDrawHeight() const;
 	const Types::tstring	GetAnimTag() const;
+	AnimMode				GetAnimMode() const;
 
 
 public:
@@ -52,11 +58,13 @@ private:
 	bool							m_bInterrupt;
 	bool							m_bReadyToChange;
 	bool							m_bLoop;
+	AnimMode					m_AnimMode;
 	UINT							m_iCurFrame;
 	UINT							m_iMaxFrame;
 	UINT							m_iDrawWidth;
 	UINT							m_iDrawHeight;
-	COLORREF					m_colorRef;
+	COLORREF					m_ColorRef;
+	BLENDFUNCTION			m_BlendFunction;
 	double						m_dPlaySectionLength;
 	double						m_dPlayTime;		//초 단위로 계산
 	double						m_dPlaySpeed;

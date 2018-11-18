@@ -206,12 +206,19 @@ bool CGameScene::Init()
 void CGameScene::Update(double fDeltaTime)
 {
 
-	//1. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
-	GameUpdate(fDeltaTime);
+	if (m_pPlayer->IsActive())
+	{
+		//1. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
+		GameUpdate(fDeltaTime);
 
-	//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사하기 위함.
-	CScene::Update(fDeltaTime);
-
+		//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사하기 위함.
+		CScene::Update(fDeltaTime);
+	}
+	if (KEY_ONCE_PRESS(VK_ESCAPE))
+	{
+		puts("reset");
+		ResetScene();
+	}
 }
 
 void CGameScene::Render(const HDC& hDC)
@@ -240,7 +247,7 @@ void CGameScene::CollisionDetect()
 	//	}
 	//}
 
-	CCollisionManager::GetInstance()->CheckCollision();
+	
 
 }
 
@@ -253,17 +260,27 @@ void CGameScene::InputUpdate(double fDeltaTime)
 
 void CGameScene::GameUpdate(double dDeltaTime)
 {	
-	//Actor Update
-	for (const auto& actor : m_ObjectPtrList) {
-		if (actor->IsActive())
-		{
-			actor->Update(dDeltaTime);
-		}
-	}
+	if (!m_pPlayer->IsDead())
+	{
 
-	//Collsion detect between Actors
-	CollisionDetect();
-	CCameraManager::GetInstance()->GetMainCamera().lock()->Update(dDeltaTime);
+		//Actor Update
+		for (const auto& actor : m_ObjectPtrList) {
+			if (actor->IsActive())
+			{
+				actor->Update(dDeltaTime);
+			}
+		}
+
+		//Collsion detect between Actors
+		//CollisionDetect();
+		CCollisionManager::GetInstance()->CheckCollision();
+		CCameraManager::GetInstance()->GetMainCamera().lock()->Update(dDeltaTime);
+	}
+	else
+	{
+		m_pPlayer->DeadProcess(dDeltaTime);
+	}
+	
 	//Adjust Position on Screen 
 	for (const auto& object : m_ObjectPtrList)
 	{
@@ -271,11 +288,17 @@ void CGameScene::GameUpdate(double dDeltaTime)
 		{
 			if (object->IsActive())
 			{
-				//object->LateUpdate();
-				object->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
+				object->LateUpdate();
+				//object->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
 			}
 		}
 	}
+
+	//if (KEY_ONCE_PRESS(VK_ESCAPE))
+	//{
+	//	puts("reset");
+	//	ResetScene();
+	//}
 
 }
 

@@ -3,7 +3,10 @@
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\AIComponent.h"
+#include "..\..\..\Include\Scene\CCameraManager.h"
+#include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+//#include "..\..\..\Include\Core\Components\HPComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
@@ -22,8 +25,6 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 	//기본 Actor의 속성 초기화
 	CActor::PostInit(data, pScene);
-	m_iDamagedStateWidth = m_iObjectWidth;
-	m_iDamagedStateHeight = m_iObjectHeight * 0.5;
 
 	//AIComponent (InputComponent) 초기화
 	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
@@ -48,7 +49,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	//PhysicsComponent 초기화
 	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
-	if (!pPhysics->PostInit(this, 200.f, 200.f, 1300.f, 700.f))
+	if (!pPhysics->PostInit(this, 200.f, 750.f, 1300.f, 700.f))
 		return false;
 
 	pPhysics->SetCurSpeed(pPhysics->GetSpeed());
@@ -75,7 +76,10 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					if (pOtherActor->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
 					{
 						SetActorState(Types::AS_DEAD);
-						SetActive(false);
+						GetComponent<ColliderBox>().lock()->SetActive(false);
+						pPhysics->SetCurJumpForce(300.f);
+						pPhysics->SetGrounded(false);
+						//SetActive(false);
 					}
 					else
 					{
@@ -105,6 +109,21 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				}
 
 			}
+			else//Owner == DAMAGED
+			{
+				if (pOtherActor->GetActorState() == Types::AS_DAMAGED)
+				{
+					if (pOtherActor->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
+					{
+						SetActorState(Types::AS_DEAD);
+						pPhysics->AddForceY(300.f);
+						pPhysics->SetGrounded(false);
+						GetComponent<ColliderBox>().lock()->SetActive(false);
+						//SetActive(false);
+					}
+
+				}
+			}
 			break;
 		case Types::AT_PROB:
 			switch (type){
@@ -125,13 +144,14 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				SetActorState(Types::AS_DAMAGED);
 				GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight()/2.f);
 				pPhysics->SetCurSpeed(0.f);
+				//GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("KoopaNormal"), TEXT("Damaged"));
 				break;
 			case Collider::COLLISION_RIGHT:
 				if (GetActorState() == Types::AS_DAMAGED)
 				{
 					if (pPhysics->GetCurSpeed() == 0.f)
 					{
-						pPhysics->AddForceX(-600.f);
+						pPhysics->AddForceX(-750.f);
 					}
 
 				}
@@ -145,7 +165,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				{
 					if (pPhysics->GetCurSpeed() == 0.f)
 					{
-						pPhysics->AddForceX(600.f);
+						pPhysics->AddForceX(750.f);
 					}
 
 				}
@@ -157,11 +177,11 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			
 			}
 			break;
-		case Types::AT_THROWN:
-			SetActorState(Types::AS_DAMAGED);
-			GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
-			pPhysics->SetCurSpeed(0.f);
-			break;
+		//case Types::AT_THROWN:
+		//	SetActorState(Types::AS_DAMAGED);
+		//	GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
+		//	pPhysics->SetCurSpeed(0.f);
+		//	break;
 
 		}
 
@@ -173,25 +193,39 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
 
+
 	//RenderComponent 초기화
 	std::shared_ptr<AnimationRender> pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"),TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"),TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunJumpRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("JumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("JumpLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenRunRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenRunLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenRunRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenRunLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
 		return false;
 
 	if (!pRender->AddAnimation(0.f, TEXT("KoopaNormal"), TEXT("KoopaGreenDamaged"), m_iObjectWidth, m_iObjectHeight, false, TEXT("Damaged")))
 		return false;
+
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
@@ -208,6 +242,10 @@ void CKoopa::Init()
 void CKoopa::Update(double dDeltaTime)
 {
 	CEnemy::Update(dDeltaTime);
+	if (!m_bActive)
+	{
+		puts("inactive");
+	}
 }
 
 void CKoopa::Render(const HDC & hDC)
@@ -220,25 +258,43 @@ void CKoopa::Render(const HDC & hDC)
 
 void CKoopa::ActorBehavior(double dDeltaTime)
 {
-	std::shared_ptr<TransformComponent> pTransform = GetComponent<TransformComponent>().lock();
-	std::shared_ptr<PhysicsComponent> pPhysics = GetComponent<PhysicsComponent>().lock();
-
-	if (m_ActorCurState != Types::AS_DAMAGED)
+	auto pPhysics = GetComponent<PhysicsComponent>().lock();
+	auto pTransform = GetTransform().lock();
+	if(m_ActorCurState != Types::AS_DEAD)
 	{
-		float fWalkSpeed = pPhysics->GetSpeed();
+		if (m_ActorCurState != Types::AS_DAMAGED)
+		{
+			float fWalkSpeed = pPhysics->GetSpeed();
 
-		if (m_Direction == Types::DIR_LEFT)
-		{
-			pPhysics->SetCurSpeed(-1 * fWalkSpeed);
+			if (m_Direction == Types::DIR_LEFT)
+			{
+				pPhysics->SetCurSpeed(-1 * fWalkSpeed);
+			}
+			else if (m_Direction == Types::DIR_RIGHT)
+			{
+				pPhysics->SetCurSpeed(fWalkSpeed);
+			}
+
 		}
-		else if (m_Direction == Types::DIR_RIGHT)
+
+	}
+	else
+	{
+		auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
+		POSITION position = pTransform->GetScreenPosition();
+		if (position.y > pCamera->GetCameraHeight() + m_iObjectHeight)
 		{
-			pPhysics->SetCurSpeed(fWalkSpeed);
+			m_bActive = false;
+			return;
 		}
-				
+		if (position.x < 0.f - m_iObjectWidth || position.x > pCamera->GetCameraWidth() + m_iObjectWidth)
+		{
+			m_bActive = false;
+			return;
+		}
+
 	}
 
-
-	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
 }

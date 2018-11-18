@@ -37,6 +37,7 @@ bool RenderComponent::PostInit(CObject * pOwner, const Types::tstring & strTag)
 
 void RenderComponent::Init() 
 {
+	m_bActive = true;
 }
 
 void RenderComponent::Update(double dDeltaTime)

@@ -29,6 +29,7 @@ bool ImageRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
 
 void ImageRender::Init()
 {
+	RenderComponent::Init();
 }
 
 void ImageRender::Update(double dDeltaTIme)

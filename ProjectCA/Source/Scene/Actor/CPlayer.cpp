@@ -4,6 +4,7 @@
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
+//#include "..\..\..\Include\Core\Components\HPComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
@@ -30,8 +31,11 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	//TransformComponent 추가
 	CActor::PostInit(data, pScene);
 
-	m_iSmallStateWidth = m_iObjectWidth;
-	m_iSmallStateHeight = m_iObjectHeight * 0.6;
+	m_bProtected			= false;
+
+	m_dTimeElapsed		= 0.f;
+	m_iSmallStateWidth	= m_iObjectWidth;
+	m_iSmallStateHeight	= m_iObjectHeight * 0.6;
 
 	//PlayerInputComponent (InputComponent) 초기화
 	std::shared_ptr<PlayerInputComponent> pInput = std::make_shared<PlayerInputComponent>();
@@ -71,16 +75,30 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 				break;
 			default:
-				if (m_PlayerState != PS_SMALL)
+				if (!m_bProtected)
 				{
-					SetPlayerState(PS_SMALL);
-				}
-				else //Player die
-				{
-					
-				}
+					if (pOtherActor->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
+					{
+						if (m_PlayerState != PS_SMALL)	//PlayerDamaged
+						{
+							SetPlayerState(PS_SMALL);
+							m_bProtected = true;
+							//m_ActorCurState = Types::AS_PROTECTED;
+						}
+						else //Player die
+						{
+							m_ActorCurState = Types::AS_DEAD;
+							pPhysics->SetCurJumpForce(700.f);
+							pPhysics->SetGrounded(false);
+							GetComponent<ColliderBox>().lock()->SetActive(false);
+							GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("MarioSmall"), TEXT("DeadImage"));
+						}
 
+					}
+				
+				}
 				break;
+
 			}
 			break;
 		case Types::AT_PROB:
@@ -181,7 +199,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerDeadImage"), m_iObjectWidth, m_iObjectHeight, false, TEXT("DeadImage")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerDeadAnimation"), m_iObjectWidth, m_iObjectHeight, false, TEXT("DeadAnimation")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioSmall"), TEXT("PlayerDeadAnimation"), m_iObjectWidth, m_iObjectHeight, false, TEXT("DeadAnimation")))
 		return false;
 
 
@@ -308,6 +326,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackLeft"), false))
 		return false;
 
+
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
@@ -325,26 +344,46 @@ void CPlayer::Init()
 {
 	//m_ActorPoint = m_spawnPoint;
 	//m_pCamera.lock()->Init();
-
+	m_bProtected = false;
+	m_ActorCurState = Types::AS_IDLE;
+	m_dTimeElapsed = 0.f;
 	for (const auto& it : m_ComponentTable)
 		it.second->Init();
 
 	SetPlayerState(PS_SMALL);
 
-	//for (const auto& fire : m_FireballPool)
-	//{
-	//	fire->Init();
-	//}
+	for (const auto& fire : m_FireballPool)
+	{
+		fire->Init();
+	}
+
+	m_bActive = true;
 }
 
 void CPlayer::Update(double dDeltaTime)
 {
-	m_ActorCurState = Types::AS_IDLE;
-	CActor::Update(dDeltaTime);
-	//for (const auto& fire : m_FireballPool)
-	//{
-	//	fire->Update(dDeltaTime);
-	//}
+	if (m_ActorCurState != Types::AS_DEAD)
+	{
+		//무적시간 관련 연산
+		if (m_bProtected)
+		{
+			m_dTimeElapsed += dDeltaTime;
+			if (m_dTimeElapsed > 3.f)
+			{
+				m_dTimeElapsed = 0.f;
+				m_bProtected = false;
+			}
+		}
+
+		m_ActorCurState = Types::AS_IDLE;
+		
+		CActor::Update(dDeltaTime);
+		for (const auto& fire : m_FireballPool)
+		{
+			fire->Update(dDeltaTime);
+		}
+
+	}
 
 }
 
@@ -356,10 +395,10 @@ void CPlayer::Render(const HDC & hDC)
 		pRender.lock()->Draw(hDC);
 	}
 
-	//for (const auto& fire : m_FireballPool)
-	//{
-	//	fire->Render(hDC);
-	//}
+	for (const auto& fire : m_FireballPool)
+	{
+		fire->Render(hDC);
+	}
 
 }
 
@@ -370,6 +409,36 @@ void CPlayer::LateUpdate()
 	{
 		fire->GetTransform().lock()->AdjustScreenPosition();
 	}
+
+}
+
+void CPlayer::DeadProcess(double dDeltaTime)
+{
+	m_dTimeElapsed += dDeltaTime;
+	
+	if (m_dTimeElapsed > 0.8f)
+	{
+		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("MarioSmall"), TEXT("DeadAnimation"));
+		if (m_dTimeElapsed < 4.0f)
+		{
+			GetComponent<PhysicsComponent>().lock()->Update(dDeltaTime);
+			GetTransform().lock()->Move(0.f, GetComponent<PhysicsComponent>().lock()->GetCurJumpForce()* dDeltaTime);
+		}
+		else
+		{
+			puts("inactive");
+			m_bActive = false;
+		}
+
+	}
+
+}
+
+void CPlayer::InterruptProecess(double dDeltaTime)
+{
+
+
+
 
 }
 
@@ -408,110 +477,6 @@ bool CPlayer::GenerateFireball()
 
 void CPlayer::ActorBehavior(double dDeltaTime)
 {
-
-	////이동 및 물리처리 관련 Player로직
-	//{
-	//	auto pInput = GetComponent<PlayerInputComponent>().lock();
-	//	auto pTransform = GetComponent<TransformComponent>().lock();
-	//	auto pPhysics = GetComponent<PhysicsComponent>().lock();
-
-	//	float fCurSpeed = pPhysics->GetCurSpeed();
-	//	float fMaxSpeed = pPhysics->GetMaxSpeed();
-	//	float fWalkSpeed = pPhysics->GetSpeed();
-	//	float fCurJumpForce = pPhysics->GetCurJumpForce();
-
-	//	if (m_Direction == Types::DIR_LEFT)
-	//	{
-	//		if (m_ActorHorizonalState == Types::HS_RUN)
-	//		{
-	//			if (fCurSpeed > -1 * fMaxSpeed)
-	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
-	//		}
-	//		else if (m_ActorHorizonalState == Types::HS_WALK)
-	//		{
-	//			if (fCurSpeed < -1 * fWalkSpeed)
-	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
-	//			else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
-	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
-	//			else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
-	//				pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
-
-	//		}
-	//		else if (m_ActorHorizonalState == Types::HS_IDLE)
-	//		{
-	//			if (fCurSpeed < 0.f)
-	//			{
-	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 5.f);
-	//				if (pPhysics->GetCurSpeed() > 0.f)
-	//					pPhysics->SetCurSpeed(0.f);
-	//			}
-	//			else if (fCurSpeed > 0.f)
-	//			{
-	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
-	//				if (pPhysics->GetCurSpeed() < 0.f)
-	//					pPhysics->SetCurSpeed(0.f);
-	//			}
-	//		}
-	//	}
-	//	else if (m_Direction == Types::DIR_RIGHT)
-	//	{
-	//		if (m_ActorHorizonalState == Types::HS_RUN)
-	//		{
-	//			if (fCurSpeed < fMaxSpeed)
-	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
-	//		}
-	//		else if (m_ActorHorizonalState == Types::HS_WALK)
-	//		{
-	//			if (fCurSpeed > fWalkSpeed)
-	//				pPhysics->SetCurSpeed(fCurSpeed - 10.f);
-	//			else if (fCurSpeed < fWalkSpeed)
-	//				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
-	//			else if (fCurSpeed >= fWalkSpeed)
-	//				pPhysics->SetCurSpeed(fWalkSpeed);
-	//		}
-	//		else if (m_ActorHorizonalState == Types::HS_IDLE)
-	//		{
-	//			if (fCurSpeed > 0.f)
-	//			{
-	//				pPhysics->SetCurSpeed(fCurSpeed - 5.f);
-	//				if (pPhysics->GetCurSpeed() < 0.f)
-	//					pPhysics->SetCurSpeed(0.f);
-	//			}
-	//			else if (fCurSpeed < 0.f)
-	//			{
-	//				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
-	//				if (pPhysics->GetCurSpeed() > 0.f)
-	//					pPhysics->SetCurSpeed(0.f);
-	//			}
-	//		}
-	//	}
-
-	//	if (pPhysics->IsGrounded())
-	//	{
-	//		if (m_ActorCurVerticalState == Types::VS_JUMP)
-	//		{
-	//			pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
-	//			pPhysics->SetGrounded(false);
-	//		}
-	//	}
-
-	//	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
-
-	//	if (!pPhysics->IsGrounded())
-	//	{
-	//		if (m_ActorCurVerticalState == Types::VS_FALL)
-	//		{
-	//			//m_bGrounded = false;
-	//			if (pPhysics->GetCurJumpForce() > 0.f)
-	//			{
-	//				pPhysics->SetCurJumpForce(0.f);
-	//			}
-	//		}
-	//	}
-
-	//}
-
-
 
 	//이동 및 물리처리 관련 Player로직
 	{
@@ -604,16 +569,18 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		{
 			if (m_ActorCurVerticalState == Types::VS_FALL)
 			{
-				//m_bGrounded = false;
 				if (pPhysics->GetCurJumpForce() > 0.f)
 				{
 					pPhysics->SetCurJumpForce(0.f);
 				}
+
 			}
+
 		}
 
+
 	}
-	
+
 	//Collider 변환 관련 Player로직
 	{
 		auto pCollider = GetComponent<ColliderBox>().lock();
@@ -632,8 +599,11 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			{
 				Attack();
 			}
+
 		}
+
 	}
+	
 }
 
 
@@ -679,7 +649,25 @@ void CPlayer::SetPlayerState(PlayerState state)
 
 }
 
+void CPlayer::SetRequestInterrupt(bool bInterrupt)
+{
+	m_bInterrupt = bInterrupt;
+}
+
 CPlayer::PlayerState CPlayer::GetPlayerState()
 {
 	return m_PlayerState;
+}
+
+bool CPlayer::IsDead()
+{
+	if (m_ActorCurState == Types::AS_DEAD)
+		return true;
+
+	return false;
+}
+
+bool CPlayer::IsRequestInterrupt()
+{
+	return m_bInterrupt;
 }

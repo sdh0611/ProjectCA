@@ -27,6 +27,11 @@ bool PlayerInputComponent::PostInit(CObject* pOwner, const Types::tstring & strT
 	return true;
 }
 
+void PlayerInputComponent::Init()
+{
+	m_bActive = true;
+}
+
 void PlayerInputComponent::Update(double fDeltaTime)
 {
 	if (m_bActive)
@@ -136,10 +141,6 @@ void PlayerInputComponent::KeyProcess()
 	//	static_cast<CPlayer*>(pOwner)->SetAttack(false);
 	//}
 
-	if (KEY_ONCE_PRESS(VK_ESCAPE))
-	{
-		puts("reset");
-		pOwner->GetOwnerScene()->ResetScene();
-	}
+
 
 }

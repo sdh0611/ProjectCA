@@ -12,10 +12,10 @@ AIComponent::~AIComponent()
 {
 }
 
-//bool AIComponent::Init(std::shared_ptr<CActor> pOwner, const Types::tstring & strTag)
-//{
-//	return true;
-//}
+void AIComponent::Init()
+{
+	m_bActive = true;
+}
 
 void AIComponent::Update(double fDeltaTime)
 {
@@ -27,8 +27,8 @@ void AIComponent::LateUpdate(double dDeltaTime)
 {
 }
 
-Delegater AIComponent::SetDelegate(Delegater pDelegater) {
-	Delegater pTemp = m_pDelegate;
+Callback AIComponent::SetDelegate(Callback pDelegater) {
+	Callback pTemp = m_pDelegate;
 
 	m_pDelegate = pDelegater;
 
@@ -39,13 +39,6 @@ void AIComponent::BehaviorUpdate()
 {
 	if(m_pDelegate != nullptr)
 		m_pDelegate(static_cast<CActor*>(m_pOwner));
-	//auto pTemp = m_pOwner;
-
-	//if (pTemp->GetActorPoint().y >= MAX_HEIGHT - pTemp->GetActorHeight())
-	//	pTemp->SetActorDirection(Types::DIR_UP);
-
-	//if (pTemp->GetActorPoint().y <= 0)
-	//	pTemp->SetActorDirection(Types::DIR_DOWN);
 
 }
 

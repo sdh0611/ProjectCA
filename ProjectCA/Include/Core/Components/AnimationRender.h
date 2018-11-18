@@ -32,17 +32,18 @@ public:
 	bool SetAnimationPlaySpeed(double dSpeed);
 	void SetAnimationMotion(ANIM_MOTION motion);
 	void SetCurAnimationTable(const TSTRING& strTableName);
+	bool ChangeAnimation(const TSTRING& strAnimTag);
+	bool ChangeAnimation(const TSTRING& strAnimTableName, const TSTRING& strAnimTag);
+	
 
 
 public:
-	const TSTRING	GetAnimTag() const;
+	const TSTRING&	GetAnimTag() const;
 
 
 private:
 	void UpdateAnimationMotion();
-	bool ChangeAnimation(const TSTRING& strAnimTag);
 	void ChangeAnimationClip(ANIM_MOTION motion);
-
 
 private:
 	bool								m_bTableChange;

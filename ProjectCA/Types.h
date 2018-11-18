@@ -42,10 +42,10 @@ namespace Types {
 	enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_THROWN, AT_BACKGROUND };
 #ifndef TYPE_ACTION 
 	//오브젝트 상태 정의
-	enum ActorState { AS_IDLE, AS_MOVE, AS_ATTACK, OS_DAMAGED, OS_DEAD };
+	enum ActorState { AS_IDLE, AS_MOVE, AS_ATTACK, AS_DAMAGED, AS_DEAD };
 #else
 	//Actor의 상태를 나타내기 위한 열거체 (10.13)
-	enum ActorState { AS_IDLE, AS_MOVE, AS_SITDOWN, AS_LOOKUP, AS_ATTACK, AS_DAMAGED, AS_DEAD };
+	enum ActorState { AS_IDLE, AS_MOVE, AS_SITDOWN, AS_LOOKUP, AS_ATTACK, AS_DAMAGED, AS_PROTECTED, AS_DEAD };
 
 	//수직상의 이동 상태를 구분하기 위한 열거체 (10.13)
 	enum VerticalState { VS_IDLE, VS_JUMP, VS_FALL };

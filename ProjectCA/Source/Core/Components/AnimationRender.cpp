@@ -54,12 +54,15 @@ void AnimationRender::Update(double dDeltaTime)
 		m_OwnerHorizonalState = m_pActor->GetActorHorizonalState();
 		m_OwnerDirection = m_pActor->GetActorDirection();
 
+
 		UpdateAnimationMotion();
 		if (m_pCurAnimation.lock()->IsReadyToChange())
 			ChangeAnimationClip(m_AnimationState);
 
 		m_pCurAnimation.lock()->Update(dDeltaTime);
+
 	}
+
 }
 
 void AnimationRender::Draw(const HDC & hDC)
@@ -72,36 +75,36 @@ void AnimationRender::Draw(const HDC & hDC)
 		if (!m_pCurAnimation.expired())
 			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, pivot);
 
-		std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
-		std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
+		//std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
+		//std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
 
-		if (pCollider)
-		{
-			pCollider->DrawCollider(hDC, position);
+		//if (pCollider)
+		//{
+		//	pCollider->DrawCollider(hDC, position);
 
-			if (pCollider->IsCollision())
-			{
-				TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
-			}
-			else
-			{
-				TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
-			}
+		//	if (pCollider->IsCollision())
+		//	{
+		//		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+		//	}
+		//	else
+		//	{
+		//		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+		//	}
 
-		}
+		//}
 
-		if (pPhysics)
-		{
-			if (pPhysics->IsGrounded())
-			{
-				TextOut(hDC, position.x, position.y + 20, TEXT("TRUE"), sizeof(TEXT("TRUE")));
-			}
-			else
-			{
-				TextOut(hDC, position.x, position.y + 20, TEXT("FALSE"), sizeof(TEXT("FALSE")));
-			}
+		//if (pPhysics)
+		//{
+		//	if (pPhysics->IsGrounded())
+		//	{
+		//		TextOut(hDC, position.x, position.y + 20, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+		//	}
+		//	else
+		//	{
+		//		TextOut(hDC, position.x, position.y + 20, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+		//	}
 
-		}
+		//}
 
 
 
@@ -165,20 +168,19 @@ void AnimationRender::SetCurAnimationTable(const TSTRING & strTableName)
 	m_pCurAnimation = m_AnimationTable.at(strTableName).at(m_pCurAnimation.lock()->GetAnimTag());
 }
 
-const TSTRING AnimationRender::GetAnimTag() const
+const TSTRING& AnimationRender::GetAnimTag() const
 {
 	return m_pCurAnimation.lock()->GetAnimTag();
 }
 
 void AnimationRender::UpdateAnimationMotion()
 {
-	auto pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
-	if (pPhysics == nullptr)
-		return;
 
-	float fCurSpeed = std::fabsf(pPhysics->GetCurSpeed());
-	float fSpeed = pPhysics->GetSpeed();
-	float fMaxSpeed = pPhysics->GetMaxSpeed();
+	if (m_OwnerState == Types::AS_DEAD)
+	{
+		m_AnimationState = Types::AM_DEAD;
+		return;
+	}
 
 	if (m_OwnerState == Types::AS_DAMAGED)
 	{
@@ -197,11 +199,21 @@ void AnimationRender::UpdateAnimationMotion()
 		m_AnimationState = Types::AM_SITDOWN;
 		return;
 	}
+
 	else if (m_OwnerState == Types::AS_LOOKUP)
 	{
 		m_AnimationState = Types::AM_LOOKUP;
 		return;
 	}
+
+	auto pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
+	if (pPhysics == nullptr)
+		return;
+
+	float fCurSpeed = std::fabsf(pPhysics->GetCurSpeed());
+	float fSpeed = pPhysics->GetSpeed();
+	float fMaxSpeed = pPhysics->GetMaxSpeed();
+	
 
 	if (fCurSpeed > 0.f && fCurSpeed < fMaxSpeed)
 	{
@@ -261,8 +273,30 @@ bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTag)
 	return true;
 }
 
+bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTableName, const TSTRING & strAnimTag)
+{
+	auto animIter = m_AnimationTable.at(strAnimTableName).find(strAnimTag);
+	if (animIter == m_AnimationTable.at(strAnimTableName).end())
+	{
+		return false;
+	}
+	//같은 animation인지 판별
+	if (!m_pCurAnimation.expired())
+	{
+		if (m_pCurAnimation.lock()->GetAnimTag() == strAnimTag)
+			return true;
+
+		m_pCurAnimation.lock()->ClearEleapsedTime();
+	}
+
+	m_pCurAnimation = animIter->second;
+
+	return true;
+}
+
 void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
 {
+
 	if (m_OwnerVerticalState == Types::VS_JUMP) {
 		switch (motion) {
 		case Types::AM_IDLE:

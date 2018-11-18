@@ -35,14 +35,14 @@ void CCollisionManager::CheckCollision()
 {
 	for (auto first = m_ColliderList.cbegin(); first != m_ColliderList.cend(); ++first)
 	{
-		if ((*first)->GetOwner()->IsActive())
+		if ((*first)->IsActive())
 		{
 			for (auto second = first; second != m_ColliderList.cend(); ++second)
 			{
 				if (second == first)
 					continue;
 
-				if ((*second)->GetOwner()->IsActive())
+				if ((*second)->IsActive() && (*first)->IsActive())
 					CheckCollisionType((*first), (*second));
 
 			}

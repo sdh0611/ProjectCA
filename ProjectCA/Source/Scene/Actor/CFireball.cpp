@@ -77,7 +77,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 		return false;
 	if (!pRender->AddAnimation(0.3f, TEXT("Default"), TEXT("FireballLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("AttackLeft")))
 		return false;
-	if (!AddComponent(pRender, pRender->GetAnimTag()))
+	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
 	m_bActive = false;
@@ -95,7 +95,6 @@ void CFireball::Update(double dDeltaTime)
 {
 	if (!m_bActive)
 	{
-		GetTransform().lock()->SetPosition(m_pOwnerActor->GetObjectPosition().x, m_pOwnerActor->GetObjectPosition().y - m_pOwnerActor->GetObjectHeight() / 2.f);
 	}
 	else
 	{
@@ -134,6 +133,7 @@ void CFireball::SetFireballActive()
 		pPhysics->SetCurSpeed(fWalkSpeed);
 	}
 	SetActive(true);
+	GetTransform().lock()->SetPosition(m_pOwnerActor->GetObjectPosition().x, m_pOwnerActor->GetObjectPosition().y - m_pOwnerActor->GetObjectHeight() / 2.f);
 
 	puts("Active");
 }

@@ -49,7 +49,7 @@ void ColliderBox::Init()
 	m_ColliderRect.top = m_ColliderPoint.y - m_fHeight;
 	m_ColliderRect.right = m_ColliderPoint.x + m_fWidth / 2;
 	m_ColliderRect.bottom = m_ColliderPoint.y;
-
+	m_bActive = true;
 }
 
 

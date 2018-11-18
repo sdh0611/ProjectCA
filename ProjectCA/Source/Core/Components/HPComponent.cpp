@@ -10,13 +10,14 @@ HPComponent::~HPComponent()
 {
 }
 
-bool HPComponent::PostInit(CObject* pOwner, float fHP, float fMaxHP, 
-	const Types::tstring & strTag)
+bool HPComponent::PostInit(CObject* pOwner, float fHP, float fMaxHP, int iLifeCount,
+	const TSTRING & strTag)
 {
 	m_pOwner = pOwner;
 	m_strComponentTag = strTag;
 	
-	m_bIsDead = false;
+	m_bDead = false;
+	m_iLife = m_iInitialLife =iLifeCount;
 	m_fHP = fHP;
 	m_fMaxHP = fMaxHP;
 
@@ -25,14 +26,35 @@ bool HPComponent::PostInit(CObject* pOwner, float fHP, float fMaxHP,
 	return true;
 }
 
+void HPComponent::Init()
+{
+	m_fHP = m_fMaxHP;
+	m_iLife = m_iInitialLife;
+	m_bDead = false;
+	m_bActive = true;
+}
+
 void HPComponent::Update(double dDeltaTime)
 {
+	if (m_fHP <= 0.f)
+	{
+		DecreaseLife(1);
+	}
 
+	if (m_iLife <= 0)
+	{
+		m_bDead = true;
+	}
 
 }
 
 void HPComponent::LateUpdate(double dDeltaTime)
 {
+}
+
+void HPComponent::SetDead(bool bDead)
+{
+	m_bDead = bDead;
 }
 
 void HPComponent::IncreaseHP(float fHeal)
@@ -51,10 +73,28 @@ void HPComponent::DecreaseHP(float fDamage)
 		m_fHP -= fDamage;
 		if (m_fHP <= 0) {
 			m_fHP = 0;
-			m_bIsDead = true;
+			m_bDead = true;
 		}
 	}
 
+}
+
+void HPComponent::IncreaseLife(UINT iValue)
+{
+	m_iLife += iValue;
 	
+}
+
+void HPComponent::DecreaseLife(UINT iValue)
+{
+	if (m_iLife > 0)
+	{
+		m_iLife -= iValue;
+	}
+
+	if (m_iLife < 0)
+	{
+		m_iLife = 0;
+	}
 
 }

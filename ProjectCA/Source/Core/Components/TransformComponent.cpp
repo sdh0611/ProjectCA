@@ -33,6 +33,7 @@ bool TransformComponent::PostInit(CObject * pOwner, const POSITION& position, co
 void TransformComponent::Init()
 {
 	m_Position = m_SpawnPosition;
+	m_bActive = true;
 }
 
 void TransformComponent::Update(double dDeltaTime)
@@ -180,6 +181,9 @@ void TransformComponent::AdjustScreenPosition()
 
 	m_ScreenPivot.x = m_ScreenPosition.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
 	m_ScreenPivot.y = m_ScreenPosition.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
+
+	//if(m_ScreenPosition.x < 0.f || m_ScreenPosition.x > )
+
 }
 
 

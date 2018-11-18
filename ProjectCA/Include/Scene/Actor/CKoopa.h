@@ -23,8 +23,7 @@ private:
 	
 
 private:
-	UINT			m_iDamagedStateWidth;
-	UINT			m_iDamagedStateHeight;
+	bool m_bDead;	
 
 
 };

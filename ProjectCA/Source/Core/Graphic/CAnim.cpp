@@ -23,7 +23,7 @@ bool CAnim::Init(const TSTRING& strSpriteName,
 	if (m_pWeakSprite.expired())
 		return false;
 
-	m_bInterrupt				= bInterrupt;
+	m_bInterrupt									= bInterrupt;
 	if (m_bInterrupt)
 	{
 		m_bReadyToChange	= true;
@@ -32,20 +32,25 @@ bool CAnim::Init(const TSTRING& strSpriteName,
 	{
 		m_bReadyToChange	= false;
 	}
+	m_AnimMode									= ANIM_DEFAULT;
 
-	m_iMaxFrame				= m_pWeakSprite.lock()->GetBitWidth() / SPRITE_WIDTH;
-	m_iDrawWidth				= iWidth;
-	m_iDrawHeight				= iHeight;
+	m_iMaxFrame									= m_pWeakSprite.lock()->GetBitWidth() / SPRITE_WIDTH;
+	m_iDrawWidth									= iWidth;
+	m_iDrawHeight									= iHeight;
 
-	m_colorRef					= RGB(248, 7, 220);
+	m_ColorRef										= RGB(248, 7, 220);
+	m_BlendFunction.BlendOp					= AC_SRC_OVER;
+	m_BlendFunction.BlendFlags				= 0;
+	m_BlendFunction.AlphaFormat				= 0;
+	m_BlendFunction.SourceConstantAlpha	= 185;
 
-	m_dPlayTime				= dPlayTime;
-	m_dPlaySpeed				= 1.f;
-	m_dPlaySectionLength	= m_dPlayTime / m_iMaxFrame;
+	m_dPlayTime									= dPlayTime;
+	m_dPlaySpeed									= 1.f;
+	m_dPlaySectionLength						= m_dPlayTime / m_iMaxFrame;
 	
-	m_strAnimTag				= strAnimTag;
+	m_strAnimTag									= strAnimTag;
 
-	m_bLoop						= bLoop;
+	m_bLoop											= bLoop;
 
 	return true;
 }
@@ -118,6 +123,11 @@ void CAnim::SetDrawingHeight(UINT iHeight)
 	m_iDrawHeight = iHeight;
 }
 
+void CAnim::SetAnimMode(AnimMode mode)
+{
+	m_AnimMode = mode;
+}
+
 bool CAnim::IsCanInterrupt() const
 {
 	return m_bInterrupt;
@@ -141,6 +151,11 @@ UINT CAnim::GetDrawHeight() const
 const Types::tstring CAnim::GetAnimTag() const
 {
 	return m_strAnimTag;
+}
+
+CAnim::AnimMode CAnim::GetAnimMode() const
+{
+	return m_AnimMode;
 }
 
 void CAnim::ClearEleapsedTime()
@@ -182,7 +197,13 @@ void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& po
 
 	TransparentBlt(hDC, point.x, point.y,
 		m_iDrawWidth, m_iDrawHeight, hMemDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
-		SPRITE_HEIGHT, m_colorRef);
+		SPRITE_HEIGHT, m_ColorRef);
+
+	//if (m_AnimMode == ANIM_BLEND)
+	//{
+	//	AlphaBlend(h)
+	//}
+
 
 	SelectObject(hMemDC, hOldBit);
 }
