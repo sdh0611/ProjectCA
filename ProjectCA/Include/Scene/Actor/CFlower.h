@@ -1,10 +1,10 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "CActor.h"
+#include "CPickup.h"
 
 
-class CFlower : public CActor {
+class CFlower : public CPickup {
 
 public:
 	CFlower();

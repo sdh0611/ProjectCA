@@ -20,6 +20,8 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!CActor::PostInit(data, pScene))
 		return false;
 
+	m_ActorType = Types::AT_PICKUP;
+
 	//PhysicsComponent Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
 	if (!pPhysics->PostInit(this, 200.f, 200.f, 1300.f, 0.f))
@@ -92,7 +94,11 @@ void CMushroom::Init()
 
 void CMushroom::Update(double dDeltaTime)
 {
-	CActor::Update(dDeltaTime);
+	if (m_bActive)
+	{
+		CActor::Update(dDeltaTime);
+	}
+
 }
 
 void CMushroom::Render(const HDC & hDC)

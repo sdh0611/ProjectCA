@@ -20,19 +20,11 @@ public:
 	virtual void	Draw(const HDC& hDC) = 0;
 
 
-public:
-	void SetVisible(bool bVisible);
-
-
-public:
-	bool IsVisible() const;
-
-
 protected:
 	HDC											m_hRenderDC;		//Backbuffer의 m_hMemDC에 대한 Compatible DC
 
 
 private:
-	bool											m_bVisible;
+
 
 };

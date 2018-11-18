@@ -25,6 +25,8 @@ bool TransformComponent::PostInit(CObject * pOwner, const POSITION& position, co
 
 	m_strComponentTag		= strTag;
 
+	m_bActive = true;
+
 	return true;
 }
 

@@ -29,8 +29,10 @@ bool PlayerInputComponent::PostInit(CObject* pOwner, const Types::tstring & strT
 
 void PlayerInputComponent::Update(double fDeltaTime)
 {
-	KeyProcess();
-
+	if (m_bActive)
+	{
+		KeyProcess();
+	}
 }
 
 void PlayerInputComponent::LateUpdate(double dDeltaTime)

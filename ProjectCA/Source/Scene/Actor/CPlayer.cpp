@@ -8,9 +8,9 @@
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
-#include "..\..\..\Include\Scene\CCameraManager.h"
+//#include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CObjectManager.h"
-#include "..\..\..\Include\Scene\Actor\CCamera.h"
+//#include "..\..\..\Include\Scene\Actor\CCamera.h"
 
 
 
@@ -324,27 +324,27 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 void CPlayer::Init()
 {
 	//m_ActorPoint = m_spawnPoint;
-	m_pCamera->Init();
+	//m_pCamera.lock()->Init();
 
 	for (const auto& it : m_ComponentTable)
 		it.second->Init();
 
 	SetPlayerState(PS_SMALL);
 
-	for (const auto& fire : m_FireballPool)
-	{
-		fire->Init();
-	}
+	//for (const auto& fire : m_FireballPool)
+	//{
+	//	fire->Init();
+	//}
 }
 
 void CPlayer::Update(double dDeltaTime)
 {
 	m_ActorCurState = Types::AS_IDLE;
 	CActor::Update(dDeltaTime);
-	for (const auto& fire : m_FireballPool)
-	{
-		fire->Update(dDeltaTime);
-	}
+	//for (const auto& fire : m_FireballPool)
+	//{
+	//	fire->Update(dDeltaTime);
+	//}
 
 }
 
@@ -356,10 +356,10 @@ void CPlayer::Render(const HDC & hDC)
 		pRender.lock()->Draw(hDC);
 	}
 
-	for (const auto& fire : m_FireballPool)
-	{
-		fire->Render(hDC);
-	}
+	//for (const auto& fire : m_FireballPool)
+	//{
+	//	fire->Render(hDC);
+	//}
 
 }
 
@@ -398,139 +398,244 @@ bool CPlayer::GenerateFireball()
 		if (pFire == nullptr)
 			return false;
 		pFire->SetOwnerActor(this);
+		//m_pOwnerScene->AddObjectToScene(pFire);
 		m_FireballPool.emplace_back(std::move(pFire));
 	}
 
 	return true;
 }
 
+
 void CPlayer::ActorBehavior(double dDeltaTime)
 {
-	auto pTransform		= GetComponent<TransformComponent>().lock();
-	auto pPhysics			= GetComponent<PhysicsComponent>().lock();
 
-	float fCurSpeed		= pPhysics->GetCurSpeed();
-	float fMaxSpeed		= pPhysics->GetMaxSpeed();
-	float fWalkSpeed		= pPhysics->GetSpeed();
-	float fCurJumpForce	= pPhysics->GetCurJumpForce();
+	////이동 및 물리처리 관련 Player로직
+	//{
+	//	auto pInput = GetComponent<PlayerInputComponent>().lock();
+	//	auto pTransform = GetComponent<TransformComponent>().lock();
+	//	auto pPhysics = GetComponent<PhysicsComponent>().lock();
 
-	if (m_Direction == Types::DIR_LEFT)
+	//	float fCurSpeed = pPhysics->GetCurSpeed();
+	//	float fMaxSpeed = pPhysics->GetMaxSpeed();
+	//	float fWalkSpeed = pPhysics->GetSpeed();
+	//	float fCurJumpForce = pPhysics->GetCurJumpForce();
+
+	//	if (m_Direction == Types::DIR_LEFT)
+	//	{
+	//		if (m_ActorHorizonalState == Types::HS_RUN)
+	//		{
+	//			if (fCurSpeed > -1 * fMaxSpeed)
+	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+	//		}
+	//		else if (m_ActorHorizonalState == Types::HS_WALK)
+	//		{
+	//			if (fCurSpeed < -1 * fWalkSpeed)
+	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+	//			else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
+	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
+	//			else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
+	//				pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
+
+	//		}
+	//		else if (m_ActorHorizonalState == Types::HS_IDLE)
+	//		{
+	//			if (fCurSpeed < 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 5.f);
+	//				if (pPhysics->GetCurSpeed() > 0.f)
+	//					pPhysics->SetCurSpeed(0.f);
+	//			}
+	//			else if (fCurSpeed > 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
+	//				if (pPhysics->GetCurSpeed() < 0.f)
+	//					pPhysics->SetCurSpeed(0.f);
+	//			}
+	//		}
+	//	}
+	//	else if (m_Direction == Types::DIR_RIGHT)
+	//	{
+	//		if (m_ActorHorizonalState == Types::HS_RUN)
+	//		{
+	//			if (fCurSpeed < fMaxSpeed)
+	//				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+	//		}
+	//		else if (m_ActorHorizonalState == Types::HS_WALK)
+	//		{
+	//			if (fCurSpeed > fWalkSpeed)
+	//				pPhysics->SetCurSpeed(fCurSpeed - 10.f);
+	//			else if (fCurSpeed < fWalkSpeed)
+	//				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
+	//			else if (fCurSpeed >= fWalkSpeed)
+	//				pPhysics->SetCurSpeed(fWalkSpeed);
+	//		}
+	//		else if (m_ActorHorizonalState == Types::HS_IDLE)
+	//		{
+	//			if (fCurSpeed > 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(fCurSpeed - 5.f);
+	//				if (pPhysics->GetCurSpeed() < 0.f)
+	//					pPhysics->SetCurSpeed(0.f);
+	//			}
+	//			else if (fCurSpeed < 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
+	//				if (pPhysics->GetCurSpeed() > 0.f)
+	//					pPhysics->SetCurSpeed(0.f);
+	//			}
+	//		}
+	//	}
+
+	//	if (pPhysics->IsGrounded())
+	//	{
+	//		if (m_ActorCurVerticalState == Types::VS_JUMP)
+	//		{
+	//			pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+	//			pPhysics->SetGrounded(false);
+	//		}
+	//	}
+
+	//	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+
+	//	if (!pPhysics->IsGrounded())
+	//	{
+	//		if (m_ActorCurVerticalState == Types::VS_FALL)
+	//		{
+	//			//m_bGrounded = false;
+	//			if (pPhysics->GetCurJumpForce() > 0.f)
+	//			{
+	//				pPhysics->SetCurJumpForce(0.f);
+	//			}
+	//		}
+	//	}
+
+	//}
+
+
+
+	//이동 및 물리처리 관련 Player로직
 	{
-		if (m_ActorHorizonalState == Types::HS_RUN)
-		{
-			if (fCurSpeed > -1 * fMaxSpeed)
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
-		}
-		else if (m_ActorHorizonalState == Types::HS_WALK)
-		{
-			if (fCurSpeed < -1 * fWalkSpeed)
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
-			else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
-			else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
-				pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
+		auto pTransform = GetComponent<TransformComponent>().lock();
+		auto pPhysics = GetComponent<PhysicsComponent>().lock();
 
-		}
-		else if (m_ActorHorizonalState == Types::HS_IDLE)
+		float fCurSpeed = pPhysics->GetCurSpeed();
+		float fMaxSpeed = pPhysics->GetMaxSpeed();
+		float fWalkSpeed = pPhysics->GetSpeed();
+		float fCurJumpForce = pPhysics->GetCurJumpForce();
+
+		if (m_Direction == Types::DIR_LEFT)
 		{
-			if (fCurSpeed < 0.f)
+			if (m_ActorHorizonalState == Types::HS_RUN)
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 5.f);
-				if (pPhysics->GetCurSpeed() > 0.f)
-					pPhysics->SetCurSpeed(0.f);
+				if (fCurSpeed > -1 * fMaxSpeed)
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
 			}
-			else if (fCurSpeed > 0.f)
+			else if (m_ActorHorizonalState == Types::HS_WALK)
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
-				if (pPhysics->GetCurSpeed() < 0.f)
-					pPhysics->SetCurSpeed(0.f);
+				if (fCurSpeed < -1 * fWalkSpeed)
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+				else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
+				else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
+					pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
+
 			}
-		}
-	}
-	else if (m_Direction == Types::DIR_RIGHT)
-	{
-		if (m_ActorHorizonalState == Types::HS_RUN)
-		{
-			if (fCurSpeed < fMaxSpeed)
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
-		}
-		else if (m_ActorHorizonalState == Types::HS_WALK)
-		{
-			if (fCurSpeed > fWalkSpeed)
-				pPhysics->SetCurSpeed(fCurSpeed - 10.f);
-			else if (fCurSpeed < fWalkSpeed)
-				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
-			else if (fCurSpeed >= fWalkSpeed)
-				pPhysics->SetCurSpeed(fWalkSpeed);
-		}
-		else if (m_ActorHorizonalState == Types::HS_IDLE)
-		{
-			if (fCurSpeed > 0.f)
+			else if (m_ActorHorizonalState == Types::HS_IDLE)
 			{
-				pPhysics->SetCurSpeed(fCurSpeed - 5.f);
-				if (pPhysics->GetCurSpeed() < 0.f)
-					pPhysics->SetCurSpeed(0.f);
+				if (fCurSpeed < 0.f)
+				{
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 5.f);
+					if (pPhysics->GetCurSpeed() > 0.f)
+						pPhysics->SetCurSpeed(0.f);
+				}
+				else if (fCurSpeed > 0.f)
+				{
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
+					if (pPhysics->GetCurSpeed() < 0.f)
+						pPhysics->SetCurSpeed(0.f);
+				}
 			}
-			else if (fCurSpeed < 0.f)
+		}
+		else if (m_Direction == Types::DIR_RIGHT)
+		{
+			if (m_ActorHorizonalState == Types::HS_RUN)
 			{
-				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
-				if (pPhysics->GetCurSpeed() > 0.f)
-					pPhysics->SetCurSpeed(0.f);
+				if (fCurSpeed < fMaxSpeed)
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
 			}
-		}
-	}
-
-	if (pPhysics->IsGrounded())
-	{
-		if (m_ActorCurVerticalState == Types::VS_JUMP)
-		{
-			pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
-			pPhysics->SetGrounded(false);
-		}
-	}
-
-	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
-
-	if (!pPhysics->IsGrounded())
-	{
-		if (m_ActorCurVerticalState == Types::VS_FALL)
-		{
-			//m_bGrounded = false;
-			if (pPhysics->GetCurJumpForce() > 0.f)
+			else if (m_ActorHorizonalState == Types::HS_WALK)
 			{
-				pPhysics->SetCurJumpForce(0.f);
+				if (fCurSpeed > fWalkSpeed)
+					pPhysics->SetCurSpeed(fCurSpeed - 10.f);
+				else if (fCurSpeed < fWalkSpeed)
+					pPhysics->SetCurSpeed(fCurSpeed + 5.f);
+				else if (fCurSpeed >= fWalkSpeed)
+					pPhysics->SetCurSpeed(fWalkSpeed);
+			}
+			else if (m_ActorHorizonalState == Types::HS_IDLE)
+			{
+				if (fCurSpeed > 0.f)
+				{
+					pPhysics->SetCurSpeed(fCurSpeed - 5.f);
+					if (pPhysics->GetCurSpeed() < 0.f)
+						pPhysics->SetCurSpeed(0.f);
+				}
+				else if (fCurSpeed < 0.f)
+				{
+					pPhysics->SetCurSpeed(fCurSpeed + 5.f);
+					if (pPhysics->GetCurSpeed() > 0.f)
+						pPhysics->SetCurSpeed(0.f);
+				}
+			}
+		}
+
+		if (pPhysics->IsGrounded())
+		{
+			if (m_ActorCurVerticalState == Types::VS_JUMP)
+			{
+				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+				pPhysics->SetGrounded(false);
+			}
+		}
+
+		pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+
+		if (!pPhysics->IsGrounded())
+		{
+			if (m_ActorCurVerticalState == Types::VS_FALL)
+			{
+				//m_bGrounded = false;
+				if (pPhysics->GetCurJumpForce() > 0.f)
+				{
+					pPhysics->SetCurJumpForce(0.f);
+				}
+			}
+		}
+
+	}
+	
+	//Collider 변환 관련 Player로직
+	{
+		auto pCollider = GetComponent<ColliderBox>().lock();
+		if (m_ActorCurState == Types::AS_SITDOWN)
+		{
+			pCollider->SetCurRectHeight(pCollider->GetHeight() / 2.f);
+		}
+		else
+		{
+			pCollider->SetCurRectHeight(pCollider->GetHeight());
+		}
+
+		if (m_PlayerState == PS_FLOWER)
+		{
+			if (m_ActorCurState == Types::AS_ATTACK && m_iAvailableFireballCount > 0)
+			{
+				Attack();
 			}
 		}
 	}
-	auto pCollider = GetComponent<ColliderBox>().lock();
-	if (m_ActorCurState == Types::AS_SITDOWN)
-	{
-		pCollider->SetCurRectHeight(pCollider->GetHeight() / 2.f);
-	}
-	else
-	{
-		pCollider->SetCurRectHeight(pCollider->GetHeight());
-	}
-
-	if (m_PlayerState == PS_FLOWER)
-	{
-		if (m_ActorCurState == Types::AS_ATTACK && m_iAvailableFireballCount > 0)
-		{
-			Attack();
-		}
-	}
-
 }
 
-bool CPlayer::AttachCamera(std::shared_ptr<CCamera> pCamera)
-{
-	if(m_pCamera)
-		return false;
-
-	m_pCamera = pCamera;
-
-	return true;
-}
 
 void CPlayer::SetPlayerState(PlayerState state)
 {
@@ -577,9 +682,4 @@ void CPlayer::SetPlayerState(PlayerState state)
 CPlayer::PlayerState CPlayer::GetPlayerState()
 {
 	return m_PlayerState;
-}
-
-std::weak_ptr<CCamera> CPlayer::GetCamera()
-{
-	return m_pCamera;
 }

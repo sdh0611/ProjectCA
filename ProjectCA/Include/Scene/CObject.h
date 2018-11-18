@@ -5,6 +5,7 @@
 
 class CLayer;
 class CScene;
+class CCamera;
 class ComponentBase;
 class TransformComponent;
 
@@ -55,6 +56,7 @@ public:
 	void SetObjectName(const TSTRING& strName);
 	void SetOwnerLayer(CLayer* pLayer);
 	void SetOwnerScene(CScene* pScene);
+	bool AttachCamera(std::shared_ptr<CCamera> pCamera);
 
 
 public:
@@ -66,16 +68,18 @@ public:
 	CScene* const									GetOwnerScene() const;
 	const TSTRING&								GetObjectName();
 	std::weak_ptr<TransformComponent>	GetTransform();
-	
+	std::weak_ptr<CCamera>					GetCamera();
+
 
 protected:
-	bool					m_bActive;
-	UINT					m_iObjectWidth;
-	UINT					m_iObjectHeight;
-	TSTRING				m_strObjectName;
-	TSTRING				m_strLayerTag;
-	CScene*				m_pOwnerScene;
-	
+	bool								m_bActive;
+	UINT								m_iObjectWidth;
+	UINT								m_iObjectHeight;
+	TSTRING							m_strObjectName;
+	TSTRING							m_strLayerTag;
+	CScene*							m_pOwnerScene;
+	std::weak_ptr<CCamera>	m_pCamera;
+
 
 protected:
 	typedef std::unordered_map<Types::tstring, std::shared_ptr<ComponentBase>> ComponentTable;
@@ -84,6 +88,7 @@ protected:
 
 private:
 	CLayer*				m_pOwnerLayer;
+
 
 private:
 	//대입연산자 막아놓음.

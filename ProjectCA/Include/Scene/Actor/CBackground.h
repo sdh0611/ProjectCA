@@ -22,9 +22,15 @@ public:
 
 public:
 	bool SetBackgroundImage(const TSTRING& strImageName);
+	void SetStatic(bool bStatic);
+
+
+public:
+	bool IsStatic();
 
 
 private:
+	bool							m_bStatic;						//움직이는 배경인가 멈춰있는 배경인가
 	float							m_fScrollSpeed;
 	//COLORREF					m_ColorRef;
 	//std::weak_ptr<CSprite>	m_pBackgroundImage;

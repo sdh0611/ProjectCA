@@ -56,16 +56,18 @@ void ColliderBox::Init()
 //물체가 움직임에 따라 CollisionBox의 좌표도 같이 이동해야함.
 void ColliderBox::Update(double dDeltaTime)
 {
-	float fPivotWidthRatio	= m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
-	float fPivotHeightRatio	= m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
+	if (m_bActive)
+	{
+		float fPivotWidthRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
+		float fPivotHeightRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
 
-	m_CurColliderPoint		= m_pOwner->GetObjectPosition();
+		m_CurColliderPoint = m_pOwner->GetObjectPosition();
 
-	m_ColliderRect.left			= m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
-	m_ColliderRect.top		= m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
-	m_ColliderRect.right		= m_CurColliderPoint.x + m_fCurWidth * fPivotWidthRatio;
-	m_ColliderRect.bottom	= m_CurColliderPoint.y;
-		
+		m_ColliderRect.left = m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
+		m_ColliderRect.top = m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
+		m_ColliderRect.right = m_CurColliderPoint.x + m_fCurWidth * fPivotWidthRatio;
+		m_ColliderRect.bottom = m_CurColliderPoint.y;
+	}
 }
 
 void ColliderBox::LateUpdate(double dDeltaTime)

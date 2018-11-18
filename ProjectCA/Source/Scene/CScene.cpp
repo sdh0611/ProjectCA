@@ -1,7 +1,7 @@
 #include "..\..\Include\Scene\CScene.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Scene\CObject.h"
-
+#include "..\..\Include\Scene\CCameraManager.h"
 
 CScene::CScene(Types::SceneType type):
 	m_SceneType(type)
@@ -17,8 +17,14 @@ CScene::~CScene()
 		}
 
 	m_LayerList.clear();
-
+	//CCameraManager::GetInstance()->Clear();
 	m_ObjectPtrList.clear();
+}
+
+
+void CScene::StartScene()
+{
+	CCameraManager::GetInstance()->ChangeMainCamera(m_pMainCameraPtr.lock());
 }
 
 bool CScene::Init()
@@ -78,18 +84,75 @@ bool CScene::DeleteLayer(const Types::tstring & tag)
 	return true;
 }
 
-CLayer * CScene::FindLayer(const Types::tstring & tag)
+CLayer * CScene::FindLayer(const TSTRING & strTag)
 {
-	for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-		if (!(*m_it)->GetLayerTag().compare( tag))
-			return (*m_it);
+	for (const auto& layer : m_LayerList) {
+		if (!layer->GetLayerTag().compare(strTag))
+			return layer;
 	}
 
 	return nullptr;
 }
 
-//해당 Scene을 리셋할 때 호출하는 메소드.
+void CScene::AddObjectToScene(CObject * pObject)
+{
+	m_ObjectPtrList.emplace_back(pObject);
+}
 
+void CScene::AddObjectToScene(std::shared_ptr<CObject> pObject)
+{
+	m_ObjectPtrList.push_back(pObject);
+}
+
+WeakObjPtr CScene::FindObjectFromScene(CObject * pObject)
+{
+	for (const auto& obj : m_ObjectPtrList)
+	{
+		if (obj.get() == pObject)
+		{
+			return obj;
+		}
+	}
+
+	return WeakObjPtr();
+}
+
+WeakObjPtr CScene::FindObjectFromScene(const TSTRING & strObjectName)
+{
+	return WeakObjPtr();
+}
+
+void CScene::SetSceneMainCamera(std::shared_ptr<CCamera> pCamera)
+{
+	m_pMainCameraPtr = pCamera;
+}
+
+bool CScene::FindObjectFromScene(UINT iObjectID)
+{
+	return false;
+}
+
+bool CScene::DeleteObjectFromScene(CObject * pObject)
+{
+	for (auto it = m_ObjectPtrList.cbegin(); it != m_ObjectPtrList.cend(); )
+	{
+		if (it->get() == pObject)
+		{
+			m_ObjectPtrList.erase(it);
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+bool CScene::DeleteObjectFromScene(UINT iObjectID)
+{
+	return false;
+}
+
+//해당 Scene을 리셋할 때 호출하는 메소드.
 void CScene::ResetScene()
 {
 	////Reset키 검사
@@ -102,6 +165,8 @@ void CScene::ResetScene()
 		actor->Init();
 	}
 
+	CCameraManager::GetInstance()->ResetCameraList();
+	
 }
 
 //LayerOrder가 클수록 먼저 출력됨.

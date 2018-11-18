@@ -11,7 +11,11 @@
 #include "..\..\stdafx.h"
 
 class CObject;
+class CCamera;
 class CLayer;
+
+typedef std::shared_ptr<CObject> ObjectPtr;
+typedef std::weak_ptr<CObject> WeakObjPtr;
 
 class CScene {
 
@@ -21,16 +25,31 @@ public:
 
 
 public:
+	void			StartScene();
 	virtual bool Init();
 	virtual void Update(double deltaTime);
 	virtual void Render(const HDC& hDC);
+	
+
+public:
+	bool		CreateLayer(const Types::tstring& tag, int order);	//Layer생성이 가능한 유일한 메소드
+	bool		DeleteLayer(const Types::tstring& tag);
+	CLayer*	FindLayer(const TSTRING& strTag);
 
 
 public:
-	bool CreateLayer(const Types::tstring& tag, int order);	//Layer생성이 가능한 유일한 메소드
-	bool DeleteLayer(const Types::tstring& tag);
-	CLayer* FindLayer(const Types::tstring& tag);
+	void				AddObjectToScene(CObject* pObject);
+	void				AddObjectToScene(std::shared_ptr<CObject> pObject);
+	bool				FindObjectFromScene(UINT iObjectID);
+	bool				DeleteObjectFromScene(CObject* pObject);
+	bool				DeleteObjectFromScene(UINT iObjectID);
+	WeakObjPtr		FindObjectFromScene(CObject* pObject);
+	WeakObjPtr		FindObjectFromScene(const TSTRING& strObjectName);
 
+
+public:
+	void SetSceneMainCamera(std::shared_ptr<CCamera> pCamera);
+	
 
 public:
 	void ResetScene();
@@ -42,13 +61,15 @@ private:
 
 
 protected:
+	bool									m_bActive;
 	Types::SceneType					m_SceneType;
 	std::list<CLayer*>					m_LayerList;
 	std::list<CLayer*>::iterator		m_it;
+	std::weak_ptr<CCamera>		m_pMainCameraPtr;
 
 
 protected:
-	typedef std::list<std::shared_ptr<CObject>>	StrongPtrObjectList;
-	StrongPtrObjectList									m_ObjectPtrList;
+	typedef std::list<ObjectPtr>	StrongObjecPtrList;
+	StrongObjecPtrList				m_ObjectPtrList;
 
 };

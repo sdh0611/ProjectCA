@@ -19,6 +19,7 @@ bool InputComponent::PostInit(CObject* pOwner, const Types::tstring & strTag)
 {
 	m_pOwner = pOwner;
 	m_strComponentTag = strTag;
+	m_bActive = true;
 
 	return true;
 }

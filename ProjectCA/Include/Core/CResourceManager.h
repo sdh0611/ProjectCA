@@ -46,6 +46,7 @@ private:
 	bool LoadEffectImageInfo();
 
 
+
 private:
 	typedef std::unordered_map<Types::tstring, std::list<Types::tstring>>	ResourcePathTable;
 	ResourcePathTable				m_pathTable;	

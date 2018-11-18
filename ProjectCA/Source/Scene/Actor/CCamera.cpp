@@ -1,5 +1,5 @@
 #include "..\..\..\stdafx.h"
-#include "..\..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\..\Include\Scene\CObject.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
@@ -15,50 +15,65 @@ CCamera::~CCamera()
 	puts("Camera Destroy");
 }
 
-bool CCamera::PostInit(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id)
+bool CCamera::PostInit(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id)
 {
+	auto pPhysics = pOwner->GetComponent<PhysicsComponent>();
+	if (pPhysics.expired())
+	{
+		m_fCameraMoveSpeed = 0.f;
+	}
+	else
+	{
+		m_fCameraMoveSpeed = pPhysics.lock()->GetMaxSpeed()*2.f;
+	}
+
 	m_bActive						= true;
 	m_fDestPosition				= 0.f;
-	m_fCameraMoveSpeed		= pOwner->GetComponent<PhysicsComponent>().lock()->GetMaxSpeed() * 2.f;
+	//m_fCameraMoveSpeed		= 0.f;
+	m_fOwnerCurSpeed			= 0.f;
+	m_fOwnerCurJumpForce		= 0.f;
 	m_iWidth						= iWidth;
 	m_iHeight						= iHeight;
 	m_iCameraID					= id;
 	m_pOwner						= pOwner;
 	m_CameraMode				= CM_DEFAULT;
 
-	m_CameraPosition				= std::move(POSITION(0.f - m_iWidth/2.f, 0));
+	m_CameraPosition				= POSITION(m_pOwner.lock()->GetObjectPosition().x - m_iWidth/2.f, 0.f);
+	m_OwnerScreenPosition		= m_pOwner.lock()->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 
 	return true;
 }
 
 void CCamera::Init()
 {
-	m_CameraPosition.x = 0.f - m_iWidth / 2.f;
+	m_CameraPosition.x = m_pOwner.lock()->GetObjectPosition().x - m_iWidth/2.f;
 	m_CameraPosition.y = 0.f;
-
+	m_OwnerScreenPosition = m_pOwner.lock()->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 }
 
 void CCamera::Update(double dDeltaTime)
 {
-	//PhysicsComponent* pPhysics = m_pOwner->GetComponent<PhysicsComponent>();
-	//if(pPhysics)
-	//{
-	//	m_fCameraMoveSpeed = pPhysics->GetMaxSpeed() + pPhysics->GetSpeed();
-	//	
-	//}
+	m_OwnerScreenPosition = m_pOwner.lock()->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 	AdjustCameraPosition(dDeltaTime);
 }
 
-std::weak_ptr<CActor> CCamera::GetOwner()
+std::weak_ptr<CObject> CCamera::GetOwner()
 {
-	if(m_pOwner == nullptr)
-		return std::weak_ptr<CActor>();
+	if(m_pOwner.expired())
+		return std::weak_ptr<CObject>();
 
 	return m_pOwner;
 }
 
 void CCamera::AdjustCameraPosition(double dDeltaTime)
 {
+	auto pPhysics = m_pOwner.lock()->GetComponent<PhysicsComponent>();
+	if (!pPhysics.expired())
+	{
+		m_fOwnerCurSpeed = pPhysics.lock()->GetCurSpeed();
+		m_fOwnerCurJumpForce = pPhysics.lock()->GetCurJumpForce();
+	}
+
 	switch (m_CameraMode)
 	{
 	case CM_DEFAULT:
@@ -89,7 +104,7 @@ void CCamera::SetCameraSize(UINT iWidth, UINT iHeight)
 
 }
 
-void CCamera::SetOwner(std::shared_ptr<CActor> pOwner)
+void CCamera::SetOwner(std::shared_ptr<CObject> pOwner)
 {
 	m_pOwner = pOwner;
 }
@@ -129,20 +144,25 @@ void CCamera::SetCameraMode(CameraMode mode)
 
 void CCamera::ScrollDefault(double dDeltaTime)
 {
+	//POSITION screenPosition = m_pOwner.lock()->GetComponent<TransformComponent>().lock()->GetScreenPosition();
+	m_CameraPosition.x += (m_fOwnerCurSpeed * dDeltaTime);
+	//m_CameraPosition.y -= (m_fOwnerCurJumpForce * dDeltaTime);
+
+
 }
 
 void CCamera::ScrollHorizon(double dDeltaTime)
 {
-	POSITION screenPosition = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
-	float fCurSpeed = m_pOwner->GetComponent<PhysicsComponent>().lock()->GetCurSpeed();
-	float fCurJumpForce = m_pOwner->GetComponent<PhysicsComponent>().lock()->GetCurJumpForce();
+	//m_OwnerScreenPosition = m_pOwner.lock()->GetComponent<TransformComponent>().lock()->GetScreenPosition();
+	//m_fOwnerCurSpeed = m_pOwner.lock()->GetComponent<PhysicsComponent>().lock()->GetCurSpeed();
+	//m_fOwnerCurJumpForce = m_pOwner.lock()->GetComponent<PhysicsComponent>().lock()->GetCurJumpForce();
 	float fUnit = m_iWidth * (1.f / 5.f);
 
 	if (m_fDestPosition != 0.f)
 	{
 		if (m_fDestPosition == fUnit * 2.f)
 		{
-			if (screenPosition.x >= fUnit * 1.89f)
+			if (m_OwnerScreenPosition.x >= fUnit * 1.89f)
 			{
 				m_CameraPosition.x += m_fCameraMoveSpeed * dDeltaTime;
 			}
@@ -154,7 +174,7 @@ void CCamera::ScrollHorizon(double dDeltaTime)
 		}
 		else if (m_fDestPosition == fUnit * 3.f)
 		{
-			if (screenPosition.x <= fUnit * 3.11f)
+			if (m_OwnerScreenPosition.x <= fUnit * 3.11f)
 			{
 				m_CameraPosition.x -= m_fCameraMoveSpeed * dDeltaTime;
 			}
@@ -168,27 +188,27 @@ void CCamera::ScrollHorizon(double dDeltaTime)
 	}
 	else
 	{
-		if (fCurSpeed > 0.f)
+		if (m_fOwnerCurSpeed > 0.f)
 		{
-			if (screenPosition.x > fUnit * 4.f)
+			if (m_OwnerScreenPosition.x > fUnit * 4.f)
 			{
 				m_fDestPosition = fUnit * 2.f;
 			}
-			else if (screenPosition.x <= fUnit * 2.f && screenPosition.x >= fUnit * 1.9f)
+			else if (m_OwnerScreenPosition.x <= fUnit * 2.f && m_OwnerScreenPosition.x >= fUnit * 1.9f)
 			{
-				m_CameraPosition.x += fCurSpeed * dDeltaTime;
+				m_CameraPosition.x += m_fOwnerCurSpeed * dDeltaTime;
 			}
 
 		}
-		else if (fCurSpeed < 0.f)
+		else if (m_fOwnerCurSpeed < 0.f)
 		{
-			if (screenPosition.x < fUnit)
+			if (m_OwnerScreenPosition.x < fUnit)
 			{
 				m_fDestPosition = fUnit * 3.f;
 			}
-			else if (screenPosition.x >= fUnit * 3.f && screenPosition.x <= fUnit * 3.1f)
+			else if (m_OwnerScreenPosition.x >= fUnit * 3.f && m_OwnerScreenPosition.x <= fUnit * 3.1f)
 			{
-				m_CameraPosition.x += fCurSpeed * dDeltaTime;
+				m_CameraPosition.x += m_fOwnerCurSpeed * dDeltaTime;
 			}
 
 		}

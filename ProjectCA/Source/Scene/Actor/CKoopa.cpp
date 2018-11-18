@@ -129,7 +129,11 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			case Collider::COLLISION_RIGHT:
 				if (GetActorState() == Types::AS_DAMAGED)
 				{
-					pPhysics->AddForceX(-600.f);
+					if (pPhysics->GetCurSpeed() == 0.f)
+					{
+						pPhysics->AddForceX(-600.f);
+					}
+
 				}
 				else
 				{
@@ -139,7 +143,11 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			case Collider::COLLISION_LEFT:
 				if (GetActorState() == Types::AS_DAMAGED)
 				{
-					pPhysics->AddForceX(600.f);
+					if (pPhysics->GetCurSpeed() == 0.f)
+					{
+						pPhysics->AddForceX(600.f);
+					}
+
 				}
 				else
 				{
@@ -148,6 +156,11 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				break;
 			
 			}
+			break;
+		case Types::AT_THROWN:
+			SetActorState(Types::AS_DAMAGED);
+			GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
+			pPhysics->SetCurSpeed(0.f);
 			break;
 
 		}

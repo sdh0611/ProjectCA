@@ -61,15 +61,16 @@ bool CGameScene::Init()
 	if (m_pPlayer == nullptr)
 		return false;
 
-	StrongCameraPtr pCamera = CCameraManager::GetInstance()->CreateCamera(m_pPlayer, MAX_WIDTH, MAX_HEIGHT).lock();
-	if (pCamera == nullptr)
+	auto pCamera = CCameraManager::GetInstance()->CreateCamera(m_pPlayer, MAX_WIDTH, MAX_HEIGHT);
+	if (pCamera.expired())
 	{
 		return false;
 	}
-	pCamera->SetCameraMode(CCamera::CM_SCROLL_HOR);
+	pCamera.lock()->SetCameraMode(CCamera::CM_SCROLL_HOR);
 	//카메라 부착
-	m_pPlayer->AttachCamera(pCamera);
-
+	m_pPlayer->AttachCamera(pCamera.lock());
+	SetSceneMainCamera(pCamera.lock());
+	
 	if (!CreateLayer(TEXT("Player"), 2))
 		return false;
 
@@ -204,12 +205,8 @@ bool CGameScene::Init()
 
 void CGameScene::Update(double fDeltaTime)
 {
-	//1. 입력에 따른 동작 Update
-	// TODO(09.17) : 현재 Input을 받는 것을 Player에 있는 PlayerInputComponent에서 수행하고 있는데,
-	//					   이 부분을 GameScene Level에서 수행할 수 있게끔 수정할 필요가 있어보임.
-	//InputUpdate(fDeltaTime); -> 일단은 임의로 GameUpdate에 몰빵시킴.
 
-	//2. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
+	//1. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
 	GameUpdate(fDeltaTime);
 
 	//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사하기 위함.
@@ -222,14 +219,8 @@ void CGameScene::Render(const HDC& hDC)
 	//Layer객체가 관리하는 Actor들을 Rendering
 	CScene::Render(hDC);
 
-	//m_pPlayer->Render(hDC);
-	//InvalidateRect(NULL, NULL, TRUE);
 }
 
-//Player와 Enemy
-//Player와 Probs
-//Enemy와 Probs
-//충돌했을 때 충돌한 Object에 대한 정보도 넘겨줘야한다.
 void CGameScene::CollisionDetect()
 {
 	//////Scene내의 모든 Actor들에 대한 충돌검사 시행
@@ -273,7 +264,6 @@ void CGameScene::GameUpdate(double dDeltaTime)
 	//Collsion detect between Actors
 	CollisionDetect();
 	CCameraManager::GetInstance()->GetMainCamera().lock()->Update(dDeltaTime);
-	//std::cout << "Address : " << CCameraManager::GetInstance() << "\n";
 	//Adjust Position on Screen 
 	for (const auto& object : m_ObjectPtrList)
 	{
@@ -281,8 +271,8 @@ void CGameScene::GameUpdate(double dDeltaTime)
 		{
 			if (object->IsActive())
 			{
-				object->LateUpdate();
-				//actor->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
+				//object->LateUpdate();
+				object->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
 			}
 		}
 	}

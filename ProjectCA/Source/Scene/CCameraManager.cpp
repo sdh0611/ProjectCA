@@ -1,6 +1,6 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CCameraManager.h"
-#include "..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\Include\Scene\CObject.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 
 CCameraManager::CCameraManager()
@@ -9,6 +9,7 @@ CCameraManager::CCameraManager()
 
 CCameraManager::~CCameraManager()
 {
+	Clear();
 	puts("CameraManager Destroy");
 }
 
@@ -26,7 +27,15 @@ void CCameraManager::Update(double dDeltaTime)
 {
 }
 
-WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight)
+void CCameraManager::ResetCameraList()
+{
+	for (const auto& camera : m_CameraList)
+	{
+		camera->Init();
+	}
+}
+
+WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeight)
 {
 	StrongCameraPtr pCamera = StrongCameraPtr(new CCamera);
 
@@ -37,7 +46,7 @@ WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CActor> pOwner, UINT 
 
 	AddCamera(pCamera);
 
-	if (m_pMainCamera.lock() == nullptr)
+	if (m_pMainCamera.expired())
 	{
 		m_pMainCamera = pCamera;
 	}
@@ -47,7 +56,7 @@ WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CActor> pOwner, UINT 
 
 StrongCameraPtr CCameraManager::GetCamera(Types::CameraID id)
 {
-	for (auto& it : m_cameraList)
+	for (auto& it : m_CameraList)
 	{
 		if (it->GetCameraID() == id)
 		{
@@ -60,17 +69,17 @@ StrongCameraPtr CCameraManager::GetCamera(Types::CameraID id)
 
 void CCameraManager::AddCamera(StrongCameraPtr pCamera)
 {
-	m_cameraList.emplace_back(pCamera);
+	m_CameraList.emplace_back(pCamera);
 
 }
 
 bool CCameraManager::DeleteCamera(StrongCameraPtr pCamera)
 {
-	for (auto it = m_cameraList.begin() ; it != m_cameraList.end(); ++it)
+	for (auto it = m_CameraList.begin() ; it != m_CameraList.end(); ++it)
 	{
 		if ((*it) == pCamera)
 		{
-			m_cameraList.erase(it);
+			m_CameraList.erase(it);
 			return true;
 		}
 	}
@@ -90,5 +99,12 @@ WeakCameraPtr CCameraManager::GetMainCamera()
 
 void CCameraManager::ChangeMainCamera(StrongCameraPtr pCamera)
 {
+	puts("ChangeMainCamera");
 	m_pMainCamera = pCamera;
+}
+
+void CCameraManager::Clear()
+{
+	m_CameraList.clear();
+	m_pMainCamera.reset();
 }

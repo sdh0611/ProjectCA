@@ -47,30 +47,33 @@ void AnimationRender::Init()
 
 void AnimationRender::Update(double dDeltaTime)
 {
-	m_OwnerState = m_pActor->GetActorState();
-	m_OwnerVerticalState = m_pActor->GetActorVerticalState();
-	m_OwnerHorizonalState = m_pActor->GetActorHorizonalState();
-	m_OwnerDirection = m_pActor->GetActorDirection();
+	if (m_bActive)
+	{
+		m_OwnerState = m_pActor->GetActorState();
+		m_OwnerVerticalState = m_pActor->GetActorVerticalState();
+		m_OwnerHorizonalState = m_pActor->GetActorHorizonalState();
+		m_OwnerDirection = m_pActor->GetActorDirection();
 
-	UpdateAnimationMotion();
-	if(m_pCurAnimation.lock()->IsReadyToChange())
-		ChangeAnimationClip(m_AnimationState);
-	
-	m_pCurAnimation.lock()->Update(dDeltaTime);
+		UpdateAnimationMotion();
+		if (m_pCurAnimation.lock()->IsReadyToChange())
+			ChangeAnimationClip(m_AnimationState);
 
+		m_pCurAnimation.lock()->Update(dDeltaTime);
+	}
 }
 
 void AnimationRender::Draw(const HDC & hDC)
 {
-	if (IsVisible())
+	if (m_bActive)
 	{
-		POSITION pivot		= m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
-		POSITION position	= m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
+
+		POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
+		POSITION position = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 		if (!m_pCurAnimation.expired())
 			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, pivot);
 
-		std::shared_ptr<Collider> pCollider					= STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
-		std::shared_ptr<PhysicsComponent> pPhysics		= STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
+		std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
+		std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
 
 		if (pCollider)
 		{
@@ -100,8 +103,9 @@ void AnimationRender::Draw(const HDC & hDC)
 
 		}
 
-	}
 
+
+	}
 }
 
 bool AnimationRender::AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName, 

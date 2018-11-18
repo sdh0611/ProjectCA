@@ -355,6 +355,13 @@ bool CResourceManager::LoadBackgroundImageInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Background/background_mountain2.bmp"), TEXT("BackgroundMountain2")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Title/title.bmp"), TEXT("Title")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Title/logo.bmp"), TEXT("Logo")))
+		return false;
+
+
 	return true;
 }
 
@@ -385,6 +392,11 @@ bool CResourceManager::LoadPickupImageInfo()
 }
 
 bool CResourceManager::LoadBlockImageInfo()
+{
+	return true;
+}
+
+bool CResourceManager::LoadEffectImageInfo()
 {
 	return true;
 }

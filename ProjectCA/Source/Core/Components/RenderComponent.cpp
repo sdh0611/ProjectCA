@@ -12,7 +12,6 @@
 
 
 RenderComponent::RenderComponent()
-	:m_bVisible(true)
 {
 }
 
@@ -27,9 +26,11 @@ bool RenderComponent::PostInit(CObject * pOwner, const Types::tstring & strTag)
 	m_pOwner					= pOwner;
 
 	m_strComponentTag		= strTag;
-	m_hRenderDC = BackBuffer::GetInstance()->AllocationCompatibleDC();
+	m_hRenderDC				= BackBuffer::GetInstance()->AllocationCompatibleDC();
 	if (m_hRenderDC == NULL)
 		return false;
+
+	m_bActive					= true;
 
 	return true;
 }
@@ -45,14 +46,3 @@ void RenderComponent::Update(double dDeltaTime)
 void RenderComponent::LateUpdate(double dDeltaTime)
 {
 }
-
-void RenderComponent::SetVisible(bool bVisible)
-{
-	m_bVisible = bVisible;
-}
-
-bool RenderComponent::IsVisible() const
-{
-	return m_bVisible;
-}
-

@@ -4,7 +4,7 @@
 #include "..\Singleton.hpp"
 
 class CCamera;
-class CActor;
+class CObject;
 
 typedef std::shared_ptr<CCamera> StrongCameraPtr;
 typedef std::weak_ptr<CCamera> WeakCameraPtr;
@@ -20,13 +20,17 @@ public:
 
 
 public:
-	WeakCameraPtr CreateCamera(std::shared_ptr<CActor> pOwner, UINT iWidth, UINT iHeight);
-	StrongCameraPtr GetCamera(Types::CameraID);
-	void AddCamera(StrongCameraPtr pCamera);
-	bool DeleteCamera(StrongCameraPtr pCamera);
+	void					ResetCameraList();
+	WeakCameraPtr	CreateCamera(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeight);
+	void					AddCamera(StrongCameraPtr pCamera);
+	bool					DeleteCamera(StrongCameraPtr pCamera);
+	void					ChangeMainCamera(StrongCameraPtr pCamera);
+	void					Clear();
+
+
+public:
 	WeakCameraPtr GetMainCamera();
-	void ChangeMainCamera(StrongCameraPtr pCamera);
-	
+	StrongCameraPtr GetCamera(Types::CameraID);
 
 
 private:
@@ -34,7 +38,7 @@ private:
 
 
 private:
-	StrongCameraList m_cameraList;
+	StrongCameraList m_CameraList;
 	WeakCameraPtr	m_pMainCamera;
 	Types::CameraID	m_iLastCameraID;
 

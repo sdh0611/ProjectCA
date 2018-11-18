@@ -23,7 +23,6 @@ bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
 	{
 		return false;
 	}
-
 	//ImageRender 추가
 	std::shared_ptr<ImageRender> pRender = std::make_shared<ImageRender>();
 	if (!pRender->PostInit(this))
@@ -31,6 +30,8 @@ bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
+
+	m_bStatic = false;
 
 	return true;;
 }
@@ -49,26 +50,31 @@ void CBackground::Update(double dDeltaTIme)
 void CBackground::Render(const HDC & hDC)
 {
 	auto pTransform = GetComponent<TransformComponent>().lock();
-	POSITION screenPosition = pTransform->GetScreenPosition();
-	UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
-
 	auto pRender = GetComponent<ImageRender>().lock();
-	
-	//카메라 좌측 맵출력
-	pRender->Draw(hDC, POSITION(screenPosition.x - m_iObjectWidth, screenPosition.y));
-	//카메라 출력부분
-	pRender->Draw(hDC, screenPosition);
+	POSITION screenPosition = pTransform->GetScreenPosition();
 
-	if (screenPosition.x > iCameraWidth)
+	if (m_bStatic)
 	{
-		pTransform->Move(-1.f * iCameraWidth, 0);
+		pRender->Draw(hDC, screenPosition);
 	}
-	else if(screenPosition.x < 0.f)
+	else
 	{
-		pTransform->Move(2.f * iCameraWidth, 0);
+		UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
+		//카메라 좌측 맵출력
+		pRender->Draw(hDC, POSITION(screenPosition.x - m_iObjectWidth, screenPosition.y));
+		//카메라 출력부분
+		pRender->Draw(hDC, screenPosition);
+
+		if (screenPosition.x > iCameraWidth)
+		{
+			pTransform->Move(-1.f * iCameraWidth, 0);
+		}
+		else if (screenPosition.x < 0.f)
+		{
+			pTransform->Move(2.f * iCameraWidth, 0);
+		}
+
 	}
-
-
 	//SelectObject(memDC, hOldBit);
 	//DeleteDC(memDC);
 
@@ -86,5 +92,15 @@ bool CBackground::SetBackgroundImage(const TSTRING & strImageName)
 	//m_iBackgroundHeight = m_pBackgroundImage.lock()->GetBitHeight();
 
 	return true;
+}
+
+void CBackground::SetStatic(bool bStatic)
+{
+	m_bStatic = bStatic;
+}
+
+bool CBackground::IsStatic()
+{
+	return m_bStatic;
 }
 

@@ -29,9 +29,12 @@ public:
 	void SetOwner(CObject* pOwner) { m_pOwner = pOwner; }
 	const Types::tstring& GetComponentTag() const { return m_strComponentTag; }
 	void SetComponentName(const Types::tstring& tag) { m_strComponentTag = tag; }
+	void SetActive(bool bActive) { m_bActive = bActive; }
+	bool IsActive() const { return m_bActive; }
 
 
 protected:
+	bool					m_bActive;
 	Types::tstring		m_strComponentTag;
 	CObject*				m_pOwner;
 

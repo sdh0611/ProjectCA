@@ -1,6 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CFireball.h"
-#include "..\..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
@@ -23,6 +23,8 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	if (!CActor::PostInit(data, pScene))
 		return false;
 
+	m_ActorType = Types::AT_THROWN;
+
 	//Physics Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
 	if (!pPhysics->PostInit(this, 600.f, 600.f, 1000.f, 500.f))
@@ -44,12 +46,6 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 		switch (pOtherActor->GetActorType())
 		{
-		case Types::AT_ENEMY:
-			pOtherActor->SetActorState(Types::AS_DAMAGED);
-			pOtherActor->GetComponent<PhysicsComponent>().lock()->SetCurSpeed(0.f);
-			pOtherActor->GetComponent<ColliderBox>().lock()->SetCurRectHeight(pOtherActor->GetComponent<ColliderBox>().lock()->GetHeight());
-			SetActive(false);
-			break;
 		case Types::AT_PROB:
 			switch (type)
 			{
@@ -61,6 +57,9 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 				SetActive(false);
 				break;
 			}
+			break;
+		case Types::AT_ENEMY:
+			SetActive(false);
 			break;
 		}
 
@@ -136,7 +135,10 @@ void CFireball::SetFireballActive()
 	}
 	SetActive(true);
 
+	puts("Active");
 }
+
+
 
 
 void CFireball::ActorBehavior(double dDeltaTime)

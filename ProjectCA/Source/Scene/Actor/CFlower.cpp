@@ -23,7 +23,7 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	//PhysicsComponent Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
-	if (!pPhysics->PostInit(this, 0.f, 0.f, 900.f, 0.f))
+	if (!pPhysics->PostInit(this, 0.f, 0.f, 1300.f, 0.f))
 		return false;
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
 		return false;

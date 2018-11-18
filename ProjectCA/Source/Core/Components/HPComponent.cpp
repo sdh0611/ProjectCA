@@ -20,6 +20,8 @@ bool HPComponent::PostInit(CObject* pOwner, float fHP, float fMaxHP,
 	m_fHP = fHP;
 	m_fMaxHP = fMaxHP;
 
+	m_bActive = true;
+
 	return true;
 }
 

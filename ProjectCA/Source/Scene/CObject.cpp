@@ -1,5 +1,6 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CObject.h"
+#include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Core\Components\ComponentBase.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\Include\Scene\CCameraManager.h"
@@ -13,8 +14,12 @@ CObject::CObject()
 CObject::~CObject()
 {
 	m_ComponentTable.clear();
-}
+	if (!m_pCamera.expired())
+	{
+		CCameraManager::GetInstance()->DeleteCamera(m_pCamera.lock());
+	}
 
+}
 bool CObject::PostInit(const OBJECT_DATA & objectData, CScene* pScene)
 {
 	//Object 속성 초기화 및 Transform 컴포넌트 추가
@@ -42,7 +47,11 @@ void CObject::Init()
 	{
 		component.second->Init();
 	}
-	
+
+	//if (!m_pCamera.expired())
+	//{
+	//	m_pCamera.lock()->Init();
+	//}
 }
 
 
@@ -150,6 +159,16 @@ void CObject::SetOwnerScene(CScene * pScene)
 	m_pOwnerScene = pScene;
 }
 
+bool CObject::AttachCamera(std::shared_ptr<CCamera> pCamera)
+{
+	if (!m_pCamera.expired())
+		return false;
+
+	m_pCamera = pCamera;
+
+	return true;
+}
+
 bool CObject::IsActive()
 {
 	return m_bActive;
@@ -188,4 +207,9 @@ const TSTRING & CObject::GetObjectName()
 std::weak_ptr<TransformComponent> CObject::GetTransform()
 {
 	return GetComponent<TransformComponent>();
+}
+
+std::weak_ptr<CCamera> CObject::GetCamera()
+{
+	return m_pCamera.lock();
 }

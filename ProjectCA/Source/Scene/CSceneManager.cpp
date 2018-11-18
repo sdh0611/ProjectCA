@@ -108,6 +108,7 @@ bool CSceneManager::ChangeScene(Types::SceneType nextSceneType)
 	m_pNextScene = nullptr;
 
 	m_bReadyToChageScene = false;
+	m_pScene->StartScene();
 
 	return CreateNextScene(nextSceneType);
 }

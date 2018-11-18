@@ -38,6 +38,8 @@ bool PhysicsComponent::PostInit(CObject* pOwner, float fSpeed, float fMaxSpeed,
 	m_fJumpForce				= fJumpForce;
 	m_strComponentTag		= strTag;
 
+	m_bActive					= true;
+
 	return true;
 }
 
@@ -50,16 +52,20 @@ void PhysicsComponent::Init()
 
 void PhysicsComponent::Update(double dDeltaTime)
 {
-	m_dTimeElapsed += dDeltaTime;
-
-	if (!m_bStatic)
+	if (m_bActive)
 	{
-		Gravity(dDeltaTime);
-	}
+		m_dTimeElapsed += dDeltaTime;
 
-	if (m_bGrounded)
-	{
-		m_bGrounded = false;
+		if (!m_bStatic)
+		{
+			Gravity(dDeltaTime);
+		}
+
+		if (m_bGrounded)
+		{
+			m_bGrounded = false;
+		}
+
 	}
 
 }

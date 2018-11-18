@@ -3,11 +3,11 @@
 #include "..\..\..\stdafx.h"
 #include "CActor.h"
 
-
 class CCamera;
 
 
 class CPlayer : public CActor {
+
 
 public:
 	enum PlayerState {
@@ -28,13 +28,11 @@ public:
 	virtual void LateUpdate() override;
 
 public:
-	bool AttachCamera(std::shared_ptr<CCamera> pCamera);
 	void SetPlayerState(PlayerState state);
 
 
 public:
 	PlayerState						GetPlayerState();
-	std::weak_ptr<CCamera>	GetCamera();
 
 
 private:
@@ -53,8 +51,7 @@ private:
 	typedef std::vector<std::shared_ptr<class CFireball>> FireballPool;
 	FireballPool						m_FireballPool;
 	UINT								m_iAvailableFireballCount;
-
-	std::shared_ptr<CCamera>	m_pCamera;
+	std::weak_ptr<CCamera>	m_pCamera;
 
 
 

@@ -23,6 +23,8 @@ bool CButton::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	if (!CObject::PostInit(objectData, pScene))
 		return false;
 
+	//GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
+
 	auto pRender = std::make_shared<ImageRender>();
 	if (!pRender->PostInit(this))
 		return false;
@@ -40,18 +42,24 @@ void CButton::Init()
 
 void CButton::Update(double dDeltaTime)
 {
-	if (IsClickOnButton())
+	if (m_bActive)
 	{
-		m_OnClick();
+		if (IsClickOnButton())
+		{
+			m_OnClick();
+		}
 	}
-
 	
 }
 
 void CButton::Render(const HDC & hDC)
 {
-	//POSITION position = GetTransform().lock()->GetPosition();
-	GetComponent<ImageRender>().lock()->Draw(hDC);
+	if (m_bActive)
+	{
+		//POSITION position = GetTransform().lock()->GetPosition();
+		GetComponent<ImageRender>().lock()->Draw(hDC, GetObjectPosition());
+	}
+
 }
 
 void CButton::SetOnClickCallback(Callback callback)
