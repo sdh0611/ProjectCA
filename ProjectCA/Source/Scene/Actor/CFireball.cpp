@@ -23,7 +23,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	if (!CActor::PostInit(data, pScene))
 		return false;
 
-	m_ActorType = Types::AT_THROWN;
+	m_ActorType = Types::AT_BULLET;
 
 	//Physics Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();

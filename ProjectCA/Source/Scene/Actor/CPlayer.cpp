@@ -463,7 +463,7 @@ bool CPlayer::GenerateFireball()
 	for (int i = 0; i < m_iAvailableFireballCount; ++i)
 	{
 		pFire = CObjectManager::GetInstance()->CreateActor<CFireball>(SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, GetObjectPosition().x, GetObjectPosition().y,
-			Types::AT_THROWN, Types::AS_ATTACK, Types::VS_IDLE, Types::HS_IDLE, m_Direction, TEXT("Fireball"), static_cast<CGameScene*>(m_pOwnerScene));
+			Types::AT_BULLET, Types::AS_ATTACK, Types::VS_IDLE, Types::HS_IDLE, m_Direction, TEXT("Fireball"), static_cast<CGameScene*>(m_pOwnerScene));
 		if (pFire == nullptr)
 			return false;
 		pFire->SetOwnerActor(this);
@@ -637,7 +637,7 @@ void CPlayer::SetPlayerState(PlayerState state)
 			pCollider->SetHeight(m_iObjectHeight*0.8);
 		}
 
-		if (m_PlayerState != PS_BIG)
+		if (m_PlayerState != PS_FLOWER)
 		{
 			pRender->SetCurAnimationTable(TEXT("MarioFlower"));
 		}

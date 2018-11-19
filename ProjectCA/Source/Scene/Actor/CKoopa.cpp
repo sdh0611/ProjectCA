@@ -119,7 +119,6 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						pPhysics->AddForceY(300.f);
 						pPhysics->SetGrounded(false);
 						GetComponent<ColliderBox>().lock()->SetActive(false);
-						//SetActive(false);
 					}
 
 				}
@@ -133,8 +132,12 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				break;
 			case Collider::COLLISION_LEFT:
+				FlipActorDirection();
+				pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
+				break;
 			case Collider::COLLISION_RIGHT:
 				FlipActorDirection();
+				pPhysics->SetCurSpeed(-1*pPhysics->GetMaxSpeed());
 				break;
 			}
 			break;
@@ -144,7 +147,6 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				SetActorState(Types::AS_DAMAGED);
 				GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight()/2.f);
 				pPhysics->SetCurSpeed(0.f);
-				//GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("KoopaNormal"), TEXT("Damaged"));
 				break;
 			case Collider::COLLISION_RIGHT:
 				if (GetActorState() == Types::AS_DAMAGED)
@@ -152,6 +154,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					if (pPhysics->GetCurSpeed() == 0.f)
 					{
 						pPhysics->AddForceX(-750.f);
+						m_Direction = Types::DIR_LEFT;
 					}
 
 				}
@@ -166,6 +169,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					if (pPhysics->GetCurSpeed() == 0.f)
 					{
 						pPhysics->AddForceX(750.f);
+						m_Direction = Types::DIR_RIGHT;
 					}
 
 				}

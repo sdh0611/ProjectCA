@@ -137,7 +137,7 @@ bool AnimationRender::AddAnimation(double dPlayTime, const TSTRING& strMapName, 
 		//테이블 안에 해당 Key값과 연결된 vector가 있는 경우
 		if (tableIter->second.find(strAnimTag) != tableIter->second.end())
 		{
-			tableIter->second[strAnimTag] = pAnim;
+			tableIter->second.at(strAnimTag) = pAnim;
 		}
 		else
 		{
@@ -170,6 +170,9 @@ void AnimationRender::SetCurAnimationTable(const TSTRING & strTableName)
 
 const TSTRING& AnimationRender::GetAnimTag() const
 {
+	if (m_pCurAnimation.expired())
+		return TEXT("");
+
 	return m_pCurAnimation.lock()->GetAnimTag();
 }
 
@@ -296,6 +299,24 @@ bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTableName, const TS
 
 void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
 {
+	if (motion== Types::AM_DAMAGED)
+	{
+		if (m_OwnerDirection == Types::DIR_LEFT)
+		{
+			if (!ChangeAnimation(TEXT("DamagedLeft")))
+			{
+				ChangeAnimation(TEXT("Damaged"));
+			}
+		}
+		else if (m_OwnerDirection == Types::DIR_RIGHT)
+		{
+			if (!ChangeAnimation(TEXT("DamagedRight")))
+			{
+				ChangeAnimation(TEXT("Damaged"));
+			}
+		}
+		return;
+	}
 
 	if (m_OwnerVerticalState == Types::VS_JUMP) {
 		switch (motion) {
@@ -337,22 +358,7 @@ void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
 			else if (m_OwnerDirection == Types::DIR_RIGHT)
 				ChangeAnimation(TEXT("JumpAttackRight"));
 			break;
-		case Types::AM_DAMAGED:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				if (!ChangeAnimation(TEXT("DamagedLeft")))
-				{
-					ChangeAnimation(TEXT("Damaged"));
-				}
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				if (!ChangeAnimation(TEXT("DamagedRight")))
-				{
-					ChangeAnimation(TEXT("Damaged"));
-				}
-			}
-			break;
+
 		}
 
 	}
@@ -396,22 +402,7 @@ void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
 			else if (m_OwnerDirection == Types::DIR_RIGHT)
 				ChangeAnimation(TEXT("JumpAttackRight"));
 			break;
-		case Types::AM_DAMAGED:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				if (!ChangeAnimation(TEXT("DamagedLeft")))
-				{
-					ChangeAnimation(TEXT("Damaged"));
-				}
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				if (!ChangeAnimation(TEXT("DamagedRight")))
-				{
-					ChangeAnimation(TEXT("Damaged"));
-				}
-			}
-			break;
+
 		}
 	}
 	else {
@@ -457,22 +448,6 @@ void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
 				ChangeAnimation(TEXT("AttackLeft"));
 			else if (m_OwnerDirection == Types::DIR_RIGHT)
 				ChangeAnimation(TEXT("AttackRight"));
-			break;
-		case Types::AM_DAMAGED:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				if (!ChangeAnimation(TEXT("DamagedLeft")))
-				{
-					ChangeAnimation(TEXT("Damaged"));
-				}
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				if (!ChangeAnimation(TEXT("DamagedRight")))
-				{
-					ChangeAnimation(TEXT("Damaged"));
-				}
-			}
 			break;
 
 		}

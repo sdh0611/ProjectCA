@@ -146,6 +146,20 @@ bool CGameScene::Init()
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
+	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, -400.f, 500.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	if (pGround == nullptr)
+		return false;
+	m_ObjectPtrList.push_back(pGround);
+	FindLayer(TEXT("Prob"))->AddActor(pGround);
+
+	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 0.f, 350.f, Types::AT_PROB,
+		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	if (pGround == nullptr)
+		return false;
+	m_ObjectPtrList.push_back(pGround);
+	FindLayer(TEXT("Prob"))->AddActor(pGround);
+
 	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 400.f, 350.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pGround== nullptr)
@@ -160,26 +174,15 @@ bool CGameScene::Init()
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 1200.f, 350.f, Types::AT_PROB,
+	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 1200.f, 500.f, Types::AT_PROB,
 		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 0.f, 350.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
-	if (pGround == nullptr)
-		return false;
-	m_ObjectPtrList.push_back(pGround);
-	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, -400.f, 350.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
-	if (pGround == nullptr)
-		return false;
-	m_ObjectPtrList.push_back(pGround);
-	FindLayer(TEXT("Prob"))->AddActor(pGround);
+	
 
 
 	//Backgorund »ý¼º
