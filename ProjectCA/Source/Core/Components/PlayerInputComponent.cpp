@@ -93,7 +93,7 @@ void PlayerInputComponent::KeyProcess()
 	//공격키
 	if (KEY_ONCE_PRESS('C'))
 	{
-		pOwner->SetActorState(Types::AS_ATTACK);
+		pOwner->SetObjectState(Types::OS_ATTACK);
 	}
 
 	//위, 아래키에 대한 입력
@@ -101,7 +101,7 @@ void PlayerInputComponent::KeyProcess()
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			pOwner->SetActorState(Types::AS_SITDOWN);
+			pOwner->SetObjectState(Types::OS_SITDOWN);
 			pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 
@@ -110,7 +110,7 @@ void PlayerInputComponent::KeyProcess()
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			pOwner->SetActorState(Types::AS_LOOKUP);
+			pOwner->SetObjectState(Types::OS_LOOKUP);
 			pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 

@@ -7,7 +7,6 @@
 
 
 CProb::CProb()
-	:CActor()
 {
 }
 
@@ -15,10 +14,12 @@ CProb::~CProb()
 {
 }
 
-bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
+bool CProb::PostInit(const OBJECT_DATA& data, CScene* pScene)
 {
 	//기본 Actor의 속성 초기화
-	CActor::PostInit(data, pScene);
+	CObject::PostInit(data, pScene);
+
+	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
 
 	//Collider 초기화
 	std::shared_ptr<ColliderBox> pCollider = std::make_shared<ColliderBox>();
@@ -28,12 +29,7 @@ bool CProb::PostInit(const Types::ActorData & data, CGameScene* pScene)
 		return false;
 
 
-	//ImageRender 추가
-	std::shared_ptr<ImageRender> pRender = std::make_shared<ImageRender>();
-	if (!pRender->PostInit(this))
-		return false;
-	if (!AddComponent(pRender, pRender->GetComponentTag()))
-		return false;
+
 
 	return true;
 }
@@ -44,7 +40,7 @@ void CProb::Init()
 
 void CProb::Update(double fDeltaTime)
 {
-	CActor::Update(fDeltaTime);
+	CObject::Update(fDeltaTime);
 }
 
 void CProb::Render(const HDC & hDC)
@@ -53,8 +49,4 @@ void CProb::Render(const HDC & hDC)
 
 	Rectangle(hDC, pivot.x, pivot.y, pivot.x + m_iObjectWidth, pivot.y + m_iObjectHeight);
 
-}
-
-void CProb::ActorBehavior(double dDeltaTime)
-{
 }

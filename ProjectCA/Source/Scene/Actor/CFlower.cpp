@@ -38,9 +38,9 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
 		//auto pOwnerActor = static_cast<CActor*>(pObject);
 
-		switch (static_cast<CActor*>(pOther)->GetActorType())
+		switch (pOther->GetObjectType())
 		{
-		case Types::AT_PROB:
+		case Types::OT_PROB:
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
@@ -55,7 +55,7 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				break;
 			}
 			break;
-		case Types::AT_PLAYER:
+		case Types::OT_PLAYER:
 			auto pPlayer = static_cast<CPlayer*>(pOther);
 			if (pPlayer->GetPlayerState() != CPlayer::PS_FLOWER)
 			{

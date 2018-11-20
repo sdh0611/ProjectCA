@@ -1,10 +1,10 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "CActor.h"
+#include "..\CObject.h"
 
 
-class CProb : public CActor {
+class CProb : public CObject {
 
 public:
 	CProb();
@@ -12,11 +12,10 @@ public:
 
 
 public:
-	virtual bool PostInit(const Types::ActorData&, CGameScene*) override;
+	virtual bool PostInit(const OBJECT_DATA&, CScene*) override;
 	virtual void Init() override;
 	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
-	virtual void ActorBehavior(double dDeltaTime) override;
 
 private:
 

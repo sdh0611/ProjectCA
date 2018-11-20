@@ -32,20 +32,22 @@ namespace Types {
 	typedef unsigned long ActorID;
 	typedef unsigned long CameraID;
 
-	//Object 타입 정의
-	enum ObjectType { OT_ACTOR, OT_UI };
+	////Object 타입 정의
+	//enum ObjectType { OT_ACTOR, OT_UI };
 
 	//UI 타입 정의
 	enum UIType { UT_BUTTON, UT_FONT };
 
 	//Actor 타입 정의
-	enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_BULLET, AT_BACKGROUND };
+	//enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_BULLET, AT_BACKGROUND };
+
+	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROB, OT_PICKUP, OT_BULLET, OT_BACKGROUND, OT_BLOCK, OT_UI };
 #ifndef TYPE_ACTION 
 	//오브젝트 상태 정의
 	enum ActorState { AS_IDLE, AS_MOVE, AS_ATTACK, AS_DAMAGED, AS_DEAD };
 #else
 	//Actor의 상태를 나타내기 위한 열거체 (10.13)
-	enum ActorState { AS_IDLE, AS_MOVE, AS_SITDOWN, AS_LOOKUP, AS_ATTACK, AS_DAMAGED, AS_PROTECTED, AS_DEAD };
+	enum ObjectState { OS_IDLE, OS_MOVE, OS_SITDOWN, OS_LOOKUP, OS_ATTACK, OS_DAMAGED, OS_PROTECTED, OS_DEAD };
 
 	//수직상의 이동 상태를 구분하기 위한 열거체 (10.13)
 	enum VerticalState { VS_IDLE, VS_JUMP, VS_FALL };
@@ -171,9 +173,13 @@ namespace Types {
 		UINT			m_iObjectHeight;
 		Point			m_ObjectPoint;
 		tstring		m_strObjectName;
+		ObjectType	m_ObjectType;
+		ObjectState m_ObjectState;
 
-		ObjectData(UINT iWidth, UINT iHeight, Point point, const tstring& strName)
-			: m_iObjectWidth(iWidth), m_iObjectHeight(iHeight), m_ObjectPoint(point), m_strObjectName(strName)
+		ObjectData(UINT iWidth, UINT iHeight, Point point, const tstring& strName, 
+			ObjectType type,ObjectState state)
+			: m_iObjectWidth(iWidth), m_iObjectHeight(iHeight), m_ObjectPoint(point),
+			m_strObjectName(strName), m_ObjectType(type), m_ObjectState(state)
 		{
 		}
 
@@ -183,6 +189,8 @@ namespace Types {
 			m_iObjectHeight		= other.m_iObjectHeight;
 			m_ObjectPoint			= other.m_ObjectPoint;
 			m_strObjectName		= other.m_strObjectName;
+			m_ObjectType			= other.m_ObjectType;
+			m_ObjectState			= other.m_ObjectState;
 		}
 
 
@@ -191,17 +199,17 @@ namespace Types {
 	struct ActorData : public ObjectData {
 		class CGameScene;
 
-		ActorType				m_ActorType;
-		ActorState				m_ActorState;
+		ObjectType				m_ActorType;
+		ObjectState				m_ActorState;
 		VerticalState			m_VerticalState;
 		HorizonalState			m_HorizonalState;
 		Direction					m_Direction;
 		ActorID					m_iActorID;
 
-		ActorData(UINT iWidth, UINT iHeight, Point point, ActorType type, ActorState state,
+		ActorData(UINT iWidth, UINT iHeight, Point point, ObjectType type, ObjectState state,
 			VerticalState vertical, HorizonalState horizonal, Direction dir,
 			ActorID id, const tstring& strName)
-			:ObjectData(iWidth, iHeight, point, strName),
+			:ObjectData(iWidth, iHeight, point, strName, type, state),
 			m_ActorType(type), m_ActorState(state), m_VerticalState(vertical), m_HorizonalState(horizonal),
 			m_Direction(dir), m_iActorID(id)
 		{			
@@ -228,11 +236,11 @@ namespace Types {
 typedef Types::tstring					TSTRING;
 typedef Types::ObjectType			OBEJCT_TYPE;
 typedef Types::UIType				UI_TYPE;
-typedef Types::ActorType			ACTOR_TYPE;
+typedef Types::ObjectType			OBJECT_TYPE;
 typedef Types::Point					POSITION;
 typedef Types::ObjectData			OBJECT_DATA;
 typedef Types::ActorData			ACTOR_DATA;
-typedef Types::ActorState			ACTOR_STATE;
+typedef Types::ObjectState			OBJECT_STATE;
 typedef Types::VerticalState			VER_STATE;
 typedef Types::HorizonalState		HOR_STATE;
 typedef Types::Direction				DIRECTION;

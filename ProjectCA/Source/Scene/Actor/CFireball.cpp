@@ -23,7 +23,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	if (!CActor::PostInit(data, pScene))
 		return false;
 
-	m_ActorType = Types::AT_BULLET;
+	m_ObjectType = Types::OT_BULLET;
 
 	//Physics Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
@@ -44,9 +44,9 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 		CActor* pOtherActor = static_cast<CActor*>(pOther);
 
-		switch (pOtherActor->GetActorType())
+		switch (pOtherActor->GetObjectType())
 		{
-		case Types::AT_PROB:
+		case Types::OT_PROB:
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
@@ -58,7 +58,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 				break;
 			}
 			break;
-		case Types::AT_ENEMY:
+		case Types::OT_ENEMY:
 			SetActive(false);
 			break;
 		}

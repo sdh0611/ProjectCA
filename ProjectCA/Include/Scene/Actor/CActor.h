@@ -45,22 +45,19 @@ public:
 
 
 public:
-	void SetActorState(Types::ActorState state);
-	void SetActorDirection(Types::Direction dir);
-	void SetActorVerticalState(Types::VerticalState vertical);
-	void SetActorHorizonalState(Types::HorizonalState horizonal);
+	void SetActorDirection(DIRECTION dir);
+	void SetActorVerticalState(VER_STATE vertical);
+	void SetActorHorizonalState(HOR_STATE horizonal);
 	//void SetOwnerWorld(CWorld* pWorld);
 
 
 public:
-	Types::ActorType		GetActorType() const;
-	Types::ActorState		GetActorState() const;
-	Types::Direction		GetActorDirection() const;
+	VER_STATE				GetActorVerticalState() const;
+	HOR_STATE				GetActorHorizonalState() const;
+	DIRECTION				GetActorDirection() const;
 	UINT						GetActorWidth() const;
 	UINT						GetActorHeight() const;
 	Types::ActorID			GetActorID() const;
-	Types::VerticalState	GetActorVerticalState() const;
-	Types::HorizonalState GetActorHorizonalState() const;
 	//CWorld* const			GetOwnerWorld() const;
 
 
@@ -73,11 +70,9 @@ private:
 
 
 protected:
-	Types::ActorType			m_ActorType;
-	Types::ActorState			m_ActorCurState;
-	Types::VerticalState		m_ActorCurVerticalState;
-	Types::HorizonalState		m_ActorHorizonalState;
-	Types::Direction			m_Direction;
+	VER_STATE					m_ActorCurVerticalState;
+	HOR_STATE					m_ActorHorizonalState;
+	DIRECTION					m_Direction;
 	Types::ActorID				m_ActorID;
 	//CWorld*					m_pOwnerWorld;
 

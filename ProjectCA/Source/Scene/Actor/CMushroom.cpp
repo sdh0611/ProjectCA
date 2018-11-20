@@ -20,7 +20,7 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!CActor::PostInit(data, pScene))
 		return false;
 
-	m_ActorType = Types::AT_PICKUP;
+	m_ObjectType = Types::OT_PICKUP;
 
 	//PhysicsComponent Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
@@ -39,9 +39,9 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
 		//auto pOwnerActor = static_cast<CActor*>(pObject);
 
-		switch (static_cast<CActor*>(pOther)->GetActorType())
+		switch (pOther->GetObjectType())
 		{
-		case Types::AT_PROB:
+		case Types::OT_PROB:
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
@@ -56,7 +56,7 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				break;
 			}
 			break;
-		case Types::AT_PLAYER:
+		case Types::OT_PLAYER:
 			auto pPlayer = static_cast<CPlayer*>(pOther);
 			if (pPlayer->GetPlayerState() == CPlayer::PS_SMALL)
 			{

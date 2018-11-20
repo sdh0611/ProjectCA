@@ -65,9 +65,9 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
 		auto pOtherActor = static_cast<CActor*>(pOther);
 
-		switch (static_cast<CActor*>(pOther)->GetActorType()) 
+		switch (static_cast<CActor*>(pOther)->GetObjectType()) 
 		{
-		case Types::AT_ENEMY:
+		case Types::OT_ENEMY:
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
@@ -83,11 +83,11 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 						{
 							SetPlayerState(PS_SMALL);
 							m_bProtected = true;
-							//m_ActorCurState = Types::AS_PROTECTED;
+							//m_ActorCurState = Types::OS_PROTECTED;
 						}
 						else //Player die
 						{
-							m_ActorCurState = Types::AS_DEAD;
+							m_ObjectState = Types::OS_DEAD;
 							pPhysics->SetCurJumpForce(700.f);
 							pPhysics->SetGrounded(false);
 							GetComponent<ColliderBox>().lock()->SetActive(false);
@@ -101,7 +101,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 			}
 			break;
-		case Types::AT_PROB:
+		case Types::OT_PROB:
 			switch (type) {
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
@@ -345,7 +345,7 @@ void CPlayer::Init()
 	//m_ActorPoint = m_spawnPoint;
 	//m_pCamera.lock()->Init();
 	m_bProtected = false;
-	m_ActorCurState = Types::AS_IDLE;
+	m_ObjectState = Types::OS_IDLE;
 	m_dTimeElapsed = 0.f;
 	for (const auto& it : m_ComponentTable)
 		it.second->Init();
@@ -362,7 +362,7 @@ void CPlayer::Init()
 
 void CPlayer::Update(double dDeltaTime)
 {
-	if (m_ActorCurState != Types::AS_DEAD)
+	if (m_ObjectState != Types::OS_DEAD)
 	{
 		//무적시간 관련 연산
 		if (m_bProtected)
@@ -375,7 +375,7 @@ void CPlayer::Update(double dDeltaTime)
 			}
 		}
 
-		m_ActorCurState = Types::AS_IDLE;
+		m_ObjectState = Types::OS_IDLE;
 		
 		CActor::Update(dDeltaTime);
 		for (const auto& fire : m_FireballPool)
@@ -463,7 +463,7 @@ bool CPlayer::GenerateFireball()
 	for (int i = 0; i < m_iAvailableFireballCount; ++i)
 	{
 		pFire = CObjectManager::GetInstance()->CreateActor<CFireball>(SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, GetObjectPosition().x, GetObjectPosition().y,
-			Types::AT_BULLET, Types::AS_ATTACK, Types::VS_IDLE, Types::HS_IDLE, m_Direction, TEXT("Fireball"), static_cast<CGameScene*>(m_pOwnerScene));
+			Types::OT_BULLET, Types::OS_ATTACK, Types::VS_IDLE, Types::HS_IDLE, m_Direction, TEXT("Fireball"), static_cast<CGameScene*>(m_pOwnerScene));
 		if (pFire == nullptr)
 			return false;
 		pFire->SetOwnerActor(this);
@@ -584,7 +584,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	//Collider 변환 관련 Player로직
 	{
 		auto pCollider = GetComponent<ColliderBox>().lock();
-		if (m_ActorCurState == Types::AS_SITDOWN)
+		if (m_ObjectState == Types::OS_SITDOWN)
 		{
 			pCollider->SetCurRectHeight(pCollider->GetHeight() / 2.f);
 		}
@@ -595,7 +595,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 
 		if (m_PlayerState == PS_FLOWER)
 		{
-			if (m_ActorCurState == Types::AS_ATTACK && m_iAvailableFireballCount > 0)
+			if (m_ObjectState == Types::OS_ATTACK && m_iAvailableFireballCount > 0)
 			{
 				Attack();
 			}
@@ -661,7 +661,7 @@ CPlayer::PlayerState CPlayer::GetPlayerState()
 
 bool CPlayer::IsDead()
 {
-	if (m_ActorCurState == Types::AS_DEAD)
+	if (m_ObjectState == Types::OS_DEAD)
 		return true;
 
 	return false;

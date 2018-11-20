@@ -20,19 +20,21 @@ CObject::~CObject()
 	}
 
 }
-bool CObject::PostInit(const OBJECT_DATA & objectData, CScene* pScene)
+bool CObject::PostInit(const OBJECT_DATA & data, CScene* pScene)
 {
 	//Object 속성 초기화 및 Transform 컴포넌트 추가
 	//Pivot ratio는 외부에서 따로 지정해줄 것.
 	m_bActive				= true;
-	m_iObjectWidth		= objectData.m_iObjectWidth;
-	m_iObjectHeight		= objectData.m_iObjectHeight;
-	m_strObjectName		= objectData.m_strObjectName;
+	m_iObjectWidth		= data.m_iObjectWidth;
+	m_iObjectHeight		= data.m_iObjectHeight;
+	m_strObjectName		= data.m_strObjectName;
+	m_ObjectType			= data.m_ObjectType;
+	m_ObjectState			= data.m_ObjectState;
 	m_strLayerTag			= TEXT("default");
 	m_pOwnerScene		= pScene;
 
 	auto pTransform = std::make_shared<TransformComponent>();
-	if (!pTransform->PostInit(this, objectData.m_ObjectPoint))
+	if (!pTransform->PostInit(this, data.m_ObjectPoint))
 		return false;
 
 	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
@@ -136,6 +138,11 @@ void CObject::SetObjectPosition(float fx, float fy)
 	GetComponent<TransformComponent>().lock()->SetPosition(fx, fy);
 }
 
+void CObject::SetObjectState(OBJECT_STATE state)
+{
+	m_ObjectState = state;
+}
+
 void CObject::SetObjectName(const TSTRING & strName)
 {
 	m_strObjectName = strName;
@@ -187,6 +194,16 @@ UINT CObject::GetObjectHeight() const
 POSITION CObject::GetObjectPosition()
 {
 	return GetTransform().lock()->GetPosition();
+}
+
+OBJECT_TYPE CObject::GetObjectType() const
+{
+	return m_ObjectType;
+}
+
+OBJECT_STATE CObject::GetObjectState() const
+{
+	return m_ObjectState;
 }
 
 CLayer * const CObject::GetOwnerLayer() const

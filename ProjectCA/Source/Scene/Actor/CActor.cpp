@@ -23,8 +23,6 @@ CActor::~CActor()
 bool CActor::PostInit(const Types::ActorData & data, CGameScene *pScene)
 {
 	//기본 Actor의 속성 초기화
-	m_ActorType = data.m_ActorType;
-	m_ActorCurState = data.m_ActorState;
 	m_ActorCurVerticalState = data.m_VerticalState;
 	m_ActorHorizonalState = data.m_HorizonalState;
 	m_Direction = data.m_Direction;
@@ -86,23 +84,19 @@ void CActor::LateUpdate(double dDeltaTime)
 //
 //}
 
-void CActor::SetActorState(Types::ActorState state)
-{
-	m_ActorCurState = state;
-}
 
-void CActor::SetActorDirection(Types::Direction dir)
+void CActor::SetActorDirection(DIRECTION dir)
 {
 	m_Direction = dir;
 }
 
 
-void CActor::SetActorVerticalState(Types::VerticalState vertical)
+void CActor::SetActorVerticalState(VER_STATE vertical)
 {
 	m_ActorCurVerticalState = vertical;;
 }
 
-void CActor::SetActorHorizonalState(Types::HorizonalState horizonal)
+void CActor::SetActorHorizonalState(HOR_STATE horizonal)
 {
 	m_ActorHorizonalState = horizonal;
 }
@@ -111,14 +105,14 @@ void CActor::SetActorHorizonalState(Types::HorizonalState horizonal)
 //
 //void CActor::SetOwnerWorld(CWorld* pWorld) { m_pOwnerWorld = pWorld; }
 
-Types::ActorType CActor::GetActorType() const
+VER_STATE CActor::GetActorVerticalState() const
 {
-	return m_ActorType;
+	return m_ActorCurVerticalState;
 }
 
-Types::ActorState CActor::GetActorState() const
+HOR_STATE	CActor::GetActorHorizonalState() const
 {
-	return m_ActorCurState;
+	return m_ActorHorizonalState;
 }
 
 Types::Direction CActor::GetActorDirection() const
@@ -141,15 +135,7 @@ Types::ActorID CActor::GetActorID() const
 	return m_ActorID;
 }
 
-Types::VerticalState CActor::GetActorVerticalState() const
-{
-	return m_ActorCurVerticalState;
-}
 
-Types::HorizonalState CActor::GetActorHorizonalState() const
-{
-	return m_ActorHorizonalState;
-}
 
 void CActor::FlipActorDirection()
 {

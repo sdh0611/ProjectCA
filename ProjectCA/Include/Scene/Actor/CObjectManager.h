@@ -49,13 +49,13 @@ public:
 
 	//오버로딩버전
 	template<typename T>
-	std::shared_ptr<T> CreateActor(UINT iWidth, UINT iHeight, float fx, float fy, Types::ActorType type, 
-		Types::ActorState state, Types::VerticalState vertical, Types::HorizonalState horizonal, Types::Direction dir,
-		const Types::tstring& strTag, CGameScene* pScene) {
+	std::shared_ptr<T> CreateActor(UINT iWidth, UINT iHeight, float fx, float fy, OBJECT_TYPE type, 
+		OBJECT_STATE state, VER_STATE vertical, HOR_STATE horizonal, DIRECTION dir,
+		const TSTRING& strTag, CGameScene* pScene) {
 
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
-		Types::ActorData data(iWidth, iHeight, Types::Point(fx, fy), type, state, 
+		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, state, 
 			vertical, horizonal, dir, m_lastActorID++,strTag);
 
 		if (!pActor->PostInit(data, pScene))
@@ -65,12 +65,30 @@ public:
 		return pActor;
 	}
 
+	//오버로딩버전
 	template<typename T>
-	std::shared_ptr<T> CreateObject(UINT iWidth, UINT iHeight, float fx, float fy, const Types::tstring& strTag, CScene* pScene) {
+	std::shared_ptr<T> CreateActor(UINT iWidth, UINT iHeight, float fx, float fy, OBJECT_TYPE type,
+		DIRECTION dir, const TSTRING& strTag, CGameScene* pScene) {
+
+		std::shared_ptr<T> pActor = std::make_shared<T>();
+
+		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, Types::OS_IDLE,
+			Types::VS_IDLE, Types::HS_IDLE, dir, m_lastActorID++, strTag);
+
+		if (!pActor->PostInit(data, pScene))
+			return std::shared_ptr<T>();
+
+
+		return pActor;
+	}
+
+	template<typename T>
+	std::shared_ptr<T> CreateObject(UINT iWidth, UINT iHeight, float fx, float fy, OBJECT_TYPE type,
+		const TSTRING& strTag, OBJECT_STATE state, CScene* pScene) {
 
 		std::shared_ptr<T> pObject = std::make_shared<T>();
 
-		Types::ObjectData data(iWidth, iHeight, Types::Point(fx, fy), strTag);
+		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, type, state);
 
 		if (!pObject->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -78,6 +96,22 @@ public:
 
 		return pObject;
 	}
+
+	template<typename T>
+	std::shared_ptr<T> CreateObject(UINT iWidth, UINT iHeight, float fx, float fy, OBJECT_TYPE type,
+		const TSTRING& strTag, CScene* pScene) {
+
+		std::shared_ptr<T> pObject = std::make_shared<T>();
+
+		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, type, Types::OS_IDLE);
+
+		if (!pObject->PostInit(data, pScene))
+			return std::shared_ptr<T>();
+
+
+		return pObject;
+	}
+
 
 
 private:

@@ -296,6 +296,7 @@ bool CResourceManager::LoadPlayerSpriteInfo()
 
 bool CResourceManager::LoadEnemySpriteInfo()
 {
+	//Koopa
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_walk_right.bmp"), TEXT("KoopaGreenWalkRight")))
 		return false;
 
@@ -310,6 +311,15 @@ bool CResourceManager::LoadEnemySpriteInfo()
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_damaged.bmp"), TEXT("KoopaGreenDamaged")))
 		return false;
+
+
+	//Goomba
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Goomba/goomba_walk_right.bmp"), TEXT("GoombaWalkRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Goomba/goomba_walk_left.bmp"), TEXT("GoombaWalkLeft")))
+		return false;
+
 
 	return true;
 }
@@ -399,6 +409,17 @@ bool CResourceManager::LoadPickupImageInfo()
 
 bool CResourceManager::LoadBlockImageInfo()
 {
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_random_image.bmp"), TEXT("RandomBlockImage")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_random_animation.bmp"), TEXT("RandomBlockAnimation")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_random_dead_image.bmp"), TEXT("RandomBlockDead")))
+		return false;
+
+
+
 	return true;
 }
 

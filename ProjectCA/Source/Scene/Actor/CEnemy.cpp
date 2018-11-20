@@ -35,9 +35,9 @@ void CEnemy::Init()
 	//m_actorPoint = m_spawnPoint;
 	for (auto& it : m_ComponentTable)
 		it.second->Init();
-
+	
 	m_bActive = true;
-	m_ActorCurState = Types::AS_IDLE;
+	m_ObjectState = Types::OS_IDLE;
 	m_Direction = Types::DIR_LEFT;
 	
 }

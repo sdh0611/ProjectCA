@@ -255,6 +255,12 @@
     <ClCompile Include="Source\Scene\Actor\CPickup.cpp">
       <Filter>소스 파일\Scene\Actors\Pickup</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CGoomba.cpp">
+      <Filter>소스 파일\Scene\Actors\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CBlock.cpp">
+      <Filter>소스 파일\Scene\Actors\Prob</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -412,6 +418,12 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CPickup.h">
       <Filter>헤더 파일\Scene\Actors\Pickup</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CGoomba.h">
+      <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CBlock.h">
+      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,24 +9,18 @@
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 
-bool CGround::PostInit(const Types::ActorData &data, CGameScene *pScene)
+bool CGround::PostInit(const OBJECT_DATA &data, CScene *pScene)
 {
 	if (!CProb::PostInit(data, pScene))
 		return false;
 
-	//auto onCollision = [](CObject* pOther, Collider::CollisionType type)->void {
-
-
-
-	//	switch (type)
-	//	{
-
-	//	}
-
-	//};
-
-	//GetComponent<ColliderBox>().lock()->SetOnCollision(onCollision);
-	GetComponent<ImageRender>().lock()->SetDrawSize(TILE_WIDTH, TILE_HEIGHT);
+	//ImageRender Ãß°¡
+	auto pRender = std::make_shared<ImageRender>();
+	if (!pRender->PostInit(this))
+		return false;
+	if (!AddComponent(pRender, pRender->GetComponentTag()))
+		return false;
+	pRender->SetDrawSize(TILE_WIDTH, TILE_HEIGHT);
 
 	return LoadTileImage();
 }
@@ -38,7 +32,7 @@ void CGround::Init()
 
 void CGround::Update(double dDeltaTime)
 {
-	CActor::Update(dDeltaTime);
+	CObject::Update(dDeltaTime);
 }
 
 void CGround::Render(const HDC & hDC)
@@ -64,10 +58,6 @@ void CGround::Render(const HDC & hDC)
 		outputPosition.x = fOriginPositionX;
 	}
 
-}
-
-void CGround::ActorBehavior(double dDeltaTime)
-{
 }
 
 bool CGround::LoadTileImage()

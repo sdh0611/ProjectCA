@@ -47,7 +47,7 @@ private:
 
 private:
 	bool								m_bTableChange;
-	ACTOR_STATE					m_OwnerState;
+	OBJECT_STATE					m_OwnerState;
 	VER_STATE						m_OwnerVerticalState;
 	HOR_STATE						m_OwnerHorizonalState;
 	DIRECTION						m_OwnerDirection;

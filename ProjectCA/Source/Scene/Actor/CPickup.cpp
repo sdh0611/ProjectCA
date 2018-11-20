@@ -22,7 +22,7 @@ bool CPickup::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
 		return false;
 
-	m_ActorType	= Types::AT_PICKUP;
+	m_ObjectType	= Types::OT_PICKUP;
 	m_bStored		= false;
 	
 	return true;

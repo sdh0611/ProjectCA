@@ -17,7 +17,7 @@ public:
 
 
 public:
-	virtual bool PostInit(const OBJECT_DATA& objectData, CScene* pScene);
+	virtual bool PostInit(const OBJECT_DATA& data, CScene* pScene);
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
@@ -53,6 +53,7 @@ public:
 	void SetObjectHeight(UINT iHeight);
 	void SetObjectPosition(POSITION position);
 	void SetObjectPosition(float fx, float fy);
+	void SetObjectState(OBJECT_STATE state); 
 	void SetObjectName(const TSTRING& strName);
 	void SetOwnerLayer(CLayer* pLayer);
 	void SetOwnerScene(CScene* pScene);
@@ -64,6 +65,8 @@ public:
 	UINT												GetObjectWidth() const;
 	UINT												GetObjectHeight() const;
 	POSITION										GetObjectPosition();
+	OBJECT_TYPE									GetObjectType() const;
+	OBJECT_STATE									GetObjectState() const;
 	CLayer* const									GetOwnerLayer() const;
 	CScene* const									GetOwnerScene() const;
 	const TSTRING&								GetObjectName();
@@ -77,6 +80,8 @@ protected:
 	UINT								m_iObjectHeight;
 	TSTRING							m_strObjectName;
 	TSTRING							m_strLayerTag;
+	OBJECT_TYPE					m_ObjectType;
+	OBJECT_STATE					m_ObjectState;
 	CScene*							m_pOwnerScene;
 	std::weak_ptr<CCamera>	m_pCamera;
 

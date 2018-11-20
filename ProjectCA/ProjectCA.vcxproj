@@ -164,7 +164,9 @@
     <ClCompile Include="Source\Core\Window\MainWindow.cpp" />
     <ClCompile Include="Source\Core\Window\MyWindow.cpp" />
     <ClCompile Include="Source\Scene\Actor\CActor.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CFireball.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CGoomba.cpp" />
     <ClCompile Include="Source\Scene\Actor\CObjectManager.cpp" />
     <ClCompile Include="Source\Scene\Actor\CBackground.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCamera.cpp" />
@@ -216,7 +218,9 @@
     <ClInclude Include="Include\Core\Window\MyWindow.h" />
     <ClInclude Include="Include\Event.h" />
     <ClInclude Include="Include\Scene\Actor\CActor.h" />
+    <ClInclude Include="Include\Scene\Actor\CBlock.h" />
     <ClInclude Include="Include\Scene\Actor\CFireball.h" />
+    <ClInclude Include="Include\Scene\Actor\CGoomba.h" />
     <ClInclude Include="Include\Scene\Actor\CObjectManager.h" />
     <ClInclude Include="Include\Scene\Actor\CBackground.h" />
     <ClInclude Include="Include\Scene\Actor\CCamera.h" />

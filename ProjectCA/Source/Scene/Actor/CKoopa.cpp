@@ -26,26 +26,26 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	//기본 Actor의 속성 초기화
 	CActor::PostInit(data, pScene);
 
-	//AIComponent (InputComponent) 초기화
-	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
-	if (!pAI->PostInit(this))
-		return false;
+	////AIComponent (InputComponent) 초기화
+	//std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
+	//if (!pAI->PostInit(this))
+	//	return false;
 
-	auto enemyBehavior = [](CActor* pActor) ->void {
+	//auto enemyBehavior = [](CActor* pActor) ->void {
 
-		if (pActor->GetObjectPosition().x < 100.f) 
-		{
-			pActor->SetActorDirection(Types::DIR_RIGHT);
-		}
-		else if (pActor->GetObjectPosition().x > 1000.f)
-		{
-			pActor->SetActorDirection(Types::DIR_LEFT);
-		}
+	//	if (pActor->GetObjectPosition().x < 100.f) 
+	//	{
+	//		pActor->SetActorDirection(Types::DIR_RIGHT);
+	//	}
+	//	else if (pActor->GetObjectPosition().x > 1000.f)
+	//	{
+	//		pActor->SetActorDirection(Types::DIR_LEFT);
+	//	}
 
-	};
-	pAI->SetDelegate(enemyBehavior);
-	if (!AddComponent(pAI, pAI->GetComponentTag()))
-		return false;
+	//};
+	//pAI->SetDelegate(enemyBehavior);
+	//if (!AddComponent(pAI, pAI->GetComponentTag()))
+	//	return false;
 
 	//PhysicsComponent 초기화
 	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
@@ -65,17 +65,17 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	auto onCollisionDelegater = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
 
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
-		auto pOtherActor = static_cast<CActor*>(pOther);
 
-		switch (pOtherActor->GetActorType()) {
-		case Types::AT_ENEMY:
-			if (m_ActorCurState != Types::AS_DAMAGED)
+
+		switch (pOther->GetObjectType()) {
+		case Types::OT_ENEMY:
+			if (m_ObjectState != Types::OS_DAMAGED)
 			{
-				if (pOtherActor->GetActorState() == Types::AS_DAMAGED)
+				if (pOther->GetObjectState() == Types::OS_DAMAGED)
 				{
-					if (pOtherActor->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
+					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
 					{
-						SetActorState(Types::AS_DEAD);
+						SetObjectState(Types::OS_DEAD);
 						GetComponent<ColliderBox>().lock()->SetActive(false);
 						pPhysics->SetCurJumpForce(300.f);
 						pPhysics->SetGrounded(false);
@@ -95,7 +95,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					}
 
 				}
-				else//otherActor != Types::AS_DAMAGED
+				else//otherActor != Types::OS_DAMAGED
 				{
 					if (type == Collider::COLLISION_LEFT)
 					{
@@ -111,11 +111,11 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			}
 			else//Owner == DAMAGED
 			{
-				if (pOtherActor->GetActorState() == Types::AS_DAMAGED)
+				if (pOther->GetObjectState() == Types::OS_DAMAGED)
 				{
-					if (pOtherActor->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
+					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
 					{
-						SetActorState(Types::AS_DEAD);
+						SetObjectState(Types::OS_DEAD);
 						pPhysics->AddForceY(300.f);
 						pPhysics->SetGrounded(false);
 						GetComponent<ColliderBox>().lock()->SetActive(false);
@@ -124,7 +124,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				}
 			}
 			break;
-		case Types::AT_PROB:
+		case Types::OT_PROB:
 			switch (type){
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
@@ -133,23 +133,29 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				break;
 			case Collider::COLLISION_LEFT:
 				FlipActorDirection();
-				pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
+				if (m_ObjectState == Types::OS_DAMAGED)
+				{
+					pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
+				}
 				break;
 			case Collider::COLLISION_RIGHT:
 				FlipActorDirection();
-				pPhysics->SetCurSpeed(-1*pPhysics->GetMaxSpeed());
+				if (m_ObjectState == Types::OS_DAMAGED)
+				{
+					pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
+				}
 				break;
 			}
 			break;
-		case Types::AT_PLAYER:
+		case Types::OT_PLAYER:
 			switch (type){
 			case Collider::COLLISION_TOP:
-				SetActorState(Types::AS_DAMAGED);
+				SetObjectState(Types::OS_DAMAGED);
 				GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight()/2.f);
 				pPhysics->SetCurSpeed(0.f);
 				break;
 			case Collider::COLLISION_RIGHT:
-				if (GetActorState() == Types::AS_DAMAGED)
+				if (GetObjectState() == Types::OS_DAMAGED)
 				{
 					if (pPhysics->GetCurSpeed() == 0.f)
 					{
@@ -158,13 +164,14 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					}
 
 				}
-				else
-				{
-					FlipActorDirection();
-				}
+				//else
+				//{
+				//	FlipActorDirection();
+				//}
 				break;
 			case Collider::COLLISION_LEFT:
-				if (GetActorState() == Types::AS_DAMAGED)
+				//puts("LEFT");
+				if (GetObjectState() == Types::OS_DAMAGED)
 				{
 					if (pPhysics->GetCurSpeed() == 0.f)
 					{
@@ -173,16 +180,16 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					}
 
 				}
-				else
-				{
-					FlipActorDirection();
-				}
+				//else
+				//{
+				//	FlipActorDirection();
+				//}
 				break;
 			
 			}
 			break;
-		//case Types::AT_THROWN:
-		//	SetActorState(Types::AS_DAMAGED);
+		//case Types::OT_BULLET:
+		//	SetActorState(Types::OS_DAMAGED);
 		//	GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
 		//	pPhysics->SetCurSpeed(0.f);
 		//	break;
@@ -246,17 +253,14 @@ void CKoopa::Init()
 void CKoopa::Update(double dDeltaTime)
 {
 	CEnemy::Update(dDeltaTime);
-	if (!m_bActive)
-	{
-		puts("inactive");
-	}
+
 }
 
 void CKoopa::Render(const HDC & hDC)
 {
-	auto pRender = GetComponent(TEXT("RenderComponent"));
-	if (!pRender.expired())
-		STATIC_POINTER_CAST(RenderComponent, pRender.lock())->Draw(hDC);
+	auto pRender = GetComponent<AnimationRender>().lock();
+	if (pRender->IsActive())
+		pRender->Draw(hDC);
 
 }
 
@@ -264,9 +268,9 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 {
 	auto pPhysics = GetComponent<PhysicsComponent>().lock();
 	auto pTransform = GetTransform().lock();
-	if(m_ActorCurState != Types::AS_DEAD)
+	if(m_ObjectState != Types::OS_DEAD)
 	{
-		if (m_ActorCurState != Types::AS_DAMAGED)
+		if (m_ObjectState != Types::OS_DAMAGED)
 		{
 			float fWalkSpeed = pPhysics->GetSpeed();
 

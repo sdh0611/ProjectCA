@@ -26,7 +26,7 @@ bool CTitleScene::Init()
 	CObjectManager* objMgr = CObjectManager::GetInstance();
 
 	//Title积己
-	auto pTitle = objMgr->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0, 0, TEXT("Logo"), this);
+	auto pTitle = objMgr->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0, 0, Types::OT_BACKGROUND,TEXT("Logo"), this);
 	if (pTitle == nullptr)
 		return false;
 	pTitle->SetBackgroundImage(TEXT("Logo"));
@@ -46,7 +46,7 @@ bool CTitleScene::Init()
 
 
 	//Test侩 滚瓢 积己
-	auto pButton = objMgr->CreateObject<CButton>(256, 96, MAX_WIDTH/2.f - 128, MAX_HEIGHT/2.f + 50, TEXT("Button"), this);
+	auto pButton = objMgr->CreateObject<CButton>(256, 96, MAX_WIDTH/2.f - 128, MAX_HEIGHT/2.f + 50, Types::OT_UI, TEXT("Button"), this);
 	if (pButton == nullptr)
 		return false;
 	

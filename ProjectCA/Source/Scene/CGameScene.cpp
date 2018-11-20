@@ -12,6 +12,7 @@
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\Actor\CEnemy.h"
 #include "..\..\Include\Scene\Actor\CKoopa.h"
+#include "..\..\Include\Scene\Actor\CGoomba.h"
 #include "..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\Include\Scene\Actor\CProb.h"
 #include "..\..\Include\Scene\Actor\CGround.h"
@@ -53,8 +54,8 @@ bool CGameScene::Init()
 	////	m_pCurWorld = new CWorld;
 
 	//Player 积己
-	m_pPlayer = m_pObjectManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 0, 0, Types::AT_PLAYER,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_RIGHT, TEXT("Player"), this);
+	m_pPlayer = m_pObjectManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 0, 0, Types::OT_PLAYER,
+		Types::DIR_RIGHT, TEXT("Player"), this);
 
 	m_ObjectPtrList.emplace_back(m_pPlayer);
 
@@ -78,8 +79,8 @@ bool CGameScene::Init()
 	
 
 	//Enemy 积己
-	std::shared_ptr<CKoopa> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::AT_ENEMY,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+	std::shared_ptr<CEnemy> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::OT_ENEMY,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 	if (pEnemy == nullptr)
 		return false;
 
@@ -89,8 +90,8 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 200.f, 250.f, Types::AT_ENEMY,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 200.f, 250.f, Types::OT_ENEMY,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 	if (pEnemy == nullptr)
 		return false;
 
@@ -98,8 +99,8 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 150.f, 250.f, Types::AT_ENEMY,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 150.f, 250.f, Types::OT_ENEMY,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 	if (pEnemy == nullptr)
 		return false;
 
@@ -107,8 +108,16 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 250.f, Types::AT_ENEMY,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+	pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 250.f, Types::OT_ENEMY,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+	if (pEnemy == nullptr)
+		return false;
+
+	m_ObjectPtrList.emplace_back(pEnemy);
+	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+	pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 350.f, 250.f, Types::OT_ENEMY,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
 	if (pEnemy == nullptr)
 		return false;
 
@@ -117,8 +126,8 @@ bool CGameScene::Init()
 
 
 	//抛胶飘侩 Mushroom 积己
-	std::shared_ptr<CActor> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::AT_PICKUP,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
+	std::shared_ptr<CActor> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
 	if (pPickup == nullptr)
 		return false;
 	if (!CreateLayer(TEXT("Pickup"), 3))
@@ -127,8 +136,8 @@ bool CGameScene::Init()
 	m_ObjectPtrList.emplace_back(pPickup);
 
 	//抛胶飘侩 Flower 积己
-	pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::AT_PICKUP,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
+	pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
 	if (pPickup == nullptr)
 		return false;
 	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
@@ -139,54 +148,47 @@ bool CGameScene::Init()
 	if (!CreateLayer(TEXT("Prob"), 10))
 		return false;
 
-	std::shared_ptr<CGround> pGround = m_pObjectManager->CreateActor<CGround>(8192, 256, 400.f, 700.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	std::shared_ptr<CGround> pGround = m_pObjectManager->CreateObject<CGround>(8192, 256, 400.f, 700.f, Types::OT_PROB, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, -400.f, 500.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	pGround = m_pObjectManager->CreateObject<CGround>(256, 160, -400.f, 500.f, Types::OT_PROB, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 0.f, 350.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 0.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 400.f, 350.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 400.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
 	if (pGround== nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 800.f, 350.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateActor<CGround>(256, 160, 1200.f, 500.f, Types::AT_PROB,
-		Types::AS_IDLE, Types::VS_IDLE, Types::HS_IDLE, Types::DIR_IDLE, TEXT("Prob"), this);
+	pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 1200.f, 500.f, Types::OT_PROB, TEXT("Prob"), this);
 	if (pGround == nullptr)
 		return false;
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-
-	
 
 
 	//Backgorund 积己
-	std::shared_ptr<CBackground> pBack = m_pObjectManager->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, TEXT("Background"), this);
+	std::shared_ptr<CBackground> pBack = m_pObjectManager->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, 
+		Types::OT_BACKGROUND, TEXT("Background"), this);
 
 	if (pBack == nullptr)
 		return false;
@@ -285,15 +287,20 @@ void CGameScene::GameUpdate(double dDeltaTime)
 	}
 	
 	//Adjust Position on Screen 
-	for (const auto& object : m_ObjectPtrList)
+	for (auto it = m_ObjectPtrList.cbegin(); it != m_ObjectPtrList.cend(); ++it)
 	{
 		//if (actor->GetActorType() != Types::AT_BACKGROUND)
 		{
-			if (object->IsActive())
+			if ((*it)->IsActive())
 			{
-				object->LateUpdate();
+				(*it)->LateUpdate();
+				//++it;
 				//object->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
 			}
+			//else
+			//{
+			//	it = m_ObjectPtrList.erase(it);
+			//}
 		}
 	}
 
