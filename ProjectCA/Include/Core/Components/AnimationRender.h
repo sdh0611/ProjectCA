@@ -30,29 +30,17 @@ public:
 
 public:
 	bool SetAnimationPlaySpeed(double dSpeed);
-	void SetAnimationMotion(ANIM_MOTION motion);
-	void SetCurAnimationTable(const TSTRING& strTableName);
 	bool ChangeAnimation(const TSTRING& strAnimTag);
-	bool ChangeAnimation(const TSTRING& strAnimTableName, const TSTRING& strAnimTag);
+	void ChangeAnimationTable(const TSTRING& strTableName);
+	bool ChangeAnimationTable(const TSTRING& strAnimTableName, const TSTRING& strAnimTag);
 	
-
 
 public:
 	const TSTRING&	GetAnimTag() const;
 
 
 private:
-	void UpdateAnimationMotion();
-	void ChangeAnimationClip(ANIM_MOTION motion);
-
-private:
 	bool								m_bTableChange;
-	OBJECT_STATE					m_OwnerState;
-	VER_STATE						m_OwnerVerticalState;
-	HOR_STATE						m_OwnerHorizonalState;
-	DIRECTION						m_OwnerDirection;
-	ANIM_MOTION				m_AnimationState;
-	ANIM_MOTION				m_PreAnimationState;
 	CActor*							m_pActor;
 	std::weak_ptr<CAnim>		m_pCurAnimation;
 	AnimationTable				m_AnimationTable;

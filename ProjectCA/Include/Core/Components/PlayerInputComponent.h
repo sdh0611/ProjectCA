@@ -29,4 +29,5 @@ private:
 private:
 	class CInputManager*		m_pInputManager;
 
+
 };

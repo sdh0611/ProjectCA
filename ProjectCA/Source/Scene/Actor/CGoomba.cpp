@@ -211,10 +211,12 @@ void CGoomba::ActorBehavior(double dDeltaTime)
 			if (m_Direction == Types::DIR_LEFT)
 			{
 				pPhysics->SetCurSpeed(-1 * fWalkSpeed);
+				GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("WalkLeft"));
 			}
 			else if (m_Direction == Types::DIR_RIGHT)
 			{
 				pPhysics->SetCurSpeed(fWalkSpeed);
+				GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("WalkRight"));
 			}
 
 		}

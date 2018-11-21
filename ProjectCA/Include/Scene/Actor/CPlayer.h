@@ -46,6 +46,7 @@ public:
 private:
 	void			Attack();
 	bool			GenerateFireball();
+	void			ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxSpeed, float fCurJumpForce);
 	virtual void	ActorBehavior(double dDeltaTime) override;
 
 

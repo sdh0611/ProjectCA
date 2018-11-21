@@ -51,6 +51,11 @@ void PlayerInputComponent::KeyProcess()
 
 	Types::Direction dir = pOwner->GetActorDirection();
 
+	if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
+	{
+		pOwner->SetObjectState(Types::OS_IDLE);
+	}
+
 	//수평상의 움직임에 대한 입력
 	if (m_pInputManager->IsKeyDown(TEXT("LEFT")))
 	{
@@ -81,13 +86,7 @@ void PlayerInputComponent::KeyProcess()
 	}
 	else 
 	{
-		//if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
-		//{
-		//	pOwner->SetActorState(Types::AS_IDLE);
-		//}
-
 		pOwner->SetActorHorizonalState(Types::HS_IDLE);
-
 	}
 
 	//공격키
@@ -116,7 +115,6 @@ void PlayerInputComponent::KeyProcess()
 
 	}
 
-
 	//수직상의 움직임에 대한 입력
 	if (m_pInputManager->IsKeyDown(TEXT("JUMP")))
 	{
@@ -134,13 +132,5 @@ void PlayerInputComponent::KeyProcess()
 		}
 
 	}
-
-
-	//else
-	//{
-	//	static_cast<CPlayer*>(pOwner)->SetAttack(false);
-	//}
-
-
 
 }

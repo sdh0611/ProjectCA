@@ -160,5 +160,13 @@ void CFireball::ActorBehavior(double dDeltaTime)
 
 	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
+	if (m_Direction == Types::DIR_RIGHT)
+	{
+		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("AttackRight"));
+	}
+	else if (m_Direction == Types::DIR_LEFT)
+	{
+		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("AttackLeft"));
+	}
 
 }

@@ -19,6 +19,7 @@ public:
 
 
 private:
+	void ChangeAnimationClip();
 	virtual void ActorBehavior(double dDeltaTime) override;
 	
 

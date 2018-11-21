@@ -303,13 +303,13 @@ bool CResourceManager::LoadEnemySpriteInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_walk_left.bmp"), TEXT("KoopaGreenWalkLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_run_right.bmp"), TEXT("KoopaGreenRunRight")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_thrown_right.bmp"), TEXT("KoopaGreenThrownRight")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_run_left.bmp"), TEXT("KoopaGreenRunLeft")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_thrown_left.bmp"), TEXT("KoopaGreenThrownLeft")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_damaged.bmp"), TEXT("KoopaGreenDamaged")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Koopa/koopa_green_shell.bmp"), TEXT("KoopaGreenShell")))
 		return false;
 
 

@@ -10,8 +10,7 @@
 
 
 AnimationRender::AnimationRender()
-	:RenderComponent(), 
-	m_AnimationState(Types::AM_IDLE)
+	:RenderComponent()
 {
 }
 
@@ -28,39 +27,19 @@ bool AnimationRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
 
 	m_pActor = static_cast<CActor*>(pOwner);
 
-	m_OwnerState = m_pActor->GetObjectState();
-	m_OwnerVerticalState = m_pActor->GetActorVerticalState();
-	m_OwnerHorizonalState = m_pActor->GetActorHorizonalState();
-	m_OwnerDirection = m_pActor->GetActorDirection();
-
-	m_AnimationState = m_PreAnimationState = Types::AM_IDLE;
-
 	return true;
 }
 
 void AnimationRender::Init()
 {
 	RenderComponent::Init();
-
-	m_AnimationState = m_PreAnimationState = Types::AM_IDLE;
 }
 
 void AnimationRender::Update(double dDeltaTime)
 {
 	if (m_bActive)
 	{
-		m_OwnerState = m_pActor->GetObjectState();
-		m_OwnerVerticalState = m_pActor->GetActorVerticalState();
-		m_OwnerHorizonalState = m_pActor->GetActorHorizonalState();
-		m_OwnerDirection = m_pActor->GetActorDirection();
-
-
-		UpdateAnimationMotion();
-		if (m_pCurAnimation.lock()->IsReadyToChange())
-			ChangeAnimationClip(m_AnimationState);
-
 		m_pCurAnimation.lock()->Update(dDeltaTime);
-
 	}
 
 }
@@ -157,129 +136,10 @@ bool AnimationRender::SetAnimationPlaySpeed(double dSpeed)
 	return m_pCurAnimation.lock()->SetPlaySpeed(dSpeed);
 }
 
-void AnimationRender::SetAnimationMotion(ANIM_MOTION motion)
-{
-	m_AnimationState = motion;
-}
-
-void AnimationRender::SetCurAnimationTable(const TSTRING & strTableName)
-{
-	m_strCurTableName = strTableName;
-	m_pCurAnimation = m_AnimationTable.at(strTableName).at(m_pCurAnimation.lock()->GetAnimTag());
-}
-
-const TSTRING& AnimationRender::GetAnimTag() const
-{
-	if (m_pCurAnimation.expired())
-		return TEXT("");
-
-	return m_pCurAnimation.lock()->GetAnimTag();
-}
-
-void AnimationRender::UpdateAnimationMotion()
-{
-
-	if (m_OwnerState == Types::OS_DEAD)
-	{
-		m_AnimationState = Types::AM_DEAD;
-		return;
-	}
-
-	if (m_OwnerState == Types::OS_DAMAGED)
-	{
-		m_AnimationState = Types::AM_DAMAGED;
-		return;
-	}
-
-	if (m_OwnerState == Types::OS_ATTACK)
-	{
-		m_AnimationState = Types::AM_ATTACK;
-		return;
-	}
-
-	if (m_OwnerState == Types::OS_SITDOWN)
-	{
-		m_AnimationState = Types::AM_SITDOWN;
-		return;
-	}
-
-	else if (m_OwnerState == Types::OS_LOOKUP)
-	{
-		m_AnimationState = Types::AM_LOOKUP;
-		return;
-	}
-
-	auto pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
-	if (pPhysics == nullptr)
-		return;
-
-	float fCurSpeed = std::fabsf(pPhysics->GetCurSpeed());
-	float fSpeed = pPhysics->GetSpeed();
-	float fMaxSpeed = pPhysics->GetMaxSpeed();
-	
-
-	if (fCurSpeed > 0.f && fCurSpeed < fMaxSpeed)
-	{
-		m_AnimationState = Types::AM_WALK;
-
-	}
-	else if (fCurSpeed >= fMaxSpeed)
-	{
-		m_AnimationState = Types::AM_RUN;
-	}
-	else
-	{
-		m_AnimationState = Types::AM_IDLE;
-	}
-
-	if (m_OwnerVerticalState == Types::VS_IDLE)
-	{
-		if (pPhysics->GetCurSpeed() < 0.f)
-		{
-			if (m_OwnerDirection == Types::DIR_RIGHT && m_OwnerHorizonalState != Types::HS_IDLE)
-				m_AnimationState = Types::AM_TURN;
-		}
-		else if (pPhysics->GetCurSpeed() > 0.f)
-		{
-			if (m_OwnerDirection == Types::DIR_LEFT && m_OwnerHorizonalState != Types::HS_IDLE)
-				m_AnimationState = Types::AM_TURN;
-		}
-	}
-
-	if (fCurSpeed < fSpeed / 3)
-		SetAnimationPlaySpeed(0.3f);
-	else if (fCurSpeed < (fSpeed / 3) * 2)
-		SetAnimationPlaySpeed(0.6f);
-	else
-		SetAnimationPlaySpeed(1.f);
-
-}
-
 bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTag)
 {
 	auto animIter = m_AnimationTable.at(m_strCurTableName).find(strAnimTag);
 	if (animIter == m_AnimationTable.at(m_strCurTableName).end())
-	{
-		return false;
-	}
-	//같은 animation인지 판별
-	if (!m_pCurAnimation.expired())
-	{
-		if (m_pCurAnimation.lock()->GetAnimTag() == strAnimTag )
-			return true;
-
-		m_pCurAnimation.lock()->ClearEleapsedTime();
-	}
-
-	m_pCurAnimation = animIter->second;
-
-	return true;
-}
-
-bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTableName, const TSTRING & strAnimTag)
-{
-	auto animIter = m_AnimationTable.at(strAnimTableName).find(strAnimTag);
-	if (animIter == m_AnimationTable.at(strAnimTableName).end())
 	{
 		return false;
 	}
@@ -297,163 +157,52 @@ bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTableName, const TS
 	return true;
 }
 
-void AnimationRender::ChangeAnimationClip(ANIM_MOTION motion)
+void AnimationRender::ChangeAnimationTable(const TSTRING & strTableName)
 {
-	if (motion== Types::AM_DAMAGED)
+	auto tableIt = m_AnimationTable.find(strTableName);
+	if (tableIt == m_AnimationTable.cend())
 	{
-		if (m_OwnerDirection == Types::DIR_LEFT)
-		{
-			if (!ChangeAnimation(TEXT("DamagedLeft")))
-			{
-				ChangeAnimation(TEXT("Damaged"));
-			}
-		}
-		else if (m_OwnerDirection == Types::DIR_RIGHT)
-		{
-			if (!ChangeAnimation(TEXT("DamagedRight")))
-			{
-				ChangeAnimation(TEXT("Damaged"));
-			}
-		}
+		std::cout << strTableName.c_str() << "is not existing key in AnimationTable.";
 		return;
 	}
 
-	if (m_OwnerVerticalState == Types::VS_JUMP) {
-		switch (motion) {
-		case Types::AM_IDLE:
-		case Types::AM_WALK:
-		case Types::AM_LOOKUP:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("JumpLeft"));
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("JumpRight"));
-			}
-			break;
-		case Types::AM_SITDOWN:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("SitdownLeft"));
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("SitdownRight"));
-			}
-			break;
-		case Types::AM_RUN:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("RunJumpLeft"));
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("RunJumpRight"));
-			}
-			break;
-		case Types::AM_ATTACK:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("JumpAttackLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("JumpAttackRight"));
-			break;
-
-		}
-
+	auto animIt = tableIt->second.find(m_pCurAnimation.lock()->GetAnimTag());
+	if (animIt == tableIt->second.cend())
+	{
+		std::cout << m_pCurAnimation.lock()->GetAnimTag().c_str() << "is not existing key in AnimationMap.";
+		return;
 	}
-	else if (m_OwnerVerticalState == Types::VS_FALL) {
-		switch (motion) {
-		case Types::AM_IDLE:
-		case Types::AM_WALK:
-		case Types::AM_LOOKUP:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("FalldownLeft"));
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("FalldownRight"));
-			}
-			break;
-		case Types::AM_SITDOWN:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("SitdownLeft"));
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("SitdownRight"));
-			}
-			break;
-		case Types::AM_RUN:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-			{
-				ChangeAnimation(TEXT("RunJumpLeft"));
-			}
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-			{
-				ChangeAnimation(TEXT("RunJumpRight"));
-			}
-			break;
-		case Types::AM_ATTACK:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("JumpAttackLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("JumpAttackRight"));
-			break;
 
-		}
-	}
-	else {
-		switch (motion) {
-		case Types::AM_IDLE:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("IdleLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("IdleRight"));
-			break;
-		case Types::AM_WALK:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("WalkLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("WalkRight"));
-			break;
-		case Types::AM_RUN:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("RunLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("RunRight"));
-			break;
-		case Types::AM_TURN:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("TurnLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("TurnRight"));
-			break;
-		case Types::AM_LOOKUP:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("LookupLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("LookupRight"));
-			break;
-		case Types::AM_SITDOWN:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("SitdownLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("SitdownRight"));
-			break;
-		case Types::AM_ATTACK:
-			if (m_OwnerDirection == Types::DIR_LEFT)
-				ChangeAnimation(TEXT("AttackLeft"));
-			else if (m_OwnerDirection == Types::DIR_RIGHT)
-				ChangeAnimation(TEXT("AttackRight"));
-			break;
-
-		}
-
-	}
+	m_strCurTableName = strTableName;
+	m_pCurAnimation = animIt->second;
 }
+
+bool AnimationRender::ChangeAnimationTable(const TSTRING & strAnimTableName, const TSTRING & strAnimTag)
+{
+	auto animIter = m_AnimationTable.at(strAnimTableName).find(strAnimTag);
+	if (animIter == m_AnimationTable.at(strAnimTableName).end())
+	{
+		return false;
+	}
+	//같은 animation인지 판별
+	if (!m_pCurAnimation.expired())
+	{
+		if (m_pCurAnimation.lock()->GetAnimTag() == strAnimTag)
+			return true;
+
+		m_pCurAnimation.lock()->ClearEleapsedTime();
+	}
+	m_strCurTableName = strAnimTableName;
+	m_pCurAnimation = animIter->second;
+
+	return true;
+}
+
+const TSTRING& AnimationRender::GetAnimTag() const
+{
+	return m_pCurAnimation.lock()->GetAnimTag();
+}
+
 
 
 

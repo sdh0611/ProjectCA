@@ -19,6 +19,7 @@ CKoopa::CKoopa()
 
 CKoopa::~CKoopa()
 {
+	puts("Koopa Destroy");
 }
 
 bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
@@ -153,6 +154,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				SetObjectState(Types::OS_DAMAGED);
 				GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight()/2.f);
 				pPhysics->SetCurSpeed(0.f);
+				GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaShell"), TEXT("ShellIdle"));
 				break;
 			case Collider::COLLISION_RIGHT:
 				if (GetObjectState() == Types::OS_DAMAGED)
@@ -210,32 +212,23 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->PostInit(this))
 		return false;
 
+	//평소 상태 animation
 	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"),TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkRight")))
 		return false;
 
 	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("JumpRight")))
+	//Shell 상태 animation
+	if (!pRender->AddAnimation(0.2f, TEXT("KoopaShell"), TEXT("KoopaGreenThrownRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("ThrownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("JumpLeft")))
+	if (!pRender->AddAnimation(0.2f, TEXT("KoopaShell"), TEXT("KoopaGreenThrownLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("ThrownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenRunRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaShell"), TEXT("KoopaGreenShell"), m_iObjectWidth, m_iObjectHeight, true, TEXT("ShellIdle")))
 		return false;
 
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenRunLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
-		return false;
-
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenRunRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
-		return false;
-
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenRunLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
-		return false;
-
-	if (!pRender->AddAnimation(0.f, TEXT("KoopaNormal"), TEXT("KoopaGreenDamaged"), m_iObjectWidth, m_iObjectHeight, false, TEXT("Damaged")))
-		return false;
 
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
@@ -248,6 +241,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 void CKoopa::Init()
 {
 	CEnemy::Init();
+	GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaNormal"), TEXT("WalkLeft"));
 }
 
 void CKoopa::Update(double dDeltaTime)
@@ -264,10 +258,17 @@ void CKoopa::Render(const HDC & hDC)
 
 }
 
+void CKoopa::ChangeAnimationClip()
+{
+
+
+}
+
 void CKoopa::ActorBehavior(double dDeltaTime)
 {
 	auto pPhysics = GetComponent<PhysicsComponent>().lock();
 	auto pTransform = GetTransform().lock();
+	auto pRender = GetComponent<AnimationRender>().lock();
 	if(m_ObjectState != Types::OS_DEAD)
 	{
 		if (m_ObjectState != Types::OS_DAMAGED)
@@ -277,12 +278,28 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 			if (m_Direction == Types::DIR_LEFT)
 			{
 				pPhysics->SetCurSpeed(-1 * fWalkSpeed);
+				pRender->ChangeAnimation(TEXT("WalkLeft"));
 			}
 			else if (m_Direction == Types::DIR_RIGHT)
 			{
 				pPhysics->SetCurSpeed(fWalkSpeed);
+				pRender->ChangeAnimation(TEXT("WalkRight"));
 			}
 
+		}
+		else
+		{
+			if (pPhysics->GetCurSpeed() != 0.f)
+			{
+				if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("ThrownLeft"));
+				}
+				else if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("ThrownRight"));
+				}
+			}
 		}
 
 	}
