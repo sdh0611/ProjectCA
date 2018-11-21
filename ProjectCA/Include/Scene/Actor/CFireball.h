@@ -17,12 +17,13 @@ public:
 	virtual void Init() override;
 	virtual void Update(double dDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
-
+	virtual void LateUpdate() override;
 
 public:
 	void SetDamage(float fDamage) { if (fDamage < 0.f) return; m_fDamage = fDamage; }
 	void SetOwnerActor(CActor* pActor) { m_pOwnerActor = pActor; }
 	void SetFireballActive();
+	void SetFireballInactive();
 
 
 public:

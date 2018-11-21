@@ -16,6 +16,7 @@ CFireball::CFireball()
 
 CFireball::~CFireball()
 {
+	puts("Destroy Fireball");
 }
 
 bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
@@ -54,12 +55,14 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 				GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(GetComponent<PhysicsComponent>().lock()->GetJumpForce());
 				break;
 			default:
-				SetActive(false);
+				SetFireballInactive();
+				//SetActive(false);
 				break;
 			}
 			break;
 		case Types::OT_ENEMY:
-			SetActive(false);
+			SetFireballInactive();
+			//SetActive(false);
 			break;
 		}
 
@@ -81,7 +84,6 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 		return false;
 
 	m_bActive = false;
-
 	return true;
 }
 
@@ -93,16 +95,14 @@ void CFireball::Init()
 
 void CFireball::Update(double dDeltaTime)
 {
-	if (!m_bActive)
-	{
-	}
-	else
+	if (m_bActive)
 	{
 		ActorBehavior(dDeltaTime);
 		for (auto& component : m_ComponentTable)
 		{
 			component.second->Update(dDeltaTime);
 		}
+
 	}
 
 }
@@ -117,6 +117,27 @@ void CFireball::Render(const HDC & hDC)
 	}
 }
 
+void CFireball::LateUpdate()
+{
+	if (m_bActive)
+	{
+		GetTransform().lock()->AdjustScreenPosition();
+
+		auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
+		auto screenPosition = GetTransform().lock()->GetScreenPosition();
+
+		if (screenPosition.x < 0.f || screenPosition.x >(float)pCamera->GetCameraWidth())
+		{
+			SetFireballInactive();
+			return;
+		}
+		if (screenPosition.y < 0.f || screenPosition.y >(float)pCamera->GetCameraHeight())
+		{
+			SetFireballInactive();
+			return;
+		}
+	}
+}
 void CFireball::SetFireballActive()
 {
 	m_Direction = m_pOwnerActor->GetActorDirection();
@@ -132,31 +153,22 @@ void CFireball::SetFireballActive()
 	{
 		pPhysics->SetCurSpeed(fWalkSpeed);
 	}
-	SetActive(true);
 	GetTransform().lock()->SetPosition(m_pOwnerActor->GetObjectPosition().x, m_pOwnerActor->GetObjectPosition().y - m_pOwnerActor->GetObjectHeight() / 2.f);
-
-	puts("Active");
+	GetComponent<ColliderBox>().lock()->SetActive(true);
+	SetActive(true);
 }
 
-
+void CFireball::SetFireballInactive()
+{
+	static_cast<CPlayer*>(m_pOwnerActor)->IncreaseAvailableFireballCount();
+	GetComponent<ColliderBox>().lock()->SetActive(false);
+	SetActive(false);
+}
 
 
 void CFireball::ActorBehavior(double dDeltaTime)
 {
 	auto pPhysics = GetComponent<PhysicsComponent>().lock();
-	auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
-	auto screenPosition = GetTransform().lock()->GetScreenPosition();
-
-	if (screenPosition.x < 0.f || screenPosition.x >(float)pCamera->GetCameraWidth())
-	{
-		m_bActive = false;
-		return;
-	}
-	if (screenPosition.y < 0.f || screenPosition.y >(float)pCamera->GetCameraHeight())
-	{
-		m_bActive = false;
-		return;
-	}
 
 	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 

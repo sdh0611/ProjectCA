@@ -415,6 +415,9 @@ bool CResourceManager::LoadBlockImageInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_random_animation.bmp"), TEXT("RandomBlockAnimation")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_random_hit_animation.bmp"), TEXT("RandomBlockHit")))
+		return false;
+
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_random_dead_image.bmp"), TEXT("RandomBlockDead")))
 		return false;
 

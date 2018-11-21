@@ -138,6 +138,14 @@ bool AnimationRender::SetAnimationPlaySpeed(double dSpeed)
 
 bool AnimationRender::ChangeAnimation(const TSTRING & strAnimTag)
 {
+	if (!m_pCurAnimation.lock()->IsCanInterrupt())
+	{
+		if (!m_pCurAnimation.lock()->IsReadyToChange())
+		{
+			return false;
+		}
+	}
+
 	auto animIter = m_AnimationTable.at(m_strCurTableName).find(strAnimTag);
 	if (animIter == m_AnimationTable.at(m_strCurTableName).end())
 	{

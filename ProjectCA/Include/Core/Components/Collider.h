@@ -14,7 +14,7 @@ public:
 		COLLISION_BOT, COLLISION_RIGHT, COLLISION_LEFT
 	};
 
-	using Delegate = std::function<void(CObject*, CollisionType type, float fintersectLength)>;
+	using Callback = std::function<void(CObject*, CollisionType type, float fIntersectLength)>;
 
 
 public:
@@ -37,9 +37,9 @@ public:
 	void SetColliderPoint(POSITION position);
 	void SetColliderPoint(float fx, float fy);
 	void SetUseTriggered(bool bUseTrigger);
-	void SetDelegate(Delegate pDelegate);
-	void SetOnCollision(Delegate pCollision);
-	void SetOnTrigerr(Delegate pTrigger);
+	void SetDelegate(Callback pDelegate);
+	void SetOnCollision(Callback pCollision);
+	void SetOnTrigerr(Callback pTrigger);
 
 
 public:
@@ -58,15 +58,15 @@ private:
 protected:
 	ColliderType				m_ColliderType;
 	CollisionType				m_CollisionType;
-	Types::Point					m_ColliderPoint;
-	Types::Point					m_CurColliderPoint;
+	POSITION					m_ColliderPoint;
+	POSITION					m_CurColliderPoint;
 	bool							m_bCollision;
 	bool							m_bUseTrigger;
 
 
 private:
-	Delegate						m_pOnCollision;
-	Delegate						m_pOnTrigger;
+	Callback						m_pOnCollision;
+	Callback						m_pOnTrigger;
 
 
 };

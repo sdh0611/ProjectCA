@@ -83,7 +83,7 @@ void Collider::SetUseTriggered(bool bUseTrigger)
 	m_bUseTrigger = bUseTrigger;
 }
 
-void Collider::SetDelegate(Delegate pDelegate)
+void Collider::SetDelegate(Callback pDelegate)
 {
 	if (m_bUseTrigger)
 	{
@@ -95,12 +95,12 @@ void Collider::SetDelegate(Delegate pDelegate)
 	}
 }
 
-void Collider::SetOnCollision(Delegate pCollision)
+void Collider::SetOnCollision(Callback pCollision)
 {
 	m_pOnCollision =  pCollision;
 }
 
-void Collider::SetOnTrigerr(Delegate pTrigger)
+void Collider::SetOnTrigerr(Callback pTrigger)
 {
 	m_pOnTrigger = pTrigger;
 }

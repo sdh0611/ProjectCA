@@ -2,12 +2,14 @@
 
 #include "..\..\..\stdafx.h"
 #include "CActor.h"
+#include "CFireball.h"
 
 class CCamera;
 
 
 class CPlayer : public CActor {
 
+	friend void CFireball::SetFireballInactive();
 
 public:
 	enum PlayerState {
@@ -30,7 +32,7 @@ public:
 public:
 	void DeadProcess(double dDeltaTime);
 	void InterruptProecess(double dDeltaTime);
-	
+
 
 public:
 	void SetPlayerState(PlayerState state);
@@ -46,6 +48,7 @@ public:
 private:
 	void			Attack();
 	bool			GenerateFireball();
+	void			IncreaseAvailableFireballCount();
 	void			ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxSpeed, float fCurJumpForce);
 	virtual void	ActorBehavior(double dDeltaTime) override;
 

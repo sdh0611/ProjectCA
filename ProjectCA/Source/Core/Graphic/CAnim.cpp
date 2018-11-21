@@ -46,8 +46,16 @@ bool CAnim::Init(const TSTRING& strSpriteName,
 
 	m_dPlayTime									= dPlayTime;
 	m_dPlaySpeed									= 1.f;
-	m_dPlaySectionLength						= m_dPlayTime / m_iMaxFrame;
-	
+
+	if (m_dPlayTime == 0.f)
+	{
+		m_dPlaySectionLength					= 0.f;
+	}
+	else
+	{
+		m_dPlaySectionLength					= m_dPlayTime / m_iMaxFrame;
+	}
+
 	m_strAnimTag									= strAnimTag;
 
 	m_bLoop											= bLoop;

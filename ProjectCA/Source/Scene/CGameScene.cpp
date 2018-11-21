@@ -16,6 +16,7 @@
 #include "..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\Include\Scene\Actor\CProb.h"
 #include "..\..\Include\Scene\Actor\CGround.h"
+#include "..\..\Include\Scene\Actor\CBlock.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
 #include "..\..\Include\Scene\Actor\CMushroom.h"
@@ -125,7 +126,7 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-	//抛胶飘侩 Mushroom 积己
+	////抛胶飘侩 Mushroom 积己
 	std::shared_ptr<CActor> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
 		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
 	if (pPickup == nullptr)
@@ -136,12 +137,27 @@ bool CGameScene::Init()
 	m_ObjectPtrList.emplace_back(pPickup);
 
 	//抛胶飘侩 Flower 积己
-	pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
+	 pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
 		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
 	if (pPickup == nullptr)
 		return false;
 	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 	m_ObjectPtrList.emplace_back(pPickup);
+
+	pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 330.f, 150.f, Types::OT_PICKUP,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
+	if (pPickup == nullptr)
+		return false;
+	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+	m_ObjectPtrList.emplace_back(pPickup);
+
+	pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 360.f, 150.f, Types::OT_PICKUP,
+		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
+	if (pPickup == nullptr)
+		return false;
+	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+	m_ObjectPtrList.emplace_back(pPickup);
+
 
 
 	//Prob 积己
@@ -166,11 +182,11 @@ bool CGameScene::Init()
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-	pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 400.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
-	if (pGround== nullptr)
-		return false;
-	m_ObjectPtrList.push_back(pGround);
-	FindLayer(TEXT("Prob"))->AddActor(pGround);
+	//pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 400.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
+	//if (pGround== nullptr)
+	//	return false;
+	//m_ObjectPtrList.push_back(pGround);
+	//FindLayer(TEXT("Prob"))->AddActor(pGround);
 
 	pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
 	if (pGround == nullptr)
@@ -184,6 +200,15 @@ bool CGameScene::Init()
 	m_ObjectPtrList.push_back(pGround);
 	FindLayer(TEXT("Prob"))->AddActor(pGround);
 
+	//Block 积己
+	if (!CreateLayer(TEXT("Block"), 9))
+		return false;
+
+	std::shared_ptr<CBlock> pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 400.f, 350.f, Types::OT_PROB, TEXT("Block"), this);
+	if (pBlock == nullptr)
+		return false;
+	m_ObjectPtrList.push_back(pBlock);
+	FindLayer(TEXT("Block"))->AddActor(pBlock);
 
 
 	//Backgorund 积己

@@ -1,6 +1,5 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
-#include "..\..\..\Include\Scene\Actor\CFireBall.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
@@ -314,16 +313,16 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerTurnLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackRight"), false))
+	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackRight"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackLeft"), false))
+	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackLeft"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackRight"), false))
+	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackRight"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackLeft"), false))
+	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackLeft"), false))
 		return false;
 
 
@@ -347,8 +346,11 @@ void CPlayer::Init()
 	m_bProtected = false;
 	m_ObjectState = Types::OS_IDLE;
 	m_dTimeElapsed = 0.f;
+	m_iAvailableFireballCount = 5;
 	for (const auto& it : m_ComponentTable)
+	{
 		it.second->Init();
+	}
 
 	SetPlayerState(PS_SMALL);
 
@@ -397,7 +399,10 @@ void CPlayer::Render(const HDC & hDC)
 
 	for (const auto& fire : m_FireballPool)
 	{
-		fire->Render(hDC);
+		if (fire->IsActive())
+		{
+			fire->Render(hDC);
+		}
 	}
 
 }
@@ -407,7 +412,7 @@ void CPlayer::LateUpdate()
 	CObject::LateUpdate();
 	for (const auto& fire : m_FireballPool)
 	{
-		fire->GetTransform().lock()->AdjustScreenPosition();
+		fire->LateUpdate();
 	}
 
 }
@@ -442,6 +447,15 @@ void CPlayer::InterruptProecess(double dDeltaTime)
 
 }
 
+void CPlayer::IncreaseAvailableFireballCount()
+{
+	if (m_iAvailableFireballCount < 5)
+	{
+		++m_iAvailableFireballCount;
+		std::cout << m_iAvailableFireballCount << "\n";
+	}
+}
+
 void CPlayer::Attack()
 {
 	for (const auto& fire : m_FireballPool)
@@ -449,6 +463,7 @@ void CPlayer::Attack()
 		if (!fire->IsActive())
 		{
 			fire->SetFireballActive();
+			--m_iAvailableFireballCount;
 			break;
 		}
 	}
@@ -506,13 +521,13 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 			{
 				pRender->ChangeAnimation(TEXT("LookupLeft"));
 			}
-
+			
 			return;
 		}
 	}
 
 	//공격 모션
-	if (m_ObjectState == Types::OS_ATTACK)
+	if (m_ObjectState == Types::OS_ATTACK && m_iAvailableFireballCount > 0)
 	{
 		if (m_ActorCurVerticalState == Types::VS_IDLE)
 		{
@@ -536,6 +551,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 				pRender->ChangeAnimation(TEXT("JumpAttackLeft"));
 			}
 		}
+		m_ObjectState = Types::OS_IDLE;
 		return;
 	}
 
@@ -801,7 +817,6 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	}
 	
 	ChangeAnimationClip(fCurSpeed, fWalkSpeed, fMaxSpeed, fCurJumpForce);
-
 }
 
 
