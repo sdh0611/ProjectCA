@@ -118,123 +118,107 @@ bool CCollisionManager::BoxAndBox(ColliderBox* pCollider, ColliderBox* pOther)
 	float fIntersecRectWidth = 0.f;
 	float fIntersecRectHeight = 0.f;
 
-	//box1 : Left, Box2 : Right
-	if (box1.right < box2.right)
+	if (box1.left < box2.left)
 	{
-		if (box1.left < box2.left)
+		fIntersecRectWidth = box1.right - box2.left;
+		if (box1.top < box2.top)
 		{
-			fIntersecRectWidth = box1.right - box2.left;
-			if (box1.top < box2.top && box1.bottom >= box2.top)		//위
+			fIntersecRectHeight = box1.bottom - box2.top;
+			if (fIntersecRectWidth >= fIntersecRectHeight)
 			{
-				fIntersecRectHeight = box1.bottom - box2.top;
-				if (fIntersecRectHeight > fIntersecRectWidth)
-				{
-					pCollider->SetCollisionType(Collider::COLLISION_RIGHT);
-					pOther->SetCollisionType(Collider::COLLISION_LEFT);
-				}
-				else
-				{
-					pCollider->SetCollisionType(Collider::COLLISION_BOT);
-					pOther->SetCollisionType(Collider::COLLISION_TOP);
-				}
+				pCollider->SetCollisionType(Collider::COLLISION_BOT);
+				pOther->SetCollisionType(Collider::COLLISION_TOP);
 			}
-			else if (box1.top <= box2.bottom && box1.bottom > box2.bottom)	//아래
+			else
 			{
-				fIntersecRectHeight = box2.bottom - box1.top;
-				if (fIntersecRectHeight > fIntersecRectWidth)
-				{
-					pCollider->SetCollisionType(Collider::COLLISION_RIGHT);
-					pOther->SetCollisionType(Collider::COLLISION_LEFT);
-				}
-				else
-				{
-					pCollider->SetCollisionType(Collider::COLLISION_TOP);
-					pOther->SetCollisionType(Collider::COLLISION_BOT);
-				}
+				pCollider->SetCollisionType(Collider::COLLISION_RIGHT);
+				pOther->SetCollisionType(Collider::COLLISION_LEFT);
 			}
-			else   //중간
+
+		}
+		else if (box1.bottom > box2.bottom)
+		{
+			fIntersecRectHeight = box2.bottom - box1.top;
+			if (fIntersecRectWidth >= fIntersecRectHeight)
 			{
-				fIntersecRectHeight = fIntersecRectWidth + 1;
+				pCollider->SetCollisionType(Collider::COLLISION_TOP);
+				pOther->SetCollisionType(Collider::COLLISION_BOT);
+			}
+			else
+			{
 				pCollider->SetCollisionType(Collider::COLLISION_RIGHT);
 				pOther->SetCollisionType(Collider::COLLISION_LEFT);
 			}
 		}
 		else
 		{
-			if (box1.bottom >= box2.top && box1.bottom < box2.bottom)
+			fIntersecRectHeight = box1.bottom - box1.top;
+			pCollider->SetCollisionType(Collider::COLLISION_RIGHT);
+			pOther->SetCollisionType(Collider::COLLISION_LEFT);
+		}
+
+	}
+	else if (box1.right > box2.right)
+	{
+		fIntersecRectWidth = box2.right - box1.left;
+		if (box1.top < box2.top)
+		{
+			fIntersecRectHeight = box1.bottom - box2.top;
+			if (fIntersecRectWidth >= fIntersecRectHeight)
 			{
-				fIntersecRectHeight = box1.bottom - box2.top;
 				pCollider->SetCollisionType(Collider::COLLISION_BOT);
 				pOther->SetCollisionType(Collider::COLLISION_TOP);
 			}
-			else if (box1.top <= box2.bottom && box1.top > box2.top)
+			else
 			{
-				fIntersecRectHeight = box2.bottom - box1.top;
+				pCollider->SetCollisionType(Collider::COLLISION_LEFT);
+				pOther->SetCollisionType(Collider::COLLISION_RIGHT);
+			}
+		}
+		else if (box1.bottom > box2.bottom)
+		{
+			fIntersecRectHeight = box2.bottom - box1.top;
+			if (fIntersecRectWidth >= fIntersecRectHeight)
+			{
 				pCollider->SetCollisionType(Collider::COLLISION_TOP);
 				pOther->SetCollisionType(Collider::COLLISION_BOT);
 			}
-			fIntersecRectWidth += fIntersecRectHeight;
-		}
-	}
-	//box1 : Right, box2 : Left
-	else if (box1.left > box2.left)
-	{
-		if (box1.right > box2.right)
-		{
-			fIntersecRectWidth = box2.right - box1.left;
-			if (box1.top < box2.top && box1.bottom >= box2.top)		//위
+			else
 			{
-				fIntersecRectHeight = box1.bottom - box2.top;
-				if (fIntersecRectHeight > fIntersecRectWidth)
-				{
-					pCollider->SetCollisionType(Collider::COLLISION_LEFT);
-					pOther->SetCollisionType(Collider::COLLISION_RIGHT);
-				}
-				else
-				{
-					pCollider->SetCollisionType(Collider::COLLISION_BOT);
-					pOther->SetCollisionType(Collider::COLLISION_TOP);
-				}
-			}
-			else if (box1.top < box2.bottom && box1.bottom > box2.bottom)	//아래
-			{
-				fIntersecRectHeight = box2.bottom - box1.top;
-				if (fIntersecRectHeight > fIntersecRectWidth)
-				{
-					pCollider->SetCollisionType(Collider::COLLISION_LEFT);
-					pOther->SetCollisionType(Collider::COLLISION_RIGHT);
-				}
-				else
-				{
-					pCollider->SetCollisionType(Collider::COLLISION_TOP);
-					pOther->SetCollisionType(Collider::COLLISION_BOT);
-				}
-			}
-			else   //중간
-			{
-				fIntersecRectHeight = fIntersecRectWidth + 1;
 				pCollider->SetCollisionType(Collider::COLLISION_LEFT);
 				pOther->SetCollisionType(Collider::COLLISION_RIGHT);
 			}
 		}
 		else
 		{
-			if (box1.bottom >= box2.top && box1.bottom < box2.bottom)
-			{
-				fIntersecRectHeight = box1.bottom - box2.top;
-				pCollider->SetCollisionType(Collider::COLLISION_BOT);
-				pOther->SetCollisionType(Collider::COLLISION_TOP);
-			}
-			else if (box1.top <= box2.bottom && box1.top > box2.top)
-			{
-				fIntersecRectHeight = box2.bottom - box1.top;
-				pCollider->SetCollisionType(Collider::COLLISION_TOP);
-				pOther->SetCollisionType(Collider::COLLISION_BOT);
-			}
-			fIntersecRectWidth += fIntersecRectHeight;
+			fIntersecRectHeight = box1.bottom - box1.top;
+			pCollider->SetCollisionType(Collider::COLLISION_LEFT);
+			pOther->SetCollisionType(Collider::COLLISION_RIGHT);
 		}
 	}
+	else
+	{
+		fIntersecRectWidth = box1.right - box1.left;
+		if (box1.top < box2.top)
+		{
+			fIntersecRectHeight = box1.bottom - box2.top;
+			pCollider->SetCollisionType(Collider::COLLISION_BOT);
+			pOther->SetCollisionType(Collider::COLLISION_TOP);
+		}
+		else if (box1.bottom > box2.bottom)
+		{
+			fIntersecRectHeight = box2.bottom - box1.top;
+			pCollider->SetCollisionType(Collider::COLLISION_TOP);
+			pOther->SetCollisionType(Collider::COLLISION_BOT);	
+		}
+		else
+		{
+			fIntersecRectHeight = box1.bottom - box2.top;
+			pCollider->SetCollisionType(Collider::COLLISION_BOT);
+			pOther->SetCollisionType(Collider::COLLISION_TOP);
+		}
 
+	}
 
 	pCollider->SetIsCollision(true);
 	pOther->SetIsCollision(true);

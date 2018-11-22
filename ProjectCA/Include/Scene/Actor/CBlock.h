@@ -24,7 +24,7 @@ public:
 
 
 private:
-
+	std::shared_ptr<class CActor> m_pPickup;
 
 
 };

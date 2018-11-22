@@ -109,6 +109,20 @@ CObject * CObject::Clone()
 
 void CObject::SetActive(bool bActive)
 {
+	if (!bActive) 
+	{
+		for (const auto& component : m_ComponentTable)
+		{
+			component.second->SetActive(false);
+		}
+	}
+	else
+	{
+		for (const auto& component : m_ComponentTable)
+		{
+			component.second->SetActive(true);
+		}
+	}
 	m_bActive = bActive;
 }
 

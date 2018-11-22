@@ -126,37 +126,37 @@ bool CGameScene::Init()
 	FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-	////테스트용 Mushroom 생성
-	std::shared_ptr<CActor> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
-		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
-	if (pPickup == nullptr)
-		return false;
+	//////테스트용 Mushroom 생성
+	//std::shared_ptr<CActor> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
+	//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
+	//if (pPickup == nullptr)
+	//	return false;
 	if (!CreateLayer(TEXT("Pickup"), 3))
 		return false;
-	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-	m_ObjectPtrList.emplace_back(pPickup);
+	//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+	//m_ObjectPtrList.emplace_back(pPickup);
 
-	//테스트용 Flower 생성
-	 pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
-		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
-	if (pPickup == nullptr)
-		return false;
-	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-	m_ObjectPtrList.emplace_back(pPickup);
+	////테스트용 Flower 생성
+	// pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
+	//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
+	//if (pPickup == nullptr)
+	//	return false;
+	//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+	//m_ObjectPtrList.emplace_back(pPickup);
 
-	pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 330.f, 150.f, Types::OT_PICKUP,
-		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
-	if (pPickup == nullptr)
-		return false;
-	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-	m_ObjectPtrList.emplace_back(pPickup);
+	//pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 330.f, 150.f, Types::OT_PICKUP,
+	//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
+	//if (pPickup == nullptr)
+	//	return false;
+	//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+	//m_ObjectPtrList.emplace_back(pPickup);
 
-	pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 360.f, 150.f, Types::OT_PICKUP,
-		Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
-	if (pPickup == nullptr)
-		return false;
-	FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-	m_ObjectPtrList.emplace_back(pPickup);
+	//pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 360.f, 150.f, Types::OT_PICKUP,
+	//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Flower"), this);
+	//if (pPickup == nullptr)
+	//	return false;
+	//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+	//m_ObjectPtrList.emplace_back(pPickup);
 
 
 

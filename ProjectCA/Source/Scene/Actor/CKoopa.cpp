@@ -80,7 +80,6 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						GetComponent<ColliderBox>().lock()->SetActive(false);
 						pPhysics->SetCurJumpForce(300.f);
 						pPhysics->SetGrounded(false);
-						//SetActive(false);
 					}
 					else
 					{
@@ -131,6 +130,9 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				pPhysics->SetGrounded(true);
 				SetActorVerticalState(Types::VS_IDLE);
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
+				break;
+			case Collider::COLLISION_TOP:
+				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 				break;
 			case Collider::COLLISION_LEFT:
 				FlipActorDirection();

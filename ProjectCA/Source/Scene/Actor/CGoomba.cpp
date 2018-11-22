@@ -77,7 +77,6 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						GetComponent<ColliderBox>().lock()->SetActive(false);
 						pPhysics->SetCurJumpForce(300.f);
 						pPhysics->SetGrounded(false);
-						//SetActive(false);
 					}
 					else
 					{

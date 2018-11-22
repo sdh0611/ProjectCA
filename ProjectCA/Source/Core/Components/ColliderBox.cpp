@@ -105,6 +105,7 @@ void ColliderBox::SetSize(float fWidth, float fHeight)
 
 	m_fWidth	= m_fCurWidth =fWidth;
 	m_fHeight	= m_fCurHeight =fHeight;
+
 }
 
 void ColliderBox::SetCurRectWidth(float fWidth)

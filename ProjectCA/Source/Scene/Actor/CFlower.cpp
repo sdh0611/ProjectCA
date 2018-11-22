@@ -49,10 +49,13 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				//pOwnerActor->SetActorState(Types::AS_IDLE);
 				SetActorVerticalState(Types::VS_IDLE);
 				break;
-			case Collider::COLLISION_LEFT:
-			case Collider::COLLISION_RIGHT:
-				FlipActorDirection();
+			case Collider::COLLISION_TOP:
+				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 				break;
+			//case Collider::COLLISION_LEFT:
+			//case Collider::COLLISION_RIGHT:
+			//	FlipActorDirection();
+			//	break;
 			}
 			break;
 		case Types::OT_PLAYER:
@@ -60,10 +63,6 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			if (pPlayer->GetPlayerState() != CPlayer::PS_FLOWER)
 			{
 				pPlayer->SetPlayerState(CPlayer::PS_FLOWER);
-			}
-			for (const auto& component : m_ComponentTable)
-			{
-				component.second->SetActive(false);
 			}
 			SetActive(false);
 			break;
@@ -99,6 +98,7 @@ void CFlower::Init()
 void CFlower::Update(double dDeltaTime)
 {
 	CActor::Update(dDeltaTime);
+	//printf("%f, %f\n", GetObjectPosition().x, GetObjectPosition().y);
 }
 
 void CFlower::Render(const HDC & hDC)

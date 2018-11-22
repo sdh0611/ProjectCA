@@ -65,14 +65,14 @@ void CActor::Update(double dDeltaTime)
 
 }
 
-void CActor::LateUpdate(double dDeltaTime)
-{
-	for (auto& it : m_ComponentTable)
-	{
-		it.second->LateUpdate(dDeltaTime);
-	}
-
-}
+//void CActor::LateUpdate(double dDeltaTime)
+//{
+//	for (auto& it : m_ComponentTable)
+//	{
+//		it.second->LateUpdate(dDeltaTime);
+//	}
+//
+//}
 
 //void CActor::Destroy()
 //{

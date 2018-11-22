@@ -54,6 +54,9 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			case Collider::COLLISION_RIGHT:
 				FlipActorDirection();
 				break;
+			case Collider::COLLISION_TOP:
+				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
+				break;
 			}
 			break;
 		case Types::OT_PLAYER:
