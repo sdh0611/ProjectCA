@@ -11,7 +11,6 @@ class CPlayer : public CActor {
 
 	friend void CFireball::SetFireballInactive();
 
-public:
 	enum PlayerState {
 		PS_SMALL, PS_BIG, PS_FLOWER
 	};
@@ -35,32 +34,36 @@ public:
 
 
 public:
-	void SetPlayerState(PlayerState state);
 	void SetRequestInterrupt(bool bInterrupt);
+	void SetStoredPickup(std::shared_ptr<CObject> pPickup);
 
 
 public:
 	PlayerState	GetPlayerState();
 	bool			IsDead();
 	bool			IsRequestInterrupt();
+	std::weak_ptr<CObject> GetStoredPickup();
 
 
 private:
 	void			Attack();
 	bool			GenerateFireball();
 	void			IncreaseAvailableFireballCount();
+	void			SetPlayerState(PlayerState state);
 	void			ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxSpeed, float fCurJumpForce);
 	virtual void	ActorBehavior(double dDeltaTime) override;
 
 
 private:
-	bool				m_bProtected;
-	bool				m_bInterrupt;
-	bool				m_bTransforming;
-	double			m_dTimeElapsed;
-	UINT				m_iSmallStateWidth;
-	UINT				m_iSmallStateHeight;
-	PlayerState		m_PlayerState;
+	bool							m_bProtected;
+	bool							m_bInterrupt;
+	bool							m_bTransforming;
+	double						m_dTimeElapsed;
+	UINT							m_iSmallStateWidth;
+	UINT							m_iSmallStateHeight;
+	PlayerState					m_PlayerState;
+	std::weak_ptr<CObject>	m_pCurPickupPtr;
+	std::weak_ptr<CObject>	m_pStoredPickupPtr;
 
 
 private:

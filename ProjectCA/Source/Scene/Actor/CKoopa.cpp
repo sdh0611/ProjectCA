@@ -27,30 +27,9 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	//기본 Actor의 속성 초기화
 	CActor::PostInit(data, pScene);
 
-	////AIComponent (InputComponent) 초기화
-	//std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
-	//if (!pAI->PostInit(this))
-	//	return false;
-
-	//auto enemyBehavior = [](CActor* pActor) ->void {
-
-	//	if (pActor->GetObjectPosition().x < 100.f) 
-	//	{
-	//		pActor->SetActorDirection(Types::DIR_RIGHT);
-	//	}
-	//	else if (pActor->GetObjectPosition().x > 1000.f)
-	//	{
-	//		pActor->SetActorDirection(Types::DIR_LEFT);
-	//	}
-
-	//};
-	//pAI->SetDelegate(enemyBehavior);
-	//if (!AddComponent(pAI, pAI->GetComponentTag()))
-	//	return false;
-
 	//PhysicsComponent 초기화
 	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
-	if (!pPhysics->PostInit(this, 200.f, 750.f, 1300.f, 700.f))
+	if (!pPhysics->PostInit(this, 200.f, 800.f, 1300.f, 700.f))
 		return false;
 
 	pPhysics->SetCurSpeed(pPhysics->GetSpeed());

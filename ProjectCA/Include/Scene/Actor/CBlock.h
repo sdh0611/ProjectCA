@@ -3,6 +3,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\CObject.h"
 
+class CPickup;
 
 class CBlock : public CObject
 {
@@ -20,11 +21,11 @@ public:
 
 
 public:
-
+	void SetStoredPickup(std::shared_ptr<CPickup> pPickup);
 
 
 private:
-	std::shared_ptr<class CActor> m_pPickup;
+	std::shared_ptr<CPickup> m_pPickup;
 
 
 };

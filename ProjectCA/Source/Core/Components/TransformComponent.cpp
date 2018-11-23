@@ -111,6 +111,7 @@ void TransformComponent::SetPivotRatio(float fWidthRatio, float fHeightRatio)
 
 	m_Pivot.x				= m_Position.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
 	m_Pivot.y				= m_Position.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
+
 }
 
 void TransformComponent::SetWidthPivotRatio(float fRatio)

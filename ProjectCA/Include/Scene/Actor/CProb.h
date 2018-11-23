@@ -17,6 +17,7 @@ public:
 	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
 
+
 private:
 
 

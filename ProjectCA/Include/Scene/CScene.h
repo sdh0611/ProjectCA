@@ -45,6 +45,8 @@ public:
 	bool				DeleteObjectFromScene(UINT iObjectID);
 	WeakObjPtr		FindObjectFromScene(CObject* pObject);
 	WeakObjPtr		FindObjectFromScene(const TSTRING& strObjectName);
+	WeakObjPtr		FindInactiveObjectFromScene(CObject* pObject);
+	WeakObjPtr		FindInactiveObjectFromScene(const TSTRING& strObjectName);
 
 
 public:

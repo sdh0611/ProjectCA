@@ -205,17 +205,17 @@ bool CCollisionManager::BoxAndBox(ColliderBox* pCollider, ColliderBox* pOther)
 			pCollider->SetCollisionType(Collider::COLLISION_BOT);
 			pOther->SetCollisionType(Collider::COLLISION_TOP);
 		}
-		else if (box1.bottom > box2.bottom)
+		//else if (box1.bottom > box2.bottom)
+		//{
+		//	fIntersecRectHeight = box2.bottom - box1.top;
+		//	pCollider->SetCollisionType(Collider::COLLISION_TOP);
+		//	pOther->SetCollisionType(Collider::COLLISION_BOT);	
+		//}
+		else
 		{
 			fIntersecRectHeight = box2.bottom - box1.top;
 			pCollider->SetCollisionType(Collider::COLLISION_TOP);
-			pOther->SetCollisionType(Collider::COLLISION_BOT);	
-		}
-		else
-		{
-			fIntersecRectHeight = box1.bottom - box2.top;
-			pCollider->SetCollisionType(Collider::COLLISION_BOT);
-			pOther->SetCollisionType(Collider::COLLISION_TOP);
+			pOther->SetCollisionType(Collider::COLLISION_BOT);
 		}
 
 	}

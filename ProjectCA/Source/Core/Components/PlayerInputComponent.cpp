@@ -92,7 +92,8 @@ void PlayerInputComponent::KeyProcess()
 	//공격키
 	if (KEY_ONCE_PRESS('C'))
 	{
-		pOwner->SetObjectState(Types::OS_ATTACK);
+		if(pOwner->GetObjectState() != Types::OS_SITDOWN)
+			pOwner->SetObjectState(Types::OS_ATTACK);
 	}
 
 	//위, 아래키에 대한 입력

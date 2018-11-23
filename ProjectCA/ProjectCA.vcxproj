@@ -165,6 +165,7 @@
     <ClCompile Include="Source\Core\Window\MyWindow.cpp" />
     <ClCompile Include="Source\Scene\Actor\CActor.cpp" />
     <ClCompile Include="Source\Scene\Actor\CBlock.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CCoin.cpp" />
     <ClCompile Include="Source\Scene\Actor\CFireball.cpp" />
     <ClCompile Include="Source\Scene\Actor\CGoomba.cpp" />
     <ClCompile Include="Source\Scene\Actor\CObjectManager.cpp" />
@@ -190,6 +191,8 @@
     <ClCompile Include="Source\Scene\CWorld.cpp" />
     <ClCompile Include="Source\Scene\UI\CButton.cpp" />
     <ClCompile Include="Source\Scene\UI\CInterface.cpp" />
+    <ClCompile Include="Source\Scene\UI\CItemInfo.cpp" />
+    <ClCompile Include="Source\Scene\UI\CNumberInterface.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +222,7 @@
     <ClInclude Include="Include\Event.h" />
     <ClInclude Include="Include\Scene\Actor\CActor.h" />
     <ClInclude Include="Include\Scene\Actor\CBlock.h" />
+    <ClInclude Include="Include\Scene\Actor\CCoin.h" />
     <ClInclude Include="Include\Scene\Actor\CFireball.h" />
     <ClInclude Include="Include\Scene\Actor\CGoomba.h" />
     <ClInclude Include="Include\Scene\Actor\CObjectManager.h" />
@@ -244,6 +248,8 @@
     <ClInclude Include="Include\Scene\CWorld.h" />
     <ClInclude Include="Include\Scene\UI\CButton.h" />
     <ClInclude Include="Include\Scene\UI\CInterface.h" />
+    <ClInclude Include="Include\Scene\UI\CItemInfo.h" />
+    <ClInclude Include="Include\Scene\UI\CNumberInterface.h" />
     <ClInclude Include="Include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Types.h" />

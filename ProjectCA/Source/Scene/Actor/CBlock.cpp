@@ -37,21 +37,16 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 		
 		if (m_ObjectState != Types::OS_DEAD)
 		{
-			if (pOther->GetObjectType() == Types::OT_PLAYER && type == Collider::COLLISION_BOT)
+			if (pOther->GetObjectType() == Types::OT_PLAYER)
 			{
-				GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
-				m_pPickup->SetActive(true);
-				//auto pPickup = CObjectManager::GetInstance()->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 
-				//	GetObjectPosition().x, GetObjectPosition().y - m_iObjectHeight / 2.f, Types::OT_PICKUP,
-				//	Types::DIR_RIGHT, TEXT("Flower"), static_cast<CGameScene*>(m_pOwnerScene));
-				//if (pPickup == nullptr)
-				//	return ;
-				//m_pOwnerScene->FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-				//m_pOwnerScene->AddObjectToScene(pPickup);
+				if (type == Collider::COLLISION_BOT)
+				{
+					GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
+					m_pPickup->SetActive(true);
+					m_ObjectState = Types::OS_DEAD;
+				}
 			}
-
 		}
-
 	};
 
 	pCollider->SetOnCollision(colliderCallback);
@@ -78,15 +73,14 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
-	auto pPickup = CObjectManager::GetInstance()->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
-		GetObjectPosition().x, GetObjectPosition().y - m_iObjectHeight / 2.f, Types::OT_PICKUP, Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN,
-		Types::DIR_RIGHT, TEXT("Flower"), static_cast<CGameScene*>(m_pOwnerScene));
-	if (pPickup == nullptr)
-		return false;
-	pPickup->SetActive(false);
-	m_pPickup = pPickup;
-	//m_pOwnerScene->FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-	//m_pOwnerScene->AddObjectToScene(pPickup);
+	//m_pPickup = CObjectManager::GetInstance()->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
+	//	GetObjectPosition().x, GetObjectPosition().y - m_iObjectHeight / 2.f, Types::OT_PICKUP, Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN,
+	//	Types::DIR_RIGHT, TEXT("Flower"), static_cast<CGameScene*>(m_pOwnerScene));
+	//if (m_pPickup == nullptr)
+	//	return false;
+	//m_pPickup->SetActive(false);
+	//m_pOwnerScene->FindLayer(TEXT("Pickup"))->AddActor(m_pPickup);
+	//m_pOwnerScene->AddObjectToScene(m_pPickup);
 
 	return true;
 }
@@ -94,8 +88,11 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 void CBlock::Init()
 {
 	CObject::Init();
-	m_pPickup->Init();
-	m_pPickup->SetActive(false);
+	//m_pPickup->Init();
+	if (m_pPickup != nullptr)
+	{
+		m_pPickup->SetActive(false);
+	}
 	m_ObjectState = Types::OS_IDLE;
 	GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Idle"));
 	m_bActive = true;
@@ -107,10 +104,10 @@ void CBlock::Update(double dDeltaTime)
 	if (m_bActive)
 	{
 		CObject::Update(dDeltaTime);
-		if (m_pPickup->IsActive())
-		{
-			m_pPickup->Update(dDeltaTime);
-		}
+		//if (m_pPickup->IsActive())
+		//{
+		//	m_pPickup->Update(dDeltaTime);
+		//}
 
 	}
 
@@ -126,10 +123,10 @@ void CBlock::Render(const HDC & hDC)
 			pRender->Draw(hDC);
 		}
 
-		if (m_pPickup->IsActive())
-		{
-			m_pPickup->Render(hDC);
-		}
+		//if (m_pPickup->IsActive())
+		//{
+		//	m_pPickup->Render(hDC);
+		//}
 
 	}
 
@@ -140,10 +137,16 @@ void CBlock::LateUpdate()
 	if (m_bActive)
 	{
 		CObject::LateUpdate();
-		if (m_pPickup->IsActive())
-		{
-			m_pPickup->LateUpdate();
-		}
+		//if (m_pPickup->IsActive())
+		//{
+		//	m_pPickup->LateUpdate();
+		//}
 	}
 
+}
+
+void CBlock::SetStoredPickup(std::shared_ptr<CPickup> pPickup)
+{
+	m_pPickup = pPickup;
+	m_pPickup->SetActive(false);
 }

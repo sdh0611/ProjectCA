@@ -113,3 +113,13 @@ bool ImageRender::SetSprite(const TSTRING & strImageTag)
 
 	return true;
 }
+
+bool ImageRender::SetSprite(std::shared_ptr<CSprite> pSprite)
+{
+	m_pWeakSprite = pSprite;
+
+	if (m_pWeakSprite.expired())
+		return false;
+
+	return true;
+}

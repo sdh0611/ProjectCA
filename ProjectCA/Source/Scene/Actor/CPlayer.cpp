@@ -26,7 +26,6 @@ CPlayer::~CPlayer()
 
 bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 {
-
 	//TransformComponent Ãß°¡
 	CActor::PostInit(data, pScene);
 
@@ -62,9 +61,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	auto onCollisionDelegater = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void 
 	{
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
-		auto pOtherActor = static_cast<CActor*>(pOther);
 
-		switch (static_cast<CActor*>(pOther)->GetObjectType()) 
+		switch (pOther->GetObjectType()) 
 		{
 		case Types::OT_ENEMY:
 			switch (type)
@@ -76,11 +74,12 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			default:
 				if (!m_bProtected)
 				{
-					if (pOtherActor->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
+					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
 					{
 						if (m_PlayerState != PS_SMALL)	//PlayerDamaged
 						{
 							SetPlayerState(PS_SMALL);
+							m_pCurPickupPtr.reset();
 							m_bProtected = true;
 							//m_ActorCurState = Types::OS_PROTECTED;
 						}
@@ -97,7 +96,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				
 				}
 				break;
-
 			}
 			break;
 		case Types::OT_PROB:
@@ -123,7 +121,41 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				pPhysics->SetCurSpeed(0.f);
 				break;
 			}
-			
+			break;
+		case Types::OT_PICKUP:
+			switch (m_PlayerState)
+			{
+			case PS_SMALL:
+				if (pOther->GetObjectName() == TEXT("Mushroom"))
+				{
+					SetPlayerState(PS_BIG);
+				}
+				else if (pOther->GetObjectName() == TEXT("Flower"))
+				{
+					SetPlayerState(PS_FLOWER);
+				}
+				m_pCurPickupPtr = m_pOwnerScene->FindObjectFromScene(pOther).lock();
+				break;
+			case PS_BIG:
+/*				if (pOther->GetObjectName() == TEXT("Mushroom"))
+				{
+					SetStoredPickup(m_pOwnerScene->FindObjectFromScene(pOther).lock());
+				}
+				else */if (pOther->GetObjectName() == TEXT("Flower"))
+				{
+					SetPlayerState(PS_FLOWER);
+				}
+				SetStoredPickup(m_pCurPickupPtr.lock());
+				m_pCurPickupPtr = m_pOwnerScene->FindObjectFromScene(pOther).lock();
+				break;
+			case PS_FLOWER:
+				if (pOther->GetObjectName() != TEXT("Coin"))
+				{
+					SetStoredPickup(m_pOwnerScene->FindObjectFromScene(pOther).lock());
+				}
+				break;
+			}
+			pOther->SetActive(false);
 			break;
 		}
 	};
@@ -347,6 +379,8 @@ void CPlayer::Init()
 	m_ObjectState = Types::OS_IDLE;
 	m_dTimeElapsed = 0.f;
 	m_iAvailableFireballCount = 5;
+	m_pCurPickupPtr.reset();
+	m_pStoredPickupPtr.reset();
 	for (const auto& it : m_ComponentTable)
 	{
 		it.second->Init();
@@ -452,7 +486,6 @@ void CPlayer::IncreaseAvailableFireballCount()
 	if (m_iAvailableFireballCount < 5)
 	{
 		++m_iAvailableFireballCount;
-		std::cout << m_iAvailableFireballCount << "\n";
 	}
 }
 
@@ -867,6 +900,13 @@ void CPlayer::SetRequestInterrupt(bool bInterrupt)
 	m_bInterrupt = bInterrupt;
 }
 
+void CPlayer::SetStoredPickup(std::shared_ptr<CObject> pPickup)
+{
+	wprintf(TEXT("Stored : %s\n"), pPickup->GetObjectName().c_str());
+	m_pStoredPickupPtr = pPickup;
+	
+}
+
 CPlayer::PlayerState CPlayer::GetPlayerState()
 {
 	return m_PlayerState;
@@ -883,4 +923,9 @@ bool CPlayer::IsDead()
 bool CPlayer::IsRequestInterrupt()
 {
 	return m_bInterrupt;
+}
+
+std::weak_ptr<CObject> CPlayer::GetStoredPickup()
+{
+	return m_pStoredPickupPtr.lock();
 }

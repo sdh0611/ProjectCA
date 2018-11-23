@@ -36,7 +36,6 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	auto colliderCallback = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
 
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
-		//auto pOwnerActor = static_cast<CActor*>(pObject);
 
 		switch (pOther->GetObjectType())
 		{
@@ -45,26 +44,13 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			{
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
-				SetObjectPosition(GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
-				//pOwnerActor->SetActorState(Types::AS_IDLE);
+				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				SetActorVerticalState(Types::VS_IDLE);
 				break;
 			case Collider::COLLISION_TOP:
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 				break;
-			//case Collider::COLLISION_LEFT:
-			//case Collider::COLLISION_RIGHT:
-			//	FlipActorDirection();
-			//	break;
 			}
-			break;
-		case Types::OT_PLAYER:
-			auto pPlayer = static_cast<CPlayer*>(pOther);
-			if (pPlayer->GetPlayerState() != CPlayer::PS_FLOWER)
-			{
-				pPlayer->SetPlayerState(CPlayer::PS_FLOWER);
-			}
-			SetActive(false);
 			break;
 		}
 

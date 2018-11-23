@@ -261,6 +261,15 @@
     <ClCompile Include="Source\Scene\Actor\CBlock.cpp">
       <Filter>소스 파일\Scene\Actors\Prob</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CCoin.cpp">
+      <Filter>소스 파일\Scene\Actors\Pickup</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\UI\CNumberInterface.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\UI\CItemInfo.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -424,6 +433,15 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CBlock.h">
       <Filter>헤더 파일\Scene\Actors\Prob</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CCoin.h">
+      <Filter>헤더 파일\Scene\Actors\Pickup</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\UI\CNumberInterface.h">
+      <Filter>헤더 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\UI\CItemInfo.h">
+      <Filter>헤더 파일\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

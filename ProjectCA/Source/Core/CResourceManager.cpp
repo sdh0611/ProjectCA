@@ -383,7 +383,109 @@ bool CResourceManager::LoadBackgroundImageInfo()
 
 bool CResourceManager::LoadUIImageInfo()
 {
+	//UI TestButton
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/button.bmp"), TEXT("TestButton")))
+		return false;
+
+
+	//UI Item info
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_item_empty.bmp"), TEXT("UIItemInfoEmpty")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_item_mushroom.bmp"), TEXT("UIItemInfoMushroom")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_item_flower.bmp"), TEXT("UIItemInfoFlower")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_item_star.bmp"), TEXT("UIItemInfoStar")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_item_feather.bmp"), TEXT("UIItemInfoFeather")))
+		return false;
+
+
+
+	//UI Number font
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_0.bmp"), TEXT("UINumber0")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_1.bmp"), TEXT("UINumber1")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_2.bmp"), TEXT("UINumber2")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_3.bmp"), TEXT("UINumber3")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_4.bmp"), TEXT("UINumber4")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_5.bmp"), TEXT("UINumber5")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_6.bmp"), TEXT("UINumber6")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_7.bmp"), TEXT("UINumber7")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_8.bmp"), TEXT("UINumber8")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_9.bmp"), TEXT("UINumber9")))
+		return false;
+
+
+
+	//UI Time number font
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_0.bmp"), TEXT("UITimeNumber0")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_1.bmp"), TEXT("UITimeNumber1")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_2.bmp"), TEXT("UITimeNumber2")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_3.bmp"), TEXT("UITimeNumber3")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_4.bmp"), TEXT("UITimeNumber4")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_5.bmp"), TEXT("UITimeNumber5")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_6.bmp"), TEXT("UITimeNumber6")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_7.bmp"), TEXT("UITimeNumber7")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_8.bmp"), TEXT("UITimeNumber8")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_9.bmp"), TEXT("UITimeNumber9")))
+		return false;
+
+
+
+	//UI Etc
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_mario.bmp"), TEXT("UIMario")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_time.bmp"), TEXT("UITime")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_stars.bmp"), TEXT("UIStars")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_x.bmp"), TEXT("UIX")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_coin.bmp"), TEXT("UICoin")))
 		return false;
 
 	return true;
@@ -403,6 +505,11 @@ bool CResourceManager::LoadPickupImageInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/flower_image.bmp"), TEXT("FlowerImage")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/coin_animation.bmp"), TEXT("CoinAnimation")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/coin_image.bmp"), TEXT("CoinImage")))
+		return false;
 
 	return true;
 }

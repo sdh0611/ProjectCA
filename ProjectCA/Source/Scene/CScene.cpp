@@ -119,6 +119,46 @@ WeakObjPtr CScene::FindObjectFromScene(CObject * pObject)
 
 WeakObjPtr CScene::FindObjectFromScene(const TSTRING & strObjectName)
 {
+	for (const auto& obj : m_ObjectPtrList)
+	{
+		if (obj->GetObjectName() == strObjectName)
+		{
+			return obj;
+		}
+	}
+
+	return WeakObjPtr();
+}
+
+WeakObjPtr CScene::FindInactiveObjectFromScene(CObject * pObject)
+{
+	for (const auto& obj : m_ObjectPtrList)
+	{
+		if (!obj->IsActive())
+		{
+			if (obj.get() == pObject)
+			{
+				return obj;
+			}
+		}
+	}
+
+	return WeakObjPtr();
+}
+
+WeakObjPtr CScene::FindInactiveObjectFromScene(const TSTRING & strObjectName)
+{
+	for (const auto& obj : m_ObjectPtrList)
+	{
+		if (!obj->IsActive())
+		{
+			if (obj->GetObjectName() == strObjectName)
+			{
+				return obj;
+			}
+		}
+	}
+
 	return WeakObjPtr();
 }
 

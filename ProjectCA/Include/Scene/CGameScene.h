@@ -33,6 +33,15 @@ public:
 	virtual void Render(const HDC& hDC) override;
 	
 
+public:
+	std::weak_ptr<CPlayer> GetPlayerPtr();
+
+
+private:
+	bool BuildUI();
+	bool BuildWorld();
+
+
 private:
 	void CollisionDetect();
 	void InputUpdate(double dDeltaTime);
@@ -41,16 +50,13 @@ private:
 	//void ChangeWorld();
 
 
-public:
+private:
+	int															m_iCurScore;
+	int															m_iCoinCount;
 
 
 private:
-	UINT														m_iCurScore;
-	UINT														m_iHighScore;
-
-
-private:
-	std::shared_ptr<CPlayer>								m_pPlayer;			//나중에 weak_ptr로 바꿀 여지가 있음.
+	std::shared_ptr<CPlayer>							m_pPlayer;			//나중에 weak_ptr로 바꿀 여지가 있음.
 	//class CActorFactory*								m_pActorFactory;
 	class CObjectManager*								m_pObjectManager;
 	//std::unique_ptr<class CollisionDetector>			m_pCollisionDetector;

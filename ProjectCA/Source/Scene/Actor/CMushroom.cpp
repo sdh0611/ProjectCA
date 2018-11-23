@@ -24,7 +24,7 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	//PhysicsComponent Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
-	if (!pPhysics->PostInit(this, 200.f, 200.f, 1300.f, 0.f))
+	if (!pPhysics->PostInit(this, 300.f, 300.f, 1300.f, 0.f))
 		return false;
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
 		return false;
@@ -46,8 +46,7 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			{
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
-				SetObjectPosition(GetObjectPosition().x, pOther->GetObjectPosition().y - pOther->GetObjectHeight());
-				//pOwnerActor->SetActorState(Types::AS_IDLE);
+				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				SetActorVerticalState(Types::VS_IDLE);
 				break;
 			case Collider::COLLISION_LEFT:
@@ -59,18 +58,14 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				break;
 			}
 			break;
-		case Types::OT_PLAYER:
-			auto pPlayer = static_cast<CPlayer*>(pOther);
-			if (pPlayer->GetPlayerState() == CPlayer::PS_SMALL)
-			{
-				pPlayer->SetPlayerState(CPlayer::PS_BIG);
-			}
-			for (const auto& component : m_ComponentTable)
-			{
-				component.second->SetActive(false);
-			}
-			SetActive(false);
-			break;
+		//case Types::OT_PLAYER:
+		//	auto pPlayer = static_cast<CPlayer*>(pOther);
+		//	if (pPlayer->GetPlayerState() == CPlayer::PS_SMALL)
+		//	{
+		//		pPlayer->SetPlayerState(CPlayer::PS_BIG);
+		//	}
+		//	SetActive(false);
+		//	break;
 		}
 
 	};
