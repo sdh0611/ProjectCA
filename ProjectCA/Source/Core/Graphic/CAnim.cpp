@@ -59,6 +59,7 @@ bool CAnim::Init(const TSTRING& strSpriteName,
 	m_strAnimTag									= strAnimTag;
 
 	m_bLoop											= bLoop;
+	m_bPause										= false;
 
 	return true;
 }
@@ -85,6 +86,11 @@ void CAnim::SetCanInterrupt(bool bInterrupt)
 void CAnim::SetReadyToChange(bool bReady)
 {
 	m_bReadyToChange = bReady;
+}
+
+void CAnim::SetPauseAnimation(bool bPause)
+{
+	m_bPause = bPause;
 }
 
 bool CAnim::SetSprite(const Types::tstring & strSpriteName)
@@ -146,6 +152,11 @@ bool CAnim::IsReadyToChange() const
 	return m_bReadyToChange;
 }
 
+bool CAnim::IsPauseAnimation() const
+{
+	return m_bPause;
+}
+
 UINT CAnim::GetDrawWidth() const
 {
 	return m_iDrawWidth;
@@ -174,31 +185,35 @@ void CAnim::ClearEleapsedTime()
 	{
 		m_bReadyToChange = false;
 	}
+	m_bPause = false;
 
 }
 
 void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& point)
 {
-	if (m_dPlayTime != 0.f)
+	if (!m_bPause)
 	{
-		if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
-			m_dTimeElapsed = 0.f;
-			if (m_iCurFrame < m_iMaxFrame - 1)
-			{
-				++m_iCurFrame;
-			}
-			else
-			{
-				if (m_bLoop)
+		if (m_dPlayTime != 0.f)
+		{
+			if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
+				m_dTimeElapsed = 0.f;
+				if (m_iCurFrame < m_iMaxFrame - 1)
 				{
-					++m_iCurFrame %= m_iMaxFrame;
+					++m_iCurFrame;
 				}
-				m_bReadyToChange = true;
-				
+				else
+				{
+					if (m_bLoop)
+					{
+						++m_iCurFrame %= m_iMaxFrame;
+					}
+					m_bReadyToChange = true;
+
+				}
+
 			}
 
 		}
-
 	}
 
 	HBITMAP hOldBit		= (HBITMAP)SelectObject(hMemDC, m_pWeakSprite.lock()->GetBitmap());

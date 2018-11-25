@@ -54,7 +54,7 @@ public:
 	
 
 public:
-	void ResetScene();
+	virtual void ResetScene();
 
 
 private:

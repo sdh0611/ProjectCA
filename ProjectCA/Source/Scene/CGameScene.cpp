@@ -4,12 +4,12 @@
 #include "..\..\Include\Core\CCollisionManager.h"
 #include "..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\Include\Scene\CCameraManager.h"
+#include "..\..\Include\Scene\CScoreManager.h"
+#include "..\..\Include\Core\CInputManager.h"
 #include "..\..\Include\Core\Components\Collider.h"
 #include "..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\Include\Core\Components\InputComponent.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
-#include "..\..\Include\Scene\CObject.h"
-#include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\Actor\CEnemy.h"
 #include "..\..\Include\Scene\Actor\CKoopa.h"
 #include "..\..\Include\Scene\Actor\CGoomba.h"
@@ -25,12 +25,11 @@
 #include "..\..\Include\Scene\Actor\CCoin.h"
 #include "..\..\Include\Scene\UI\CItemInfo.h"
 #include "..\..\Include\Scene\UI\CNumberInterface.h"
-//#include "..\..\Include\Scene\CWorld.h"
 
 
 
 CGameScene::CGameScene(Types::SceneType type)
-	:CScene(type), m_pObjectManager(nullptr), m_pPlayer(nullptr)
+	:CScene(type), m_pObjectManager(nullptr)
 {
 	//기본 레이어 생성.
 	//ActorManager에서 Actor를 생성할 경우 기본적으로 default레이어에 들어가게 할 것.
@@ -41,10 +40,7 @@ CGameScene::CGameScene(Types::SceneType type)
 
 CGameScene::~CGameScene()
 {
-	//SAFE_DELETE(m_pCurWorld)
-	//SAFE_DELETE(m_pNextWorld)
-	//m_pObjectManager->Destroy();
-	//m_ObjectPtrList.clear();
+	m_ObjectPtrList.clear();
 	puts("Destroy Game");
 	CCollisionManager::GetInstance()->Destroy();
 }
@@ -55,31 +51,34 @@ bool CGameScene::Init()
 	if (!CCollisionManager::GetInstance()->Init())
 		return false;
 
-	////if(m_pCurWorld == nullptr)
-	////	m_pCurWorld = new CWorld;
+	m_pScoreManager = CScoreManager::GetInstance();
+	m_pScoreManager->Init();
 
 	//Player 생성
-	m_pPlayer = m_pObjectManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5f, SPRITE_HEIGHT*2.5f, 0, 0, Types::OT_PLAYER,
-		Types::DIR_RIGHT, TEXT("Player"), this);
-	if (m_pPlayer == nullptr)
-		return false;
-
-	auto pCamera = CCameraManager::GetInstance()->CreateCamera(m_pPlayer, MAX_WIDTH, MAX_HEIGHT);
-	if (pCamera.expired())
 	{
-		return false;
+		auto pPlayer = m_pObjectManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5f, SPRITE_HEIGHT*2.5f, 0, 0, Types::OT_PLAYER,
+			Types::DIR_RIGHT, TEXT("Player"), this);
+		if (pPlayer == nullptr)
+			return false;
+
+		auto pCamera = CCameraManager::GetInstance()->CreateCamera(pPlayer, MAX_WIDTH, MAX_HEIGHT);
+		if (pCamera.expired())
+		{
+			return false;
+		}
+		pCamera.lock()->SetCameraMode(CCamera::CM_SCROLL_HOR);
+		//카메라 부착
+		pPlayer->AttachCamera(pCamera.lock());
+		SetSceneMainCamera(pCamera.lock());
+
+		m_ObjectPtrList.emplace_back(pPlayer);
+		if (!CreateLayer(TEXT("Player"), 2))
+			return false;
+
+		FindLayer(TEXT("Player"))->AddActor(pPlayer);
+		m_pPlayer = pPlayer;
 	}
-	pCamera.lock()->SetCameraMode(CCamera::CM_SCROLL_HOR);
-	//카메라 부착
-	m_pPlayer->AttachCamera(pCamera.lock());
-	SetSceneMainCamera(pCamera.lock());
 
-	m_ObjectPtrList.emplace_back(m_pPlayer);
-	if (!CreateLayer(TEXT("Player"), 2))
-		return false;
-
-	FindLayer(TEXT("Player"))->AddActor(m_pPlayer);
-	
 	if (!BuildUI())
 		return false;
 
@@ -87,28 +86,41 @@ bool CGameScene::Init()
 		return false;
 
 	//For test
-	m_iCurScore = 52312;
-	m_iCoinCount = 76;
+	m_iCurScore			= m_pScoreManager->GetScore();
+	m_iCoinCount		= m_pScoreManager->GetCoinCount();
+	m_iLife				= m_pScoreManager->GetLifeCount();
+	m_iRemainTime	= 5;
+	m_dTimeElapsed	= 0.f;
 
 	CScene::Init();
 
 	return true;
 }
 
-void CGameScene::Update(double fDeltaTime)
+void CGameScene::Update(double dDeltaTime)
 {
-
-	if (m_pPlayer->IsActive())
+	if (m_pPlayer.lock()->IsActive())
 	{
 		//1. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
-		GameUpdate(fDeltaTime);
+		GameUpdate(dDeltaTime);
 
-		//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사하기 위함.
-		CScene::Update(fDeltaTime);
+		//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사
+		CScene::Update(dDeltaTime);
 	}
-	if (KEY_ONCE_PRESS(VK_ESCAPE))
+	else
+	{
+		if (m_iLife > 0)
+		{
+			m_pScoreManager->DecreaseLifeCount();
+			ResetScene();
+		}
+	}
+
+	if (CInputManager::GetInstance()->IsKeyDown(TEXT("RESET")))
 	{
 		puts("reset");
+		m_iLife = 5;
+		m_pScoreManager->Init();
 		ResetScene();
 	}
 }
@@ -122,8 +134,9 @@ void CGameScene::Render(const HDC& hDC)
 
 std::weak_ptr<CPlayer> CGameScene::GetPlayerPtr()
 {
-	return m_pPlayer;
+	return m_pPlayer.lock();
 }
+
 
 bool CGameScene::BuildUI()
 {
@@ -132,6 +145,7 @@ bool CGameScene::BuildUI()
 	
 	//글자 생성
 	{
+		//Mario
 		auto pFont = m_pObjectManager->CreateObject<CInterface>(SPRITE_WIDTH * 5.f, SPRITE_HEIGHT * 2.5, MAX_WIDTH / 4.f, 45.f, Types::OT_UI, TEXT("FontMario"), this);
 		if (pFont == nullptr)
 			return false;
@@ -140,14 +154,7 @@ bool CGameScene::BuildUI()
 			return false;
 		FindLayer(TEXT("UI"))->AddActor(pFont);
 
-		pFont = m_pObjectManager->CreateObject<CInterface>(SPRITE_WIDTH * 2.5f, SPRITE_HEIGHT * 2.5f, MAX_WIDTH / 1.7f, 45.f, Types::OT_UI, TEXT("FontTime"), this);
-		if (pFont == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pFont);
-		if (!pFont->SetImage(TEXT("UITime")))
-			return false;
-		FindLayer(TEXT("UI"))->AddActor(pFont);
-
+		//Time
 		pFont = m_pObjectManager->CreateObject<CInterface>(SPRITE_WIDTH * 2.5f, SPRITE_HEIGHT * 2.5f, MAX_WIDTH / 1.7f, 45.f, Types::OT_UI, TEXT("FontTime"), this);
 		if (pFont == nullptr)
 			return false;
@@ -159,6 +166,7 @@ bool CGameScene::BuildUI()
 
 	//8bit크기 그림
 	{
+		//X
 		auto pInterface = m_pObjectManager->CreateObject<CInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 4.4f, 65.f, Types::OT_UI, TEXT("FontX"), this);
 		if (pInterface== nullptr)
 			return false;
@@ -167,6 +175,7 @@ bool CGameScene::BuildUI()
 			return false;
 		FindLayer(TEXT("UI"))->AddActor(pInterface);
 
+		//Coint
 		pInterface = m_pObjectManager->CreateObject<CInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.5f, 45.f, Types::OT_UI, TEXT("ImageCoin"), this);
 		if (pInterface == nullptr)
 			return false;
@@ -175,6 +184,7 @@ bool CGameScene::BuildUI()
 			return false;
 		FindLayer(TEXT("UI"))->AddActor(pInterface);
 		
+		//X
 		pInterface = m_pObjectManager->CreateObject<CInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.465f, 45.f, Types::OT_UI, TEXT("FontX"), this);
 		if (pInterface == nullptr)
 			return false;
@@ -186,21 +196,27 @@ bool CGameScene::BuildUI()
 
 	//NumberInterface 생성
 	{
-		//auto pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 3.9f, 65.f, Types::OT_UI, TEXT("NumberLife"), this);
-		//if (pNumberInterface == nullptr)
-		//	return false;
-		//pNumberInterface->SetDigit(2);
-		//m_ObjectPtrList.emplace_back(pNumberInterface);
-		//FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
+		//Life
+		auto pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 3.9f, 65.f, Types::OT_UI, TEXT("NumberLife"), this);
+		if (pNumberInterface == nullptr)
+			return false;
+		pNumberInterface->SetDigit(2);
+		pNumberInterface->LinkValuePtr(&m_iLife);
+		m_ObjectPtrList.emplace_back(pNumberInterface);
+		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
 
-		//pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.675f, 65.f, Types::OT_UI, TEXT("NumberTime"), this);
-		//if (pNumberInterface == nullptr)
-		//	return false;
-		//pNumberInterface->SetDigit(3);
-		//m_ObjectPtrList.emplace_back(pNumberInterface);
-		//FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
+		//Time
+		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.675f, 65.f, Types::OT_UI, TEXT("NumberTime"), this);
+		if (pNumberInterface == nullptr)
+			return false;
+		pNumberInterface->SetDigit(3);
+		pNumberInterface->SetFontType(CNumberInterface::FontType::FONT_YELLOW);
+		pNumberInterface->LinkValuePtr(&m_iRemainTime);
+		m_ObjectPtrList.emplace_back(pNumberInterface);
+		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
 
-		auto pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.375f, 45.f, Types::OT_UI, TEXT("NumberCoin"), this);
+		//Coin
+		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.375f, 45.f, Types::OT_UI, TEXT("NumberCoin"), this);
 		if (pNumberInterface == nullptr)
 			return false;
 		pNumberInterface->SetDigit(2);
@@ -208,10 +224,11 @@ bool CGameScene::BuildUI()
 		m_ObjectPtrList.emplace_back(pNumberInterface);
 		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
 
+		//Score
 		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.375f, 65.f, Types::OT_UI, TEXT("NumberScore"), this);
 		if (pNumberInterface == nullptr)
 			return false;
-		pNumberInterface->SetDigit(6);
+		pNumberInterface->SetDigit(7);
 		pNumberInterface->LinkValuePtr(&m_iCurScore);
 		m_ObjectPtrList.emplace_back(pNumberInterface);
 		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
@@ -299,6 +316,27 @@ bool CGameScene::BuildWorld()
 			return false;
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
+
+		//테스트용 Coin 생성
+		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 370.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		if (pPickup == nullptr)
+			return false;
+		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		m_ObjectPtrList.emplace_back(pPickup);
+
+		//테스트용 Coin 생성
+		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 410.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		if (pPickup == nullptr)
+			return false;
+		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		m_ObjectPtrList.emplace_back(pPickup);
+
+		//테스트용 Coin 생성
+		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 450.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		if (pPickup == nullptr)
+			return false;
+		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		m_ObjectPtrList.emplace_back(pPickup);
 	}
 	
 	//Prob 생성
@@ -324,12 +362,6 @@ bool CGameScene::BuildWorld()
 		m_ObjectPtrList.push_back(pGround);
 		FindLayer(TEXT("Prob"))->AddActor(pGround);
 
-		//pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 400.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
-		//if (pGround== nullptr)
-		//	return false;
-		//m_ObjectPtrList.push_back(pGround);
-		//FindLayer(TEXT("Prob"))->AddActor(pGround);
-
 		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
 		if (pGround == nullptr)
 			return false;
@@ -344,6 +376,8 @@ bool CGameScene::BuildWorld()
 	}
 
 	//Block 생성
+	// ->일단 임시로 생성할 때 충돌처리에서 PROB으로써 인식하도로 ObjectType을 PROB으로 설정.
+	//		추후에 BLOCK으로 따로 빼낼예정
 	{
 		if (!CreateLayer(TEXT("Block"), 9))
 			return false;
@@ -355,6 +389,22 @@ bool CGameScene::BuildWorld()
 		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
 			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN,
 			Types::DIR_RIGHT, TEXT("Mushroom"), this);
+		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		m_ObjectPtrList.emplace_back(pPickup);
+		if (pPickup == nullptr)
+			return false;
+		//Pickup set
+		pBlock->SetStoredPickup(pPickup);
+		m_ObjectPtrList.push_back(pBlock);
+		FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 460.f, 350.f, Types::OT_PROB, TEXT("Block"), this);
+		if (pBlock == nullptr)
+			return false;
+		//Block에 저장시켜놓을 Pickup 생성
+		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
+			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
 		if (pPickup == nullptr)
@@ -382,40 +432,26 @@ bool CGameScene::BuildWorld()
 	return true;
 }
 
-void CGameScene::CollisionDetect()
-{
-	//////Scene내의 모든 Actor들에 대한 충돌검사 시행
-	//for (auto first = m_ObjectPtrList.begin(); first != m_ObjectPtrList.end(); ++first) {
-	//	if ((*first)->IsActive())
-	//	{
-	//		for (auto second = first; second != m_ObjectPtrList.end(); ++second) {
-	//			if (first == second)
-	//			{
-	//				continue;
-	//			}
-	//			if ((*second)->IsActive())
-	//			{
-	//				CCollisionManager::GetInstance()->CheckCollision((*first), (*second));
-	//			}
-	//		}
-	//	}
-	//}
-
-	
-
-}
-
-void CGameScene::InputUpdate(double fDeltaTime)
-{
-
-
-
-}
-
 void CGameScene::GameUpdate(double dDeltaTime)
 {	
-	if (!m_pPlayer->IsDead())
+	if (!m_pPlayer.lock()->IsDead())
 	{
+		//시간, 점수, 코인개수, Life값 Update
+		m_dTimeElapsed += dDeltaTime;
+		if (m_dTimeElapsed > 1.f)
+		{
+			if (--m_iRemainTime > 0)
+			{
+				m_dTimeElapsed = 0.f;
+			}
+			else //TimeOut
+			{
+				m_pPlayer.lock()->SetPlayerDead();
+			}
+		}
+		m_iCurScore = m_pScoreManager->GetScore();
+		m_iCoinCount = m_pScoreManager->GetCoinCount();
+		m_iLife = m_pScoreManager->GetLifeCount();
 
 		//Actor Update
 		for (const auto& actor : m_ObjectPtrList) {
@@ -426,39 +462,32 @@ void CGameScene::GameUpdate(double dDeltaTime)
 		}
 
 		//Collsion detect between Actors
-		//CollisionDetect();
 		CCollisionManager::GetInstance()->CheckCollision();
+		//Update main camera
 		CCameraManager::GetInstance()->GetMainCamera().lock()->Update(dDeltaTime);
 	}
 	else
 	{
-		m_pPlayer->DeadProcess(dDeltaTime);
+		m_pPlayer.lock()->DeadProcess(dDeltaTime);
 	}
 	
-	//Adjust Position on Screen 
+	//Adjust position on screen 
 	for (auto it = m_ObjectPtrList.cbegin(); it != m_ObjectPtrList.cend(); ++it)
 	{
-		//if (actor->GetActorType() != Types::AT_BACKGROUND)
+		if ((*it)->IsActive())
 		{
-			if ((*it)->IsActive())
-			{
-				(*it)->LateUpdate();
-				//++it;
-				//object->GetComponent<TransformComponent>().lock()->AdjustScreenPosition();
-			}
-			//else
-			//{
-			//	it = m_ObjectPtrList.erase(it);
-			//}
+			(*it)->LateUpdate();
 		}
 	}
 
-	//if (KEY_ONCE_PRESS(VK_ESCAPE))
-	//{
-	//	puts("reset");
-	//	ResetScene();
-	//}
 
+}
+
+void CGameScene::ResetScene()
+{
+	m_iRemainTime = 999;
+	m_dTimeElapsed = 0.f;
+	CScene::ResetScene();
 }
 
 

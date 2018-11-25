@@ -25,7 +25,7 @@ public:
 
 
 private:
-	std::shared_ptr<CPickup> m_pPickup;
+	std::weak_ptr<CPickup> m_pPickup;
 
 
 };

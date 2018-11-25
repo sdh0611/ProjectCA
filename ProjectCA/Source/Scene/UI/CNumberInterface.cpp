@@ -23,21 +23,38 @@ bool CNumberInterface::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	GetTransform().lock()->SetPivotRatio(0.f, 0.5f);
 
 	auto pResourceMgr = CResourceManager::GetInstance();
+	
+	m_NumberFontList.emplace_back(NumberFontList());
+	m_NumberFontList.emplace_back(NumberFontList());
 
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber0")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber1")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber2")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber3")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber4")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber5")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber6")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber7")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber8")).lock());
-	m_NumberFontList.emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumber9")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite0")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite1")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite2")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite3")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite4")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite5")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite6")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite7")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite8")).lock());
+	m_NumberFontList[0].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberWhite9")).lock());
 
-	m_iFontWidth = m_NumberFontList[0].lock()->GetBitWidth() * 2;
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow0")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow1")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow2")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow3")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow4")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow5")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow6")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow7")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow8")).lock());
+	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow9")).lock());
+
+
+	m_iFontWidth = m_NumberFontList[0][0].lock()->GetBitWidth() * 2;
 	m_iDigit = 0;
 	m_pValue = nullptr;
+	m_FontType = FONT_WHITE;
+
 
 	return true;
 }
@@ -59,19 +76,18 @@ void CNumberInterface::Render(const HDC & hDC)
 	{
 		auto pRender = GetComponent<ImageRender>().lock();
 		auto position = GetTransform().lock()->GetPivot();
-		//for (int index = 0; index < m_iDigit; ++index)
-		//{
-		//	pRender->Draw(hDC, POSITION(position.x - m_iFontWidth * index, position.y), m_NumberFontList[index].lock());
-		//}
 
-		//auto position();
-		for (int value = *m_pValue, index = 0; value > 0; value /= 10)
+		if (*m_pValue == 0)
 		{
-			
-			pRender->Draw(hDC, POSITION(position.x - m_iFontWidth * index++, position.y), m_NumberFontList[value%10].lock());
-
+			pRender->Draw(hDC, POSITION(position.x, position.y), m_NumberFontList[m_FontType][0].lock());
 		}
-
+		else
+		{
+			for (int value = *m_pValue, index = 0; value > 0 && index < m_iDigit; value /= 10)
+			{
+				pRender->Draw(hDC, POSITION(position.x - m_iFontWidth * index++, position.y), m_NumberFontList[m_FontType][value % 10].lock());
+			}
+		}
 	}
 
 }
@@ -87,4 +103,9 @@ void CNumberInterface::SetDigit(int iDigit)
 		return;
 
 	m_iDigit = iDigit;
+}
+
+void CNumberInterface::SetFontType(FontType type)
+{
+	m_FontType = type;
 }

@@ -6,6 +6,7 @@
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Scene\CScoreManager.h"
 #include "..\..\..\Include\Scene\CLayer.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
@@ -27,7 +28,6 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 		return false;
 	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
 
-
 	//Collider
 	auto pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
@@ -41,8 +41,9 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 			{
 				if (type == Collider::COLLISION_BOT)
 				{
+					CScoreManager::GetInstance()->IncreaseScore(10);
 					GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
-					m_pPickup->SetActive(true);
+					m_pPickup.lock()->SetActive(true);
 					m_ObjectState = Types::OS_DEAD;
 				}
 			}
@@ -73,14 +74,6 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
-	//m_pPickup = CObjectManager::GetInstance()->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
-	//	GetObjectPosition().x, GetObjectPosition().y - m_iObjectHeight / 2.f, Types::OT_PICKUP, Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN,
-	//	Types::DIR_RIGHT, TEXT("Flower"), static_cast<CGameScene*>(m_pOwnerScene));
-	//if (m_pPickup == nullptr)
-	//	return false;
-	//m_pPickup->SetActive(false);
-	//m_pOwnerScene->FindLayer(TEXT("Pickup"))->AddActor(m_pPickup);
-	//m_pOwnerScene->AddObjectToScene(m_pPickup);
 
 	return true;
 }
@@ -88,10 +81,9 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 void CBlock::Init()
 {
 	CObject::Init();
-	//m_pPickup->Init();
-	if (m_pPickup != nullptr)
+	if (!m_pPickup.expired())
 	{
-		m_pPickup->SetActive(false);
+		m_pPickup.lock()->SetActive(false);
 	}
 	m_ObjectState = Types::OS_IDLE;
 	GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Idle"));
@@ -104,10 +96,6 @@ void CBlock::Update(double dDeltaTime)
 	if (m_bActive)
 	{
 		CObject::Update(dDeltaTime);
-		//if (m_pPickup->IsActive())
-		//{
-		//	m_pPickup->Update(dDeltaTime);
-		//}
 
 	}
 
@@ -123,11 +111,6 @@ void CBlock::Render(const HDC & hDC)
 			pRender->Draw(hDC);
 		}
 
-		//if (m_pPickup->IsActive())
-		//{
-		//	m_pPickup->Render(hDC);
-		//}
-
 	}
 
 }
@@ -137,10 +120,7 @@ void CBlock::LateUpdate()
 	if (m_bActive)
 	{
 		CObject::LateUpdate();
-		//if (m_pPickup->IsActive())
-		//{
-		//	m_pPickup->LateUpdate();
-		//}
+
 	}
 
 }
@@ -148,5 +128,5 @@ void CBlock::LateUpdate()
 void CBlock::SetStoredPickup(std::shared_ptr<CPickup> pPickup)
 {
 	m_pPickup = pPickup;
-	m_pPickup->SetActive(false);
+	m_pPickup.lock()->SetActive(false);
 }

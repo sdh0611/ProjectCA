@@ -19,7 +19,10 @@ bool CInputManager::Init() {
 	m_KeyInputList.emplace_back(TEXT("DOWN"), VK_DOWN);
 	m_KeyInputList.emplace_back(TEXT("JUMP"), 'X');
 	m_KeyInputList.emplace_back(TEXT("ACCEL"), 'A');
-	
+	m_KeyInputList.emplace_back(TEXT("ATTACK"), 'C', true);
+	m_KeyInputList.emplace_back(TEXT("FUNC1"), VK_SHIFT, true);
+	m_KeyInputList.emplace_back(TEXT("RESET"), VK_ESCAPE, true);
+
 	m_MouseInputList.emplace_back(TEXT("LBUTTON_DBCLK"), WM_LBUTTONDBLCLK);
 	m_MouseInputList.emplace_back(TEXT("LBUTTON"), WM_LBUTTONDOWN);
 	m_MouseInputList.emplace_back(TEXT("RBUTTON_DBCLK"), WM_RBUTTONDBLCLK);
@@ -177,12 +180,30 @@ void CInputManager::KeyProcess()
 
 void CInputManager::UpdateKeyDown()
 {
-	for (auto& it : m_KeyInputList)
+	for (auto& key : m_KeyInputList)
 	{
-		if (KEY_DOWN(it.m_iInputCode))
-			it.m_bPressed = true;
+		if (key.m_bCheckOnce)
+		{
+			if (KEY_ONCE_PRESS(key.m_iInputCode))
+			{
+				key.m_bPressed = true;
+			}
+			else
+			{
+				key.m_bPressed = false;
+			}
+		}
 		else
-			it.m_bPressed = false;
+		{
+			if (KEY_DOWN(key.m_iInputCode))
+			{
+				key.m_bPressed = true;
+			}
+			else
+			{
+				key.m_bPressed = false;
+			}
+		}
 	}
 
 }

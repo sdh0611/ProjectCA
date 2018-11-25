@@ -407,67 +407,67 @@ bool CResourceManager::LoadUIImageInfo()
 
 
 	//UI Number font
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_0.bmp"), TEXT("UINumber0")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_0.bmp"), TEXT("UINumberWhite0")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_1.bmp"), TEXT("UINumber1")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_1.bmp"), TEXT("UINumberWhite1")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_2.bmp"), TEXT("UINumber2")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_2.bmp"), TEXT("UINumberWhite2")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_3.bmp"), TEXT("UINumber3")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_3.bmp"), TEXT("UINumberWhite3")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_4.bmp"), TEXT("UINumber4")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_4.bmp"), TEXT("UINumberWhite4")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_5.bmp"), TEXT("UINumber5")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_5.bmp"), TEXT("UINumberWhite5")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_6.bmp"), TEXT("UINumber6")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_6.bmp"), TEXT("UINumberWhite6")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_7.bmp"), TEXT("UINumber7")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_7.bmp"), TEXT("UINumberWhite7")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_8.bmp"), TEXT("UINumber8")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_8.bmp"), TEXT("UINumberWhite8")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_9.bmp"), TEXT("UINumber9")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_white_9.bmp"), TEXT("UINumberWhite9")))
 		return false;
 
 
 
 	//UI Time number font
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_0.bmp"), TEXT("UITimeNumber0")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_0.bmp"), TEXT("UINumberYellow0")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_1.bmp"), TEXT("UITimeNumber1")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_1.bmp"), TEXT("UINumberYellow1")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_2.bmp"), TEXT("UITimeNumber2")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_2.bmp"), TEXT("UINumberYellow2")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_3.bmp"), TEXT("UITimeNumber3")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_3.bmp"), TEXT("UINumberYellow3")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_4.bmp"), TEXT("UITimeNumber4")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_4.bmp"), TEXT("UINumberYellow4")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_5.bmp"), TEXT("UITimeNumber5")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_5.bmp"), TEXT("UINumberYellow5")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_6.bmp"), TEXT("UITimeNumber6")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_6.bmp"), TEXT("UINumberYellow6")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_7.bmp"), TEXT("UITimeNumber7")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_7.bmp"), TEXT("UINumberYellow7")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_8.bmp"), TEXT("UITimeNumber8")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_8.bmp"), TEXT("UINumberYellow8")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_time_9.bmp"), TEXT("UITimeNumber9")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_number_yellow_9.bmp"), TEXT("UINumberYellow9")))
 		return false;
 
 

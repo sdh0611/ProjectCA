@@ -1,6 +1,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CGoomba.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Scene\CScoreManager.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
@@ -77,6 +78,7 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						GetComponent<ColliderBox>().lock()->SetActive(false);
 						pPhysics->SetCurJumpForce(300.f);
 						pPhysics->SetGrounded(false);
+						CScoreManager::GetInstance()->IncreaseScore(200);
 					}
 					else
 					{
@@ -92,7 +94,7 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					}
 
 				}
-				else//otherActor != Types::OS_DAMAGED
+				else  //otherActor != Types::OS_DAMAGED
 				{
 					if (type == Collider::COLLISION_LEFT)
 					{
@@ -128,11 +130,8 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				pPhysics->SetCurSpeed(0.f);
 				pPhysics->SetCurJumpForce(300.f);
 				pPhysics->SetGrounded(false);
+				CScoreManager::GetInstance()->IncreaseScore(200);
 				break;
-			//case Collider::COLLISION_RIGHT:
-			//case Collider::COLLISION_LEFT:
-			//	FlipActorDirection();
-			//	break;
 			}
 			break;
 			case Types::OT_BULLET:
@@ -141,10 +140,9 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				pPhysics->SetCurSpeed(0.f);
 				pPhysics->SetCurJumpForce(300.f);
 				pPhysics->SetGrounded(false);
+				CScoreManager::GetInstance()->IncreaseScore(200);
 				break;
-
 		}
-
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);

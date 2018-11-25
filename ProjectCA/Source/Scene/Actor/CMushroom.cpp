@@ -17,11 +17,9 @@ CMushroom::~CMushroom()
 
 bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
-	if (!CActor::PostInit(data, pScene))
+	if (!CPickup::PostInit(data, pScene))
 		return false;
-
-	m_ObjectType = Types::OT_PICKUP;
-
+	
 	//PhysicsComponent Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
 	if (!pPhysics->PostInit(this, 300.f, 300.f, 1300.f, 0.f))
@@ -42,30 +40,25 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		switch (pOther->GetObjectType())
 		{
 		case Types::OT_PROB:
-			switch (type)
+			if (!IsStored())
 			{
-			case Collider::COLLISION_BOT:
-				pPhysics->SetGrounded(true);
-				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
-				SetActorVerticalState(Types::VS_IDLE);
-				break;
-			case Collider::COLLISION_LEFT:
-			case Collider::COLLISION_RIGHT:
-				FlipActorDirection();
-				break;
-			case Collider::COLLISION_TOP:
-				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
-				break;
+				switch (type)
+				{
+				case Collider::COLLISION_BOT:
+					pPhysics->SetGrounded(true);
+					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
+					SetActorVerticalState(Types::VS_IDLE);
+					break;
+				case Collider::COLLISION_LEFT:
+				case Collider::COLLISION_RIGHT:
+					FlipActorDirection();
+					break;
+				case Collider::COLLISION_TOP:
+					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
+					break;
+				}
 			}
 			break;
-		//case Types::OT_PLAYER:
-		//	auto pPlayer = static_cast<CPlayer*>(pOther);
-		//	if (pPlayer->GetPlayerState() == CPlayer::PS_SMALL)
-		//	{
-		//		pPlayer->SetPlayerState(CPlayer::PS_BIG);
-		//	}
-		//	SetActive(false);
-		//	break;
 		}
 
 	};
@@ -90,8 +83,7 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 void CMushroom::Init()
 {
-	CActor::Init();
-	m_bActive = true;
+	CPickup::Init();
 }
 
 void CMushroom::Update(double dDeltaTime)
@@ -115,17 +107,24 @@ void CMushroom::Render(const HDC & hDC)
 void CMushroom::ActorBehavior(double dDeltaTime)
 {
 	auto pPhysics = GetComponent<PhysicsComponent>().lock();
-	float fWalkSpeed = pPhysics->GetSpeed();
-
-	if (m_Direction == Types::DIR_LEFT)
+	if (!IsStored())
 	{
-		pPhysics->SetCurSpeed(-1 * fWalkSpeed);
-	}
-	else if (m_Direction == Types::DIR_RIGHT)
-	{
-		pPhysics->SetCurSpeed(fWalkSpeed);
-	}
+		float fWalkSpeed = pPhysics->GetSpeed();
 
-	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+		if (m_Direction == Types::DIR_LEFT)
+		{
+			pPhysics->SetCurSpeed(-1 * fWalkSpeed);
+		}
+		else if (m_Direction == Types::DIR_RIGHT)
+		{
+			pPhysics->SetCurSpeed(fWalkSpeed);
+		}
+
+		GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+	}
+	else
+	{
+		GetTransform().lock()->Move(0.f, -200.f * dDeltaTime);
+	}
 
 }

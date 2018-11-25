@@ -16,7 +16,6 @@ Collider::Collider(ColliderType type)
 Collider::~Collider()
 {
 	puts("Delete Collider");
-	wprintf(m_pOwner->GetObjectName().c_str(), "%s\n");
 
 	CCollisionManager::GetInstance()->DeleteCollider(this);
 }

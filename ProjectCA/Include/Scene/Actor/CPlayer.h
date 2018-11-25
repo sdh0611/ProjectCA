@@ -3,13 +3,14 @@
 #include "..\..\..\stdafx.h"
 #include "CActor.h"
 #include "CFireball.h"
+//#include "..\..\Core\Components\PlayerInputComponent.h"
 
 class CCamera;
-
 
 class CPlayer : public CActor {
 
 	friend void CFireball::SetFireballInactive();
+	//friend void PlayerInputComponent::KeyProcess();
 
 	enum PlayerState {
 		PS_SMALL, PS_BIG, PS_FLOWER
@@ -29,6 +30,7 @@ public:
 	
 
 public:
+	void SetPlayerDead();
 	void DeadProcess(double dDeltaTime);
 	void InterruptProecess(double dDeltaTime);
 
@@ -51,6 +53,7 @@ private:
 	void			IncreaseAvailableFireballCount();
 	void			SetPlayerState(PlayerState state);
 	void			ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxSpeed, float fCurJumpForce);
+	void			PopStoredPickup();
 	virtual void	ActorBehavior(double dDeltaTime) override;
 
 

@@ -186,6 +186,7 @@
     <ClCompile Include="Source\Scene\CObject.cpp" />
     <ClCompile Include="Source\Scene\CScene.cpp" />
     <ClCompile Include="Source\Scene\CSceneManager.cpp" />
+    <ClCompile Include="Source\Scene\CScoreManager.cpp" />
     <ClCompile Include="Source\Scene\CTile.cpp" />
     <ClCompile Include="Source\Scene\CTitleScene.cpp" />
     <ClCompile Include="Source\Scene\CWorld.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="Include\Scene\CObject.h" />
     <ClInclude Include="Include\Scene\CScene.h" />
     <ClInclude Include="Include\Scene\CSceneManager.h" />
+    <ClInclude Include="Include\Scene\CScoreManager.h" />
     <ClInclude Include="Include\Scene\CTile.h" />
     <ClInclude Include="Include\Scene\CTitleScene.h" />
     <ClInclude Include="Include\Scene\CWorld.h" />

@@ -1,5 +1,11 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
+#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\..\Include\Scene\Actor\CPickup.h"
+#include "..\..\..\Include\Scene\Actor\CCamera.h"
+#include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Scene\CScoreManager.h"
+#include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
@@ -7,10 +13,8 @@
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
-#include "..\..\..\Include\Scene\CGameScene.h"
-//#include "..\..\..\Include\Scene\CCameraManager.h"
-#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
-//#include "..\..\..\Include\Scene\Actor\CCamera.h"
+#include "..\..\..\Include\Core\CInputManager.h"
+
 
 
 
@@ -21,6 +25,7 @@ CPlayer::CPlayer()
 
 CPlayer::~CPlayer()
 {
+	m_FireballPool.clear();
 }
 
 
@@ -70,6 +75,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			case Collider::COLLISION_BOT:
 				SetActorVerticalState(Types::VS_JUMP);
 				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+
 				break;
 			default:
 				if (!m_bProtected)
@@ -79,17 +85,13 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 						if (m_PlayerState != PS_SMALL)	//PlayerDamaged
 						{
 							SetPlayerState(PS_SMALL);
+							PopStoredPickup();
 							m_pCurPickupPtr.reset();
 							m_bProtected = true;
-							//m_ActorCurState = Types::OS_PROTECTED;
 						}
 						else //Player die
 						{
-							m_ObjectState = Types::OS_DEAD;
-							pPhysics->SetCurJumpForce(700.f);
-							pPhysics->SetGrounded(false);
-							GetComponent<ColliderBox>().lock()->SetActive(false);
-							GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("MarioSmall"), TEXT("DeadImage"));
+							SetPlayerDead();
 						}
 
 					}
@@ -123,37 +125,37 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			}
 			break;
 		case Types::OT_PICKUP:
-			switch (m_PlayerState)
+			if (pOther->GetObjectName() != TEXT("Coin"))
 			{
-			case PS_SMALL:
-				if (pOther->GetObjectName() == TEXT("Mushroom"))
+				CScoreManager::GetInstance()->IncreaseScore(1000);
+				switch (m_PlayerState)
 				{
-					SetPlayerState(PS_BIG);
+				case PS_SMALL:
+					if (pOther->GetObjectName() == TEXT("Mushroom"))
+					{
+						SetPlayerState(PS_BIG);
+					}
+					else if (pOther->GetObjectName() == TEXT("Flower"))
+					{
+						SetPlayerState(PS_FLOWER);
+					}
+					m_pCurPickupPtr = m_pOwnerScene->FindObjectFromScene(pOther).lock();
+					break;
+				case PS_BIG:
+					if (pOther->GetObjectName() == TEXT("Flower"))
+					{
+						SetPlayerState(PS_FLOWER);
+					}
+					SetStoredPickup(m_pCurPickupPtr.lock());
+					m_pCurPickupPtr = m_pOwnerScene->FindObjectFromScene(pOther).lock();
+					break;
+				case PS_FLOWER:
+					if (pOther->GetObjectName() != TEXT("Coin"))
+					{
+						SetStoredPickup(m_pOwnerScene->FindObjectFromScene(pOther).lock());
+					}
+					break;
 				}
-				else if (pOther->GetObjectName() == TEXT("Flower"))
-				{
-					SetPlayerState(PS_FLOWER);
-				}
-				m_pCurPickupPtr = m_pOwnerScene->FindObjectFromScene(pOther).lock();
-				break;
-			case PS_BIG:
-/*				if (pOther->GetObjectName() == TEXT("Mushroom"))
-				{
-					SetStoredPickup(m_pOwnerScene->FindObjectFromScene(pOther).lock());
-				}
-				else */if (pOther->GetObjectName() == TEXT("Flower"))
-				{
-					SetPlayerState(PS_FLOWER);
-				}
-				SetStoredPickup(m_pCurPickupPtr.lock());
-				m_pCurPickupPtr = m_pOwnerScene->FindObjectFromScene(pOther).lock();
-				break;
-			case PS_FLOWER:
-				if (pOther->GetObjectName() != TEXT("Coin"))
-				{
-					SetStoredPickup(m_pOwnerScene->FindObjectFromScene(pOther).lock());
-				}
-				break;
 			}
 			pOther->SetActive(false);
 			break;
@@ -230,7 +232,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerDeadImage"), m_iObjectWidth, m_iObjectHeight, false, TEXT("DeadImage")))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioSmall"), TEXT("PlayerDeadAnimation"), m_iObjectWidth, m_iObjectHeight, false, TEXT("DeadAnimation")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioSmall"), TEXT("PlayerDeadAnimation"), m_iObjectWidth, m_iObjectHeight, true, TEXT("DeadAnimation")))
 		return false;
 
 
@@ -373,14 +375,14 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 void CPlayer::Init()
 {
-	//m_ActorPoint = m_spawnPoint;
-	//m_pCamera.lock()->Init();
-	m_bProtected = false;
-	m_ObjectState = Types::OS_IDLE;
-	m_dTimeElapsed = 0.f;
-	m_iAvailableFireballCount = 5;
+	m_bProtected					= false;
+	m_ObjectState					= Types::OS_IDLE;
+	m_dTimeElapsed				= 0.f;
+	m_iAvailableFireballCount	= 5;
+
 	m_pCurPickupPtr.reset();
 	m_pStoredPickupPtr.reset();
+
 	for (const auto& it : m_ComponentTable)
 	{
 		it.second->Init();
@@ -410,8 +412,6 @@ void CPlayer::Update(double dDeltaTime)
 				m_bProtected = false;
 			}
 		}
-
-		//m_ObjectState = Types::OS_IDLE;
 		
 		CActor::Update(dDeltaTime);
 		for (const auto& fire : m_FireballPool)
@@ -451,15 +451,26 @@ void CPlayer::LateUpdate()
 
 }
 
+void CPlayer::SetPlayerDead()
+{
+	m_ObjectState = Types::OS_DEAD;
+	GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("MarioSmall"), TEXT("DeadAnimation"));
+	GetComponent<AnimationRender>().lock()->SetPauseAnimation(true);
+	GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(700.f);
+	GetComponent<PhysicsComponent>().lock()->SetGrounded(false);
+	GetComponent<ColliderBox>().lock()->SetActive(false);
+}
+
 void CPlayer::DeadProcess(double dDeltaTime)
 {
-	m_dTimeElapsed += dDeltaTime;
+		m_dTimeElapsed += dDeltaTime;
 	
 	if (m_dTimeElapsed > 0.8f)
 	{
-		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("MarioSmall"), TEXT("DeadAnimation"));
+		GetComponent<AnimationRender>().lock()->SetPauseAnimation(false);
 		if (m_dTimeElapsed < 4.0f)
 		{
+			GetComponent<AnimationRender>().lock()->Update(dDeltaTime);
 			GetComponent<PhysicsComponent>().lock()->Update(dDeltaTime);
 			GetTransform().lock()->Move(0.f, GetComponent<PhysicsComponent>().lock()->GetCurJumpForce()* dDeltaTime);
 		}
@@ -515,7 +526,6 @@ bool CPlayer::GenerateFireball()
 		if (pFire == nullptr)
 			return false;
 		pFire->SetOwnerActor(this);
-		//m_pOwnerScene->AddObjectToScene(pFire);
 		m_FireballPool.emplace_back(std::move(pFire));
 	}
 
@@ -724,6 +734,18 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 
 }
 
+void CPlayer::PopStoredPickup()
+{
+	if (m_pStoredPickupPtr.expired())
+		return;
+	auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
+	POSITION position((2.f * pCamera->GetCameraPosition().x + pCamera->GetCameraWidth()) / 2.f, 70.f);
+
+	m_pStoredPickupPtr.lock()->GetTransform().lock()->SetPosition(position);
+	m_pStoredPickupPtr.lock()->SetActive(true);
+	m_pStoredPickupPtr.reset();
+}
+
 
 void CPlayer::ActorBehavior(double dDeltaTime)
 {
@@ -849,6 +871,11 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 
 	}
 	
+	if (CInputManager::GetInstance()->IsKeyDown(TEXT("FUNC1")))
+	{
+		PopStoredPickup();
+	}
+
 	ChangeAnimationClip(fCurSpeed, fWalkSpeed, fMaxSpeed, fCurJumpForce);
 }
 
@@ -904,7 +931,7 @@ void CPlayer::SetStoredPickup(std::shared_ptr<CObject> pPickup)
 {
 	wprintf(TEXT("Stored : %s\n"), pPickup->GetObjectName().c_str());
 	m_pStoredPickupPtr = pPickup;
-	
+	STATIC_POINTER_CAST(CPickup, m_pStoredPickupPtr.lock())->SetStored(true);
 }
 
 CPlayer::PlayerState CPlayer::GetPlayerState()

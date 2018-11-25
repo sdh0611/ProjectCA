@@ -1,5 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CKoopa.h"
+#include "..\..\..\Include\Scene\CScoreManager.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\AIComponent.h"
@@ -59,6 +60,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						GetComponent<ColliderBox>().lock()->SetActive(false);
 						pPhysics->SetCurJumpForce(300.f);
 						pPhysics->SetGrounded(false);
+						CScoreManager::GetInstance()->IncreaseScore(200);
 					}
 					else
 					{
@@ -98,6 +100,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						pPhysics->AddForceY(300.f);
 						pPhysics->SetGrounded(false);
 						GetComponent<ColliderBox>().lock()->SetActive(false);
+						CScoreManager::GetInstance()->IncreaseScore(200);
 					}
 
 				}
@@ -132,50 +135,67 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		case Types::OT_PLAYER:
 			switch (type){
 			case Collider::COLLISION_TOP:
-				SetObjectState(Types::OS_DAMAGED);
-				GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight()/2.f);
-				pPhysics->SetCurSpeed(0.f);
-				GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaShell"), TEXT("ShellIdle"));
+				if (m_ObjectState != Types::OS_DAMAGED)
+				{
+					SetObjectState(Types::OS_DAMAGED);
+					GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
+					pPhysics->SetCurSpeed(0.f);
+					GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaShell"), TEXT("ShellIdle"));
+					CScoreManager::GetInstance()->IncreaseScore(200);
+				}
+				else
+				{
+					if (pPhysics->GetCurSpeed() != 0.f)
+					{
+						pPhysics->SetCurSpeed(0.f);
+						GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaShell"), TEXT("ShellIdle"));
+						CScoreManager::GetInstance()->IncreaseScore(200);
+					}
+					else {
+						if (pOther->GetObjectPosition().x < GetObjectPosition().x)
+						{
+							if (pPhysics->GetCurSpeed() == 0.f)
+							{
+								pPhysics->SetCurSpeed(750.f);
+								m_Direction = Types::DIR_RIGHT;
+							}
+						}
+						else
+						{
+							pPhysics->SetCurSpeed(-750.f);
+							m_Direction = Types::DIR_LEFT;
+						}
+					}
+				}
 				break;
 			case Collider::COLLISION_RIGHT:
 				if (GetObjectState() == Types::OS_DAMAGED)
 				{
 					if (pPhysics->GetCurSpeed() == 0.f)
 					{
-						pPhysics->AddForceX(-750.f);
-						m_Direction = Types::DIR_LEFT;
+						if (pPhysics->GetCurSpeed() == 0.f)
+						{
+							pPhysics->SetCurSpeed(-750.f);
+							m_Direction = Types::DIR_LEFT;
+						}
 					}
-
 				}
-				//else
-				//{
-				//	FlipActorDirection();
-				//}
 				break;
 			case Collider::COLLISION_LEFT:
-				//puts("LEFT");
 				if (GetObjectState() == Types::OS_DAMAGED)
 				{
 					if (pPhysics->GetCurSpeed() == 0.f)
 					{
-						pPhysics->AddForceX(750.f);
+						pPhysics->SetCurSpeed(750.f);
 						m_Direction = Types::DIR_RIGHT;
 					}
 
 				}
-				//else
-				//{
-				//	FlipActorDirection();
-				//}
+
 				break;
 			
 			}
 			break;
-		//case Types::OT_BULLET:
-		//	SetActorState(Types::OS_DAMAGED);
-		//	GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
-		//	pPhysics->SetCurSpeed(0.f);
-		//	break;
 
 		}
 

@@ -7,6 +7,11 @@
 class CNumberInterface : public CInterface
 {
 public:
+	enum FontType {
+		FONT_WHITE = 0, FONT_YELLOW
+	};
+
+public:
 	CNumberInterface();
 	virtual ~CNumberInterface();
 
@@ -21,12 +26,15 @@ public:
 public:
 	void LinkValuePtr(int* pValue);
 	void SetDigit(int iDigit);
+	void SetFontType(FontType type);
+
 
 private:
 	typedef std::vector<std::weak_ptr<class CSprite>> NumberFontList;
-	NumberFontList	m_NumberFontList;
-	int						m_iFontWidth;
-	int						m_iDigit;
-	int*					m_pValue;
+	std::vector<NumberFontList	>	m_NumberFontList;
+	int										m_iFontWidth;
+	int										m_iDigit;
+	const int* 							m_pValue;
+	FontType								m_FontType;
 
 };

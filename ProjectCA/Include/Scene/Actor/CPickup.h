@@ -19,6 +19,11 @@ public:
 	virtual void Render(const HDC& hDC) override = 0 ;
 
 
+public:
+	void SetStored(bool bStored);
+	bool IsStored() const;
+
+
 private:
 	virtual void ActorBehavior(double dDeltaTime) override;
 

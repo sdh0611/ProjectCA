@@ -2,6 +2,7 @@
 #include "..\..\..\Include\Scene\Actor\CPickup.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 
+
 CPickup::CPickup()
 {
 }
@@ -15,28 +16,44 @@ bool CPickup::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!CActor::PostInit(data, pScene))
 		return false;
 
-	//PhysicsComponent 추가
-	auto pPhysics = std::make_shared<PhysicsComponent>();
-	if (!pPhysics->PostInit(this, 0.f, 0.f, 1300.f, 0.f))
-		return false;
-	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
-		return false;
+	////PhysicsComponent 추가
+	//auto pPhysics = std::make_shared<PhysicsComponent>();
+	//if (!pPhysics->PostInit(this, 0.f, 0.f, 1300.f, 0.f))
+	//	return false;
+	//if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
+	//	return false;
 
-	m_ObjectType	= Types::OT_PICKUP;
-	m_bStored		= false;
-	
+	m_ObjectType = Types::OT_PICKUP;
+	m_bStored = false;
+
 	return true;
 }
 
 void CPickup::Init()
 {
 	CActor::Init();
+	m_bActive = true;
 	m_bStored = false;
 }
 
 void CPickup::Update(double dDeltaTime)
 {
 	CActor::Update(dDeltaTime);
+}
+
+void CPickup::SetStored(bool bStored)
+{
+	if (!GetComponent<PhysicsComponent>().expired())
+	{
+		GetComponent<PhysicsComponent>().lock()->SetActive(false);
+	}
+
+	m_bStored = bStored;
+}
+
+bool CPickup::IsStored() const
+{
+	return m_bStored;
 }
 
 

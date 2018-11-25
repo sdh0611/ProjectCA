@@ -199,7 +199,7 @@ void CScene::ResetScene()
 	//if (KEY_DOWN(VK_BACK)) {
 
 	//	Init();
-	//}
+	//}	
 
 	for (const auto& actor : m_ObjectPtrList) {
 		actor->Init();

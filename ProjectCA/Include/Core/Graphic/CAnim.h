@@ -29,6 +29,7 @@ public:
 public:
 	void SetCanInterrupt(bool bInterrupt);
 	void SetReadyToChange(bool bReady);
+	void SetPauseAnimation(bool bPause);
 	bool SetSprite(const Types::tstring& strSpriteName);
 	bool SetTotalPlayTime(double dTime);
 	bool SetPlaySpeed(double dSpeed);
@@ -40,6 +41,7 @@ public:
 public:
 	bool						IsCanInterrupt() const;
 	bool						IsReadyToChange() const;
+	bool						IsPauseAnimation() const;
 	UINT						GetDrawWidth() const;
 	UINT						GetDrawHeight() const;
 	const Types::tstring	GetAnimTag() const;
@@ -58,6 +60,7 @@ private:
 	bool							m_bInterrupt;
 	bool							m_bReadyToChange;
 	bool							m_bLoop;
+	bool							m_bPause;
 	AnimMode					m_AnimMode;
 	UINT							m_iCurFrame;
 	UINT							m_iMaxFrame;
@@ -69,7 +72,7 @@ private:
 	double						m_dPlayTime;		//초 단위로 계산
 	double						m_dPlaySpeed;
 	double						m_dTimeElapsed;
-	Types::tstring				m_strAnimTag;
+	TSTRING						m_strAnimTag;
 	WeakSpriteTable			m_weakSpriteTable;
 	std::weak_ptr<CSprite>	m_pWeakSprite;
 

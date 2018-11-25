@@ -15,20 +15,22 @@ class CInputManager : public Singleton<CInputManager> {
 	DECLARE_SINGLETON(CInputManager)
 
 	struct InputInfo {
-		InputInfo(const Types::tstring& strInputname, SHORT iInputCode, bool bPressed = false)
-			:m_strInputName(strInputname), m_iInputCode(iInputCode), m_bPressed(bPressed)
+		InputInfo(const Types::tstring& strInputname, SHORT iInputCode, bool bCheckOnce = false, bool bPressed = false)
+			:m_strInputName(strInputname), m_iInputCode(iInputCode), 
+			m_bCheckOnce(bCheckOnce), m_bPressed(bPressed)
 		{
 		}
 
 		InputInfo(InputInfo&& other)
-			:m_strInputName(std::move(other.m_strInputName)), m_iInputCode(other.m_iInputCode), m_bPressed(other.m_bPressed)
+			:m_strInputName(std::move(other.m_strInputName)), m_iInputCode(other.m_iInputCode), 
+			m_bCheckOnce(other.m_bCheckOnce), m_bPressed(other.m_bPressed)
 		{
 		}
 
 		bool operator ==(const InputInfo& other)
 		{
 			if (m_strInputName == other.m_strInputName && m_iInputCode == other.m_iInputCode
-				&& m_bPressed == other.m_bPressed)
+				&& m_bCheckOnce == other.m_bCheckOnce && m_bPressed == other.m_bPressed)
 				return true;
 
 			return false;
@@ -39,16 +41,18 @@ class CInputManager : public Singleton<CInputManager> {
 			if (*this == other)
 				return *this;
 
-			this->m_strInputName = other.m_strInputName;
-			this->m_iInputCode = other.m_iInputCode;
-			this->m_bPressed = other.m_bPressed;
+			this->m_strInputName	= other.m_strInputName;
+			this->m_iInputCode		= other.m_iInputCode;
+			this->m_bCheckOnce		= other.m_bCheckOnce;
+			this->m_bPressed			= other.m_bPressed;
 
 			return *this;
 		}
 
-		Types::tstring	m_strInputName;
-		SHORT			m_iInputCode;
-		bool				m_bPressed;
+		TSTRING		m_strInputName;
+		SHORT		m_iInputCode;
+		bool			m_bCheckOnce;
+		bool			m_bPressed;
 	};
 
 public:

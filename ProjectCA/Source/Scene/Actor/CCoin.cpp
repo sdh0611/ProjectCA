@@ -3,6 +3,8 @@
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
+#include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Scene\CScoreManager.h"
 
 
 CCoin::CCoin()
@@ -26,6 +28,8 @@ bool CCoin::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 		if (pOther->GetObjectType() == Types::OT_PLAYER)
 		{
+			CScoreManager::GetInstance()->IncreaseCoinCount();
+			CScoreManager::GetInstance()->IncreaseScore(10);
 			SetActive(false);
 		}
 

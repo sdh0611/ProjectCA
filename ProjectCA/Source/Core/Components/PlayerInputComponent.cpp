@@ -51,6 +51,7 @@ void PlayerInputComponent::KeyProcess()
 
 	Types::Direction dir = pOwner->GetActorDirection();
 
+
 	if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 	{
 		pOwner->SetObjectState(Types::OS_IDLE);
@@ -90,7 +91,7 @@ void PlayerInputComponent::KeyProcess()
 	}
 
 	//°ø°ÝÅ°
-	if (KEY_ONCE_PRESS('C'))
+	if (m_pInputManager->IsKeyDown(TEXT("ATTACK")))
 	{
 		if(pOwner->GetObjectState() != Types::OS_SITDOWN)
 			pOwner->SetObjectState(Types::OS_ATTACK);

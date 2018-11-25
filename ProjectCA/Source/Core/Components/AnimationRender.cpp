@@ -20,7 +20,7 @@ AnimationRender::~AnimationRender()
 }
 
 
-bool AnimationRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
+bool AnimationRender::PostInit(CObject * pOwner, const TSTRING & strTag)
 {
 	if (!RenderComponent::PostInit(pOwner, strTag))
 		return false;
@@ -54,36 +54,36 @@ void AnimationRender::Draw(const HDC & hDC)
 		if (!m_pCurAnimation.expired())
 			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, pivot);
 
-		std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
-		std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
+		//std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
+		//std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
 
-		if (pCollider)
-		{
-			pCollider->DrawCollider(hDC, position);
+		//if (pCollider)
+		//{
+		//	pCollider->DrawCollider(hDC, position);
 
-			if (pCollider->IsCollision())
-			{
-				TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
-			}
-			else
-			{
-				TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
-			}
+		//	if (pCollider->IsCollision())
+		//	{
+		//		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+		//	}
+		//	else
+		//	{
+		//		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+		//	}
 
-		}
+		//}
 
-		if (pPhysics)
-		{
-			if (pPhysics->IsGrounded())
-			{
-				TextOut(hDC, position.x, position.y + 20, TEXT("TRUE"), sizeof(TEXT("TRUE")));
-			}
-			else
-			{
-				TextOut(hDC, position.x, position.y + 20, TEXT("FALSE"), sizeof(TEXT("FALSE")));
-			}
+		//if (pPhysics)
+		//{
+		//	if (pPhysics->IsGrounded())
+		//	{
+		//		TextOut(hDC, position.x, position.y + 20, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+		//	}
+		//	else
+		//	{
+		//		TextOut(hDC, position.x, position.y + 20, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+		//	}
 
-		}
+		//}
 
 
 
@@ -91,7 +91,7 @@ void AnimationRender::Draw(const HDC & hDC)
 }
 
 bool AnimationRender::AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName, 
-	UINT iWidth, UINT iHeight, bool bLoop, const Types::tstring & strAnimTag, bool bInterrupt)
+	UINT iWidth, UINT iHeight, bool bLoop, const TSTRING & strAnimTag, bool bInterrupt)
 {
 	auto pAnim = std::make_shared<CAnim>();
 
@@ -129,6 +129,11 @@ bool AnimationRender::AddAnimation(double dPlayTime, const TSTRING& strMapName, 
 
 	return true;
 
+}
+
+void AnimationRender::SetPauseAnimation(bool bPause)
+{
+	m_pCurAnimation.lock()->SetPauseAnimation(bPause);
 }
 
 bool AnimationRender::SetAnimationPlaySpeed(double dSpeed)

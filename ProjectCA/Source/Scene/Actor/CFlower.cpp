@@ -18,7 +18,7 @@ CFlower::~CFlower()
 
 bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
-	if (!CActor::PostInit(data, pScene))
+	if (!CPickup::PostInit(data, pScene))
 		return false;
 
 	//PhysicsComponent Ãß°¡
@@ -40,16 +40,19 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		switch (pOther->GetObjectType())
 		{
 		case Types::OT_PROB:
-			switch (type)
+			if (!IsStored())
 			{
-			case Collider::COLLISION_BOT:
-				pPhysics->SetGrounded(true);
-				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
-				SetActorVerticalState(Types::VS_IDLE);
-				break;
-			case Collider::COLLISION_TOP:
-				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
-				break;
+				switch (type)
+				{
+				case Collider::COLLISION_BOT:
+					pPhysics->SetGrounded(true);
+					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
+					SetActorVerticalState(Types::VS_IDLE);
+					break;
+				case Collider::COLLISION_TOP:
+					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
+					break;
+				}
 			}
 			break;
 		}
@@ -77,14 +80,12 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 void CFlower::Init()
 {
-	CActor::Init();
-	m_bActive = true;
+	CPickup::Init();
 }
 
 void CFlower::Update(double dDeltaTime)
 {
 	CActor::Update(dDeltaTime);
-	//printf("%f, %f\n", GetObjectPosition().x, GetObjectPosition().y);
 }
 
 void CFlower::Render(const HDC & hDC)
@@ -97,7 +98,13 @@ void CFlower::Render(const HDC & hDC)
 
 void CFlower::ActorBehavior(double dDeltaTime)
 {
-	auto pPhysics = GetComponent<PhysicsComponent>().lock();
-
-	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+	if (!IsStored())
+	{
+		auto pPhysics = GetComponent<PhysicsComponent>().lock();
+		GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+	}
+	else
+	{
+		GetTransform().lock()->Move(0.f, -200.f * dDeltaTime);
+	}
 }

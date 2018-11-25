@@ -29,7 +29,7 @@ public:
 
 public:
 	virtual bool Init() override;
-	virtual void Update(double fDeltaTime) override;
+	virtual void Update(double dDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
 	
 
@@ -43,27 +43,22 @@ private:
 
 
 private:
-	void CollisionDetect();
-	void InputUpdate(double dDeltaTime);
 	void GameUpdate(double dDeltaTime);
-	//bool IsWorldChange();
-	//void ChangeWorld();
+	virtual void ResetScene() override;
 
 
 private:
 	int															m_iCurScore;
 	int															m_iCoinCount;
+	int															m_iLife;
+	int															m_iRemainTime;
+	double													m_dTimeElapsed;
 
 
 private:
-	std::shared_ptr<CPlayer>							m_pPlayer;			//나중에 weak_ptr로 바꿀 여지가 있음.
-	//class CActorFactory*								m_pActorFactory;
+	std::weak_ptr<CPlayer>								m_pPlayer;			
 	class CObjectManager*								m_pObjectManager;
-	//std::unique_ptr<class CollisionDetector>			m_pCollisionDetector;
+	class CScoreManager*								m_pScoreManager;
 
-
-private:
-	//CWorld*												m_pCurWorld;
-	//CWorld*												m_pNextWorld;
 
 };

@@ -17,7 +17,7 @@ public:
 
 
 public:
-	virtual bool	PostInit(CObject* pOwner, const Types::tstring& strTag = TEXT("RenderComponent")) override;
+	virtual bool	PostInit(CObject* pOwner, const TSTRING& strTag = TEXT("RenderComponent")) override;
 	virtual void Init() override;
 	virtual void Update(double dDeltaTIme) override;
 	virtual void Draw(const HDC& hDC) override;
@@ -25,10 +25,11 @@ public:
 
 public:
 	bool AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName,
-		UINT iWidth, UINT iHeight, bool bLoop, const Types::tstring & strAnimTag, bool bInterrupt = true);
+		UINT iWidth, UINT iHeight, bool bLoop, const TSTRING & strAnimTag, bool bInterrupt = true);
 
 
 public:
+	void SetPauseAnimation(bool bPause);
 	bool SetAnimationPlaySpeed(double dSpeed);
 	bool ChangeAnimation(const TSTRING& strAnimTag);
 	void ChangeAnimationTable(const TSTRING& strTableName);
