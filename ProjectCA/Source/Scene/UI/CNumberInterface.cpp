@@ -20,7 +20,7 @@ bool CNumberInterface::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	if (!CInterface::PostInit(data, pScene))
 		return false;
 
-	GetTransform().lock()->SetPivotRatio(0.f, 0.5f);
+	//GetTransform().lock()->SetPivotRatio(0.f, 0.5f);
 
 	auto pResourceMgr = CResourceManager::GetInstance();
 	
@@ -50,11 +50,12 @@ bool CNumberInterface::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow9")).lock());
 
 
-	m_iFontWidth = m_NumberFontList[0][0].lock()->GetBitWidth() * 2;
 	m_iDigit = 0;
+	m_iFontInterval = m_NumberFontList[0][0].lock()->GetBitWidth();
+	m_iFontWidth = m_NumberFontList[0][0].lock()->GetBitWidth();
+	m_iFontHeight = m_NumberFontList[0][0].lock()->GetBitHeight();
 	m_pValue = nullptr;
 	m_FontType = FONT_WHITE;
-
 
 	return true;
 }
@@ -85,7 +86,7 @@ void CNumberInterface::Render(const HDC & hDC)
 		{
 			for (int value = *m_pValue, index = 0; value > 0 && index < m_iDigit; value /= 10)
 			{
-				pRender->Draw(hDC, POSITION(position.x - m_iFontWidth * index++, position.y), m_NumberFontList[m_FontType][value % 10].lock());
+				pRender->Draw(hDC, POSITION(position.x - m_iFontInterval * index++, position.y), m_NumberFontList[m_FontType][value % 10].lock());
 			}
 		}
 	}
@@ -108,4 +109,28 @@ void CNumberInterface::SetDigit(int iDigit)
 void CNumberInterface::SetFontType(FontType type)
 {
 	m_FontType = type;
+}
+
+void CNumberInterface::SetFontInterval(UINT iInteval)
+{
+	m_iFontInterval = iInteval;
+}
+
+void CNumberInterface::SetFontWidth(UINT iWidth)
+{
+	m_iFontWidth = iWidth;
+	GetComponent<ImageRender>().lock()->SetDrawWidth(iWidth);
+}
+
+void CNumberInterface::SetFontHeight(UINT iHeight)
+{
+	m_iFontHeight = iHeight;
+	GetComponent<ImageRender>().lock()->SetDrawHeight(iHeight);
+}
+
+void CNumberInterface::SetFontSize(UINT iWidth, UINT iHeight)
+{
+	m_iFontWidth = iWidth;
+	m_iFontHeight = iHeight;
+	GetComponent<ImageRender>().lock()->SetDrawSize(iWidth, iHeight);
 }

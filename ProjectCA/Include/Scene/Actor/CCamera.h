@@ -46,6 +46,7 @@ public:
 	bool							IsActive() const;
 	UINT							GetCameraWidth() const;
 	UINT							GetCameraHeight() const;
+	float							GetCameraCurSpeed() const;
 	Types::CameraID			GetCameraID() const;
 	const POSITION&			GetCameraPosition() const;
 	std::weak_ptr<CObject>	GetOwner();
@@ -58,7 +59,8 @@ public:
 private:
 	bool								m_bActive;
 	float								m_fDestPosition;
-	float								m_fCameraMoveSpeed;
+	float								m_fCameraCurSpeed;
+	float								m_fCameraMaxSpeed;
 	float								m_fOwnerCurSpeed;
 	float								m_fOwnerCurJumpForce;
 	UINT								m_iWidth;

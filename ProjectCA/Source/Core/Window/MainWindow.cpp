@@ -99,7 +99,7 @@ void MainWindow::Render()
 	if (!m_pBackBuffer->DrawSet(m_hDC))
 		return ;
 
-	m_hOldBrush = (HBRUSH)SelectObject(m_pBackBuffer->GetMemDC(), m_hBrush);
+	//m_hOldBrush = (HBRUSH)SelectObject(m_pBackBuffer->GetMemDC(), m_hBrush);
 	//HDC hMemDC = CreateCompatibleDC(m_pBackBuffer->GetMemDC());
 	//HBITMAP hOldBit = (HBITMAP)SelectObject(hMemDC, m_hBackground);
 	//BitBlt(m_pBackBuffer->GetMemDC(), 0, 0, MAX_WIDTH, MAX_HEIGHT, hMemDC, 0, 0, SRCCOPY);
@@ -109,7 +109,7 @@ void MainWindow::Render()
 	m_pTimer->DrawFPS(m_pBackBuffer->GetMemDC());
 	BitBlt(m_hDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, m_pBackBuffer->GetMemDC(), 0, 0, SRCCOPY);
 
-	m_hBrush = (HBRUSH)SelectObject(m_pBackBuffer->GetMemDC() , m_hOldBrush);
+	//m_hBrush = (HBRUSH)SelectObject(m_pBackBuffer->GetMemDC() , m_hOldBrush);
 
 	m_pBackBuffer->DrawEnd();
 

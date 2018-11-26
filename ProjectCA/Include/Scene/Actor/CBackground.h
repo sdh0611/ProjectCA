@@ -23,7 +23,7 @@ public:
 public:
 	bool SetBackgroundImage(const TSTRING& strImageName);
 	void SetStatic(bool bStatic);
-
+	void SetScrollSpeed(float fSpeed);
 
 public:
 	bool IsStatic();

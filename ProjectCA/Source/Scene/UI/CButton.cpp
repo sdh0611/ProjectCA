@@ -23,12 +23,10 @@ bool CButton::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	if (!CObject::PostInit(objectData, pScene))
 		return false;
 
-	//GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
+	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
 
 	auto pRender = std::make_shared<ImageRender>();
 	if (!pRender->PostInit(this))
-		return false;
-	if (!pRender->SetSprite(TEXT("TestButton")))
 		return false;
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
@@ -57,7 +55,7 @@ void CButton::Render(const HDC & hDC)
 	if (m_bActive)
 	{
 		//POSITION position = GetTransform().lock()->GetPosition();
-		GetComponent<ImageRender>().lock()->Draw(hDC, GetObjectPosition());
+		GetComponent<ImageRender>().lock()->Draw(hDC, GetTransform().lock()->GetPivot());
 	}
 
 }
@@ -67,9 +65,14 @@ void CButton::SetOnClickCallback(Callback callback)
 	m_OnClick = callback;
 }
 
+void CButton::SetImage(const TSTRING & strImageName)
+{
+	GetComponent<ImageRender>().lock()->SetSprite(strImageName);
+}
+
 bool CButton::IsClickOnButton()
 {
-	POSITION buttonPosition = GetObjectPosition();
+	POSITION buttonPosition = GetTransform().lock()->GetPivot();
 	POINT point;
 	GetCursorPos(&point);
 	ScreenToClient(MainWindow::GetInstance()->GetWindowHandle(), &point);

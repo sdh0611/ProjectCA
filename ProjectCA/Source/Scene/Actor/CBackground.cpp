@@ -3,9 +3,13 @@
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
+#include "..\..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ImageRender.h"
 #include "..\..\..\Include\Core\CResourceManager.h"
+#include "..\..\..\Include\Scene\CCameraManager.h"
+#include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Graphic\CSprite.h"
 
 
@@ -24,7 +28,7 @@ bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
 		return false;
 	}
 	//ImageRender 추가
-	std::shared_ptr<ImageRender> pRender = std::make_shared<ImageRender>();
+	auto pRender = std::make_shared<ImageRender>();
 	if (!pRender->PostInit(this))
 		return false;
 
@@ -32,18 +36,30 @@ bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
 		return false;
 
 	m_bStatic = false;
+	m_fScrollSpeed = 100.f;
 
 	return true;;
 }
 
 void CBackground::Init()
 {
+	CObject::Init();
 }
 
 void CBackground::Update(double dDeltaTIme)
 {
 	for (auto& it : m_ComponentTable)
 		it.second->Update(dDeltaTIme);
+
+	if (!m_bStatic)
+	{
+		float fSpeed = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraCurSpeed();
+		if (fSpeed)
+		{
+			GetTransform().lock()->Move(-1 * fSpeed * 0.2f* dDeltaTIme, 0);
+		}
+
+	}
 
 }
 
@@ -55,28 +71,27 @@ void CBackground::Render(const HDC & hDC)
 
 	if (m_bStatic)
 	{
-		pRender->Draw(hDC, screenPosition);
+		pRender->Draw(hDC, GetObjectPosition());
 	}
 	else
 	{
 		UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
+		POSITION position = GetObjectPosition();
 		//카메라 좌측 맵출력
-		pRender->Draw(hDC, POSITION(screenPosition.x - m_iObjectWidth, screenPosition.y));
+		pRender->Draw(hDC, POSITION(position.x - m_iObjectWidth, position.y));
 		//카메라 출력부분
-		pRender->Draw(hDC, screenPosition);
+		pRender->Draw(hDC, position);
 
-		if (screenPosition.x > iCameraWidth)
+		if (position.x > iCameraWidth)
 		{
 			pTransform->Move(-1.f * iCameraWidth, 0);
 		}
-		else if (screenPosition.x < 0.f)
+		else if (position.x < 0.f)
 		{
 			pTransform->Move(2.f * iCameraWidth, 0);
 		}
 
 	}
-	//SelectObject(memDC, hOldBit);
-	//DeleteDC(memDC);
 
 }
 
@@ -88,8 +103,6 @@ bool CBackground::SetBackgroundImage(const TSTRING & strImageName)
 	{
 		return false;
 	}
-	//m_iBackgroundWidth = m_pBackgroundImage.lock()->GetBitWidth();
-	//m_iBackgroundHeight = m_pBackgroundImage.lock()->GetBitHeight();
 
 	return true;
 }
@@ -97,6 +110,11 @@ bool CBackground::SetBackgroundImage(const TSTRING & strImageName)
 void CBackground::SetStatic(bool bStatic)
 {
 	m_bStatic = bStatic;
+}
+
+void CBackground::SetScrollSpeed(float fSpeed)
+{
+	m_fScrollSpeed = fSpeed;
 }
 
 bool CBackground::IsStatic()

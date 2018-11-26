@@ -19,6 +19,7 @@ public:
 
 
 public:
+	void AdjustPivot();
 	void Move(float fx, float fy);
 	void SetPosition(const POSITION& position);
 	void SetPosition(float fx, float fy);

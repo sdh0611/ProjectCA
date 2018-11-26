@@ -27,14 +27,21 @@ public:
 	void LinkValuePtr(int* pValue);
 	void SetDigit(int iDigit);
 	void SetFontType(FontType type);
+	void SetFontInterval(UINT iInteval);
+	void SetFontWidth(UINT iWidth);
+	void SetFontHeight(UINT iHeight);
+	void SetFontSize(UINT iWidth, UINT iHeight);
 
 
 private:
-	typedef std::vector<std::weak_ptr<class CSprite>> NumberFontList;
-	std::vector<NumberFontList	>	m_NumberFontList;
-	int										m_iFontWidth;
 	int										m_iDigit;
+	UINT									m_iFontInterval;
+	UINT									m_iFontWidth;
+	UINT									m_iFontHeight;
 	const int* 							m_pValue;
 	FontType								m_FontType;
+	typedef std::vector<std::weak_ptr<class CSprite>> NumberFontList;
+	std::vector<NumberFontList	>	m_NumberFontList;
+
 
 };

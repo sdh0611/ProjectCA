@@ -22,6 +22,7 @@ public:
 
 public:
 	void SetOnClickCallback(Callback callback);
+	void SetImage(const TSTRING& strImageName);
 
 
 private:

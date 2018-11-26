@@ -273,6 +273,9 @@
     <ClCompile Include="Source\Scene\CScoreManager.cpp">
       <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\UI\CFont.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -448,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\CScoreManager.h">
       <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\UI\CFont.h">
+      <Filter>헤더 파일\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

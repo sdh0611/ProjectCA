@@ -63,7 +63,7 @@ namespace Types {
 	enum Direction { DIR_DOWN = -1, DIR_IDLE, DIR_UP, DIR_LEFT, DIR_RIGHT };
 
 	//Scene 타입 정의
-	enum SceneType { ST_TITLE, ST_GAME, ST_SELECT };
+	enum SceneType { ST_TITLE, ST_GAME, ST_SELECT, ST_GAMEOVER, ST_LOADING };
 
 	//EventType 정의
 	enum EventType { ET_ATTACK, ET_DAMAGE };

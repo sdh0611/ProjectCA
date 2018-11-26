@@ -197,38 +197,46 @@ bool CGameScene::BuildUI()
 	//NumberInterface »ý¼º
 	{
 		//Life
-		auto pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 3.9f, 65.f, Types::OT_UI, TEXT("NumberLife"), this);
+		auto pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 3.7f, 65.f, Types::OT_UI, TEXT("NumberLife"), this);
 		if (pNumberInterface == nullptr)
 			return false;
 		pNumberInterface->SetDigit(2);
+		pNumberInterface->SetFontSize(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);
+		pNumberInterface->SetFontInterval(SPRITE_WIDTH / 2);
 		pNumberInterface->LinkValuePtr(&m_iLife);
 		m_ObjectPtrList.emplace_back(pNumberInterface);
 		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
 
 		//Time
-		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.675f, 65.f, Types::OT_UI, TEXT("NumberTime"), this);
+		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.65f, 65.f, Types::OT_UI, TEXT("NumberTime"), this);
 		if (pNumberInterface == nullptr)
 			return false;
 		pNumberInterface->SetDigit(3);
+		pNumberInterface->SetFontSize(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);
+		pNumberInterface->SetFontInterval(SPRITE_WIDTH / 2);
 		pNumberInterface->SetFontType(CNumberInterface::FontType::FONT_YELLOW);
 		pNumberInterface->LinkValuePtr(&m_iRemainTime);
 		m_ObjectPtrList.emplace_back(pNumberInterface);
 		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
 
 		//Coin
-		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.375f, 45.f, Types::OT_UI, TEXT("NumberCoin"), this);
+		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.35f, 45.f, Types::OT_UI, TEXT("NumberCoin"), this);
 		if (pNumberInterface == nullptr)
 			return false;
 		pNumberInterface->SetDigit(2);
+		pNumberInterface->SetFontSize(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);
+		pNumberInterface->SetFontInterval(SPRITE_WIDTH / 2);
 		pNumberInterface->LinkValuePtr(&m_iCoinCount);
 		m_ObjectPtrList.emplace_back(pNumberInterface);
 		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
 
 		//Score
-		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.375f, 65.f, Types::OT_UI, TEXT("NumberScore"), this);
+		pNumberInterface = m_pObjectManager->CreateObject<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.35f, 65.f, Types::OT_UI, TEXT("NumberScore"), this);
 		if (pNumberInterface == nullptr)
 			return false;
 		pNumberInterface->SetDigit(7);
+		pNumberInterface->SetFontSize(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);
+		pNumberInterface->SetFontInterval(SPRITE_WIDTH / 2);
 		pNumberInterface->LinkValuePtr(&m_iCurScore);
 		m_ObjectPtrList.emplace_back(pNumberInterface);
 		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
@@ -242,7 +250,6 @@ bool CGameScene::BuildUI()
 		m_ObjectPtrList.emplace_back(pInfo);
 		FindLayer(TEXT("UI"))->AddActor(pInfo);
 	}
-
 
 	return true;
 }

@@ -191,6 +191,7 @@
     <ClCompile Include="Source\Scene\CTitleScene.cpp" />
     <ClCompile Include="Source\Scene\CWorld.cpp" />
     <ClCompile Include="Source\Scene\UI\CButton.cpp" />
+    <ClCompile Include="Source\Scene\UI\CFont.cpp" />
     <ClCompile Include="Source\Scene\UI\CInterface.cpp" />
     <ClCompile Include="Source\Scene\UI\CItemInfo.cpp" />
     <ClCompile Include="Source\Scene\UI\CNumberInterface.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="Include\Scene\CTitleScene.h" />
     <ClInclude Include="Include\Scene\CWorld.h" />
     <ClInclude Include="Include\Scene\UI\CButton.h" />
+    <ClInclude Include="Include\Scene\UI\CFont.h" />
     <ClInclude Include="Include\Scene\UI\CInterface.h" />
     <ClInclude Include="Include\Scene\UI\CItemInfo.h" />
     <ClInclude Include="Include\Scene\UI\CNumberInterface.h" />

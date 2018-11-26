@@ -18,7 +18,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPTSTR lpszCm
 
 	MainWindow::Destroy();
 
-	getchar();
+	//getchar();
 
 	return retValue;
 

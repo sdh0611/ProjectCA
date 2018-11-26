@@ -38,11 +38,16 @@ void TransformComponent::Init()
 
 void TransformComponent::Update(double dDeltaTime)
 {
-	//AdjustScreenPosition();
 }
 
 void TransformComponent::LateUpdate(double dDeltaTime)
 {
+}
+
+void TransformComponent::AdjustPivot()
+{
+	m_Pivot.x = m_Position.x - m_pOwner->GetObjectWidth() * m_fPivotWidthRatio;
+	m_Pivot.y = m_Position.y - m_pOwner->GetObjectHeight() * m_fPivotHeightRatio;
 }
 
 void TransformComponent::Move(float fx, float fy)
