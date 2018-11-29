@@ -37,7 +37,7 @@ private:
 	UINT							m_iDrawWidth;
 	UINT							m_iDrawHeight;
 	COLORREF					m_ColorRef;
-	Types::tstring				m_strImageTag;
+	TSTRING						m_strImageTag;
 	std::weak_ptr<CSprite>	m_pWeakSprite;
 
 };

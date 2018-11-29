@@ -22,5 +22,5 @@ public:
 public:
 	bool SetImage(const TSTRING& strImageName);
 
-
+	
 };

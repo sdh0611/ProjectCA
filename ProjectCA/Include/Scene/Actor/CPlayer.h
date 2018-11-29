@@ -67,6 +67,7 @@ private:
 	PlayerState					m_PlayerState;
 	std::weak_ptr<CObject>	m_pCurPickupPtr;
 	std::weak_ptr<CObject>	m_pStoredPickupPtr;
+	std::weak_ptr<CObject> m_pPickObjectPtr;
 
 
 private:

@@ -2,6 +2,7 @@
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Core\CCollisionManager.h"
+#include "..\..\Include\Scene\CSceneManager.h"
 #include "..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\CScoreManager.h"
@@ -113,6 +114,11 @@ void CGameScene::Update(double dDeltaTime)
 		{
 			m_pScoreManager->DecreaseLifeCount();
 			ResetScene();
+		}
+		else
+		{
+			CSceneManager::GetInstance()->SetReadyToChangeScene(true);
+			CSceneManager::GetInstance()->CreateNextScene(Types::ST_GAMEOVER);
 		}
 	}
 
@@ -289,7 +295,7 @@ bool CGameScene::BuildWorld()
 		m_ObjectPtrList.emplace_back(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 350.f, 250.f, Types::OT_ENEMY,
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, -100.f, 450.f, Types::OT_ENEMY,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
 		if (pEnemy == nullptr)
 			return false;
@@ -346,50 +352,48 @@ bool CGameScene::BuildWorld()
 		m_ObjectPtrList.emplace_back(pPickup);
 	}
 	
-	//Prob 생성
+	//Ground생성
 	{
-		if (!CreateLayer(TEXT("Prob"), 10))
+		if (!CreateLayer(TEXT("Ground"), 10))
 			return false;
 
-		auto pGround = m_pObjectManager->CreateObject<CGround>(8192, 256, 400.f, 700.f, Types::OT_PROB, TEXT("Prob"), this);
+		auto pGround = m_pObjectManager->CreateObject<CGround>(8192, 256, 400.f, 700.f, Types::OT_GROUND, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Prob"))->AddActor(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, -400.f, 500.f, Types::OT_PROB, TEXT("Prob"), this);
+		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, -400.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Prob"))->AddActor(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 0.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
+		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 0.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Prob"))->AddActor(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_PROB, TEXT("Prob"), this);
+		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Prob"))->AddActor(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 1200.f, 500.f, Types::OT_PROB, TEXT("Prob"), this);
+		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 1200.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Prob"))->AddActor(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
 	}
 
 	//Block 생성
-	// ->일단 임시로 생성할 때 충돌처리에서 PROB으로써 인식하도로 ObjectType을 PROB으로 설정.
-	//		추후에 BLOCK으로 따로 빼낼예정
 	{
 		if (!CreateLayer(TEXT("Block"), 9))
 			return false;
 
-		auto pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 400.f, 350.f, Types::OT_PROB, TEXT("Block"), this);
+		auto pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 400.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
 		if (pBlock == nullptr)
 			return false;
 		//Block에 저장시켜놓을 Pickup 생성
@@ -406,7 +410,7 @@ bool CGameScene::BuildWorld()
 		FindLayer(TEXT("Block"))->AddActor(pBlock);
 
 
-		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 460.f, 350.f, Types::OT_PROB, TEXT("Block"), this);
+		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 460.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
 		if (pBlock == nullptr)
 			return false;
 		//Block에 저장시켜놓을 Pickup 생성
@@ -418,6 +422,22 @@ bool CGameScene::BuildWorld()
 			return false;
 		//Pickup set
 		pBlock->SetStoredPickup(pPickup);
+		m_ObjectPtrList.push_back(pBlock);
+		FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 520.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+		if (pBlock == nullptr)
+			return false;
+		//Block에 저장시켜놓을 Pickup 생성
+		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
+			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		m_ObjectPtrList.emplace_back(pPickup);
+		if (pPickup == nullptr)
+			return false;
+		//Pickup set
+		pBlock->SetStoredPickup(pPickup);
+		pBlock->SetHide();
 		m_ObjectPtrList.push_back(pBlock);
 		FindLayer(TEXT("Block"))->AddActor(pBlock);
 	}

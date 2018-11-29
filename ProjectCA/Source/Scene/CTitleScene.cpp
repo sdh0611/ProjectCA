@@ -5,6 +5,7 @@
 #include "..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
+#include "..\..\Include\Scene\Actor\CGround.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\Include\Scene\UI\CButton.h"
 #include "..\..\Include\Scene\UI\CFont.h"
@@ -24,18 +25,22 @@ CTitleScene::~CTitleScene()
 
 bool CTitleScene::Init()
 {
-	CObjectManager* pObjMgr = CObjectManager::GetInstance();
+	auto pObjMgr = CObjectManager::GetInstance();
+
+	auto pCamera = CCameraManager::GetInstance()->CreateCamera(nullptr, MAX_WIDTH, MAX_HEIGHT);
+	if (pCamera.expired())
+		return false;
+	SetSceneMainCamera(pCamera.lock());
 
 	//Title logo积己
 	{
 		if (!CreateLayer(TEXT("Title"), 0))
 			return false;
 	
-		auto pTitle = pObjMgr->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0, 0, Types::OT_BACKGROUND, TEXT("Logo"), this);
+		auto pTitle = pObjMgr->CreateObject<CInterface>( MAX_WIDTH * 0.7f, MAX_HEIGHT * 0.3f , MAX_WIDTH / 2.f, MAX_HEIGHT / 3.f, Types::OT_UI, TEXT("Logo"), this);
 		if (pTitle == nullptr)
 			return false;
-		pTitle->SetBackgroundImage(TEXT("Logo"));
-		pTitle->SetStatic(true);
+		pTitle->SetImage(TEXT("Logo2"));
 		m_ObjectPtrList.emplace_back(pTitle);
 		FindLayer(TEXT("Title"))->AddActor(pTitle);
 	}
@@ -46,12 +51,13 @@ bool CTitleScene::Init()
 			return false;
 
 		//Start button
-		auto pButton = pObjMgr->CreateObject<CButton>(SPRITE_WIDTH * 12, SPRITE_HEIGHT *1.25, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 120, Types::OT_UI, TEXT("Button"), this);
+		auto pButton = pObjMgr->CreateObject<CButton>(SPRITE_WIDTH * 9, SPRITE_HEIGHT, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 120, Types::OT_UI, TEXT("Button"), this);
 		if (pButton == nullptr)
 			return false;
 
 		auto startButtonCallback = []()->void {
 			puts("Start");
+			CSceneManager::GetInstance()->CreateNextScene(Types::ST_GAME);
 			CSceneManager::GetInstance()->SetReadyToChangeScene(true);
 		};
 		pButton->SetImage(TEXT("StartButton"));
@@ -62,7 +68,7 @@ bool CTitleScene::Init()
 
 		
 		//Exit button
-		pButton = pObjMgr->CreateObject<CButton>(SPRITE_WIDTH * 10, SPRITE_HEIGHT *1.25, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 180, Types::OT_UI, TEXT("Button"), this);
+		pButton = pObjMgr->CreateObject<CButton>(SPRITE_WIDTH * 8, SPRITE_HEIGHT, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 180, Types::OT_UI, TEXT("Button"), this);
 		if (pButton == nullptr)
 			return false;
 
@@ -101,9 +107,20 @@ bool CTitleScene::Init()
 		FindLayer(TEXT("Font"))->AddActor(pFont);
 	}
 
+	//{
+	//	if (!CreateLayer(TEXT("Ground"), 3))
+	//		return false;
+
+	//	auto pGround = pObjMgr->CreateObject<CGround>(MAX_WIDTH, 256, MAX_WIDTH / 2.f, 700.f, Types::OT_GROUND, TEXT("Ground"), this);
+	//	if (pGround == nullptr)
+	//		return false;
+	//	m_ObjectPtrList.push_back(pGround);
+	//	FindLayer(TEXT("Ground"))->AddActor(pGround);
+	//}
+
 	//硅版 积己
 	{
-		if (!CreateLayer(TEXT("Background"), 10))
+		if (!CreateLayer(TEXT("Background"), 99))
 			return false;
 
 		auto pBackground = pObjMgr->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0, 0, Types::OT_BACKGROUND, TEXT("Background"), this);
@@ -113,7 +130,6 @@ bool CTitleScene::Init()
 		pBackground->SetStatic(true);
 		m_ObjectPtrList.emplace_back(pBackground);
 		FindLayer(TEXT("Background"))->AddActor(pBackground);
-
 	}
 
 	return true;

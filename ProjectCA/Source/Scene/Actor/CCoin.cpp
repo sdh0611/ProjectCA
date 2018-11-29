@@ -20,6 +20,8 @@ bool CCoin::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!CPickup::PostInit(data, pScene))
 		return false;
 
+	m_Type = PT_COIN;
+
 	auto pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
@@ -29,7 +31,7 @@ bool CCoin::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		if (pOther->GetObjectType() == Types::OT_PLAYER)
 		{
 			CScoreManager::GetInstance()->IncreaseCoinCount();
-			CScoreManager::GetInstance()->IncreaseScore(10);
+			CScoreManager::GetInstance()->IncreaseScore(m_iScore);
 			SetActive(false);
 		}
 

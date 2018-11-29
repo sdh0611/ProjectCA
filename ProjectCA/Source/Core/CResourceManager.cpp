@@ -154,6 +154,9 @@ bool CResourceManager::LoadPlayerSpriteInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_turn_left.bmp"), TEXT("PlayerSmallTurnLeft")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_small_spin.bmp"), TEXT("PlayerSmallSpin")))
+		return false;
+
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Small/mario_dead_image.bmp"), TEXT("PlayerDeadImage")))
 		return false;
 
@@ -214,6 +217,9 @@ bool CResourceManager::LoadPlayerSpriteInfo()
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_turn_left.bmp"), TEXT("PlayerBigTurnLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Big/mario_big_spin.bmp"), TEXT("PlayerBigSpin")))
 		return false;
 
 
@@ -282,6 +288,9 @@ bool CResourceManager::LoadPlayerSpriteInfo()
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_jump_attack_left.bmp"), TEXT("PlayerFlowerJumpAttackLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/New/Flower/mario_flower_spin.bmp"), TEXT("PlayerFlowerSpin")))
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/fireball_right.bmp"), TEXT("FireballRight")))
@@ -377,6 +386,8 @@ bool CResourceManager::LoadBackgroundImageInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Title/logo.bmp"), TEXT("Logo")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Title/logo2.bmp"), TEXT("Logo2")))
+		return false;
 
 	return true;
 }
@@ -391,6 +402,12 @@ bool CResourceManager::LoadUIImageInfo()
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/exitgame.bmp"), TEXT("ExitButton")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/continue.bmp"), TEXT("ContinueButton")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/gotitle.bmp"), TEXT("GoTitleButton")))
 		return false;
 
 

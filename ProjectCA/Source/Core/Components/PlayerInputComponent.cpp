@@ -126,6 +126,13 @@ void PlayerInputComponent::KeyProcess()
 		}
 
 	}
+	else if (m_pInputManager->IsKeyDown(TEXT("SPIN_JUMP")))
+	{
+		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
+		{
+			pOwner->SetActorVerticalState(Types::VS_JUMP);
+		}
+	}
 	else 
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_JUMP)

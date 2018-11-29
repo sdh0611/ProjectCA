@@ -18,9 +18,10 @@ bool CInputManager::Init() {
 	m_KeyInputList.emplace_back(TEXT("UP"), VK_UP);
 	m_KeyInputList.emplace_back(TEXT("DOWN"), VK_DOWN);
 	m_KeyInputList.emplace_back(TEXT("JUMP"), 'X');
+	m_KeyInputList.emplace_back(TEXT("SPIN_JUMP"), VK_SHIFT);
 	m_KeyInputList.emplace_back(TEXT("ACCEL"), 'A');
 	m_KeyInputList.emplace_back(TEXT("ATTACK"), 'C', true);
-	m_KeyInputList.emplace_back(TEXT("FUNC1"), VK_SHIFT, true);
+	m_KeyInputList.emplace_back(TEXT("FUNC1"), VK_SPACE, true);
 	m_KeyInputList.emplace_back(TEXT("RESET"), VK_ESCAPE, true);
 
 	m_MouseInputList.emplace_back(TEXT("LBUTTON_DBCLK"), WM_LBUTTONDBLCLK);

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "..\..\..\Include\Scene\CObject.h"
+#include "..\..\..\Include\Scene\UI\CInterface.h"
 
 using Callback = std::function<void(void)>;
 
 
-class CButton : public CObject
+class CButton : public CInterface
 {
 public:
 	CButton();
@@ -22,7 +22,6 @@ public:
 
 public:
 	void SetOnClickCallback(Callback callback);
-	void SetImage(const TSTRING& strImageName);
 
 
 private:

@@ -2,6 +2,7 @@
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Scene\CObject.h"
 #include "..\..\Include\Scene\CCameraManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.h"
 
 CScene::CScene(Types::SceneType type):
 	m_SceneType(type)
@@ -19,6 +20,7 @@ CScene::~CScene()
 	m_LayerList.clear();
 	//CCameraManager::GetInstance()->Clear();
 	m_ObjectPtrList.clear();
+	CObjectManager::GetInstance()->Clear();
 }
 
 
@@ -29,20 +31,14 @@ void CScene::StartScene()
 
 bool CScene::Init()
 {
-	//if (!m_LayerList.empty())
-	//	for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-	//		(*m_it)->Init();
-
-	//	}
-
 	return true;
 }
 
-void CScene::Update(double deltaTime)
+void CScene::Update(double dDeltaTime)
 {
 	if (!m_LayerList.empty())
 		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-			(*m_it)->Update(deltaTime);
+			(*m_it)->Update(dDeltaTime);
 
 		}
 
@@ -134,12 +130,9 @@ WeakObjPtr CScene::FindInactiveObjectFromScene(CObject * pObject)
 {
 	for (const auto& obj : m_ObjectPtrList)
 	{
-		if (!obj->IsActive())
+		if (obj.get() == pObject)
 		{
-			if (obj.get() == pObject)
-			{
-				return obj;
-			}
+			return obj;
 		}
 	}
 
@@ -150,14 +143,12 @@ WeakObjPtr CScene::FindInactiveObjectFromScene(const TSTRING & strObjectName)
 {
 	for (const auto& obj : m_ObjectPtrList)
 	{
-		if (!obj->IsActive())
+		if (obj->GetObjectName() == strObjectName)
 		{
-			if (obj->GetObjectName() == strObjectName)
-			{
-				return obj;
-			}
+			return obj;
 		}
 	}
+	
 
 	return WeakObjPtr();
 }
@@ -167,9 +158,18 @@ void CScene::SetSceneMainCamera(std::shared_ptr<CCamera> pCamera)
 	m_pMainCameraPtr = pCamera;
 }
 
-bool CScene::FindObjectFromScene(UINT iObjectID)
+WeakObjPtr CScene::FindObjectFromScene(UINT iObjectID)
 {
-	return false;
+	for (const auto& obj : m_ObjectPtrList)
+	{
+		if (obj->GetObjectID() == iObjectID)
+		{
+			return obj;
+		}
+
+	}
+
+	return WeakObjPtr();
 }
 
 bool CScene::DeleteObjectFromScene(CObject * pObject)

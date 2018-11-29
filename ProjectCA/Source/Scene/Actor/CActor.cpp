@@ -26,7 +26,6 @@ bool CActor::PostInit(const Types::ActorData & data, CGameScene *pScene)
 	m_ActorCurVerticalState = data.m_VerticalState;
 	m_ActorHorizonalState = data.m_HorizonalState;
 	m_Direction = data.m_Direction;
-	m_ActorID = data.m_iActorID;
 	
 	if (!CObject::PostInit(data, pScene))
 		return false;	
@@ -129,12 +128,6 @@ UINT CActor::GetActorHeight() const
 {
 	return m_iObjectHeight;
 }
-
-Types::ActorID CActor::GetActorID() const
-{
-	return m_ActorID;
-}
-
 
 
 void CActor::FlipActorDirection()

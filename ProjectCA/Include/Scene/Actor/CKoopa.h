@@ -21,7 +21,8 @@ public:
 private:
 	void ChangeAnimationClip();
 	virtual void ActorBehavior(double dDeltaTime) override;
-	
+	virtual void DeadProcess(double dDeltaTime) override;
+
 
 private:
 	bool m_bDead;	

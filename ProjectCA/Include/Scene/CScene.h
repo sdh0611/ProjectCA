@@ -27,7 +27,7 @@ public:
 public:
 	void			StartScene();
 	virtual bool Init();
-	virtual void Update(double deltaTime);
+	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC);
 	
 
@@ -40,11 +40,11 @@ public:
 public:
 	void				AddObjectToScene(CObject* pObject);
 	void				AddObjectToScene(std::shared_ptr<CObject> pObject);
-	bool				FindObjectFromScene(UINT iObjectID);
 	bool				DeleteObjectFromScene(CObject* pObject);
 	bool				DeleteObjectFromScene(UINT iObjectID);
 	WeakObjPtr		FindObjectFromScene(CObject* pObject);
 	WeakObjPtr		FindObjectFromScene(const TSTRING& strObjectName);
+	WeakObjPtr		FindObjectFromScene(UINT iObjectID);
 	WeakObjPtr		FindInactiveObjectFromScene(CObject* pObject);
 	WeakObjPtr		FindInactiveObjectFromScene(const TSTRING& strObjectName);
 

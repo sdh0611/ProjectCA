@@ -21,7 +21,7 @@ public:
 
 private:
 	virtual void ActorBehavior(double dDeltaTime) override;
-
+	virtual void DeadProcess(double dDeltaTime) override;
 
 
 

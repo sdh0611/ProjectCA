@@ -57,7 +57,6 @@ public:
 	DIRECTION				GetActorDirection() const;
 	UINT						GetActorWidth() const;
 	UINT						GetActorHeight() const;
-	Types::ActorID			GetActorID() const;
 	//CWorld* const			GetOwnerWorld() const;
 
 
@@ -73,7 +72,6 @@ protected:
 	VER_STATE					m_ActorCurVerticalState;
 	HOR_STATE					m_ActorHorizonalState;
 	DIRECTION					m_Direction;
-	Types::ActorID				m_ActorID;
 	//CWorld*					m_pOwnerWorld;
 
 	

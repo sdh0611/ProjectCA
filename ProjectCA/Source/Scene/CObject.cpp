@@ -30,6 +30,7 @@ bool CObject::PostInit(const OBJECT_DATA & data, CScene* pScene)
 	m_strObjectName		= data.m_strObjectName;
 	m_ObjectType			= data.m_ObjectType;
 	m_ObjectState			= data.m_ObjectState;
+	m_ObjectID				= data.m_iObjectID;
 	m_strLayerTag			= TEXT("default");
 	m_pOwnerScene		= pScene;
 
@@ -180,6 +181,15 @@ void CObject::SetOwnerScene(CScene * pScene)
 	m_pOwnerScene = pScene;
 }
 
+void CObject::SetOwnerObject(std::shared_ptr<CObject> pOwner)
+{
+	if (pOwner == nullptr)
+	{
+
+	}
+	m_pOwnerObject = pOwner;
+}
+
 bool CObject::AttachCamera(std::shared_ptr<CCamera> pCamera)
 {
 	if (!m_pCamera.expired())
@@ -195,6 +205,11 @@ bool CObject::IsActive()
 	return m_bActive;
 }
 
+bool CObject::IsSubordinate()
+{
+	return !m_pOwnerObject.expired();
+}
+
 UINT CObject::GetObjectWidth() const
 {
 	return m_iObjectWidth;
@@ -208,6 +223,11 @@ UINT CObject::GetObjectHeight() const
 POSITION CObject::GetObjectPosition()
 {
 	return GetTransform().lock()->GetPosition();
+}
+
+OBJECT_ID CObject::GetObjectID() const
+{
+	return m_ObjectID;
 }
 
 OBJECT_TYPE CObject::GetObjectType() const
@@ -238,6 +258,11 @@ const TSTRING & CObject::GetObjectName()
 std::weak_ptr<TransformComponent> CObject::GetTransform()
 {
 	return GetComponent<TransformComponent>();
+}
+
+std::weak_ptr<CObject> CObject::GetOwnerObject()
+{
+	return m_pOwnerObject.lock();
 }
 
 std::weak_ptr<CCamera> CObject::GetCamera()

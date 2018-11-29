@@ -7,6 +7,10 @@ class CPickup;
 
 class CBlock : public CObject
 {
+	enum BlockType {
+		BT_DEFAULT, BT_HIDE
+	};
+
 public:
 	CBlock();
 	virtual ~CBlock();
@@ -22,9 +26,20 @@ public:
 
 public:
 	void SetStoredPickup(std::shared_ptr<CPickup> pPickup);
+	void SetHide();
+
+
+public:
+	bool IsHiding() const;
 
 
 private:
+	void SetDead();
+
+
+private:
+	bool							m_bHiding;
+	BlockType					m_Type;
 	std::weak_ptr<CPickup> m_pPickup;
 
 

@@ -25,6 +25,7 @@ bool CPickup::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	m_ObjectType = Types::OT_PICKUP;
 	m_bStored = false;
+	m_iScore = 10;
 
 	return true;
 }
@@ -41,19 +42,25 @@ void CPickup::Update(double dDeltaTime)
 	CActor::Update(dDeltaTime);
 }
 
-void CPickup::SetStored(bool bStored)
+void CPickup::SetStored()
 {
+	printf("Stored : %d\n", m_ObjectID);
 	if (!GetComponent<PhysicsComponent>().expired())
 	{
 		GetComponent<PhysicsComponent>().lock()->SetActive(false);
 	}
 
-	m_bStored = bStored;
+	m_bStored = true;
 }
 
 bool CPickup::IsStored() const
 {
 	return m_bStored;
+}
+
+CPickup::PickupType CPickup::GetPickupType() const
+{
+	return m_Type;
 }
 
 

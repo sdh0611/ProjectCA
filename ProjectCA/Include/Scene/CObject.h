@@ -57,20 +57,25 @@ public:
 	void SetObjectName(const TSTRING& strName);
 	void SetOwnerLayer(CLayer* pLayer);
 	void SetOwnerScene(CScene* pScene);
+	void SetOwnerObject(std::shared_ptr<CObject> pOwner);
 	bool AttachCamera(std::shared_ptr<CCamera> pCamera);
+
 
 
 public:
 	bool												IsActive();
+	bool												IsSubordinate();
 	UINT												GetObjectWidth() const;
 	UINT												GetObjectHeight() const;
 	POSITION										GetObjectPosition();
+	OBJECT_ID										GetObjectID() const;
 	OBJECT_TYPE									GetObjectType() const;
 	OBJECT_STATE									GetObjectState() const;
 	CLayer* const									GetOwnerLayer() const;
 	CScene* const									GetOwnerScene() const;
 	const TSTRING&								GetObjectName();
 	std::weak_ptr<TransformComponent>	GetTransform();
+	std::weak_ptr<CObject>						GetOwnerObject();
 	std::weak_ptr<CCamera>					GetCamera();
 
 
@@ -80,9 +85,11 @@ protected:
 	UINT								m_iObjectHeight;
 	TSTRING							m_strObjectName;
 	TSTRING							m_strLayerTag;
+	OBJECT_ID						m_ObjectID;
 	OBJECT_TYPE					m_ObjectType;
 	OBJECT_STATE					m_ObjectState;
 	CScene*							m_pOwnerScene;
+	std::weak_ptr<CObject>		m_pOwnerObject;
 	std::weak_ptr<CCamera>	m_pCamera;
 
 
@@ -92,7 +99,7 @@ protected:
 
 
 private:
-	CLayer*				m_pOwnerLayer;
+	CLayer*						m_pOwnerLayer;
 
 
 private:

@@ -8,6 +8,12 @@
 class CPickup : public CActor 
 {
 public:
+	enum PickupType {
+		PT_MUSHROOM_RED, PT_MUSHROOM_GREEN, PT_FLOWER, PT_COIN
+	};
+
+
+public:
 	CPickup();
 	virtual ~CPickup();
 
@@ -20,16 +26,18 @@ public:
 
 
 public:
-	void SetStored(bool bStored);
-	bool IsStored() const;
+	void			SetStored();
+	bool			IsStored() const;
+	PickupType GetPickupType() const;
 
 
 private:
 	virtual void ActorBehavior(double dDeltaTime) override;
 
 
-private:
-	bool m_bStored;
-
+protected:
+	bool			m_bStored;
+	int				m_iScore;
+	PickupType	m_Type;
 
 };

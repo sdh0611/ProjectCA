@@ -20,7 +20,6 @@ public:
 
 
 public:
-	//virtual bool Init(const Types::ActorData&) override;
 	virtual bool PostInit(const Types::ActorData&, CGameScene*) override;
 	virtual void Init() override;
 	virtual void Update(double fDeltaTime) override;
@@ -30,7 +29,7 @@ public:
 public:
 	float GetEnemyDamage() const { return m_fDamage; }
 	void SetEnemyDamage(float fDamage) { if (fDamage < 0.f) return; m_fDamage = fDamage; }
-
+	virtual void DeadProcess(double dDeltaTime) = 0;
 
 protected:
 	virtual void ActorBehavior(double dDeltaTime) override;

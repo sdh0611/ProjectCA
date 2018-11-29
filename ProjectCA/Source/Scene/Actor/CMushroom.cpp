@@ -1,10 +1,13 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CMushroom.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
+#include "..\..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\..\Include\Scene\CScoreManager.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\ImageRender.h"
+
 
 
 CMushroom::CMushroom()
@@ -20,6 +23,9 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!CPickup::PostInit(data, pScene))
 		return false;
 	
+	m_iScore		= 1000;
+	m_Type		= PT_MUSHROOM_RED;
+
 	//PhysicsComponent Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
 	if (!pPhysics->PostInit(this, 300.f, 300.f, 1300.f, 0.f))
@@ -59,8 +65,53 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				}
 			}
 			break;
-		}
+		case Types::OT_BLOCK:
+			if (!IsStored())
+			{
+				auto pBlock = static_cast<CBlock*>(pOther);
+				if (!pBlock->IsHiding())
+				{
+					switch (type)
+					{
+					case Collider::COLLISION_BOT:
+						pPhysics->SetGrounded(true);
+						SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
+						SetActorVerticalState(Types::VS_IDLE);
+						break;
+					case Collider::COLLISION_LEFT:
+					case Collider::COLLISION_RIGHT:
+						FlipActorDirection();
+						break;
+					case Collider::COLLISION_TOP:
+						SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
+						break;
+					}
+				}
+			}
+			break;
+		case Types::OT_GROUND:
+			if (!IsStored())
+			{
+				if (type == Collider::COLLISION_BOT)
+				{
+					pPhysics->SetGrounded(true);
+					pPhysics->SetCurJumpForce(0.f);
+					SetActorVerticalState(Types::VS_IDLE);
+					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
+				}
 
+			}
+			break;
+		case Types::OT_PLAYER:
+			if (!IsStored())
+			{
+				CScoreManager::GetInstance()->IncreaseScore(m_iScore);
+				SetStored();
+			}
+			SetActive(false);
+			break;
+		}
+		
 	};
 	pCollider->SetOnCollision(colliderCallback);
 	pCollider->SetSize(m_iObjectWidth * 0.5f, m_iObjectHeight * 0.5f);

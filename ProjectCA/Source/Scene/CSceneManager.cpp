@@ -4,6 +4,7 @@
 #include "..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\Include\Scene\CScene.h"
 #include "..\..\Include\Scene\CGameScene.h"
+#include "..\..\Include\Scene\CGameOverScene.h"
 #include "..\..\Include\Scene\CTitleScene.h"
 
 
@@ -42,7 +43,7 @@ void CSceneManager::Update(double fDeltaTime)
 {
 	if (m_bReadyToChageScene)
 	{
-		ChangeScene(Types::ST_TITLE);
+		ChangeScene();
 	}
 	else
 	{
@@ -67,8 +68,8 @@ bool CSceneManager::CreateScene(Types::SceneType type)
 	case Types::ST_GAME:
 		m_pScene = new CGameScene(type);
 		break;
-	case Types::ST_SELECT:
-
+	case Types::ST_GAMEOVER:
+		m_pScene = new CGameOverScene();
 		break;
 	default:
 		return false;
@@ -88,8 +89,8 @@ bool CSceneManager::CreateNextScene(Types::SceneType type)
 	case Types::ST_GAME:
 		m_pNextScene = new CGameScene(type);
 		break;
-	case Types::ST_SELECT:
-
+	case Types::ST_GAMEOVER:
+		m_pNextScene = new CGameOverScene();
 		break;
 	default:
 		return false;
@@ -98,7 +99,7 @@ bool CSceneManager::CreateNextScene(Types::SceneType type)
 	return m_pNextScene->Init();
 }
 
-bool CSceneManager::ChangeScene(Types::SceneType nextSceneType)
+bool CSceneManager::ChangeScene()
 {
 	if (m_pNextScene == nullptr)
 		return false;
@@ -110,7 +111,8 @@ bool CSceneManager::ChangeScene(Types::SceneType nextSceneType)
 	m_bReadyToChageScene = false;
 	m_pScene->StartScene();
 
-	return CreateNextScene(nextSceneType);
+	return true;
+	//return CreateNextScene(nextSceneType);
 }
 
 void CSceneManager::SetReadyToChangeScene(bool bReady)

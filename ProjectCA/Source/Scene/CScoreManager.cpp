@@ -14,7 +14,7 @@ void CScoreManager::Init()
 {
 	m_iCurScore = 0;
 	m_iCoinCount = 96;
-	m_iLifeCount = 5;
+	m_iLifeCount = 0;
 }
 
 

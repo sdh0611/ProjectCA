@@ -40,16 +40,18 @@ void ImageRender::Draw(const HDC & hDC)
 {
 	if (m_bActive)
 	{
-		POSITION point = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
-		HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
+		if (!m_pWeakSprite.expired())
+		{
+			POSITION point = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
+			HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
 
-		TransparentBlt(hDC, point.x, point.y,
-			m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
-			m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
-			m_ColorRef);
+			TransparentBlt(hDC, point.x, point.y,
+				m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+				m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
+				m_ColorRef);
 
-		SelectObject(m_hRenderDC, hOldBit);
-
+			SelectObject(m_hRenderDC, hOldBit);
+		}
 	}
 
 }
@@ -58,15 +60,17 @@ void ImageRender::Draw(const HDC& hDC, const POSITION& position)
 {
 	if (m_bActive)
 	{
-		HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
+		if (!m_pWeakSprite.expired())
+		{
+			HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
 
-		TransparentBlt(hDC, position.x, position.y,
-			m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
-			m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
-			m_ColorRef);
+			TransparentBlt(hDC, position.x, position.y,
+				m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+				m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
+				m_ColorRef);
 
-		SelectObject(m_hRenderDC, hOldBit);
-
+			SelectObject(m_hRenderDC, hOldBit);
+		}
 	}
 
 }

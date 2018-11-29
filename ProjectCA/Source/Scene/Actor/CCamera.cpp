@@ -8,6 +8,7 @@
 
 CCamera::CCamera()
 {
+	puts("Camera Create");
 }
 
 CCamera::~CCamera()
@@ -204,7 +205,6 @@ void CCamera::ScrollHorizon(double dDeltaTime)
 	{
 		if (m_fOwnerCurSpeed > 0.f)
 		{
-			m_fCameraCurSpeed = m_fOwnerCurSpeed;
 			if (m_OwnerScreenPosition.x > fUnit * 4.f)
 			{
 				m_fDestPosition = fUnit * 2.f;
@@ -212,12 +212,12 @@ void CCamera::ScrollHorizon(double dDeltaTime)
 			else if (m_OwnerScreenPosition.x <= fUnit * 2.f && m_OwnerScreenPosition.x >= fUnit * 1.9f)
 			{
 				m_CameraPosition.x += m_fOwnerCurSpeed * dDeltaTime;
+				m_fCameraCurSpeed = m_fOwnerCurSpeed;
 			}
 
 		}
 		else if (m_fOwnerCurSpeed < 0.f)
 		{
-			m_fCameraCurSpeed = m_fOwnerCurSpeed;
 			if (m_OwnerScreenPosition.x < fUnit)
 			{
 				m_fDestPosition = fUnit * 3.f;
@@ -225,6 +225,7 @@ void CCamera::ScrollHorizon(double dDeltaTime)
 			else if (m_OwnerScreenPosition.x >= fUnit * 3.f && m_OwnerScreenPosition.x <= fUnit * 3.1f)
 			{
 				m_CameraPosition.x += m_fOwnerCurSpeed * dDeltaTime;
+				m_fCameraCurSpeed = m_fOwnerCurSpeed;
 			}
 
 		}

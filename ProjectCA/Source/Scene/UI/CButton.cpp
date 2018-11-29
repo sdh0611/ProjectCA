@@ -20,16 +20,10 @@ CButton::~CButton()
 
 bool CButton::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 {
-	if (!CObject::PostInit(objectData, pScene))
+	if (!CInterface::PostInit(objectData, pScene))
 		return false;
 
 	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
-
-	auto pRender = std::make_shared<ImageRender>();
-	if (!pRender->PostInit(this))
-		return false;
-	if (!AddComponent(pRender, pRender->GetComponentTag()))
-		return false;
 
 	return true;
 }
@@ -65,10 +59,6 @@ void CButton::SetOnClickCallback(Callback callback)
 	m_OnClick = callback;
 }
 
-void CButton::SetImage(const TSTRING & strImageName)
-{
-	GetComponent<ImageRender>().lock()->SetSprite(strImageName);
-}
 
 bool CButton::IsClickOnButton()
 {

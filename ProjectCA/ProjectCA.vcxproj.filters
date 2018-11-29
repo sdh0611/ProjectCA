@@ -276,6 +276,12 @@
     <ClCompile Include="Source\Scene\UI\CFont.cpp">
       <Filter>소스 파일\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\CGameOverScene.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\UI\CMenu.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -453,6 +459,15 @@
       <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\UI\CFont.h">
+      <Filter>헤더 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CEndPickup.h">
+      <Filter>헤더 파일\Scene\Actors\Pickup</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CGameOverScene.h">
+      <Filter>헤더 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\UI\CMenu.h">
       <Filter>헤더 파일\UI</Filter>
     </ClInclude>
   </ItemGroup>

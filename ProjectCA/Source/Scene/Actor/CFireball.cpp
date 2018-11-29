@@ -60,6 +60,13 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 				break;
 			}
 			break;
+		case Types::OT_GROUND:
+			if (type == Collider::COLLISION_BOT)
+			{
+				GetComponent<PhysicsComponent>().lock()->SetGrounded(true);
+				GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(GetComponent<PhysicsComponent>().lock()->GetJumpForce());
+			}
+			break;
 		case Types::OT_ENEMY:
 			SetFireballInactive();
 			//SetActive(false);

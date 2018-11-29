@@ -26,7 +26,7 @@ public:
 public:
 	bool CreateScene(Types::SceneType type);
 	bool CreateNextScene(Types::SceneType type);
-	bool ChangeScene(Types::SceneType nextSceneType);
+	bool ChangeScene();
 	
 
 public:

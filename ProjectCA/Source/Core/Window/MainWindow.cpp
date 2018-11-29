@@ -65,8 +65,8 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	//Initializing Manager Classes
 	if (!m_pSceneManager->Init(Types::ST_TITLE))
 		return false;
-	if (!m_pSceneManager->CreateNextScene(Types::ST_GAME))
-		return false;
+	//if (!m_pSceneManager->CreateNextScene(Types::ST_GAME))
+	//	return false;
 
 	if (!m_pTimer->Init())
 		return false;

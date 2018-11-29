@@ -30,10 +30,10 @@ public:
 //	WeakObjectPtr GetTarger(const Types::tstring& strTag);
 //	
 //
-//public:
-//	void Clear();
-//
-//
+public:
+	void Clear();
+
+
 public:
 	template<typename T>
 	std::shared_ptr<T> CreateActor(const Types::ActorData& data) {
@@ -56,7 +56,7 @@ public:
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
 		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, state, 
-			vertical, horizonal, dir, m_lastActorID++,strTag);
+			vertical, horizonal, dir, m_iLastObjectID++,strTag);
 
 		if (!pActor->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -73,7 +73,7 @@ public:
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
 		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, Types::OS_IDLE,
-			Types::VS_IDLE, Types::HS_IDLE, dir, m_lastActorID++, strTag);
+			Types::VS_IDLE, Types::HS_IDLE, dir, m_iLastObjectID++, strTag);
 
 		if (!pActor->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -88,7 +88,7 @@ public:
 
 		std::shared_ptr<T> pObject = std::make_shared<T>();
 
-		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, type, state);
+		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, m_iLastObjectID++,type, state);
 
 		if (!pObject->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -103,7 +103,7 @@ public:
 
 		std::shared_ptr<T> pObject = std::make_shared<T>();
 
-		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, type, Types::OS_IDLE);
+		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, m_iLastObjectID++, type, Types::OS_IDLE);
 
 		if (!pObject->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -120,7 +120,7 @@ private:
 
 private:
 	//std::list<StrongObjectPtr>		m_strongActorPtrList;
-	static Types::ActorID				m_lastActorID;
+	static OBJECT_ID			m_iLastObjectID;
 	
 };
 

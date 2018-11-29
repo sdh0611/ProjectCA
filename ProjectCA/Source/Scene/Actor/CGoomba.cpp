@@ -6,6 +6,7 @@
 #include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
+#include "..\..\..\Include\Scene\Actor\CBlock.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 //#include "..\..\..\Include\Core\Components\HPComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
@@ -31,21 +32,21 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pAI->PostInit(this))
 		return false;
 
-	auto enemyBehavior = [](CActor* pActor) ->void {
+	//auto enemyBehavior = [](CActor* pActor) ->void {
 
-		if (pActor->GetObjectPosition().x < 100.f)
-		{
-			pActor->SetActorDirection(Types::DIR_RIGHT);
-		}
-		else if (pActor->GetObjectPosition().x > 1000.f)
-		{
-			pActor->SetActorDirection(Types::DIR_LEFT);
-		}
+	//	if (pActor->GetObjectPosition().x < 100.f)
+	//	{
+	//		pActor->SetActorDirection(Types::DIR_RIGHT);
+	//	}
+	//	else if (pActor->GetObjectPosition().x > 1000.f)
+	//	{
+	//		pActor->SetActorDirection(Types::DIR_LEFT);
+	//	}
 
-	};
-	pAI->SetDelegate(enemyBehavior);
-	if (!AddComponent(pAI, pAI->GetComponentTag()))
-		return false;
+	//};
+	//pAI->SetDelegate(enemyBehavior);
+	//if (!AddComponent(pAI, pAI->GetComponentTag()))
+	//	return false;
 
 	//PhysicsComponent √ ±‚»≠
 	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
@@ -122,6 +123,50 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				break;
 			}
 			break;
+		case Types::OT_GROUND:
+			if (type == Collider::COLLISION_BOT)
+			{
+				pPhysics->SetGrounded(true);
+				pPhysics->SetCurJumpForce(0.f);
+				SetActorVerticalState(Types::VS_IDLE);
+				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
+			}
+			break;
+		case Types::OT_BLOCK:
+		{
+			auto pBlock = static_cast<CBlock*>(pOther);
+			if (!pBlock->IsHiding())
+			{
+				switch (type) {
+				case Collider::COLLISION_BOT:
+					pPhysics->SetGrounded(true);
+					SetActorVerticalState(Types::VS_IDLE);
+					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
+					break;
+				case Collider::COLLISION_TOP:
+					pPhysics->SetGrounded(false);
+					pPhysics->SetCurJumpForce(-100.f);
+					SetActorVerticalState(Types::VS_FALL);
+					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
+					break;
+				case Collider::COLLISION_LEFT:
+					FlipActorDirection();
+					if (m_ObjectState == Types::OS_DAMAGED)
+					{
+						pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
+					}
+					break;
+				case Collider::COLLISION_RIGHT:
+					FlipActorDirection();
+					if (m_ObjectState == Types::OS_DAMAGED)
+					{
+						pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
+					}
+					break;
+				}
+			}
+		}
+		break;
 		case Types::OT_PLAYER:
 			switch (type) {
 			case Collider::COLLISION_TOP:
@@ -238,4 +283,8 @@ void CGoomba::ActorBehavior(double dDeltaTime)
 
 	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
+}
+
+void CGoomba::DeadProcess(double dDeltaTime)
+{
 }

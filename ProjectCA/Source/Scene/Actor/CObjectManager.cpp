@@ -10,7 +10,7 @@
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 
 
-Types::ActorID CObjectManager::m_lastActorID = 0;
+OBJECT_ID CObjectManager::m_iLastObjectID = 0;
 
 CObjectManager::CObjectManager()
 {
@@ -50,7 +50,7 @@ bool CObjectManager::Init() {
 //	return WeakActorPtr();
 //}
 //
-//void CActorManager::Clear()
-//{
-//	m_strongActorPtrList.clear();
-//}
+void CObjectManager::Clear()
+{
+	m_iLastObjectID = 0;
+}

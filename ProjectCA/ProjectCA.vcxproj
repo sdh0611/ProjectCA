@@ -190,10 +190,12 @@
     <ClCompile Include="Source\Scene\CTile.cpp" />
     <ClCompile Include="Source\Scene\CTitleScene.cpp" />
     <ClCompile Include="Source\Scene\CWorld.cpp" />
+    <ClCompile Include="Source\Scene\CGameOverScene.cpp" />
     <ClCompile Include="Source\Scene\UI\CButton.cpp" />
     <ClCompile Include="Source\Scene\UI\CFont.cpp" />
     <ClCompile Include="Source\Scene\UI\CInterface.cpp" />
     <ClCompile Include="Source\Scene\UI\CItemInfo.cpp" />
+    <ClCompile Include="Source\Scene\UI\CMenu.cpp" />
     <ClCompile Include="Source\Scene\UI\CNumberInterface.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
@@ -225,6 +227,7 @@
     <ClInclude Include="Include\Scene\Actor\CActor.h" />
     <ClInclude Include="Include\Scene\Actor\CBlock.h" />
     <ClInclude Include="Include\Scene\Actor\CCoin.h" />
+    <ClInclude Include="Include\Scene\Actor\CEndPickup.h" />
     <ClInclude Include="Include\Scene\Actor\CFireball.h" />
     <ClInclude Include="Include\Scene\Actor\CGoomba.h" />
     <ClInclude Include="Include\Scene\Actor\CObjectManager.h" />
@@ -249,10 +252,12 @@
     <ClInclude Include="Include\Scene\CTile.h" />
     <ClInclude Include="Include\Scene\CTitleScene.h" />
     <ClInclude Include="Include\Scene\CWorld.h" />
+    <ClInclude Include="Include\Scene\CGameOverScene.h" />
     <ClInclude Include="Include\Scene\UI\CButton.h" />
     <ClInclude Include="Include\Scene\UI\CFont.h" />
     <ClInclude Include="Include\Scene\UI\CInterface.h" />
     <ClInclude Include="Include\Scene\UI\CItemInfo.h" />
+    <ClInclude Include="Include\Scene\UI\CMenu.h" />
     <ClInclude Include="Include\Scene\UI\CNumberInterface.h" />
     <ClInclude Include="Include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />
