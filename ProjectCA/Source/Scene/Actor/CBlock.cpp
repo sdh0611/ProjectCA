@@ -64,7 +64,7 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 			}
 				break;
 			case Types::OT_ENEMY:
-				if (!m_bHiding)
+				if (!m_bHiding)//Hiding상태가 아닐 경우에만 반응
 				{
 					if (pOther->GetObjectState() == Types::OS_DAMAGED && !pOther->IsSubordinate())
 					{
@@ -131,16 +131,6 @@ void CBlock::Update(double dDeltaTime)
 	if (m_bActive)
 	{
 		CObject::Update(dDeltaTime);
-		if (m_bHiding)
-		{
-			//auto playerTop = static_cast<CGameScene*>(m_pOwnerScene)->GetPlayerPtr().lock()->GetComponent<ColliderBox>().lock()->GetRect().top;
-			//if (playerTop <= GetObjectPosition().y + 10.f)
-			//{
-			//	GetComponent<ColliderBox>().lock()->SetActive(true);
-			//}
-
-		}
-
 	}
 
 }
@@ -166,7 +156,6 @@ void CBlock::LateUpdate()
 	if (m_bActive)
 	{
 		CObject::LateUpdate();
-
 	}
 
 }
@@ -181,7 +170,6 @@ void CBlock::SetHide()
 {
 	m_bHiding = true;
 	m_Type = BT_HIDE;
-	//GetComponent<ColliderBox>().lock()->SetActive(false);
 
 }
 
@@ -194,7 +182,14 @@ void CBlock::SetDead()
 {
 	CScoreManager::GetInstance()->IncreaseScore(10);
 	GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
-	m_pPickup.lock()->SetActive(true);
+	if (m_pPickup.lock()->GetPickupType() != CPickup::PickupType::PT_COIN)
+	{
+		m_pPickup.lock()->SetActive(true);
+	}
+	else
+	{
+
+	}
 	m_ObjectState = Types::OS_DEAD;
 
 

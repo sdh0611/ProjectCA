@@ -80,6 +80,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 					{
 						m_pPickObjectPtr = m_pOwnerScene->FindObjectFromScene(pOther->GetObjectID()).lock();
 						m_pPickObjectPtr.lock()->SetOwnerObject(m_pOwnerScene->FindObjectFromScene(m_ObjectID).lock());
+						m_pPickObjectPtr.lock()->GetComponent<PhysicsComponent>().lock()->SetStatic(true);
 					}
 				}
 			}
@@ -296,6 +297,39 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallTurnLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnLeft")))
 		return false;
 
+	//
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickIdleRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallPickMoveRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallPickMoveLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpLeft")))
+		return false;
+
+
+
 	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallSpin"), m_iObjectWidth, m_iObjectHeight, true, TEXT("Spin"), false))
 		return false;
 
@@ -360,6 +394,38 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigTurnLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnLeft")))
 		return false;
+
+	//
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickIdleRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigPickMoveRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigPickMoveLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpLeft")))
+		return false;
+	//
 
 	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigSpin"), m_iObjectWidth, m_iObjectHeight, true, TEXT("Spin"), false))
 		return false;
@@ -430,6 +496,38 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackLeft"), false))
 		return false;
+
+	//
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickIdleRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickMoveRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickMoveLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownLeft")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpRight")))
+		return false;
+
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpLeft")))
+		return false;
+	//
 
 	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerSpin"), m_iObjectWidth, m_iObjectHeight, true, TEXT("Spin"), false))
 		return false;
@@ -581,6 +679,7 @@ void CPlayer::IncreaseAvailableFireballCount()
 void CPlayer::Attack()
 {
 	auto pRender = GetComponent<AnimationRender>().lock();
+
 	//공격 모션
 	if (m_ObjectState == Types::OS_ATTACK && m_iAvailableFireballCount > 0)
 	{
@@ -642,157 +741,233 @@ bool CPlayer::GenerateFireball()
 void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxSpeed, float fCurJumpForce)
 {
 	auto pRender = GetComponent<AnimationRender>().lock();
+	float fCurSpeedAbs = std::fabsf(fCurSpeed);
 
-	//앉는 모션
-	if (m_ObjectState == Types::OS_SITDOWN)
+	if (m_pPickObjectPtr.expired())
 	{
-		if (m_Direction == Types::DIR_RIGHT)
-		{
-			pRender->ChangeAnimation(TEXT("SitdownRight"));
-		}
-		else if (m_Direction == Types::DIR_LEFT)
-		{
-			pRender->ChangeAnimation(TEXT("SitdownLeft"));
-		}
-
-		return;
-	}
-
-	//위를 보는 모션 모션
-	if (m_ActorCurVerticalState == Types::VS_IDLE)
-	{
-		if (m_ObjectState == Types::OS_LOOKUP)
+		//앉는 모션
+		if (m_ObjectState == Types::OS_SITDOWN)
 		{
 			if (m_Direction == Types::DIR_RIGHT)
 			{
-				pRender->ChangeAnimation(TEXT("LookupRight"));
+				pRender->ChangeAnimation(TEXT("SitdownRight"));
 			}
 			else if (m_Direction == Types::DIR_LEFT)
 			{
-				pRender->ChangeAnimation(TEXT("LookupLeft"));
+				pRender->ChangeAnimation(TEXT("SitdownLeft"));
 			}
-			
+
 			return;
 		}
-	}
 
-	float fCurSpeedAbs = std::fabsf(fCurSpeed);
-	//이동 관련 Animation
-	if (m_ActorCurVerticalState == Types::VS_JUMP)
-	{
-		if (fCurSpeedAbs >= fMaxSpeed)
+		//위를 보는 모션 모션
+		if (m_ActorCurVerticalState == Types::VS_IDLE)
 		{
-			if (m_Direction == Types::DIR_RIGHT)
+			if (m_ObjectState == Types::OS_LOOKUP)
 			{
-				pRender->ChangeAnimation(TEXT("RunJumpRight"));
+				if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("LookupRight"));
+				}
+				else if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("LookupLeft"));
+				}
+
+				return;
 			}
-			else if (m_Direction == Types::DIR_LEFT)
+		}
+
+		//이동 관련 Animation
+		if (m_ActorCurVerticalState == Types::VS_JUMP)
+		{
+			if (fCurSpeedAbs >= fMaxSpeed)
 			{
-				pRender->ChangeAnimation(TEXT("RunJumpLeft"));
+				if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("RunJumpRight"));
+				}
+				else if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("RunJumpLeft"));
+				}
+			}
+			else
+			{
+				if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("JumpRight"));
+				}
+				else if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("JumpLeft"));
+				}
+			}
+		}
+		else if (m_ActorCurVerticalState == Types::VS_FALL)
+		{
+			if (fCurSpeedAbs >= fMaxSpeed)
+			{
+				if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("RunJumpRight"));
+				}
+				else if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("RunJumpLeft"));
+				}
+			}
+			else
+			{
+				if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("FalldownRight"));
+				}
+				else if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("FalldownLeft"));
+				}
 			}
 		}
 		else
 		{
-			if (m_Direction == Types::DIR_RIGHT)
+			if (fCurSpeed < 0.f)	//힘의 방향이 왼쪽인 경우(LEFT)
 			{
-				pRender->ChangeAnimation(TEXT("JumpRight"));
+				if (m_Direction == Types::DIR_LEFT)
+				{
+					if (fCurSpeedAbs >= fMaxSpeed)
+					{
+						pRender->ChangeAnimation(TEXT("RunLeft"));
+					}
+					else if (fCurSpeedAbs > 0.f)
+					{
+						pRender->ChangeAnimation(TEXT("WalkLeft"));
+					}
+				}
+				else if (m_Direction == Types::DIR_RIGHT)
+				{
+					if (m_ActorHorizonalState != Types::HS_IDLE)
+					{
+						pRender->ChangeAnimation(TEXT("TurnRight"));
+					}
+					else
+					{
+						pRender->ChangeAnimation(TEXT("WalkRight"));
+					}
+				}
 			}
-			else if (m_Direction == Types::DIR_LEFT)
+			else if (fCurSpeed > 0.f)		//힘의 방향이 오른쪽인 있는 경우(RIGHT)
 			{
-				pRender->ChangeAnimation(TEXT("JumpLeft"));
+				if (m_Direction == Types::DIR_RIGHT)
+				{
+					if (fCurSpeedAbs >= fMaxSpeed)
+					{
+						pRender->ChangeAnimation(TEXT("RunRight"));
+					}
+					else if (fCurSpeedAbs > 0.f)
+					{
+						pRender->ChangeAnimation(TEXT("WalkRight"));
+					}
+				}
+				else if (m_Direction == Types::DIR_LEFT)
+				{
+					if (m_ActorHorizonalState != Types::HS_IDLE)
+					{
+						pRender->ChangeAnimation(TEXT("TurnLeft"));
+					}
+					else
+					{
+						pRender->ChangeAnimation(TEXT("WalkLeft"));
+					}
+				}
 			}
-		}
-	}
-	else if (m_ActorCurVerticalState == Types::VS_FALL)
-	{
-		if (fCurSpeedAbs >= fMaxSpeed)
-		{
-			if (m_Direction == Types::DIR_RIGHT)
+			else
 			{
-				pRender->ChangeAnimation(TEXT("RunJumpRight"));
-			}
-			else if (m_Direction == Types::DIR_LEFT)
-			{
-				pRender->ChangeAnimation(TEXT("RunJumpLeft"));
-			}
-		}
-		else
-		{
-			if (m_Direction == Types::DIR_RIGHT)
-			{
-				pRender->ChangeAnimation(TEXT("FalldownRight"));
-			}
-			else if (m_Direction == Types::DIR_LEFT)
-			{
-				pRender->ChangeAnimation(TEXT("FalldownLeft"));
+				if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("IdleRight"));
+				}
+				else if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("IdleLeft"));
+				}
 			}
 		}
 	}
 	else
 	{
-		if (fCurSpeed < 0.f)	//힘의 방향이 왼쪽인 경우(LEFT)
-		{
-			if (m_Direction == Types::DIR_LEFT)
-			{
-				if (fCurSpeedAbs >= fMaxSpeed)
-				{
-					pRender->ChangeAnimation(TEXT("RunLeft"));
-				}
-				else if(fCurSpeedAbs > 0.f)
-				{
-					pRender->ChangeAnimation(TEXT("WalkLeft"));
-				}
-			}
-			else if (m_Direction == Types::DIR_RIGHT)
-			{
-				if (m_ActorHorizonalState != Types::HS_IDLE)
-				{
-					pRender->ChangeAnimation(TEXT("TurnRight"));
-				}
-				else
-				{
-					pRender->ChangeAnimation(TEXT("WalkRight"));
-				}
-			}
-		}
-		else if (fCurSpeed > 0.f)		//힘의 방향이 오른쪽인 있는 경우(RIGHT)
+		//앉는 모션
+		if (m_ObjectState == Types::OS_SITDOWN)
 		{
 			if (m_Direction == Types::DIR_RIGHT)
 			{
-				if (fCurSpeedAbs >= fMaxSpeed)
-				{
-					pRender->ChangeAnimation(TEXT("RunRight"));
-				}
-				else if (fCurSpeedAbs > 0.f)
-				{
-					pRender->ChangeAnimation(TEXT("WalkRight"));
-				}
+				pRender->ChangeAnimation(TEXT("PickSitdownRight"));
 			}
 			else if (m_Direction == Types::DIR_LEFT)
 			{
-				if (m_ActorHorizonalState != Types::HS_IDLE)
+				pRender->ChangeAnimation(TEXT("PickSitdownLeft"));
+			}
+
+			return;
+		}
+
+		//위를 보는 모션 모션
+		if (m_ActorCurVerticalState == Types::VS_IDLE)
+		{
+			if (m_ObjectState == Types::OS_LOOKUP)
+			{
+				if (m_Direction == Types::DIR_RIGHT)
 				{
-					pRender->ChangeAnimation(TEXT("TurnLeft"));
+					pRender->ChangeAnimation(TEXT("PickLookupRight"));
 				}
-				else
+				else if (m_Direction == Types::DIR_LEFT)
 				{
-					pRender->ChangeAnimation(TEXT("WalkLeft"));
+					pRender->ChangeAnimation(TEXT("PickLookupLeft"));
 				}
+
+				return;
+			}
+		}
+
+		//이동 관련 Animation
+		if (m_ActorCurVerticalState != Types::VS_IDLE)
+		{
+			if (m_Direction == Types::DIR_RIGHT)
+			{
+				pRender->ChangeAnimation(TEXT("PickJumpRight"));
+			}
+			else if (m_Direction == Types::DIR_LEFT)
+			{
+				pRender->ChangeAnimation(TEXT("PickJumpLeft"));
+
 			}
 		}
 		else
 		{
-			if (m_Direction == Types::DIR_RIGHT)
+			if (fCurSpeedAbs > 0.f)
 			{
-				pRender->ChangeAnimation(TEXT("IdleRight"));
+				if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("PickWalkLeft"));
+				}
+				else if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("PickWalkRight"));
+				}
 			}
-			else if (m_Direction == Types::DIR_LEFT)
+			else
 			{
-				pRender->ChangeAnimation(TEXT("IdleLeft"));
+				if (m_Direction == Types::DIR_LEFT)
+				{
+					pRender->ChangeAnimation(TEXT("PickIdleLeft"));
+				}
+				else if (m_Direction == Types::DIR_RIGHT)
+				{
+					pRender->ChangeAnimation(TEXT("PickIdleRight"));
+				}
 			}
 		}
 	}
-
 
 	if (fCurSpeedAbs > 0.f)
 	{
@@ -911,8 +1086,8 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			pPhysics->SetGrounded(false);
 		}
 	}
-
 	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
+
 	//PickObject Update
 	if (!m_pPickObjectPtr.expired())
 	{
@@ -920,16 +1095,17 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		{
 			if (m_Direction == Types::DIR_LEFT)
 			{
-				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 20.f, GetObjectPosition().y - m_iObjectHeight * 0.2f);
+				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 20.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
 			}
 			else if (m_Direction == Types::DIR_RIGHT)
 			{
-				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 20.f, GetObjectPosition().y - m_iObjectHeight * 0.2f);
+				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 20.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
 			}
 		}
 		else
 		{
 			auto pPhysics = m_pPickObjectPtr.lock()->GetComponent<PhysicsComponent>().lock();
+			pPhysics->SetStatic(false);
 			if (CInputManager::GetInstance()->IsKeyDown(TEXT("UP")))
 			{
 				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - m_iObjectHeight * 0.4f);
@@ -938,27 +1114,27 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			}
 			else if (CInputManager::GetInstance()->IsKeyDown(TEXT("DOWN")))
 			{
-				pPhysics->SetCurJumpForce(0.f);
+				//pPhysics->SetCurJumpForce(0.f);
 				if (m_Direction == Types::DIR_LEFT)
 				{
-					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iObjectHeight * 0.2f);
+					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iObjectHeight * 0.1f);
 				}
 				else if (m_Direction == Types::DIR_RIGHT)
 				{
-					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iObjectHeight * 0.2f);
+					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iObjectHeight * 0.1f);
 				}
 			}
 			else
 			{
-				pPhysics->SetCurJumpForce(0.f);
+				//pPhysics->SetCurJumpForce(0.f);
 				if (m_Direction == Types::DIR_LEFT)
 				{
-					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iObjectHeight * 0.2f);
+					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
 					pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
 				}
 				else if (m_Direction == Types::DIR_RIGHT)
 				{
-					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iObjectHeight * 0.2f);
+					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
 					pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
 				}
 			}
@@ -967,6 +1143,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		}
 	}
 
+	//Jump 관련 연산
 	if (!pPhysics->IsGrounded())
 	{
 		if (m_ActorCurVerticalState == Types::VS_FALL)

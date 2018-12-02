@@ -49,6 +49,7 @@ void PhysicsComponent::Init()
 	m_fYSpeed			= 0.f;
 	m_dTimeElapsed	= 0.f;
 	m_bActive			= true;
+	m_bStatic			= false;
 }
 
 void PhysicsComponent::Update(double dDeltaTime)
@@ -121,6 +122,10 @@ void PhysicsComponent::SetAcceled(bool bAccel)
 
 void PhysicsComponent::SetStatic(bool bStatic)
 {
+	if (bStatic)
+	{
+		m_fYSpeed = 0.f;
+	}
 	m_bStatic = bStatic;
 }
 

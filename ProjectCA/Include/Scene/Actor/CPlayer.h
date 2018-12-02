@@ -10,7 +10,6 @@ class CCamera;
 class CPlayer : public CActor {
 
 	friend void CFireball::SetFireballInactive();
-	//friend void PlayerInputComponent::KeyProcess();
 
 	enum PlayerState {
 		PS_SMALL, PS_BIG, PS_FLOWER
