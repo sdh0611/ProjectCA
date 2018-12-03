@@ -32,12 +32,8 @@ bool Collider::PostInit(CObject * pOwner, const Types::tstring & strTag)
 	return true;
 }
 
-void Collider::LateUpdate(double dDeltaTime)
+void Collider::LateUpdate()
 {
-	if (!m_bCollision)
-	{
-		
-	}
 }
 
 void Collider::ResolveCollision(CObject* pOther, float fintersectLength)

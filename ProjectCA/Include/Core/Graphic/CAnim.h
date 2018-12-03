@@ -20,10 +20,12 @@ public:
 
 
 public:
-	bool Init(const TSTRING& strSpriteName, UINT iWidth, UINT iHeight,
-		double dPlayTime, bool bLoop, const TSTRING& strAnimTag = TEXT("Default"), bool bInterrupt = true);
+	//bool Init(const TSTRING& strSpriteName, UINT iWidth, UINT iHeight,
+	//	double dPlayTime, bool bLoop, const TSTRING& strAnimTag = TEXT("Default"), bool bInterrupt = true);
+	bool Init(const TSTRING& strSpriteName, double dPlayTime, bool bLoop, 
+		const TSTRING& strAnimTag = TEXT("Default"), bool bInterrupt = true);
 	void Update(double dDeltaTIme);
-	void Draw(const HDC& hDC, const HDC& hMemDC, const POSITION& point);
+	void Draw(const HDC& hDC, const HDC& hMemDC, const POSITION& point, UINT iWidth, UINT iHeight);
 
 
 public:
@@ -33,19 +35,19 @@ public:
 	bool SetSprite(const Types::tstring& strSpriteName);
 	bool SetTotalPlayTime(double dTime);
 	bool SetPlaySpeed(double dSpeed);
-	void SetDrawingWidth(UINT iWidth);
-	void SetDrawingHeight(UINT iHeight);
+	//void SetDrawingWidth(UINT iWidth);
+	//void SetDrawingHeight(UINT iHeight);
 	void SetAnimMode(AnimMode mode);
 
 
 public:
-	bool						IsCanInterrupt() const;
-	bool						IsReadyToChange() const;
-	bool						IsPauseAnimation() const;
-	UINT						GetDrawWidth() const;
-	UINT						GetDrawHeight() const;
-	const Types::tstring	GetAnimTag() const;
-	AnimMode				GetAnimMode() const;
+	bool					IsCanInterrupt() const;
+	bool					IsReadyToChange() const;
+	bool					IsPauseAnimation() const;
+	//UINT				GetDrawWidth() const;
+	//UINT				GetDrawHeight() const;
+	const TSTRING&	GetAnimTag() const;
+	AnimMode			GetAnimMode() const;
 
 
 public:
@@ -53,7 +55,7 @@ public:
 
 
 private:
-	void DrawAnimation(const HDC& hDC, const HDC& hMemDC, const Types::Point& point);
+	void DrawAnimation(const HDC& hDC, const HDC& hMemDC, const POSITION& point, UINT iWidth, UINT iHeight);
 
 
 private:
@@ -64,8 +66,8 @@ private:
 	AnimMode					m_AnimMode;
 	UINT							m_iCurFrame;
 	UINT							m_iMaxFrame;
-	UINT							m_iDrawWidth;
-	UINT							m_iDrawHeight;
+	//UINT							m_iDrawWidth;
+	//UINT							m_iDrawHeight;
 	COLORREF					m_ColorRef;
 	BLENDFUNCTION			m_BlendFunction;
 	double						m_dPlaySectionLength;

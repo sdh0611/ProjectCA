@@ -92,16 +92,14 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	auto pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
-
-	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("RandomBlockAnimation"), m_iObjectWidth, m_iObjectHeight, true, TEXT("Idle")))
+	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("RandomBlockAnimation"),   true, TEXT("Idle")))
 		return false;
-
-	if (!pRender->AddAnimation(0.f, TEXT("Default"), TEXT("RandomBlockDead"), m_iObjectWidth, m_iObjectHeight, false, TEXT("Dead")))
+	if (!pRender->AddAnimation(0.f, TEXT("Default"), TEXT("RandomBlockDead"),   false, TEXT("Dead")))
 		return false;
-
-	if (!pRender->AddAnimation(0.1f, TEXT("Default"), TEXT("RandomBlockHit"), m_iObjectWidth, m_iObjectHeight, false, TEXT("Hit")))
+	if (!pRender->AddAnimation(0.1f, TEXT("Default"), TEXT("RandomBlockHit"),   false, TEXT("Hit")))
 		return false;
-
+	pRender->SetExpansionRatio(2.5f);
+	pRender->SetPivotRatio(0.5f, 1.f);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 

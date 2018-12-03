@@ -199,7 +199,7 @@ bool CCollisionManager::BoxAndBox(ColliderBox* pCollider, ColliderBox* pOther)
 	else
 	{
 		fIntersecRectWidth = box1.right - box1.left;
-		if (box1.top < box2.top)
+		if (box1.top < box2.top && box1.bottom < box2.bottom)
 		{
 			fIntersecRectHeight = box1.bottom - box2.top;
 			pCollider->SetCollisionType(Collider::COLLISION_BOT);

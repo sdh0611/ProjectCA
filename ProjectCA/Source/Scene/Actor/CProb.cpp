@@ -25,10 +25,10 @@ bool CProb::PostInit(const OBJECT_DATA& data, CScene* pScene)
 	std::shared_ptr<ColliderBox> pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
+	
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
-
-
+	
 
 
 	return true;
@@ -36,6 +36,7 @@ bool CProb::PostInit(const OBJECT_DATA& data, CScene* pScene)
 
 void CProb::Init()
 {
+
 }
 
 void CProb::Update(double fDeltaTime)

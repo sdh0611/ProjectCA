@@ -36,13 +36,22 @@ bool CShell::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pPhysics->PostInit(this, 0.f, 0.f, 0.f, 0.f))
 		return false;
 
-	//if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
-	//	return false;
+	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
+		return false;
 
 	//Collider ÃÊ±âÈ­
 	std::shared_ptr<ColliderBox> pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
+
+	auto onCollision = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
+
+
+
+
+	};
+	pCollider->SetOnCollision(onCollision);
+	
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;

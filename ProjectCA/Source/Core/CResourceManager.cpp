@@ -30,6 +30,9 @@ bool CResourceManager::Init() {
 	if (!LoadBackgroundImageInfo())
 		return false;
 
+	if (!LoadProbImageInfo())
+		return false;
+
 	if (!LoadUIImageInfo())
 		return false;
 
@@ -459,6 +462,20 @@ bool CResourceManager::LoadGroundTileImageInfo()
 		return false;
 
 
+	return true;
+}
+
+bool CResourceManager::LoadProbImageInfo()
+{
+	//Pipe
+	{
+		if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Tiles/pipe_head.bmp"), TEXT("PipeHead")))
+			return false;
+
+		if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Tiles/pipe_body.bmp"), TEXT("PipeBody")))
+			return false;
+
+	}
 	return true;
 }
 

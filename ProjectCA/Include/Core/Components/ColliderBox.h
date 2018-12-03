@@ -15,7 +15,7 @@ public:
 	virtual bool PostInit(CObject* owner, const Types::tstring& strTag = TEXT("Collider")) override;
 	virtual void Init() override;
 	virtual void Update(double dDeltaTime) override;
-	virtual void LateUpdate(double dDeltaTime) override;
+	virtual void LateUpdate() override;
 
 
 public:

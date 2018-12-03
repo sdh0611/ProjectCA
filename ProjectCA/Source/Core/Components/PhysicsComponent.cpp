@@ -71,7 +71,7 @@ void PhysicsComponent::Update(double dDeltaTime)
 	}
 
 }
-void PhysicsComponent::LateUpdate(double dDeltaTime)
+void PhysicsComponent::LateUpdate()
 {
 	if (m_bGrounded)
 		m_bGrounded = false;

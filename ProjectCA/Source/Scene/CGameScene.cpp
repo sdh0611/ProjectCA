@@ -18,6 +18,7 @@
 #include "..\..\Include\Scene\Actor\CProb.h"
 #include "..\..\Include\Scene\Actor\CGround.h"
 #include "..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\Include\Scene\Actor\CPipe.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
 #include "..\..\Include\Scene\Actor\CPickup.h"
@@ -57,7 +58,7 @@ bool CGameScene::Init()
 
 	//Player 持失
 	{
-		auto pPlayer = m_pObjectManager->CreateActor<CPlayer>(SPRITE_WIDTH*2.5f, SPRITE_HEIGHT*2.5f, 0, 0, Types::OT_PLAYER,
+		auto pPlayer = m_pObjectManager->CreateActor<CPlayer>(SPRITE_WIDTH, SPRITE_HEIGHT*2.f, 0, 0, Types::OT_PLAYER,
 			Types::DIR_RIGHT, TEXT("Player"), this);
 		if (pPlayer == nullptr)
 			return false;
@@ -267,35 +268,35 @@ bool CGameScene::BuildWorld()
 		if (!CreateLayer(TEXT("Enemy"), 4))
 			return false;
 
-		std::shared_ptr<CEnemy> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 250.f, 250.f, Types::OT_ENEMY,
+		std::shared_ptr<CEnemy> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.9f, 250.f, 250.f, Types::OT_ENEMY,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		m_ObjectPtrList.emplace_back(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 200.f, 250.f, Types::OT_ENEMY,
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.9f, 200.f, 250.f, Types::OT_ENEMY,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		m_ObjectPtrList.emplace_back(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 150.f, 250.f, Types::OT_ENEMY,
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.9f, 150.f, 250.f, Types::OT_ENEMY,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		m_ObjectPtrList.emplace_back(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 250.f, Types::OT_ENEMY,
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.9f, 300.f, 250.f, Types::OT_ENEMY,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		m_ObjectPtrList.emplace_back(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, -100.f, 450.f, Types::OT_ENEMY,
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, -100.f, 450.f, Types::OT_ENEMY,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
 		if (pEnemy == nullptr)
 			return false;
@@ -352,40 +353,16 @@ bool CGameScene::BuildWorld()
 		m_ObjectPtrList.emplace_back(pPickup);
 	}
 	
-	//Ground持失
+	//Prob 持失
 	{
-		if (!CreateLayer(TEXT("Ground"), 10))
+		if (!CreateLayer(TEXT("Prob"), 8))
 			return false;
 
-		auto pGround = m_pObjectManager->CreateObject<CGround>(8192, 256, 400.f, 700.f, Types::OT_GROUND, TEXT("Ground"), this);
-		if (pGround == nullptr)
+		auto pProb = m_pObjectManager->CreateObject<CPipe>(SPRITE_WIDTH * 2.5f , SPRITE_HEIGHT * 3 * 0.5f * 2.5f, 400.f, 444.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
 			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, -400.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 0.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 1200.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		m_ObjectPtrList.emplace_back(pProb);
 	}
 
 	//Block 持失
@@ -441,7 +418,43 @@ bool CGameScene::BuildWorld()
 		m_ObjectPtrList.push_back(pBlock);
 		FindLayer(TEXT("Block"))->AddActor(pBlock);
 	}
-	
+
+	//Ground持失
+	{
+		if (!CreateLayer(TEXT("Ground"), 10))
+			return false;
+
+		auto pGround = m_pObjectManager->CreateObject<CGround>(8192, 256, 400.f, 700.f, Types::OT_GROUND, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		m_ObjectPtrList.push_back(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, -400.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		m_ObjectPtrList.push_back(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 0.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		m_ObjectPtrList.push_back(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		m_ObjectPtrList.push_back(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 1200.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		m_ObjectPtrList.push_back(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+	}
+
 	//Backgorund 持失
 	{
 		if (!CreateLayer(TEXT("Background"), 99))

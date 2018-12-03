@@ -191,7 +191,6 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
-	pCollider->SetSize(m_iObjectWidth*0.45, m_iObjectHeight*0.45);
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
@@ -201,20 +200,16 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	std::shared_ptr<AnimationRender> pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
-
-	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkRight"),   true, TEXT("WalkRight")))
 		return false;
-
-	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkLeft"),   true, TEXT("WalkLeft")))
 		return false;
-
-	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("JumpRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkRight"),   true, TEXT("JumpRight")))
 		return false;
-
-	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("JumpLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkLeft"),   true, TEXT("JumpLeft")))
 		return false;
-
-
+	pRender->SetExpansionRatio(2.5f);
+	pRender->SetPivotRatio(0.5f, 1.f);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 

@@ -39,6 +39,7 @@ private:
 	bool LoadPlayerSpriteInfo();
 	bool LoadEnemySpriteInfo();
 	bool LoadGroundTileImageInfo();
+	bool LoadProbImageInfo();
 	bool LoadBackgroundImageInfo();
 	bool LoadUIImageInfo();
 	bool LoadPickupImageInfo();

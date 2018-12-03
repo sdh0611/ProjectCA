@@ -48,7 +48,7 @@ void HPComponent::Update(double dDeltaTime)
 
 }
 
-void HPComponent::LateUpdate(double dDeltaTime)
+void HPComponent::LateUpdate()
 {
 }
 

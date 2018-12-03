@@ -15,7 +15,7 @@ public:
 	bool			PostInit(CObject* pOwner, const POSITION& position, const TSTRING& strTag = TEXT("TransformComponent"));
 	virtual void	Init() override;
 	virtual void	Update(double dDeltaTime) override;
-	virtual void	LateUpdate(double dDeltaTime) override;
+	virtual void	LateUpdate() override;
 
 
 public:

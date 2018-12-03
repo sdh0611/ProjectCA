@@ -26,7 +26,7 @@ bool ColliderBox::PostInit(CObject* pOwner, const Types::tstring& strTag)
 	m_fWidth					= m_fCurWidth = m_pOwner->GetObjectWidth();
 	m_fHeight					= m_fCurHeight =m_pOwner->GetObjectHeight();
 
-	m_CurColliderPoint = m_pOwner->GetObjectPosition();
+	m_CurColliderPoint		= m_pOwner->GetObjectPosition();
 
 	m_ColliderRect.left			= m_CurColliderPoint.x - m_fCurWidth / 2;
 	m_ColliderRect.top		= m_CurColliderPoint.y - m_fCurHeight;
@@ -45,9 +45,9 @@ void ColliderBox::Init()
 	m_fCurWidth = m_fWidth;
 	m_fCurHeight = m_fHeight;
 	
-	m_ColliderRect.left = m_ColliderPoint.x - m_fWidth / 2;
+	m_ColliderRect.left = m_ColliderPoint.x - m_fWidth * 0.5f;
 	m_ColliderRect.top = m_ColliderPoint.y - m_fHeight;
-	m_ColliderRect.right = m_ColliderPoint.x + m_fWidth / 2;
+	m_ColliderRect.right = m_ColliderPoint.x + m_fWidth * 0.5f;
 	m_ColliderRect.bottom = m_ColliderPoint.y;
 	m_bActive = true;
 }
@@ -70,7 +70,7 @@ void ColliderBox::Update(double dDeltaTime)
 	}
 }
 
-void ColliderBox::LateUpdate(double dDeltaTime)
+void ColliderBox::LateUpdate()
 {
 }
 

@@ -21,7 +21,7 @@ public:
 public:
 	virtual void Init();
 	virtual void Update(double fDeltaTime) override;
-	virtual void LateUpdate(double dDeltaTime) override;
+	virtual void LateUpdate() override;
 
 public:
 	Callback SetDelegate(Callback pDelegater);

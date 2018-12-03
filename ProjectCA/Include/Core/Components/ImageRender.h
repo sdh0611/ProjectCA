@@ -22,9 +22,6 @@ public:
 
 
 public:
-	void SetDrawWidth(UINT iWidth);
-	void SetDrawHeight(UINT iHeight);
-	void SetDrawSize(UINT iWidth, UINT iHeight);
 	bool SetSprite(const TSTRING& strImageTag);
 	bool SetSprite(std::shared_ptr<CSprite> pSprite);
 
@@ -34,8 +31,6 @@ private:
 
 
 private:
-	UINT							m_iDrawWidth;
-	UINT							m_iDrawHeight;
 	COLORREF					m_ColorRef;
 	TSTRING						m_strImageTag;
 	std::weak_ptr<CSprite>	m_pWeakSprite;

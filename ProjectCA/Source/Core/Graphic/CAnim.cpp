@@ -7,7 +7,8 @@
 
 CAnim::CAnim()
 	:m_bLoop(false), m_iCurFrame(0), m_iMaxFrame(0),
-	m_iDrawWidth(0), m_iDrawHeight(0),	m_dPlayTime(0.f), m_dPlaySpeed(0.f), 
+	//m_iDrawWidth(0), m_iDrawHeight(0),	
+	m_dPlayTime(0.f), m_dPlaySpeed(0.f), 
 	m_dPlaySectionLength(0.f), m_dTimeElapsed(0.f)
 {
 }
@@ -16,8 +17,7 @@ CAnim::~CAnim()
 {
 }
 
-bool CAnim::Init(const TSTRING& strSpriteName, 
-	UINT iWidth, UINT iHeight, double dPlayTime, bool bLoop,const TSTRING& strAnimTag, bool bInterrupt)
+bool CAnim::Init(const TSTRING& strSpriteName, double dPlayTime, bool bLoop,const TSTRING& strAnimTag, bool bInterrupt)
 {
 	m_pWeakSprite = CResourceManager::GetInstance()->GetWeakSprtiePtr(strSpriteName);
 	if (m_pWeakSprite.expired())
@@ -35,8 +35,8 @@ bool CAnim::Init(const TSTRING& strSpriteName,
 	m_AnimMode									= ANIM_DEFAULT;
 
 	m_iMaxFrame									= m_pWeakSprite.lock()->GetBitWidth() / SPRITE_WIDTH;
-	m_iDrawWidth									= iWidth;
-	m_iDrawHeight									= iHeight;
+	//m_iDrawWidth									= iWidth;
+	//m_iDrawHeight									= iHeight;
 
 	m_ColorRef										= RGB(248, 7, 220);
 	m_BlendFunction.BlendOp					= AC_SRC_OVER;
@@ -70,11 +70,11 @@ void CAnim::Update(double fDeltaTIme)
 	m_dTimeElapsed += fDeltaTIme;
 }
 
-void CAnim::Draw(const HDC & hDC, const HDC& hMemDC,const POSITION& point)
+void CAnim::Draw(const HDC & hDC, const HDC& hMemDC,const POSITION& point, UINT iWidth, UINT iHeight)
 {
 	if (!m_pWeakSprite.expired()) 
 	{
-		DrawAnimation(hDC, hMemDC, point);
+		DrawAnimation(hDC, hMemDC, point, iWidth, iHeight);
 	}
 }
 
@@ -121,21 +121,21 @@ bool CAnim::SetPlaySpeed(double dSpeed)
 	return true;
 }
 
-void CAnim::SetDrawingWidth(UINT iWidth)
-{
-	if (iWidth < 0.f || iWidth >MAX_WIDTH)
-		return;
-
-	m_iDrawWidth = iWidth;
-}
-
-void CAnim::SetDrawingHeight(UINT iHeight)
-{
-	if (iHeight < 0.f || iHeight >MAX_HEIGHT)
-		return;
-
-	m_iDrawHeight = iHeight;
-}
+//void CAnim::SetDrawingWidth(UINT iWidth)
+//{
+//	if (iWidth < 0.f || iWidth >MAX_WIDTH)
+//		return;
+//
+//	m_iDrawWidth = iWidth;
+//}
+//
+//void CAnim::SetDrawingHeight(UINT iHeight)
+//{
+//	if (iHeight < 0.f || iHeight >MAX_HEIGHT)
+//		return;
+//
+//	m_iDrawHeight = iHeight;
+//}
 
 void CAnim::SetAnimMode(AnimMode mode)
 {
@@ -157,17 +157,17 @@ bool CAnim::IsPauseAnimation() const
 	return m_bPause;
 }
 
-UINT CAnim::GetDrawWidth() const
-{
-	return m_iDrawWidth;
-}
+//UINT CAnim::GetDrawWidth() const
+//{
+//	return m_iDrawWidth;
+//}
+//
+//UINT CAnim::GetDrawHeight() const
+//{
+//	return m_iDrawHeight;
+//}
 
-UINT CAnim::GetDrawHeight() const
-{
-	return m_iDrawHeight;
-}
-
-const Types::tstring CAnim::GetAnimTag() const
+const TSTRING& CAnim::GetAnimTag() const
 {
 	return m_strAnimTag;
 }
@@ -189,7 +189,7 @@ void CAnim::ClearEleapsedTime()
 
 }
 
-void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& point)
+void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& point, UINT iWidth, UINT iHeight)
 {
 	if (!m_bPause)
 	{
@@ -219,7 +219,7 @@ void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& po
 	HBITMAP hOldBit		= (HBITMAP)SelectObject(hMemDC, m_pWeakSprite.lock()->GetBitmap());
 
 	TransparentBlt(hDC, point.x, point.y,
-		m_iDrawWidth, m_iDrawHeight, hMemDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
+		iWidth, iHeight, hMemDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
 		SPRITE_HEIGHT, m_ColorRef);
 
 	//if (m_AnimMode == ANIM_BLEND)

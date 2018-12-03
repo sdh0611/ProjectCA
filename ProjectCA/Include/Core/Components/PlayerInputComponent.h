@@ -18,7 +18,7 @@ public:
 	virtual bool PostInit(CObject* pOwner, const Types::tstring& strTag = TEXT("InputComponent")) override;
 	virtual void Init();
 	virtual void Update(double fDeltaTime) override;
-	virtual void LateUpdate(double dDeltaTime) override;
+	virtual void LateUpdate() override;
 
 
 private:

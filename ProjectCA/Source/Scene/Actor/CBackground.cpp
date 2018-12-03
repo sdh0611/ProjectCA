@@ -31,7 +31,7 @@ bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
 	auto pRender = std::make_shared<ImageRender>();
 	if (!pRender->PostInit(this))
 		return false;
-
+	pRender->SetDrawSize(MAX_WIDTH, MAX_HEIGHT);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 

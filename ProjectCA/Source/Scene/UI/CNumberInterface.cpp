@@ -20,8 +20,6 @@ bool CNumberInterface::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	if (!CInterface::PostInit(data, pScene))
 		return false;
 
-	//GetTransform().lock()->SetPivotRatio(0.f, 0.5f);
-
 	auto pResourceMgr = CResourceManager::GetInstance();
 	
 	m_NumberFontList.emplace_back(NumberFontList());
@@ -50,12 +48,12 @@ bool CNumberInterface::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	m_NumberFontList[1].emplace_back(pResourceMgr->GetWeakSprtiePtr(TEXT("UINumberYellow9")).lock());
 
 
-	m_iDigit = 0;
-	m_iFontInterval = m_NumberFontList[0][0].lock()->GetBitWidth();
-	m_iFontWidth = m_NumberFontList[0][0].lock()->GetBitWidth();
-	m_iFontHeight = m_NumberFontList[0][0].lock()->GetBitHeight();
-	m_pValue = nullptr;
-	m_FontType = FONT_WHITE;
+	m_iFontInterval		= m_NumberFontList[0][0].lock()->GetBitWidth();
+	m_iFontWidth		= m_NumberFontList[0][0].lock()->GetBitWidth();
+	m_iFontHeight		= m_NumberFontList[0][0].lock()->GetBitHeight();
+	m_iDigit				= 0;
+	m_pValue			= nullptr;
+	m_FontType			= FONT_WHITE;
 
 	return true;
 }

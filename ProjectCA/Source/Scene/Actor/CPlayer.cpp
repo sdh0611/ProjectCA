@@ -231,7 +231,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
-	pCollider->SetSize(m_iObjectWidth*0.35, m_iObjectHeight*0.8);
+	//pCollider->SetSize(m_iObjectWidth*0.35, m_iObjectHeight*0.8);
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
@@ -241,295 +241,296 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	std::shared_ptr<AnimationRender> pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
+	pRender->SetExpansionRatio(2.5f);
+	pRender->SetPivotRatio(0.5f, 1.f);
 
 	//Small state image
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallIdleRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("IdleRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallIdleRight"), false, TEXT("IdleRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("IdleLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallIdleLeft"), false, TEXT("IdleLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.15f, TEXT("MarioSmall"), TEXT("PlayerSmallWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkRight")))
+	if (!pRender->AddAnimation(0.15f, TEXT("MarioSmall"), TEXT("PlayerSmallWalkRight"), true, TEXT("WalkRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.15f, TEXT("MarioSmall"), TEXT("PlayerSmallWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkLeft")))
+	if (!pRender->AddAnimation(0.15f, TEXT("MarioSmall"), TEXT("PlayerSmallWalkLeft"), true, TEXT("WalkLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.05f, TEXT("MarioSmall"), TEXT("PlayerSmallRunRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioSmall"), TEXT("PlayerSmallRunRight"),   true, TEXT("RunRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.05f, TEXT("MarioSmall"), TEXT("PlayerSmallRunLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioSmall"), TEXT("PlayerSmallRunLeft"),   true, TEXT("RunLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("LookupRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallLookupRight"),   false, TEXT("LookupRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("LookupLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallLookupLeft"),   false, TEXT("LookupLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("SitdownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallSitdownRight"),   false, TEXT("SitdownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("SitdownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallSitdownLeft"),   false, TEXT("SitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallJumpRight"),   false, TEXT("JumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallJumpLeft"),   false, TEXT("JumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallFalldownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("FalldownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallFalldownRight"),   false, TEXT("FalldownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallFalldownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("FalldownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallFalldownLeft"),   false, TEXT("FalldownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallRunJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("RunJumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallRunJumpRight"),   false, TEXT("RunJumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallRunJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallRunJumpLeft"),   false, TEXT("RunJumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallTurnRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallTurnRight"),   false, TEXT("TurnRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallTurnLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallTurnLeft"),   false, TEXT("TurnLeft")))
 		return false;
 
 	//
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickIdleRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickIdleRight"),   false, TEXT("PickIdleRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickIdleLeft"),   false, TEXT("PickIdleLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallPickMoveRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkRight")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallPickMoveRight"),   true, TEXT("PickWalkRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallPickMoveLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkLeft")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallPickMoveLeft"),   true, TEXT("PickWalkLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickLookupRight"),   false, TEXT("PickLookupRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickLookupLeft"),   false, TEXT("PickLookupLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickSitdownRight"),   false, TEXT("PickSitdownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickSitdownLeft"),   false, TEXT("PickSitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickJumpRight"),   false, TEXT("PickJumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickJumpLeft"),   false, TEXT("PickJumpLeft")))
+		return false;
+	//
+
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallSpin"),   true, TEXT("Spin"), false))
 		return false;
 
-
-
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallSpin"), m_iObjectWidth, m_iObjectHeight, true, TEXT("Spin"), false))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerDeadImage"),   false, TEXT("DeadImage")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerDeadImage"), m_iObjectWidth, m_iObjectHeight, false, TEXT("DeadImage")))
-		return false;
-
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioSmall"), TEXT("PlayerDeadAnimation"), m_iObjectWidth, m_iObjectHeight, true, TEXT("DeadAnimation")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioSmall"), TEXT("PlayerDeadAnimation"),   true, TEXT("DeadAnimation")))
 		return false;
 
 
 	//Big state image
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"),TEXT("PlayerBigIdleRight"),m_iObjectWidth, m_iObjectHeight, false, TEXT("IdleRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"),TEXT("PlayerBigIdleRight"),  false, TEXT("IdleRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("IdleLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigIdleLeft"),   false, TEXT("IdleLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioBig"), TEXT("PlayerBigWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkRight")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioBig"), TEXT("PlayerBigWalkRight"),   true, TEXT("WalkRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioBig"), TEXT("PlayerBigWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkLeft")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioBig"), TEXT("PlayerBigWalkLeft"),   true, TEXT("WalkLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.05f, TEXT("MarioBig"), TEXT("PlayerBigRunRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioBig"), TEXT("PlayerBigRunRight"),   true, TEXT("RunRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.05f, TEXT("MarioBig"), TEXT("PlayerBigRunLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioBig"), TEXT("PlayerBigRunLeft"),   true, TEXT("RunLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("LookupRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigLookupRight"),   false, TEXT("LookupRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("LookupLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigLookupLeft"),   false, TEXT("LookupLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("SitdownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigSitdownRight"),   false, TEXT("SitdownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("SitdownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigSitdownLeft"),   false, TEXT("SitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigJumpRight"),   false, TEXT("JumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigJumpLeft"),   false, TEXT("JumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigFalldownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("FalldownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigFalldownRight"),   false, TEXT("FalldownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigFalldownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("FalldownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigFalldownLeft"),   false, TEXT("FalldownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigRunJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("RunJumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigRunJumpRight"),   false, TEXT("RunJumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigRunJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigRunJumpLeft"),   false, TEXT("RunJumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigTurnRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigTurnRight"),   false, TEXT("TurnRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigTurnLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigTurnLeft"),   false, TEXT("TurnLeft")))
 		return false;
 
 	//
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickIdleRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickIdleRight"),   false, TEXT("PickIdleRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickIdleLeft"),   false, TEXT("PickIdleLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigPickMoveRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkRight")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigPickMoveRight"),   true, TEXT("PickWalkRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigPickMoveLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkLeft")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigPickMoveLeft"),   true, TEXT("PickWalkLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickLookupRight"),   false, TEXT("PickLookupRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickLookupLeft"),   false, TEXT("PickLookupLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickSitdownRight"),   false, TEXT("PickSitdownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickSitdownLeft"),   false, TEXT("PickSitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickJumpRight"),   false, TEXT("PickJumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickJumpLeft"),   false, TEXT("PickJumpLeft")))
 		return false;
 	//
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigSpin"), m_iObjectWidth, m_iObjectHeight, true, TEXT("Spin"), false))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigSpin"),   true, TEXT("Spin"), false))
 		return false;
 
 	//Flower state image
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerIdleRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("IdleRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerIdleRight"),   false, TEXT("IdleRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("IdleLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerIdleLeft"),   false, TEXT("IdleLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkRight")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerWalkRight"),   true, TEXT("WalkRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkLeft")))
+	if (!pRender->AddAnimation(0.2f, TEXT("MarioFlower"), TEXT("PlayerFlowerWalkLeft"),   true, TEXT("WalkLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.05f, TEXT("MarioFlower"), TEXT("PlayerFlowerRunRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunRight")))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioFlower"), TEXT("PlayerFlowerRunRight"),   true, TEXT("RunRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.05f, TEXT("MarioFlower"), TEXT("PlayerFlowerRunLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("RunLeft")))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioFlower"), TEXT("PlayerFlowerRunLeft"),   true, TEXT("RunLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("LookupRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerLookupRight"),   false, TEXT("LookupRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("LookupLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerLookupLeft"),   false, TEXT("LookupLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("SitdownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerSitdownRight"),   false, TEXT("SitdownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("SitdownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerSitdownLeft"),   false, TEXT("SitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpRight"),   false, TEXT("JumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpLeft"),   false, TEXT("JumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerFalldownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("FalldownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerFalldownRight"),   false, TEXT("FalldownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerFalldownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("FalldownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerFalldownLeft"),   false, TEXT("FalldownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerRunJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("RunJumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerRunJumpRight"),   false, TEXT("RunJumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerRunJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("RunJumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerRunJumpLeft"),   false, TEXT("RunJumpLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerTurnRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerTurnRight"),   false, TEXT("TurnRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerTurnLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("TurnLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerTurnLeft"),   false, TEXT("TurnLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackRight"), false))
+	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackRight"),   false, TEXT("AttackRight"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("AttackLeft"), false))
+	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerAttackLeft"),   false, TEXT("AttackLeft"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackRight"), false))
+	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackRight"),   false, TEXT("JumpAttackRight"), false))
 		return false;
 
-	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("JumpAttackLeft"), false))
+	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"),   false, TEXT("JumpAttackLeft"), false))
 		return false;
 
 	//
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickIdleRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickIdleRight"),   false, TEXT("PickIdleRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickIdleLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickIdleLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickIdleLeft"),   false, TEXT("PickIdleLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickMoveRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkRight")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickMoveRight"),   true, TEXT("PickWalkRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickMoveLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("PickWalkLeft")))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickMoveLeft"),   true, TEXT("PickWalkLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickLookupRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickLookupRight"),   false, TEXT("PickLookupRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickLookupLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickLookupLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickLookupLeft"),   false, TEXT("PickLookupLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickSitdownRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickSitdownRight"),   false, TEXT("PickSitdownRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickSitdownLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickSitdownLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickSitdownLeft"),   false, TEXT("PickSitdownLeft")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickJumpRight"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpRight")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickJumpRight"),   false, TEXT("PickJumpRight")))
 		return false;
 
-	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickJumpLeft"), m_iObjectWidth, m_iObjectHeight, false, TEXT("PickJumpLeft")))
+	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickJumpLeft"),   false, TEXT("PickJumpLeft")))
 		return false;
 	//
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerSpin"), m_iObjectWidth, m_iObjectHeight, true, TEXT("Spin"), false))
+	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerSpin"),   true, TEXT("Spin"), false))
 		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
@@ -542,6 +543,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	m_PlayerState = PS_SMALL;
 	pRender->ChangeAnimationTable(TEXT("MarioSmall"));
 	pCollider->SetHeight(m_iSmallStateHeight);
+
 	return true;
 }
 

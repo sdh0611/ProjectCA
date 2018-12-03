@@ -282,6 +282,9 @@
     <ClCompile Include="Source\Scene\UI\CMenu.cpp">
       <Filter>소스 파일\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CPipe.cpp">
+      <Filter>소스 파일\Scene\Actors\Prob</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -469,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\UI\CMenu.h">
       <Filter>헤더 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CPipe.h">
+      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

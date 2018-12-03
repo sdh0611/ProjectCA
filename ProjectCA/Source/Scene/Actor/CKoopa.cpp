@@ -8,7 +8,6 @@
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
-//#include "..\..\..\Include\Core\Components\HPComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
@@ -30,8 +29,8 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	CActor::PostInit(data, pScene);
 
 	//PhysicsComponent 초기화
-	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
-	if (!pPhysics->PostInit(this, 200.f, 750.f, 1300.f, 700.f))
+	auto pPhysics = std::make_shared<PhysicsComponent>();
+	if (!pPhysics->PostInit(this, 200.f, 750.f, 1300.f, 850.f))
 		return false;
 
 	pPhysics->SetCurSpeed(pPhysics->GetSpeed());
@@ -40,7 +39,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 
 	//Collider 초기화
-	std::shared_ptr<ColliderBox> pCollider = std::make_shared<ColliderBox>();
+	auto pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
 
@@ -270,36 +269,31 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
-	pCollider->SetSize(m_iObjectWidth*0.45, m_iObjectHeight*0.8);
+	//pCollider->SetSize(m_iObjectWidth*0.45, m_iObjectHeight*0.8);
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
 
 
 	//RenderComponent 초기화
-	std::shared_ptr<AnimationRender> pRender = std::make_shared<AnimationRender>();
+	auto pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
 
 	//평소 상태 animation
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"),TEXT("KoopaGreenWalkRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkRight")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"),TEXT("KoopaGreenWalkRight"),   true, TEXT("WalkRight")))
 		return false;
-
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("WalkLeft")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"),   true, TEXT("WalkLeft")))
 		return false;
-
 	//Shell 상태 animation
-	if (!pRender->AddAnimation(0.2f, TEXT("KoopaShell"), TEXT("KoopaGreenThrownRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("ThrownRight")))
+	if (!pRender->AddAnimation(0.2f, TEXT("KoopaShell"), TEXT("KoopaGreenThrownRight"),   true, TEXT("ThrownRight")))
 		return false;
-
-	if (!pRender->AddAnimation(0.2f, TEXT("KoopaShell"), TEXT("KoopaGreenThrownLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("ThrownLeft")))
+	if (!pRender->AddAnimation(0.2f, TEXT("KoopaShell"), TEXT("KoopaGreenThrownLeft"),   true, TEXT("ThrownLeft")))
 		return false;
-
-	if (!pRender->AddAnimation(0.25f, TEXT("KoopaShell"), TEXT("KoopaGreenShell"), m_iObjectWidth, m_iObjectHeight, true, TEXT("ShellIdle")))
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaShell"), TEXT("KoopaGreenShell"),   true, TEXT("ShellIdle")))
 		return false;
-
-
-
+	pRender->SetExpansionRatio(2.5f);
+	pRender->SetPivotRatio(0.5f, 1.f);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 

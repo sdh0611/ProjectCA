@@ -23,6 +23,7 @@ const unsigned int SPRITE_HEIGHT		= 32;
 const unsigned int TILE_WIDTH			= 32;
 const unsigned int TILE_HEIGHT			= 32;
 
+const unsigned int FONT_SIZE				= 8;
 
 
 namespace Types {

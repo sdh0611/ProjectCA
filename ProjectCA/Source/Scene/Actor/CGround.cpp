@@ -9,6 +9,8 @@
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 
+
+
 bool CGround::PostInit(const OBJECT_DATA &data, CScene *pScene)
 {
 	if (!CProb::PostInit(data, pScene))

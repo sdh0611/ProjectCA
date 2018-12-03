@@ -40,7 +40,7 @@ void PlayerInputComponent::Update(double fDeltaTime)
 	}
 }
 
-void PlayerInputComponent::LateUpdate(double dDeltaTime)
+void PlayerInputComponent::LateUpdate()
 {
 }
 

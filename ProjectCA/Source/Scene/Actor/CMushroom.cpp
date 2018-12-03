@@ -125,6 +125,8 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 	if (!pRender->SetSprite(TEXT("Mushroom")))
 		return false;
+	pRender->SetExpansionRatio(2.5f);
+	pRender->SetPivotRatio(0.5f, 1.f);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 	

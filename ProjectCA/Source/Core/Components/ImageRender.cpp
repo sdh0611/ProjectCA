@@ -20,9 +20,7 @@ bool ImageRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
 	if (!RenderComponent::PostInit(pOwner, strTag))
 		return false;
 
-	m_iDrawWidth = pOwner->GetObjectWidth();
-	m_iDrawHeight = pOwner->GetObjectHeight();
-	m_ColorRef = RGB(248, 7, 220);
+	m_ColorRef			= RGB(248, 7, 220);
 
 	return true;
 }
@@ -42,10 +40,10 @@ void ImageRender::Draw(const HDC & hDC)
 	{
 		if (!m_pWeakSprite.expired())
 		{
-			POSITION point = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
+			//POSITION point = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
 			HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
 
-			TransparentBlt(hDC, point.x, point.y,
+			TransparentBlt(hDC, m_DrawPivot.x, m_DrawPivot.y,
 				m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
 				m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
 				m_ColorRef);
@@ -92,21 +90,6 @@ void ImageRender::Draw(const HDC & hDC, const POSITION & position, std::weak_ptr
 
 }
 
-void ImageRender::SetDrawWidth(UINT iWidth)
-{
-	m_iDrawWidth = iWidth;
-}
-
-void ImageRender::SetDrawHeight(UINT iHeight)
-{
-	m_iDrawHeight = iHeight;
-}
-
-void ImageRender::SetDrawSize(UINT iWidth, UINT iHeight)
-{
-	m_iDrawWidth = iWidth;
-	m_iDrawHeight = iHeight;
-}
 
 bool ImageRender::SetSprite(const TSTRING & strImageTag)
 {

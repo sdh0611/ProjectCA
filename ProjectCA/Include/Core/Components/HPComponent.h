@@ -18,7 +18,7 @@ public:
 		const TSTRING& strTag = TEXT("HPComponent"));
 	virtual void Init();
 	virtual void Update(double dDeltaTime) override;
-	virtual void LateUpdate(double dDeltaTime) override;
+	virtual void LateUpdate() override;
 
 	
 public:

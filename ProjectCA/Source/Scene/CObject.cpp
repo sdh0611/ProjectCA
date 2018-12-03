@@ -3,6 +3,7 @@
 #include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Core\Components\ComponentBase.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\CLayer.h"
 
@@ -71,6 +72,10 @@ void CObject::LateUpdate()
 	if (CCameraManager::GetInstance()->GetMainCamera().expired())
 		return;
 	GetTransform().lock()->AdjustScreenPosition();
+	auto pRender = GetComponent(TEXT("RenderComponent"));
+	if (!pRender.expired())
+		pRender.lock()->LateUpdate();
+
 }
 
 

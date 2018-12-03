@@ -25,7 +25,7 @@ public:
 
 public:
 	bool AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName,
-		UINT iWidth, UINT iHeight, bool bLoop, const TSTRING & strAnimTag, bool bInterrupt = true);
+		bool bLoop, const TSTRING & strAnimTag, bool bInterrupt = true);
 
 
 public:

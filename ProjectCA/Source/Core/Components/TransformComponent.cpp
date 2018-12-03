@@ -1,8 +1,10 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Scene\CObject.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
+
 
 
 TransformComponent::TransformComponent()
@@ -40,7 +42,7 @@ void TransformComponent::Update(double dDeltaTime)
 {
 }
 
-void TransformComponent::LateUpdate(double dDeltaTime)
+void TransformComponent::LateUpdate()
 {
 }
 

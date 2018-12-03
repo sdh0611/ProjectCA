@@ -45,10 +45,12 @@ bool CCoin::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->PostInit(this))
 		return false;
 
-	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("CoinAnimation"), m_iObjectWidth, m_iObjectHeight, true, TEXT("IdleLeft")))
+	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("CoinAnimation"),   true, TEXT("IdleLeft")))
 		return false;
-	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("CoinAnimation"), m_iObjectWidth, m_iObjectHeight, true, TEXT("IdleRight")))
+	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("CoinAnimation"),   true, TEXT("IdleRight")))
 		return false;
+	pRender->SetExpansionRatio(2.5f);
+	pRender->SetPivotRatio(0.5f, 1.f);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 

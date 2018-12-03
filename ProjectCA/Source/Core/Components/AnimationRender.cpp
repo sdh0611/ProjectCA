@@ -49,11 +49,11 @@ void AnimationRender::Draw(const HDC & hDC)
 	if (m_bActive)
 	{
 
-		POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
-		POSITION position = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
+		//POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
 		if (!m_pCurAnimation.expired())
-			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, pivot);
+			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, m_DrawPivot, m_iDrawWidth, m_iDrawHeight);
 
+		//POSITION position = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 		//std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
 		//std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
 
@@ -91,11 +91,11 @@ void AnimationRender::Draw(const HDC & hDC)
 }
 
 bool AnimationRender::AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName, 
-	UINT iWidth, UINT iHeight, bool bLoop, const TSTRING & strAnimTag, bool bInterrupt)
+	bool bLoop, const TSTRING & strAnimTag, bool bInterrupt)
 {
 	auto pAnim = std::make_shared<CAnim>();
 
-	if (!pAnim->Init(strSpriteName, iWidth, iHeight, dPlayTime, bLoop, strAnimTag, bInterrupt))
+	if (!pAnim->Init(strSpriteName, dPlayTime, bLoop, strAnimTag, bInterrupt))
 		return false;
 
 	if (m_pCurAnimation.expired())

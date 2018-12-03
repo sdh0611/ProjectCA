@@ -177,6 +177,7 @@
     <ClCompile Include="Source\Scene\Actor\CKoopa.cpp" />
     <ClCompile Include="Source\Scene\Actor\CMushroom.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPickup.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CPipe.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPlayer.cpp" />
     <ClCompile Include="Source\Scene\Actor\CProb.cpp" />
     <ClCompile Include="Source\Scene\Actor\CShell.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="Include\Scene\Actor\CKoopa.h" />
     <ClInclude Include="Include\Scene\Actor\CMushroom.h" />
     <ClInclude Include="Include\Scene\Actor\CPickup.h" />
+    <ClInclude Include="Include\Scene\Actor\CPipe.h" />
     <ClInclude Include="Include\Scene\Actor\CPlayer.h" />
     <ClInclude Include="Include\Scene\Actor\CProb.h" />
     <ClInclude Include="Include\Scene\Actor\CShell.h" />

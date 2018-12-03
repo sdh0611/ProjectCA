@@ -26,6 +26,7 @@ bool CButton::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
 
 	return true;
+
 }
 
 void CButton::Init()

@@ -25,7 +25,7 @@ public:
 public:
 	virtual bool PostInit(CObject* pOwner, const Types::tstring& strTag = TEXT("Collider"));
 	virtual void Update(double dDeltaTime) = 0;
-	virtual void LateUpdate(double dDeltaTime) override;
+	virtual void LateUpdate() override;
 	virtual void ResolveCollision(CObject* pOther, float fintersectLength);
 	virtual void DrawCollider(const HDC& hDC, const POSITION& position) = 0;
 

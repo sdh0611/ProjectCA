@@ -83,10 +83,12 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	auto pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
-	if (!pRender->AddAnimation(0.3f, TEXT("Default"), TEXT("FireballRight"), m_iObjectWidth, m_iObjectHeight, true, TEXT("AttackRight")))
+	if (!pRender->AddAnimation(0.3f, TEXT("Default"), TEXT("FireballRight"),   true, TEXT("AttackRight")))
 		return false;
-	if (!pRender->AddAnimation(0.3f, TEXT("Default"), TEXT("FireballLeft"), m_iObjectWidth, m_iObjectHeight, true, TEXT("AttackLeft")))
+	if (!pRender->AddAnimation(0.3f, TEXT("Default"), TEXT("FireballLeft"),   true, TEXT("AttackLeft")))
 		return false;
+	pRender->SetExpansionRatio(2.5f);
+	pRender->SetPivotRatio(0.5f, 1.f);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
@@ -129,6 +131,7 @@ void CFireball::LateUpdate()
 	if (m_bActive)
 	{
 		GetTransform().lock()->AdjustScreenPosition();
+		GetComponent<AnimationRender>().lock()->LateUpdate();
 
 		auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
 		auto screenPosition = GetTransform().lock()->GetScreenPosition();

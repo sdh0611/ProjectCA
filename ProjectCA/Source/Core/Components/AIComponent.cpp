@@ -23,7 +23,7 @@ void AIComponent::Update(double fDeltaTime)
 	
 }
 
-void AIComponent::LateUpdate(double dDeltaTime)
+void AIComponent::LateUpdate()
 {
 }
 
