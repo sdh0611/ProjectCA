@@ -13,6 +13,12 @@
 
 bool CGround::PostInit(const OBJECT_DATA &data, CScene *pScene)
 {
+	UINT& iWidth = const_cast<UINT&>(data.m_iObjectWidth);
+	UINT& iHeight = const_cast<UINT&>(data.m_iObjectHeight);
+
+	iWidth *= TILE_WIDTH;
+	iHeight *= TILE_HEIGHT;
+
 	if (!CProb::PostInit(data, pScene))
 		return false;
 

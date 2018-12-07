@@ -1,6 +1,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CFireball.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
+#include "..\..\..\Include\Scene\Actor\CBlock.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
@@ -28,7 +29,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 	//Physics Ãß°¡
 	auto pPhysics = std::make_shared<PhysicsComponent>();
-	if (!pPhysics->PostInit(this, 600.f, 600.f, 1000.f, 500.f))
+	if (!pPhysics->PostInit(this, 600.f, 600.f, 1300.f, 300.f))
 		return false;
 	//pPhysics->SetCurSpeed(pPhysics->GetSpeed());
 	if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
@@ -47,11 +48,25 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 
 		switch (pOtherActor->GetObjectType())
 		{
+		case Types::OT_BLOCK:
+			if (!static_cast<CBlock*>(pOther)->IsHiding())
+			{
+				switch (type)
+				{
+				case Collider::COLLISION_BOT:
+					GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(GetComponent<PhysicsComponent>().lock()->GetJumpForce());
+					break;
+				default:
+					SetFireballInactive();
+					//SetActive(false);
+					break;
+				}
+			}
+			break;
 		case Types::OT_PROB:
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
-				GetComponent<PhysicsComponent>().lock()->SetGrounded(true);
 				GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(GetComponent<PhysicsComponent>().lock()->GetJumpForce());
 				break;
 			default:
@@ -63,7 +78,6 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 		case Types::OT_GROUND:
 			if (type == Collider::COLLISION_BOT)
 			{
-				GetComponent<PhysicsComponent>().lock()->SetGrounded(true);
 				GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(GetComponent<PhysicsComponent>().lock()->GetJumpForce());
 			}
 			break;
@@ -164,7 +178,6 @@ void CFireball::SetFireballActive()
 		pPhysics->SetCurSpeed(fWalkSpeed);
 	}
 	GetTransform().lock()->SetPosition(m_pOwnerActor->GetObjectPosition().x, m_pOwnerActor->GetObjectPosition().y - m_pOwnerActor->GetObjectHeight() / 2.f);
-	GetComponent<ColliderBox>().lock()->SetActive(true);
 	SetActive(true);
 }
 
@@ -191,4 +204,8 @@ void CFireball::ActorBehavior(double dDeltaTime)
 		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("AttackLeft"));
 	}
 
+}
+
+void CFireball::SetOwnerObject(std::shared_ptr<CObject> pOwner)
+{
 }

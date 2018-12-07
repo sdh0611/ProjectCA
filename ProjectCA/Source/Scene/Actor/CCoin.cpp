@@ -37,7 +37,6 @@ bool CCoin::PostInit(const Types::ActorData & data, CGameScene * pScene)
 
 	};
 	pCollider->SetOnCollision(onCollisionCallback);
-	pCollider->SetSize(m_iObjectWidth * 0.4f, m_iObjectHeight * 0.5f);
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
 

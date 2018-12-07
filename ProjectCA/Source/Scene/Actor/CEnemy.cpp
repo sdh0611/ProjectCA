@@ -27,7 +27,7 @@ CEnemy::~CEnemy()
 
 bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 {
-	return true;
+	return CActor::PostInit(data ,pScene);
 }
 
 void CEnemy::Init()
@@ -59,11 +59,6 @@ void CEnemy::Render(const HDC & hDC)
 	else {
 		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
 	}
-
-}
-
-void CEnemy::ActorBehavior(double dDeltaTime)
-{
 
 }
 

@@ -18,7 +18,6 @@
 
 
 
-
 CPlayer::CPlayer()
 	:CActor()
 {
@@ -225,6 +224,12 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 					}
 					break;
 				}
+			}
+			break;
+		case Types::OT_PICKABLE:
+			if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
+			{
+
 			}
 			break;
 		}
@@ -1080,6 +1085,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		}
 	}
 
+	//Jump관련 연산
 	if (pPhysics->IsGrounded())
 	{
 		if (m_ActorCurVerticalState == Types::VS_JUMP)
@@ -1154,9 +1160,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			{
 				pPhysics->SetCurJumpForce(0.f);
 			}
-
 		}
-
 	}
 	
 	//Collider 변환 관련 Player로직

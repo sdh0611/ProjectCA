@@ -32,7 +32,7 @@ public:
 	virtual void DeadProcess(double dDeltaTime) = 0;
 
 protected:
-	virtual void ActorBehavior(double dDeltaTime) override;
+	virtual void ActorBehavior(double dDeltaTime) = 0;
 
 
 protected:

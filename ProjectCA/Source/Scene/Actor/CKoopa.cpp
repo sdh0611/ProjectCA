@@ -322,6 +322,11 @@ void CKoopa::Render(const HDC & hDC)
 
 }
 
+CKoopa::KoopaState CKoopa::GetKoopaState()
+{
+	return m_KoopaState;
+}
+
 void CKoopa::ChangeAnimationClip()
 {
 

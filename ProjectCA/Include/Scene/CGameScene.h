@@ -34,6 +34,10 @@ public:
 	
 
 public:
+	void SetIsGameClear();
+
+
+public:
 	std::weak_ptr<CPlayer> GetPlayerPtr();
 
 
@@ -56,6 +60,7 @@ private:
 
 
 private:
+	bool														m_bClear;
 	std::weak_ptr<CPlayer>								m_pPlayer;			
 	class CObjectManager*								m_pObjectManager;
 	class CScoreManager*								m_pScoreManager;

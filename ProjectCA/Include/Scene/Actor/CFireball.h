@@ -34,6 +34,10 @@ public:
 private:
 	virtual void ActorBehavior(double dDeltaTime) override;
 
+	
+private:
+	virtual void SetOwnerObject(std::shared_ptr<CObject> pOwner) override;
+
 
 private:
 	float		m_fDamage;

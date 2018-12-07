@@ -71,7 +71,7 @@ void CPipe::Render(const HDC & hDC)
 		auto pRender = GetComponent<ImageRender>().lock();
 		auto position = GetTransform().lock()->GetScreenPivot();
 
-		Rectangle(hDC, position.x, position.y, position.x + m_iObjectWidth, position.y + m_iObjectHeight);
+		//Rectangle(hDC, position.x, position.y, position.x + m_iObjectWidth, position.y + m_iObjectHeight);
 
 		size_t size = m_PipeImageList.size();
 		position.y -= (m_iObjectHeight / size);

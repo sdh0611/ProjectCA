@@ -15,6 +15,10 @@ class CPlayer : public CActor {
 		PS_SMALL, PS_BIG, PS_FLOWER
 	};
 
+	enum PlayerEvent {
+		PE_IDLE, PE_PIPE, PE_DAMAGED, PE_TRANSFORM
+	};
+
 public:
 	CPlayer();
 	virtual ~CPlayer();

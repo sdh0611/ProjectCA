@@ -156,6 +156,7 @@
     <ClCompile Include="Source\Core\CResourceManager.cpp" />
     <ClCompile Include="Source\Core\Debuging\Debug.cpp" />
     <ClCompile Include="Source\Core\Graphic\CAnim.cpp" />
+    <ClCompile Include="Source\Core\Graphic\CEffectManager.cpp" />
     <ClCompile Include="Source\Core\Graphic\CSprite.cpp" />
     <ClCompile Include="Source\Core\CInputManager.cpp" />
     <ClCompile Include="Source\Core\Math\CVector.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Source\Scene\Actor\CActor.cpp" />
     <ClCompile Include="Source\Scene\Actor\CBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCoin.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CEndPickup.cpp" />
     <ClCompile Include="Source\Scene\Actor\CFireball.cpp" />
     <ClCompile Include="Source\Scene\Actor\CGoomba.cpp" />
     <ClCompile Include="Source\Scene\Actor\CObjectManager.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="Source\Scene\Actor\CPipe.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPlayer.cpp" />
     <ClCompile Include="Source\Scene\Actor\CProb.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CRex.cpp" />
     <ClCompile Include="Source\Scene\Actor\CShell.cpp" />
     <ClCompile Include="Source\Scene\CCameraManager.cpp" />
     <ClCompile Include="Source\Scene\CGameScene.cpp" />
@@ -217,6 +220,7 @@
     <ClInclude Include="Include\Core\CResourceManager.h" />
     <ClInclude Include="Include\Core\Debuging\Debug.h" />
     <ClInclude Include="Include\Core\Graphic\CAnim.h" />
+    <ClInclude Include="Include\Core\Graphic\CEffectManager.h" />
     <ClInclude Include="Include\Core\Graphic\CSprite.h" />
     <ClInclude Include="Include\Core\CInputManager.h" />
     <ClInclude Include="Include\Core\Math\CVector.h" />
@@ -243,6 +247,7 @@
     <ClInclude Include="Include\Scene\Actor\CPipe.h" />
     <ClInclude Include="Include\Scene\Actor\CPlayer.h" />
     <ClInclude Include="Include\Scene\Actor\CProb.h" />
+    <ClInclude Include="Include\Scene\Actor\CRex.h" />
     <ClInclude Include="Include\Scene\Actor\CShell.h" />
     <ClInclude Include="Include\Scene\CCameraManager.h" />
     <ClInclude Include="Include\Scene\CGameScene.h" />

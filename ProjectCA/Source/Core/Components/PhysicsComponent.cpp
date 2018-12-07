@@ -73,8 +73,7 @@ void PhysicsComponent::Update(double dDeltaTime)
 }
 void PhysicsComponent::LateUpdate()
 {
-	if (m_bGrounded)
-		m_bGrounded = false;
+
 }
 
 void PhysicsComponent::SetCurSpeed(float fSpeed)
@@ -210,13 +209,6 @@ void PhysicsComponent::Gravity(double dDeltaTime)
 			}
 		}
 
-		//if (pOwner->GetActorVerticalState() == Types::VS_FALL)
-		//{
-		//	if (m_fYSpeed > 0.f)
-		//	{
-		//		m_fYSpeed = 0.f;
-		//	}
-		//}
 	}
 
 }

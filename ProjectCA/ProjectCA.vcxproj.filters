@@ -285,6 +285,15 @@
     <ClCompile Include="Source\Scene\Actor\CPipe.cpp">
       <Filter>소스 파일\Scene\Actors\Prob</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Graphic\CEffectManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CEndPickup.cpp">
+      <Filter>소스 파일\Scene\Actors\Pickup</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CRex.cpp">
+      <Filter>소스 파일\Scene\Actors\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -475,6 +484,12 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CPipe.h">
       <Filter>헤더 파일\Scene\Actors\Prob</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Graphic\CEffectManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CRex.h">
+      <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

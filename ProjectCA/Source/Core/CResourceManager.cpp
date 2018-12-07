@@ -423,6 +423,26 @@ bool CResourceManager::LoadEnemySpriteInfo()
 		return false;
 
 
+	//Rex
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Rex/rex_move_right.bmp"), TEXT("RexMoveRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Rex/rex_move_left.bmp"), TEXT("RexMoveLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Rex/rex_damaged_move_right.bmp"), TEXT("RexDamagedMoveRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Rex/rex_damaged_move_left.bmp"), TEXT("RexDamagedMoveLeft")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Rex/rex_dead_right.bmp"), TEXT("RexDeadRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Rex/rex_dead_left.bmp"), TEXT("RexDeadLeft")))
+		return false;
+
+
 	return true;
 }
 
@@ -893,6 +913,9 @@ bool CResourceManager::LoadPickupImageInfo()
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/coin_image.bmp"), TEXT("CoinImage")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Pickup/end.bmp"), TEXT("End")))
 		return false;
 
 	return true;

@@ -47,18 +47,18 @@ public:
 
 
 public:
-	void SetActive(bool bActive);
-	void SetObjectSize(UINT iWidth, UINT iHeight);
-	void SetObjectWidth(UINT iWidth);
-	void SetObjectHeight(UINT iHeight);
-	void SetObjectPosition(POSITION position);
-	void SetObjectPosition(float fx, float fy);
-	void SetObjectState(OBJECT_STATE state); 
-	void SetObjectName(const TSTRING& strName);
-	void SetOwnerLayer(CLayer* pLayer);
-	void SetOwnerScene(CScene* pScene);
-	void SetOwnerObject(std::shared_ptr<CObject> pOwner);
-	bool AttachCamera(std::shared_ptr<CCamera> pCamera);
+	void			SetActive(bool bActive);
+	void			SetObjectSize(UINT iWidth, UINT iHeight);
+	void			SetObjectWidth(UINT iWidth);
+	void			SetObjectHeight(UINT iHeight);
+	void			SetObjectPosition(POSITION position);
+	void			SetObjectPosition(float fx, float fy);
+	void			SetObjectState(OBJECT_STATE state); 
+	void			SetObjectName(const TSTRING& strName);
+	void			SetOwnerLayer(CLayer* pLayer);
+	void			SetOwnerScene(CScene* pScene);
+	bool			AttachCamera(std::shared_ptr<CCamera> pCamera);
+	virtual void SetOwnerObject(std::shared_ptr<CObject> pOwner);
 
 
 
@@ -77,6 +77,10 @@ public:
 	std::weak_ptr<TransformComponent>	GetTransform();
 	std::weak_ptr<CObject>						GetOwnerObject();
 	std::weak_ptr<CCamera>					GetCamera();
+
+
+protected:
+	virtual void HandlingEvent() = 0;
 
 
 protected:

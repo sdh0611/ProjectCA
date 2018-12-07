@@ -114,7 +114,6 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		
 	};
 	pCollider->SetOnCollision(colliderCallback);
-	pCollider->SetSize(m_iObjectWidth * 0.5f, m_iObjectHeight * 0.5f);
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
 

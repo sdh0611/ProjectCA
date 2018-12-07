@@ -25,7 +25,8 @@ CGoomba::~CGoomba()
 bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 	//기본 Actor의 속성 초기화
-	CActor::PostInit(data, pScene);
+	if (!CActor::PostInit(data, pScene))
+		return false;
 
 	//AIComponent (InputComponent) 초기화
 	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();

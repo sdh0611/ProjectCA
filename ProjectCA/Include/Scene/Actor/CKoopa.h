@@ -7,6 +7,12 @@
 class CKoopa : public CEnemy {
 
 public:
+	enum KoopaState {
+		KS_IDLE, KS_SHELL
+	};
+
+
+public:
 	CKoopa();
 	virtual ~CKoopa();
 
@@ -18,6 +24,10 @@ public:
 	virtual void Render(const HDC& hDC);
 
 
+public:
+	KoopaState GetKoopaState();
+
+
 private:
 	void ChangeAnimationClip();
 	virtual void ActorBehavior(double dDeltaTime) override;
@@ -25,7 +35,7 @@ private:
 
 
 private:
-	bool m_bDead;	
+	KoopaState m_KoopaState;	
 
 
 };

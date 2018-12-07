@@ -14,6 +14,7 @@
 #include "..\..\Include\Scene\Actor\CEnemy.h"
 #include "..\..\Include\Scene\Actor\CKoopa.h"
 #include "..\..\Include\Scene\Actor\CGoomba.h"
+#include "..\..\Include\Scene\Actor\CRex.h"
 #include "..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\Include\Scene\Actor\CProb.h"
 #include "..\..\Include\Scene\Actor\CGround.h"
@@ -24,6 +25,7 @@
 #include "..\..\Include\Scene\Actor\CPickup.h"
 #include "..\..\Include\Scene\Actor\CMushroom.h"
 #include "..\..\Include\Scene\Actor\CFlower.h"
+#include "..\..\Include\Scene\Actor\CEndPickup.h"
 #include "..\..\Include\Scene\Actor\CCoin.h"
 #include "..\..\Include\Scene\UI\CItemInfo.h"
 #include "..\..\Include\Scene\UI\CNumberInterface.h"
@@ -88,6 +90,7 @@ bool CGameScene::Init()
 		return false;
 
 	//For test
+	m_bClear				= false;
 	m_iCurScore			= m_pScoreManager->GetScore();
 	m_iCoinCount		= m_pScoreManager->GetCoinCount();
 	m_iLife				= m_pScoreManager->GetLifeCount();
@@ -101,34 +104,42 @@ bool CGameScene::Init()
 
 void CGameScene::Update(double dDeltaTime)
 {
-	if (m_pPlayer.lock()->IsActive())
+	if (!m_bClear)
 	{
-		//1. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
-		GameUpdate(dDeltaTime);
-
-		//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사
-		CScene::Update(dDeltaTime);
-	}
-	else
-	{
-		if (m_iLife > 0)
+		if (m_pPlayer.lock()->IsActive())
 		{
-			m_pScoreManager->DecreaseLifeCount();
-			ResetScene();
+			//1. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
+			GameUpdate(dDeltaTime);
+
+			//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사
+			CScene::Update(dDeltaTime);
 		}
 		else
 		{
-			CSceneManager::GetInstance()->SetReadyToChangeScene(true);
-			CSceneManager::GetInstance()->CreateNextScene(Types::ST_GAMEOVER);
+			if (m_iLife > 0)
+			{
+				m_pScoreManager->DecreaseLifeCount();
+				ResetScene();
+			}
+			else
+			{
+				CSceneManager::GetInstance()->SetReadyToChangeScene(true);
+				CSceneManager::GetInstance()->CreateNextScene(Types::ST_GAMEOVER);
+			}
+		}
+
+		if (CInputManager::GetInstance()->IsKeyDown(TEXT("RESET")))
+		{
+			puts("reset");
+			m_iLife = 5;
+			m_pScoreManager->Init();
+			ResetScene();
 		}
 	}
-
-	if (CInputManager::GetInstance()->IsKeyDown(TEXT("RESET")))
+	else
 	{
-		puts("reset");
-		m_iLife = 5;
-		m_pScoreManager->Init();
-		ResetScene();
+		CSceneManager::GetInstance()->SetReadyToChangeScene(true);
+		CSceneManager::GetInstance()->CreateNextScene(Types::ST_GAMEOVER);
 	}
 }
 
@@ -137,6 +148,11 @@ void CGameScene::Render(const HDC& hDC)
 	//Layer객체가 관리하는 Actor들을 Rendering
 	CScene::Render(hDC);
 
+}
+
+void CGameScene::SetIsGameClear()
+{
+	m_bClear = true;
 }
 
 std::weak_ptr<CPlayer> CGameScene::GetPlayerPtr()
@@ -263,54 +279,13 @@ bool CGameScene::BuildUI()
 
 bool CGameScene::BuildWorld()
 {
-	//Enemy 생성
-	{
-		if (!CreateLayer(TEXT("Enemy"), 4))
-			return false;
-
-		std::shared_ptr<CEnemy> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.9f, 250.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.9f, 200.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.9f, 150.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.9f, 300.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, -100.f, 450.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-	}
-
 	//Pickup 생성
 	{
 		if (!CreateLayer(TEXT("Pickup"), 3))
 			return false;
 
 		//테스트용 Mushroom 생성
-		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP,
+		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 150.f, Types::OT_PICKUP,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
 		if (pPickup == nullptr)
 			return false;
@@ -318,41 +293,101 @@ bool CGameScene::BuildWorld()
 		m_ObjectPtrList.emplace_back(pPickup);
 
 		//테스트용 Flower 생성
-		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 300.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
 		if (pPickup == nullptr)
 			return false;
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
 
 		//테스트용 Coin 생성
-		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 330.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 330.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
 		if (pPickup == nullptr)
 			return false;
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
 
 		//테스트용 Coin 생성
-		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 370.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 370.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
 		if (pPickup == nullptr)
 			return false;
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
 
 		//테스트용 Coin 생성
-		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 410.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 410.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
 		if (pPickup == nullptr)
 			return false;
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
 
 		//테스트용 Coin 생성
-		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 450.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 450.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		if (pPickup == nullptr)
+			return false;
+		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		m_ObjectPtrList.emplace_back(pPickup);
+
+		//테스트용 EndPickup 생성
+		pPickup = m_pObjectManager->CreateActor<CEndPickup>(SPRITE_WIDTH, SPRITE_HEIGHT, 13000.f, 444.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("EndPickup"), this);
 		if (pPickup == nullptr)
 			return false;
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
 	}
-	
+
+	//Enemy 생성
+	{
+		if (!CreateLayer(TEXT("Enemy"), 4))
+			return false;
+
+		std::shared_ptr<CEnemy> /*pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 250.f, 250.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		if (pEnemy == nullptr)
+			return false;
+		m_ObjectPtrList.emplace_back(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 200.f, 250.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		if (pEnemy == nullptr)
+			return false;
+		m_ObjectPtrList.emplace_back(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 150.f, 250.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		if (pEnemy == nullptr)
+			return false;
+		m_ObjectPtrList.emplace_back(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 300.f, 250.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		if (pEnemy == nullptr)
+			return false;
+		m_ObjectPtrList.emplace_back(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, -100.f, 450.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		if (pEnemy == nullptr)
+			return false;
+		m_ObjectPtrList.emplace_back(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+*/
+
+		pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 100.f, 450.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
+		if (pEnemy == nullptr)
+			return false;
+		m_ObjectPtrList.emplace_back(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+	}
+
 	//Prob 생성
 	{
 		if (!CreateLayer(TEXT("Prob"), 8))
@@ -370,11 +405,11 @@ bool CGameScene::BuildWorld()
 		if (!CreateLayer(TEXT("Block"), 9))
 			return false;
 
-		auto pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 400.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+		auto pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 400.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
 		if (pBlock == nullptr)
 			return false;
 		//Block에 저장시켜놓을 Pickup 생성
-		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
+		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH, SPRITE_HEIGHT,
 			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN,
 			Types::DIR_RIGHT, TEXT("Mushroom"), this);
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
@@ -387,11 +422,11 @@ bool CGameScene::BuildWorld()
 		FindLayer(TEXT("Block"))->AddActor(pBlock);
 
 
-		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 460.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 460.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
 		if (pBlock == nullptr)
 			return false;
 		//Block에 저장시켜놓을 Pickup 생성
-		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
+		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
 			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
@@ -402,11 +437,12 @@ bool CGameScene::BuildWorld()
 		m_ObjectPtrList.push_back(pBlock);
 		FindLayer(TEXT("Block"))->AddActor(pBlock);
 
-		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5, 520.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+
+		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 520.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
 		if (pBlock == nullptr)
 			return false;
 		//Block에 저장시켜놓을 Pickup 생성
-		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH*2.5, SPRITE_HEIGHT*2.5,
+		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
 			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
@@ -424,35 +460,59 @@ bool CGameScene::BuildWorld()
 		if (!CreateLayer(TEXT("Ground"), 10))
 			return false;
 
-		auto pGround = m_pObjectManager->CreateObject<CGround>(8192, 256, 400.f, 700.f, Types::OT_GROUND, TEXT("Ground"), this);
+		auto pGround = m_pObjectManager->CreateObject<CGround>(100, 8, 1600.f, 700.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		m_ObjectPtrList.push_back(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, -400.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
+
+		pGround = m_pObjectManager->CreateObject<CGround>(40, 30, -640.f, 700.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		m_ObjectPtrList.push_back(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 0.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(256, 160, -400.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 1200.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 0.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		//pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 800.f, 350.f, Types::OT_GROUND, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		//pGround = m_pObjectManager->CreateObject<CGround>(256, 160, 1200.f, 500.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		//pGround = m_pObjectManager->CreateObject<CGround>(4096, 256, 6600.f, 700.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		//pGround = m_pObjectManager->CreateObject<CGround>(4096, 256, 11000.f, 700.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 	}
 
 	//Backgorund 생성
@@ -525,8 +585,9 @@ void CGameScene::GameUpdate(double dDeltaTime)
 
 void CGameScene::ResetScene()
 {
-	m_iRemainTime = 999;
-	m_dTimeElapsed = 0.f;
+	m_bClear				= false;
+	m_iRemainTime	= 999;
+	m_dTimeElapsed	= 0.f;
 	CScene::ResetScene();
 }
 
