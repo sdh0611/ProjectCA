@@ -71,10 +71,20 @@ void CObject::LateUpdate()
 {
 	if (CCameraManager::GetInstance()->GetMainCamera().expired())
 		return;
+
 	GetTransform().lock()->AdjustScreenPosition();
+
+	//auto pCollider = GetComponent(TEXT("Collider"));
+	//if (!pCollider.expired())
+	//{
+	//	pCollider.lock()->LateUpdate();
+	//}
+
 	auto pRender = GetComponent(TEXT("RenderComponent"));
 	if (!pRender.expired())
+	{
 		pRender.lock()->LateUpdate();
+	}
 
 }
 

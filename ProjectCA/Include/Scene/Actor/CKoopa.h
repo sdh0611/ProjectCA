@@ -8,9 +8,8 @@ class CKoopa : public CEnemy {
 
 public:
 	enum KoopaState {
-		KS_IDLE, KS_SHELL
+		KOOPA_IDLE, KOOPA_SHELL, KOOPA_RAW
 	};
-
 
 public:
 	CKoopa();
@@ -32,6 +31,7 @@ private:
 	void ChangeAnimationClip();
 	virtual void ActorBehavior(double dDeltaTime) override;
 	virtual void DeadProcess(double dDeltaTime) override;
+	virtual void HandlingEvent(EVENT_TYPE type) override;
 
 
 private:

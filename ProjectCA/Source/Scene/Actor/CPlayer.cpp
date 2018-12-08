@@ -34,7 +34,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	//TransformComponent 추가
 	CActor::PostInit(data, pScene);
 
-	m_bProtected			= false;
+	//m_bProtected			= false;
 
 	m_dTimeElapsed		= 0.f;
 	m_iSmallStateWidth	= m_iObjectWidth;
@@ -70,49 +70,21 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		switch (pOther->GetObjectType())
 		{
 		case Types::OT_ENEMY:
-			if (pOther->GetObjectState() == Types::OS_DAMAGED
-				&& pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() == 0.f)
+			switch (type)
 			{
-				if (m_pPickObjectPtr.expired())
+			case Collider::COLLISION_BOT:
+				SetActorVerticalState(Types::VS_JUMP);
+				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+				break;
+			default:
+				if (GetObjectState() != Types::OS_DAMAGED)
 				{
-					if (CInputManager::GetInstance()->IsKeyDown(TEXT("ACCEL")))
+					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
 					{
-						m_pPickObjectPtr = m_pOwnerScene->FindObjectFromScene(pOther->GetObjectID()).lock();
-						m_pPickObjectPtr.lock()->SetOwnerObject(m_pOwnerScene->FindObjectFromScene(m_ObjectID).lock());
-						m_pPickObjectPtr.lock()->GetComponent<PhysicsComponent>().lock()->SetStatic(true);
+						HandlingEvent(Types::EVENT_DAMAGED);
 					}
 				}
-			}
-			else
-			{
-				switch (type)
-				{
-				case Collider::COLLISION_BOT:
-					SetActorVerticalState(Types::VS_JUMP);
-					pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
-					break;
-				default:
-					if (!m_bProtected)
-					{
-						if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
-						{
-							if (m_PlayerState != PS_SMALL)	//PlayerDamaged
-							{
-								SetPlayerState(PS_SMALL);
-								PopStoredPickup();
-								m_pCurPickupPtr.reset();
-								m_bProtected = true;
-							}
-							else //Player die
-							{
-								SetPlayerDead();
-							}
-
-						}
-
-					}
-					break;
-				}
+				break;
 			}
 			break;
 		case Types::OT_PROB:
@@ -147,7 +119,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			{
 				if (m_ActorCurVerticalState != Types::VS_FALL)
 				{
-					if(type == Collider::COLLISION_TOP) 
+					if (type == Collider::COLLISION_TOP)
 					{
 						SetActorVerticalState(Types::VS_FALL);
 						SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
@@ -181,7 +153,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				}
 			}
 		}
-			break;
+		break;
 		case Types::OT_GROUND:
 			if (type == Collider::COLLISION_BOT)
 			{
@@ -229,7 +201,34 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		case Types::OT_PICKABLE:
 			if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
 			{
-
+				if (type == Collider::COLLISION_BOT)
+				{
+					SetActorVerticalState(Types::VS_JUMP);
+					pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+				}
+				else
+				{
+					if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
+					{
+						if (GetObjectState() != Types::OS_DAMAGED)
+							HandlingEvent(Types::EVENT_DAMAGED);
+					}
+				}
+			}
+			else
+			{
+				if (m_pPickObjectPtr.expired())
+				{
+					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() == 0.f)
+					{
+						if (CInputManager::GetInstance()->IsKeyDown(TEXT("ACCEL")))
+						{
+							m_pPickObjectPtr = m_pOwnerScene->FindObjectFromScene(pOther->GetObjectID()).lock();
+							m_pPickObjectPtr.lock()->SetOwnerObject(m_pOwnerScene->FindObjectFromScene(m_ObjectID).lock());
+							m_pPickObjectPtr.lock()->GetComponent<PhysicsComponent>().lock()->SetStatic(true);
+						}
+					}
+				}
 			}
 			break;
 		}
@@ -336,7 +335,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		return false;
 	//
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioSmall"), TEXT("PlayerSmallSpin"),   true, TEXT("Spin"), false))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioSmall"), TEXT("PlayerSmallSpin"),   true, TEXT("Spin"), false))
 		return false;
 
 	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerDeadImage"),   false, TEXT("DeadImage")))
@@ -433,7 +432,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		return false;
 	//
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioBig"), TEXT("PlayerBigSpin"),   true, TEXT("Spin"), false))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioBig"), TEXT("PlayerBigSpin"),   true, TEXT("Spin"), false))
 		return false;
 
 	//Flower state image
@@ -535,7 +534,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		return false;
 	//
 
-	if (!pRender->AddAnimation(0.1f, TEXT("MarioFlower"), TEXT("PlayerFlowerSpin"),   true, TEXT("Spin"), false))
+	if (!pRender->AddAnimation(0.05f, TEXT("MarioFlower"), TEXT("PlayerFlowerSpin"),   true, TEXT("Spin"), false))
 		return false;
 
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
@@ -554,7 +553,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 void CPlayer::Init()
 {
-	m_bProtected					= false;
+	m_ActType						= Types::ACT_IDLE;
 	m_ObjectState					= Types::OS_IDLE;
 	m_dTimeElapsed				= 0.f;
 	m_iAvailableFireballCount	= 5;
@@ -583,13 +582,13 @@ void CPlayer::Update(double dDeltaTime)
 	if (m_ObjectState != Types::OS_DEAD)
 	{
 		//무적시간 관련 연산
-		if (m_bProtected)
+		if (GetObjectState() == Types::OS_DAMAGED)
 		{
 			m_dTimeElapsed += dDeltaTime;
 			if (m_dTimeElapsed > 3.f)
 			{
 				m_dTimeElapsed = 0.f;
-				m_bProtected = false;
+				SetObjectState(Types::OS_IDLE);
 			}
 		}
 		
@@ -677,7 +676,7 @@ void CPlayer::InterruptProecess(double dDeltaTime)
 
 void CPlayer::IncreaseAvailableFireballCount()
 {
-	if (m_iAvailableFireballCount < 5)
+	if (m_iAvailableFireballCount < 3)
 	{
 		++m_iAvailableFireballCount;
 	}
@@ -688,7 +687,7 @@ void CPlayer::Attack()
 	auto pRender = GetComponent<AnimationRender>().lock();
 
 	//공격 모션
-	if (m_ObjectState == Types::OS_ATTACK && m_iAvailableFireballCount > 0)
+	if (m_ActType == Types::ACT_ATTACK && m_iAvailableFireballCount > 0)
 	{
 		if (m_ActorCurVerticalState == Types::VS_IDLE)
 		{
@@ -725,6 +724,7 @@ void CPlayer::Attack()
 		}
 	}
 
+	m_ActType = Types::ACT_IDLE;
 }
 
 bool CPlayer::GenerateFireball()
@@ -735,7 +735,7 @@ bool CPlayer::GenerateFireball()
 	for (int i = 0; i < m_iAvailableFireballCount; ++i)
 	{
 		pFire = CObjectManager::GetInstance()->CreateActor<CFireball>(SPRITE_WIDTH * 2.5, SPRITE_HEIGHT * 2.5, GetObjectPosition().x, GetObjectPosition().y,
-			Types::OT_BULLET, Types::OS_ATTACK, Types::VS_IDLE, Types::HS_IDLE, m_Direction, TEXT("Fireball"), static_cast<CGameScene*>(m_pOwnerScene));
+			Types::OT_BULLET, Types::ACT_ATTACK, m_Direction, TEXT("Fireball"), static_cast<CGameScene*>(m_pOwnerScene));
 		if (pFire == nullptr)
 			return false;
 		pFire->SetOwnerActor(this);
@@ -753,7 +753,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 	if (m_pPickObjectPtr.expired())
 	{
 		//앉는 모션
-		if (m_ObjectState == Types::OS_SITDOWN)
+		if (m_ActType == Types::ACT_SITDOWN)
 		{
 			if (m_Direction == Types::DIR_RIGHT)
 			{
@@ -770,7 +770,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		//위를 보는 모션 모션
 		if (m_ActorCurVerticalState == Types::VS_IDLE)
 		{
-			if (m_ObjectState == Types::OS_LOOKUP)
+			if (m_ActType == Types::ACT_LOOKUP)
 			{
 				if (m_Direction == Types::DIR_RIGHT)
 				{
@@ -788,51 +788,65 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		//이동 관련 Animation
 		if (m_ActorCurVerticalState == Types::VS_JUMP)
 		{
-			if (fCurSpeedAbs >= fMaxSpeed)
+			if (GetActorAct() == Types::ACT_DESTROY)
 			{
-				if (m_Direction == Types::DIR_RIGHT)
-				{
-					pRender->ChangeAnimation(TEXT("RunJumpRight"));
-				}
-				else if (m_Direction == Types::DIR_LEFT)
-				{
-					pRender->ChangeAnimation(TEXT("RunJumpLeft"));
-				}
+				pRender->ChangeAnimation(TEXT("Spin"));
 			}
 			else
 			{
-				if (m_Direction == Types::DIR_RIGHT)
+				if (fCurSpeedAbs >= fMaxSpeed)
 				{
-					pRender->ChangeAnimation(TEXT("JumpRight"));
+					if (m_Direction == Types::DIR_RIGHT)
+					{
+						pRender->ChangeAnimation(TEXT("RunJumpRight"));
+					}
+					else if (m_Direction == Types::DIR_LEFT)
+					{
+						pRender->ChangeAnimation(TEXT("RunJumpLeft"));
+					}
 				}
-				else if (m_Direction == Types::DIR_LEFT)
+				else
 				{
-					pRender->ChangeAnimation(TEXT("JumpLeft"));
+					if (m_Direction == Types::DIR_RIGHT)
+					{
+						pRender->ChangeAnimation(TEXT("JumpRight"));
+					}
+					else if (m_Direction == Types::DIR_LEFT)
+					{
+						pRender->ChangeAnimation(TEXT("JumpLeft"));
+					}
 				}
 			}
 		}
 		else if (m_ActorCurVerticalState == Types::VS_FALL)
 		{
-			if (fCurSpeedAbs >= fMaxSpeed)
+			if (GetActorAct() == Types::ACT_DESTROY)
 			{
-				if (m_Direction == Types::DIR_RIGHT)
-				{
-					pRender->ChangeAnimation(TEXT("RunJumpRight"));
-				}
-				else if (m_Direction == Types::DIR_LEFT)
-				{
-					pRender->ChangeAnimation(TEXT("RunJumpLeft"));
-				}
+				pRender->ChangeAnimation(TEXT("Spin"));
 			}
 			else
 			{
-				if (m_Direction == Types::DIR_RIGHT)
+				if (fCurSpeedAbs >= fMaxSpeed)
 				{
-					pRender->ChangeAnimation(TEXT("FalldownRight"));
+					if (m_Direction == Types::DIR_RIGHT)
+					{
+						pRender->ChangeAnimation(TEXT("RunJumpRight"));
+					}
+					else if (m_Direction == Types::DIR_LEFT)
+					{
+						pRender->ChangeAnimation(TEXT("RunJumpLeft"));
+					}
 				}
-				else if (m_Direction == Types::DIR_LEFT)
+				else
 				{
-					pRender->ChangeAnimation(TEXT("FalldownLeft"));
+					if (m_Direction == Types::DIR_RIGHT)
+					{
+						pRender->ChangeAnimation(TEXT("FalldownRight"));
+					}
+					else if (m_Direction == Types::DIR_LEFT)
+					{
+						pRender->ChangeAnimation(TEXT("FalldownLeft"));
+					}
 				}
 			}
 		}
@@ -904,7 +918,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 	else
 	{
 		//앉는 모션
-		if (m_ObjectState == Types::OS_SITDOWN)
+		if (m_ActType == Types::ACT_SITDOWN)
 		{
 			if (m_Direction == Types::DIR_RIGHT)
 			{
@@ -921,7 +935,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		//위를 보는 모션 모션
 		if (m_ActorCurVerticalState == Types::VS_IDLE)
 		{
-			if (m_ObjectState == Types::OS_LOOKUP)
+			if (m_ActType == Types::ACT_LOOKUP)
 			{
 				if (m_Direction == Types::DIR_RIGHT)
 				{
@@ -976,20 +990,27 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		}
 	}
 
-	if (fCurSpeedAbs > 0.f)
+	if (GetActorVerticalState() == Types::VS_IDLE)
 	{
-		if (fCurSpeedAbs <= fWalkSpeed * 0.33f)
+		if (fCurSpeedAbs > 0.f)
 		{
-			pRender->SetAnimationPlaySpeed(0.33f);
+			if (fCurSpeedAbs <= fWalkSpeed * 0.33f)
+			{
+				pRender->SetAnimationPlaySpeed(0.33f);
+			}
+			else if (fCurSpeedAbs <= fWalkSpeed * 0.66f)
+			{
+				pRender->SetAnimationPlaySpeed(0.66f);
+			}
+			else
+			{
+				pRender->SetAnimationPlaySpeed(1.f);
+			}
 		}
-		else if (fCurSpeedAbs <= fWalkSpeed * 0.66f)
-		{
-			pRender->SetAnimationPlaySpeed(0.66f);
-		}
-		else
-		{
-			pRender->SetAnimationPlaySpeed(1.f);
-		}
+	}
+	else
+	{
+		pRender->SetAnimationPlaySpeed(1.f);
 	}
 
 }
@@ -1112,6 +1133,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		}
 		else
 		{
+			STATIC_POINTER_CAST(CActor, m_pPickObjectPtr.lock())->SetActorAct(Types::ACT_ATTACK);
 			auto pPhysics = m_pPickObjectPtr.lock()->GetComponent<PhysicsComponent>().lock();
 			pPhysics->SetStatic(false);
 			if (CInputManager::GetInstance()->IsKeyDown(TEXT("UP")))
@@ -1166,7 +1188,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	//Collider 변환 관련 Player로직
 	{
 		auto pCollider = GetComponent<ColliderBox>().lock();
-		if (m_ObjectState == Types::OS_SITDOWN)
+		if (m_ActType == Types::ACT_SITDOWN)
 		{
 			pCollider->SetCurRectHeight(pCollider->GetHeight() / 2.f);
 		}
@@ -1176,11 +1198,13 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		}
 	}
 	
+	//공격 관련 로직
+	//무언가를 들고있는 상태면 발사 불가능
 	if (m_pPickObjectPtr.expired())
 	{
 		if (m_PlayerState == PS_FLOWER)
 		{
-			if (m_ObjectState == Types::OS_ATTACK && m_iAvailableFireballCount > 0)
+			if (m_ActType == Types::ACT_ATTACK && m_iAvailableFireballCount > 0)
 			{
 				Attack();
 			}
@@ -1193,6 +1217,35 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	}
 
 	ChangeAnimationClip(fCurSpeed, fWalkSpeed, fMaxSpeed, fCurJumpForce);
+
+	//m_ActType = Types::ACT_IDLE;
+}
+
+void CPlayer::HandlingEvent(EVENT_TYPE type)
+{
+	switch (type)
+	{
+	case Types::EVENT_DAMAGED:
+		if (m_PlayerState != PS_SMALL)	//PlayerDamaged
+		{
+			SetPlayerState(PS_SMALL);
+			PopStoredPickup();
+			m_pCurPickupPtr.reset();
+			SetObjectState(Types::OS_DAMAGED);
+		}
+		else //Player die
+		{
+			SetPlayerDead();
+		}
+		break;
+	case Types::EVENT_DESTROY:
+
+		break;
+	case Types::EVENT_INACTIVE:
+
+		break;
+	}
+
 }
 
 

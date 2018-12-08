@@ -51,62 +51,26 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		{
 			switch (pOther->GetObjectType()) {
 			case Types::OT_ENEMY:
-				if (m_ObjectState != Types::OS_DAMAGED)
+				if (GetKoopaState() != KOOPA_SHELL)
 				{
-					if (pOther->GetObjectState() == Types::OS_DAMAGED)
+					if (type == Collider::COLLISION_LEFT)
 					{
-						if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
-						{
-							SetObjectState(Types::OS_DEAD);
-							GetComponent<ColliderBox>().lock()->SetActive(false);
-							pPhysics->SetCurJumpForce(300.f);
-							pPhysics->SetGrounded(false);
-							CScoreManager::GetInstance()->IncreaseScore(200);
-						}
-						else
-						{
-							if (type == Collider::COLLISION_LEFT)
-							{
-								SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
-							}
-							else if (type == Collider::COLLISION_RIGHT)
-							{
-								SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
-							}
-							FlipActorDirection();
-						}
-
+						SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
 					}
-					else//otherActor != Types::OS_DAMAGED
+					else if (type == Collider::COLLISION_RIGHT)
 					{
-						if (type == Collider::COLLISION_LEFT)
-						{
-							SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
-						}
-						else if (type == Collider::COLLISION_RIGHT)
-						{
-							SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
-						}
-						FlipActorDirection();
+						SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 					}
-
+					FlipActorDirection();
 				}
-				else//state == DAMAGED
-				{
-					if (pOther->GetObjectState() == Types::OS_DAMAGED)
-					{
-						if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
-						{
-							puts("Dead");
-							SetObjectState(Types::OS_DEAD);
-							pPhysics->AddForceY(300.f);
-							pPhysics->SetGrounded(false);
-							GetComponent<ColliderBox>().lock()->SetActive(false);
-							CScoreManager::GetInstance()->IncreaseScore(200);
-						}
-
-					}
-				}
+				//else
+				//{
+				//	SetObjectState(Types::OS_DEAD);
+				//	GetComponent<ColliderBox>().lock()->SetActive(false);
+				//	pPhysics->SetCurJumpForce(300.f);
+				//	pPhysics->SetGrounded(false);
+				//	CScoreManager::GetInstance()->IncreaseScore(1000);
+				//}
 				break;
 			case Types::OT_PROB:
 				switch (type) {
@@ -123,14 +87,14 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					break;
 				case Collider::COLLISION_LEFT:
 					FlipActorDirection();
-					if (m_ObjectState == Types::OS_DAMAGED)
+					if (GetKoopaState() == KOOPA_SHELL)
 					{
 						pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
 					}
 					break;
 				case Collider::COLLISION_RIGHT:
 					FlipActorDirection();
-					if (m_ObjectState == Types::OS_DAMAGED)
+					if (GetKoopaState() == KOOPA_SHELL)
 					{
 						pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
 					}
@@ -156,14 +120,14 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						break;
 					case Collider::COLLISION_LEFT:
 						FlipActorDirection();
-						if (m_ObjectState == Types::OS_DAMAGED)
+						if (GetKoopaState() == KOOPA_SHELL)
 						{
 							pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
 						}
 						break;
 					case Collider::COLLISION_RIGHT:
 						FlipActorDirection();
-						if (m_ObjectState == Types::OS_DAMAGED)
+						if (GetKoopaState() == KOOPA_SHELL)
 						{
 							pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
 						}
@@ -186,57 +150,64 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			case Types::OT_PLAYER:
 				switch (type) {
 				case Collider::COLLISION_TOP:
-					if (m_ObjectState != Types::OS_DAMAGED)
+					if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_DESTROY)
 					{
-						SetObjectState(Types::OS_DAMAGED);
-						GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
-						pPhysics->SetCurSpeed(0.f);
-						GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaShell"), TEXT("ShellIdle"));
-						CScoreManager::GetInstance()->IncreaseScore(200);
+						SetObjectState(Types::OS_DEAD);
+						GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaNormal"), TEXT("Destroy"));
 					}
 					else
 					{
-						if (pPhysics->GetCurSpeed() != 0.f)
+						if (m_KoopaState == KOOPA_IDLE)
 						{
+							m_KoopaState = KOOPA_SHELL;
+							m_ObjectType = Types::OT_PICKABLE;
+							//SetObjectState(Types::OS_DAMAGED);
+							GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
 							pPhysics->SetCurSpeed(0.f);
 							GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaShell"), TEXT("ShellIdle"));
 							CScoreManager::GetInstance()->IncreaseScore(200);
 						}
 						else
 						{
-							if (pOther->GetObjectPosition().x < GetObjectPosition().x)
+							if (pPhysics->GetCurSpeed() != 0.f)
 							{
-
-								SetObjectPosition(pOther->GetObjectPosition().x + 70, GetObjectPosition().y);
-								pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
-								m_Direction = Types::DIR_RIGHT;
+								pPhysics->SetCurSpeed(0.f);
+								SetActorAct(Types::ACT_IDLE);
+								GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaShell"), TEXT("ShellIdle"));
+								CScoreManager::GetInstance()->IncreaseScore(200);
 							}
 							else
 							{
-								SetObjectPosition(pOther->GetObjectPosition().x - 70, GetObjectPosition().y);
-								pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
-								m_Direction = Types::DIR_LEFT;
-
+								SetActorAct(Types::ACT_ATTACK);
+								if (pOther->GetObjectPosition().x < GetObjectPosition().x)
+								{
+									SetObjectPosition(pOther->GetObjectPosition().x + 70, GetObjectPosition().y);
+									pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
+									m_Direction = Types::DIR_RIGHT;
+								}
+								else
+								{
+									SetObjectPosition(pOther->GetObjectPosition().x - 70, GetObjectPosition().y);
+									pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
+									m_Direction = Types::DIR_LEFT;
+								}
 							}
 						}
 					}
 					break;
 				case Collider::COLLISION_RIGHT:
-					if (GetObjectState() == Types::OS_DAMAGED)
+					if (GetKoopaState() == KOOPA_SHELL)
 					{
 						if (pPhysics->GetCurSpeed() == 0.f)
 						{
-							if (pPhysics->GetCurSpeed() == 0.f)
-							{
-								SetObjectPosition(pOther->GetObjectPosition().x - 70, GetObjectPosition().y);
-								pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
-								m_Direction = Types::DIR_LEFT;
-							}
+							SetObjectPosition(pOther->GetObjectPosition().x - 70, GetObjectPosition().y);
+							pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
+							m_Direction = Types::DIR_LEFT;
 						}
 					}
 					break;
 				case Collider::COLLISION_LEFT:
-					if (GetObjectState() == Types::OS_DAMAGED)
+					if (GetKoopaState() == KOOPA_SHELL)
 					{
 						if (pPhysics->GetCurSpeed() == 0.f)
 						{
@@ -244,13 +215,33 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 							pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
 							m_Direction = Types::DIR_RIGHT;
 						}
-
 					}
 					break;
-
 				}
 				break;
-
+			case Types::OT_PICKABLE:
+				if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
+				{
+					//puts("Dead");
+					SetObjectState(Types::OS_DEAD);
+					GetComponent<ColliderBox>().lock()->SetActive(false);
+					pPhysics->SetCurJumpForce(300.f);
+					pPhysics->SetGrounded(false);
+					CScoreManager::GetInstance()->IncreaseScore(200);
+				}
+				else
+				{
+					if (type == Collider::COLLISION_LEFT)
+					{
+						SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
+					}
+					else if (type == Collider::COLLISION_RIGHT)
+					{
+						SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
+					}
+					FlipActorDirection();
+				}
+				break;
 			}
 		}
 		//else
@@ -285,6 +276,8 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		return false;
 	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("KoopaGreenWalkLeft"),   true, TEXT("WalkLeft")))
 		return false;
+	if (!pRender->AddAnimation(0.25f, TEXT("KoopaNormal"), TEXT("EffectDestroyEnemy"), false, TEXT("Destroy"), false))
+		return false;
 	//Shell ป๓ลย animation
 	if (!pRender->AddAnimation(0.2f, TEXT("KoopaShell"), TEXT("KoopaGreenThrownRight"),   true, TEXT("ThrownRight")))
 		return false;
@@ -297,6 +290,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
+	m_KoopaState = KOOPA_IDLE;
 	
 	return true;
 }
@@ -304,6 +298,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 void CKoopa::Init()
 {
 	CEnemy::Init();
+	m_KoopaState = KOOPA_IDLE;
 	m_pOwnerObject.reset();
 	GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaNormal"), TEXT("WalkLeft"));
 }
@@ -338,12 +333,12 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 	auto pPhysics = GetComponent<PhysicsComponent>().lock();
 	auto pTransform = GetTransform().lock();
 	auto pRender = GetComponent<AnimationRender>().lock();
-	float fSpeed = 0.f;
+	//float fSpeed = 0.f;
 	if(m_ObjectState != Types::OS_DEAD)
 	{
-		if (m_ObjectState != Types::OS_DAMAGED)
+		if (m_KoopaState != KOOPA_SHELL)
 		{
-			fSpeed = pPhysics->GetSpeed();
+			float fSpeed = pPhysics->GetSpeed();
 
 			if (m_Direction == Types::DIR_LEFT)
 			{
@@ -359,7 +354,7 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 		}
 		else
 		{
-			fSpeed = pPhysics->GetMaxSpeed();
+			//fSpeed = pPhysics->GetMaxSpeed();
 			if (pPhysics->GetCurSpeed() != 0.f)
 			{
 				if (m_Direction == Types::DIR_LEFT)
@@ -410,4 +405,18 @@ void CKoopa::DeadProcess(double dDeltaTime)
 	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
 
+}
+
+void CKoopa::HandlingEvent(EVENT_TYPE type)
+{
+	switch (type)
+	{
+	case Types::EVENT_DAMAGED:
+
+		break;
+	case Types::EVENT_DESTROY:
+
+		break;
+	}
+	
 }

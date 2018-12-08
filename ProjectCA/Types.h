@@ -49,7 +49,10 @@ namespace Types {
 	enum ActorState { AS_IDLE, AS_MOVE, AS_ATTACK, AS_DAMAGED, AS_DEAD };
 #else
 	//Objectr의 상태를 나타내기 위한 열거체 (10.13)
-	enum ObjectState { OS_IDLE, OS_MOVE, OS_SITDOWN, OS_LOOKUP, OS_ATTACK, OS_DAMAGED, OS_PROTECTED, OS_DEAD };
+	enum ObjectState { OS_IDLE, OS_DAMAGED, OS_DEAD };
+
+	//Actor들의 동작에 대한 열거체
+	enum ActType { ACT_IDLE, ACT_MOVE, ACT_SITDOWN, ACT_LOOKUP, ACT_ATTACK, ACT_DESTROY };
 
 	//수직상의 이동 상태를 구분하기 위한 열거체 (10.13)
 	enum VerticalState { VS_IDLE, VS_JUMP, VS_FALL };
@@ -68,7 +71,7 @@ namespace Types {
 	enum SceneType { ST_TITLE, ST_GAME, ST_SELECT, ST_GAMEOVER, ST_LOADING };
 
 	//EventType 정의
-	enum EventType { ET_ATTACK, ET_DAMAGE };
+	enum EventType { EVENT_ATTACK, EVENT_DAMAGED, EVENT_DESTROY, EVENT_INACTIVE };
 
 	//Point구조체 정의
 	struct Point {
@@ -205,15 +208,17 @@ namespace Types {
 
 		ObjectType				m_ActorType;
 		ObjectState				m_ActorState;
+		ActType					m_ActType;
 		VerticalState			m_VerticalState;
 		HorizonalState			m_HorizonalState;
 		Direction					m_Direction;
 
 		ActorData(UINT iWidth, UINT iHeight, Point point, ObjectType type, ObjectState state,
-			VerticalState vertical, HorizonalState horizonal, Direction dir,
+			ActType act, VerticalState vertical, HorizonalState horizonal, Direction dir,
 			ObjectID id, const tstring& strName)
 			:ObjectData(iWidth, iHeight, point, strName, id, type, state),
-			m_ActorType(type), m_ActorState(state), m_VerticalState(vertical), m_HorizonalState(horizonal),
+			m_ActorType(type), m_ActorState(state), 
+			m_ActType(act), m_VerticalState(vertical), m_HorizonalState(horizonal),
 			m_Direction(dir)
 		{			
 		}
@@ -226,6 +231,7 @@ namespace Types {
 			m_strObjectName		= other.m_strObjectName;
 			m_ActorType			= other.m_ActorType;
 			m_ActorState			= other.m_ActorState;
+			m_ActType				= other.m_ActType;
 			m_VerticalState			= other.m_VerticalState;
 			m_HorizonalState		= other.m_HorizonalState;
 			m_Direction				= other.m_Direction;
@@ -245,7 +251,9 @@ typedef Types::ObjectData			OBJECT_DATA;
 typedef Types::ObjectID				OBJECT_ID;
 typedef Types::ObjectState			OBJECT_STATE;
 typedef Types::ActorData			ACTOR_DATA;
+typedef Types::ActType				ACT;
 typedef Types::VerticalState			VER_STATE;
 typedef Types::HorizonalState		HOR_STATE;
 typedef Types::Direction				DIRECTION;
 typedef Types::AnimationMotion	ANIM_MOTION;
+typedef Types::EventType			EVENT_TYPE;

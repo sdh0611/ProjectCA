@@ -147,7 +147,7 @@ bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				if (m_RexState != REX_DAMAGED)
 				{
 					m_RexState = REX_DAMAGED;
-					SetObjectHeight(GetObjectHeight() * 0.5f);
+					GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetObjectHeight() * 0.5f);
 					GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("RexDamaged"));
 				}
 				else

@@ -340,7 +340,7 @@ bool CGameScene::BuildWorld()
 		if (!CreateLayer(TEXT("Enemy"), 4))
 			return false;
 
-		std::shared_ptr<CEnemy> /*pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 250.f, 250.f, Types::OT_ENEMY,
+		std::shared_ptr<CEnemy> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 250.f, 250.f, Types::OT_ENEMY,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
@@ -356,36 +356,36 @@ bool CGameScene::BuildWorld()
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 150.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 150.f, 250.f, Types::OT_ENEMY,
+		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		//if (pEnemy == nullptr)
+		//	return false;
+		//m_ObjectPtrList.emplace_back(pEnemy);
+		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 300.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 300.f, 250.f, Types::OT_ENEMY,
+		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		//if (pEnemy == nullptr)
+		//	return false;
+		//m_ObjectPtrList.emplace_back(pEnemy);
+		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, -100.f, 450.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-*/
+		//pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, -100.f, 450.f, Types::OT_ENEMY,
+		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		//if (pEnemy == nullptr)
+		//	return false;
+		//m_ObjectPtrList.emplace_back(pEnemy);
+		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-		pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 100.f, 450.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+		//pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 100.f, 450.f, Types::OT_ENEMY,
+		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
+		//if (pEnemy == nullptr)
+		//	return false;
+		//m_ObjectPtrList.emplace_back(pEnemy);
+		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 	}
 
 	//Prob »ý¼º

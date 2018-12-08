@@ -54,7 +54,8 @@ void PlayerInputComponent::KeyProcess()
 
 	if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 	{
-		pOwner->SetObjectState(Types::OS_IDLE);
+		//pOwner->SetObjectState(Types::OS_IDLE);
+		pOwner->SetActorAct(Types::ACT_IDLE);
 	}
 
 	//수평상의 움직임에 대한 입력
@@ -93,8 +94,8 @@ void PlayerInputComponent::KeyProcess()
 	//공격키
 	if (m_pInputManager->IsKeyDown(TEXT("ATTACK")))
 	{
-		if(pOwner->GetObjectState() != Types::OS_SITDOWN)
-			pOwner->SetObjectState(Types::OS_ATTACK);
+		if(pOwner->GetActorAct() != Types::ACT_SITDOWN)
+			pOwner->SetActorAct(Types::ACT_ATTACK);
 	}
 
 	//위, 아래키에 대한 입력
@@ -102,7 +103,7 @@ void PlayerInputComponent::KeyProcess()
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			pOwner->SetObjectState(Types::OS_SITDOWN);
+			pOwner->SetActorAct(Types::ACT_SITDOWN);
 			pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 
@@ -111,7 +112,7 @@ void PlayerInputComponent::KeyProcess()
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			pOwner->SetObjectState(Types::OS_LOOKUP);
+			pOwner->SetActorAct(Types::ACT_LOOKUP);
 			pOwner->SetActorHorizonalState(Types::HS_IDLE);
 		}
 
@@ -124,12 +125,12 @@ void PlayerInputComponent::KeyProcess()
 		{
 			pOwner->SetActorVerticalState(Types::VS_JUMP);
 		}
-
 	}
 	else if (m_pInputManager->IsKeyDown(TEXT("SPIN_JUMP")))
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
+			pOwner->SetActorAct(Types::ACT_DESTROY);
 			pOwner->SetActorVerticalState(Types::VS_JUMP);
 		}
 	}

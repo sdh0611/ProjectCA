@@ -63,10 +63,10 @@ bool CBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 				}
 			}
 				break;
-			case Types::OT_ENEMY:
+			case Types::OT_PICKABLE:
 				if (!m_bHiding)//Hiding상태가 아닐 경우에만 반응
 				{
-					if (pOther->GetObjectState() == Types::OS_DAMAGED && !pOther->IsSubordinate())
+					if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
 					{
 						if (type != Collider::COLLISION_TOP)
 						{

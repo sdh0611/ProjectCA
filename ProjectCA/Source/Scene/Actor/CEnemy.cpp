@@ -35,10 +35,12 @@ void CEnemy::Init()
 	//m_actorPoint = m_spawnPoint;
 	for (auto& it : m_ComponentTable)
 		it.second->Init();
-	
-	m_bActive = true;
-	m_ObjectState = Types::OS_IDLE;
-	m_Direction = Types::DIR_LEFT;
+
+	m_bActive		= true;
+	m_ActType		= Types::ACT_IDLE;
+	m_ObjectType	= Types::OT_ENEMY;
+	m_ObjectState	= Types::OS_IDLE;
+	m_Direction		= Types::DIR_LEFT;
 	
 }
 

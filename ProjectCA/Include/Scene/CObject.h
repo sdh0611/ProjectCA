@@ -80,7 +80,7 @@ public:
 
 
 protected:
-	virtual void HandlingEvent() = 0;
+	virtual void HandlingEvent(EVENT_TYPE type) { }
 
 
 protected:

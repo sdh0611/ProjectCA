@@ -45,6 +45,7 @@ public:
 
 
 public:
+	void SetActorAct(ACT act);
 	void SetActorDirection(DIRECTION dir);
 	void SetActorVerticalState(VER_STATE vertical);
 	void SetActorHorizonalState(HOR_STATE horizonal);
@@ -52,6 +53,7 @@ public:
 
 
 public:
+	ACT						GetActorAct() const;
 	VER_STATE				GetActorVerticalState() const;
 	HOR_STATE				GetActorHorizonalState() const;
 	DIRECTION				GetActorDirection() const;
@@ -69,6 +71,7 @@ private:
 
 
 protected:
+	ACT							m_ActType;
 	VER_STATE					m_ActorCurVerticalState;
 	HOR_STATE					m_ActorHorizonalState;
 	DIRECTION					m_Direction;

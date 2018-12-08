@@ -56,7 +56,7 @@ public:
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
 		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, state, 
-			vertical, horizonal, dir, m_iLastObjectID++,strTag);
+			Types::ACT_IDLE, vertical, horizonal, dir, m_iLastObjectID++,strTag);
 
 		if (!pActor->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -72,7 +72,24 @@ public:
 
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
-		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, Types::OS_IDLE,
+		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, Types::OS_IDLE, Types::ACT_IDLE,
+			Types::VS_IDLE, Types::HS_IDLE, dir, m_iLastObjectID++, strTag);
+
+		if (!pActor->PostInit(data, pScene))
+			return std::shared_ptr<T>();
+
+
+		return pActor;
+	}
+
+	//오버로딩버전
+	template<typename T>
+	std::shared_ptr<T> CreateActor(UINT iWidth, UINT iHeight, float fx, float fy, OBJECT_TYPE type, 
+		ACT act, DIRECTION dir, const TSTRING& strTag, CGameScene* pScene) {
+
+		std::shared_ptr<T> pActor = std::make_shared<T>();
+
+		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, Types::OS_IDLE, act,
 			Types::VS_IDLE, Types::HS_IDLE, dir, m_iLastObjectID++, strTag);
 
 		if (!pActor->PostInit(data, pScene))

@@ -72,6 +72,18 @@ void ColliderBox::Update(double dDeltaTime)
 
 void ColliderBox::LateUpdate()
 {
+	if (m_bActive)
+	{
+		float fPivotWidthRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
+		float fPivotHeightRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
+
+		m_CurColliderPoint = m_pOwner->GetObjectPosition();
+
+		m_ColliderRect.left = m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
+		m_ColliderRect.top = m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
+		m_ColliderRect.right = m_CurColliderPoint.x + m_fCurWidth * fPivotWidthRatio;
+		m_ColliderRect.bottom = m_CurColliderPoint.y;
+	}
 }
 
 void ColliderBox::DrawCollider(const HDC & hDC, const POSITION& position)

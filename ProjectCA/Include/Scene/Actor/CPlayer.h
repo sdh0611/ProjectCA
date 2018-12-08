@@ -58,10 +58,11 @@ private:
 	void			ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxSpeed, float fCurJumpForce);
 	void			PopStoredPickup();
 	virtual void	ActorBehavior(double dDeltaTime) override;
+	virtual void HandlingEvent(EVENT_TYPE type) override;
 
 
 private:
-	bool							m_bProtected;
+	//bool							m_bProtected;
 	bool							m_bInterrupt;
 	bool							m_bTransforming;
 	double						m_dTimeElapsed;
