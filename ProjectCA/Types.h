@@ -49,7 +49,7 @@ namespace Types {
 	enum ActorState { AS_IDLE, AS_MOVE, AS_ATTACK, AS_DAMAGED, AS_DEAD };
 #else
 	//Objectr의 상태를 나타내기 위한 열거체 (10.13)
-	enum ObjectState { OS_IDLE, OS_DAMAGED, OS_DEAD };
+	enum ObjectState { OS_IDLE, OS_DAMAGED, OS_DEAD, OS_DESTROYED };
 
 	//Actor들의 동작에 대한 열거체
 	enum ActType { ACT_IDLE, ACT_MOVE, ACT_SITDOWN, ACT_LOOKUP, ACT_ATTACK, ACT_DESTROY };
@@ -71,7 +71,7 @@ namespace Types {
 	enum SceneType { ST_TITLE, ST_GAME, ST_SELECT, ST_GAMEOVER, ST_LOADING };
 
 	//EventType 정의
-	enum EventType { EVENT_ATTACK, EVENT_DAMAGED, EVENT_DESTROY, EVENT_INACTIVE };
+	enum EventType { EVENT_ATTACK, EVENT_DAMAGED, EVENT_ACTIVE, EVENT_INACTIVE, EVENT_DESTROY, EVENT_DEAD };
 
 	//Point구조체 정의
 	struct Point {

@@ -91,13 +91,6 @@ void PlayerInputComponent::KeyProcess()
 		pOwner->SetActorHorizonalState(Types::HS_IDLE);
 	}
 
-	//공격키
-	if (m_pInputManager->IsKeyDown(TEXT("ATTACK")))
-	{
-		if(pOwner->GetActorAct() != Types::ACT_SITDOWN)
-			pOwner->SetActorAct(Types::ACT_ATTACK);
-	}
-
 	//위, 아래키에 대한 입력
 	if (m_pInputManager->IsKeyDown(TEXT("DOWN")))
 	{
@@ -130,7 +123,10 @@ void PlayerInputComponent::KeyProcess()
 	{
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
-			pOwner->SetActorAct(Types::ACT_DESTROY);
+			if (!static_cast<CPlayer*>(m_pOwner)->IsPickingObject())
+			{
+				pOwner->SetActorAct(Types::ACT_DESTROY);
+			}
 			pOwner->SetActorVerticalState(Types::VS_JUMP);
 		}
 	}
@@ -141,6 +137,13 @@ void PlayerInputComponent::KeyProcess()
 			pOwner->SetActorVerticalState(Types::VS_FALL);
 		}
 
+	}
+
+	//공격키
+	if (m_pInputManager->IsKeyDown(TEXT("ATTACK")))
+	{
+		if (pOwner->GetActorAct() != Types::ACT_SITDOWN && pOwner->GetActorAct() != Types::ACT_DESTROY)
+			pOwner->SetActorAct(Types::ACT_ATTACK);
 	}
 
 }

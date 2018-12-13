@@ -1,7 +1,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CFireball.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
-#include "..\..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
@@ -49,7 +49,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 		switch (pOtherActor->GetObjectType())
 		{
 		case Types::OT_BLOCK:
-			if (!static_cast<CBlock*>(pOther)->IsHiding())
+			if (!static_cast<CRandomBlock*>(pOther)->IsHiding())
 			{
 				switch (type)
 				{
@@ -82,6 +82,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 			}
 			break;
 		case Types::OT_ENEMY:
+		case Types::OT_PICKABLE:
 			SetFireballInactive();
 			//SetActive(false);
 			break;
@@ -164,10 +165,13 @@ void CFireball::LateUpdate()
 }
 void CFireball::SetFireballActive()
 {
+	SetActive(true);
 	m_Direction = m_pOwnerActor->GetActorDirection();
 	
 	auto pPhysics = GetComponent<PhysicsComponent>().lock();
 	float fWalkSpeed = pPhysics->GetSpeed();
+
+	pPhysics->SetCurJumpForce(0.f);
 
 	if (m_Direction == Types::DIR_LEFT)
 	{
@@ -178,13 +182,12 @@ void CFireball::SetFireballActive()
 		pPhysics->SetCurSpeed(fWalkSpeed);
 	}
 	GetTransform().lock()->SetPosition(m_pOwnerActor->GetObjectPosition().x, m_pOwnerActor->GetObjectPosition().y - m_pOwnerActor->GetObjectHeight() / 2.f);
-	SetActive(true);
 }
 
 void CFireball::SetFireballInactive()
 {
 	static_cast<CPlayer*>(m_pOwnerActor)->IncreaseAvailableFireballCount();
-	GetComponent<ColliderBox>().lock()->SetActive(false);
+	//GetComponent<ColliderBox>().lock()->SetActive(false);
 	SetActive(false);
 }
 

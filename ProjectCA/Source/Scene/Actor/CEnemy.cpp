@@ -27,6 +27,9 @@ CEnemy::~CEnemy()
 
 bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 {
+	m_fDamage			= 0.f;
+	m_dTimeElapsed	= 0.f;
+
 	return CActor::PostInit(data ,pScene);
 }
 
@@ -36,12 +39,12 @@ void CEnemy::Init()
 	for (auto& it : m_ComponentTable)
 		it.second->Init();
 
-	m_bActive		= true;
-	m_ActType		= Types::ACT_IDLE;
-	m_ObjectType	= Types::OT_ENEMY;
-	m_ObjectState	= Types::OS_IDLE;
-	m_Direction		= Types::DIR_LEFT;
-	
+	m_bActive			= true;
+	m_ActType			= Types::ACT_IDLE;
+	m_ObjectType		= Types::OT_ENEMY;
+	m_ObjectState		= Types::OS_IDLE;
+	m_Direction			= Types::DIR_LEFT;
+	m_dTimeElapsed	= 0.f;
 }
 
 void CEnemy::Update(double fDeltaTime)

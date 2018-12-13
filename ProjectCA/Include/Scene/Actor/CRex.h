@@ -25,6 +25,11 @@ public:
 private:
 	virtual void ActorBehavior(double dDeltaTime) override;
 	virtual void DeadProcess(double dDeltaTime) override;
+	virtual void HandlingEvent(EVENT_TYPE type) override;
+
+
+private:
+	RexState GetRexState() const;
 
 
 private:

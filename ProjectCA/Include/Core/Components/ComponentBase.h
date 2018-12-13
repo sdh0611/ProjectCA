@@ -6,7 +6,6 @@
 */
 
 #include "..\..\..\stdafx.h"
-#include "Message\ComponentMessage.h"
 
 class CObject;
 
@@ -36,5 +35,6 @@ protected:
 	bool					m_bActive;
 	TSTRING				m_strComponentTag;
 	CObject*				m_pOwner;
+
 
 };

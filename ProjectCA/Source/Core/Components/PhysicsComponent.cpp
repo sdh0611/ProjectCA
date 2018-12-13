@@ -155,17 +155,17 @@ bool PhysicsComponent::IsStatic() const
 
 float PhysicsComponent::GetCurSpeed() const
 {
-	return m_fXSpeed;
+	return m_bActive ? m_fXSpeed : 0.f;
 }
 
 float PhysicsComponent::GetMaxSpeed() const
 {
-	return m_fMaxSpeed;
+	return m_bActive ? m_fMaxSpeed : 0.f;
 }
 
 float PhysicsComponent::GetSpeed() const
 {
-	return m_fSpeed;
+	return m_bActive? m_fSpeed : 0.f;
 }
 
 float PhysicsComponent::GetMass() const
@@ -175,17 +175,17 @@ float PhysicsComponent::GetMass() const
 
 float PhysicsComponent::GetCurJumpForce() const
 {
-	return m_fYSpeed;
+	return m_bActive ? m_fYSpeed : 0.f;
 }
 
 float PhysicsComponent::GetGravity() const
 {
-	return m_fGravity;
+	return m_bActive ? m_fGravity : 0.f;
 }
 
 float PhysicsComponent::GetJumpForce() const
 {	
-	return m_fJumpForce;
+	return m_bActive ? m_fJumpForce : 0.f;
 }
 
 void PhysicsComponent::Gravity(double dDeltaTime)

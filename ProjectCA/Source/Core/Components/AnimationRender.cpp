@@ -211,6 +211,11 @@ bool AnimationRender::ChangeAnimationTable(const TSTRING & strAnimTableName, con
 	return true;
 }
 
+bool AnimationRender::IsCurAnimationEnd() const
+{
+	return m_pCurAnimation.lock()->IsReadyToChange();
+}
+
 const TSTRING& AnimationRender::GetAnimTag() const
 {
 	return m_pCurAnimation.lock()->GetAnimTag();

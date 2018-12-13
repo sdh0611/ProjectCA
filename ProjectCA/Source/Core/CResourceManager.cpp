@@ -424,6 +424,11 @@ bool CResourceManager::LoadEnemySpriteInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Goomba/goomba_walk_left.bmp"), TEXT("GoombaWalkLeft")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Goomba/goomba_turnover_right.bmp"), TEXT("GoombaTurnOverRight")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Goomba/goomba_turnover_left.bmp"), TEXT("GoombaTurnOverLeft")))
+		return false;
 
 	//Rex
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Rex/rex_move_right.bmp"), TEXT("RexMoveRight")))
@@ -937,6 +942,11 @@ bool CResourceManager::LoadBlockImageInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_random_dead_image.bmp"), TEXT("RandomBlockDead")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_spin_idle.bmp"), TEXT("SpinBlockIdle")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Block/block_spin_spining.bmp"), TEXT("SpinBlockSpining")))
+		return false;
 
 
 	return true;

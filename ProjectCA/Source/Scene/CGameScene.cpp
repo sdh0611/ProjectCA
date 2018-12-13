@@ -18,7 +18,8 @@
 #include "..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\Include\Scene\Actor\CProb.h"
 #include "..\..\Include\Scene\Actor\CGround.h"
-#include "..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\Include\Scene\Actor\CSpinBlock.h"
+#include "..\..\Include\Scene\Actor\CRandomBlock.h"
 #include "..\..\Include\Scene\Actor\CPipe.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
@@ -348,12 +349,12 @@ bool CGameScene::BuildWorld()
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 200.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 200.f, 250.f, Types::OT_ENEMY,
+		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		//if (pEnemy == nullptr)
+		//	return false;
+		//m_ObjectPtrList.emplace_back(pEnemy);
+		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
 		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 150.f, 250.f, Types::OT_ENEMY,
@@ -372,7 +373,7 @@ bool CGameScene::BuildWorld()
 		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		//pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, -100.f, 450.f, Types::OT_ENEMY,
+		//pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 450.f, Types::OT_ENEMY,
 		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
 		//if (pEnemy == nullptr)
 		//	return false;
@@ -380,12 +381,12 @@ bool CGameScene::BuildWorld()
 		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		//pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 100.f, 450.f, Types::OT_ENEMY,
-		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
-		//if (pEnemy == nullptr)
-		//	return false;
-		//m_ObjectPtrList.emplace_back(pEnemy);
-		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+		pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 100.f, 450.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
+		if (pEnemy == nullptr)
+			return false;
+		m_ObjectPtrList.emplace_back(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 	}
 
 	//Prob 생성
@@ -404,53 +405,60 @@ bool CGameScene::BuildWorld()
 	{
 		if (!CreateLayer(TEXT("Block"), 9))
 			return false;
+		{
+			auto pBlock = m_pObjectManager->CreateObject<CRandomBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 400.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			//Block에 저장시켜놓을 Pickup 생성
+			std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH, SPRITE_HEIGHT,
+				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN,
+				Types::DIR_RIGHT, TEXT("Mushroom"), this);
+			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+			m_ObjectPtrList.emplace_back(pPickup);
+			if (pPickup == nullptr)
+				return false;
+			//Pickup set
+			pBlock->SetStoredPickup(pPickup);
+			m_ObjectPtrList.push_back(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
 
-		auto pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 400.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+
+			pBlock = m_pObjectManager->CreateObject<CRandomBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 460.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			//Block에 저장시켜놓을 Pickup 생성
+			pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
+				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+			m_ObjectPtrList.emplace_back(pPickup);
+			if (pPickup == nullptr)
+				return false;
+			//Pickup set
+			pBlock->SetStoredPickup(pPickup);
+			m_ObjectPtrList.push_back(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CRandomBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 520.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			//Block에 저장시켜놓을 Pickup 생성
+			pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
+				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+			m_ObjectPtrList.emplace_back(pPickup);
+			if (pPickup == nullptr)
+				return false;
+			//Pickup set
+			pBlock->SetStoredPickup(pPickup);
+			pBlock->SetHide();
+			m_ObjectPtrList.push_back(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+		}
+
+		auto pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 580.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
 		if (pBlock == nullptr)
 			return false;
-		//Block에 저장시켜놓을 Pickup 생성
-		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH, SPRITE_HEIGHT,
-			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN,
-			Types::DIR_RIGHT, TEXT("Mushroom"), this);
-		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-		m_ObjectPtrList.emplace_back(pPickup);
-		if (pPickup == nullptr)
-			return false;
-		//Pickup set
-		pBlock->SetStoredPickup(pPickup);
-		m_ObjectPtrList.push_back(pBlock);
-		FindLayer(TEXT("Block"))->AddActor(pBlock);
-
-
-		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 460.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
-		if (pBlock == nullptr)
-			return false;
-		//Block에 저장시켜놓을 Pickup 생성
-		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
-			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
-		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-		m_ObjectPtrList.emplace_back(pPickup);
-		if (pPickup == nullptr)
-			return false;
-		//Pickup set
-		pBlock->SetStoredPickup(pPickup);
-		m_ObjectPtrList.push_back(pBlock);
-		FindLayer(TEXT("Block"))->AddActor(pBlock);
-
-
-		pBlock = m_pObjectManager->CreateObject<CBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 520.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
-		if (pBlock == nullptr)
-			return false;
-		//Block에 저장시켜놓을 Pickup 생성
-		pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
-			pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
-		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-		m_ObjectPtrList.emplace_back(pPickup);
-		if (pPickup == nullptr)
-			return false;
-		//Pickup set
-		pBlock->SetStoredPickup(pPickup);
-		pBlock->SetHide();
 		m_ObjectPtrList.push_back(pBlock);
 		FindLayer(TEXT("Block"))->AddActor(pBlock);
 	}

@@ -103,6 +103,12 @@
     <Filter Include="소스 파일\Scene\World">
       <UniqueIdentifier>{8e0706e5-88c7-406c-a08e-dd855a89604b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene\Actors\Block">
+      <UniqueIdentifier>{0941ec00-b5b6-4306-a0d3-05ce35e3dfb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Scene\Actors\Block">
+      <UniqueIdentifier>{f32c4193-e287-4e35-bfb3-d0f375ad9bf2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -258,9 +264,6 @@
     <ClCompile Include="Source\Scene\Actor\CGoomba.cpp">
       <Filter>소스 파일\Scene\Actors\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Actor\CBlock.cpp">
-      <Filter>소스 파일\Scene\Actors\Prob</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CCoin.cpp">
       <Filter>소스 파일\Scene\Actors\Pickup</Filter>
     </ClCompile>
@@ -293,6 +296,21 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CRex.cpp">
       <Filter>소스 파일\Scene\Actors\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Graphic\CEffect.cpp">
+      <Filter>소스 파일\Core\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CRandomBlock.cpp">
+      <Filter>소스 파일\Scene\Actors\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CSpinBlock.cpp">
+      <Filter>소스 파일\Scene\Actors\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CBlock.cpp">
+      <Filter>소스 파일\Scene\Actors\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CCoinBlock.cpp">
+      <Filter>소스 파일\Scene\Actors\Block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -455,9 +473,6 @@
     <ClInclude Include="Include\Scene\Actor\CGoomba.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Actor\CBlock.h">
-      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CCoin.h">
       <Filter>헤더 파일\Scene\Actors\Pickup</Filter>
     </ClInclude>
@@ -490,6 +505,24 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CRex.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Graphic\CEffect.h">
+      <Filter>헤더 파일\Core\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CSpinBlock.h">
+      <Filter>헤더 파일\Scene\Actors\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CRandomBlock.h">
+      <Filter>헤더 파일\Scene\Actors\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CBlock.h">
+      <Filter>헤더 파일\Scene\Actors\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CCoinBlock.h">
+      <Filter>헤더 파일\Scene\Actors\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CPickupBlock.h">
+      <Filter>헤더 파일\Scene\Actors\Block</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

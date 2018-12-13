@@ -6,7 +6,7 @@
 #include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
-#include "..\..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 //#include "..\..\..\Include\Core\Components\HPComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
@@ -72,43 +72,15 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		case Types::OT_ENEMY:
 			if (m_ObjectState != Types::OS_DAMAGED)
 			{
-				if (pOther->GetObjectState() == Types::OS_DAMAGED)
+				if (type == Collider::COLLISION_LEFT)
 				{
-					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
-					{
-						SetObjectState(Types::OS_DEAD);
-						GetComponent<ColliderBox>().lock()->SetActive(false);
-						pPhysics->SetCurJumpForce(300.f);
-						pPhysics->SetGrounded(false);
-						CScoreManager::GetInstance()->IncreaseScore(200);
-					}
-					else
-					{
-						if (type == Collider::COLLISION_LEFT)
-						{
-							SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
-						}
-						else if (type == Collider::COLLISION_RIGHT)
-						{
-							SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
-						}
-						FlipActorDirection();
-					}
-
+					SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
 				}
-				else  //otherActor != Types::OS_DAMAGED
+				else if (type == Collider::COLLISION_RIGHT)
 				{
-					if (type == Collider::COLLISION_LEFT)
-					{
-						SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
-					}
-					else if (type == Collider::COLLISION_RIGHT)
-					{
-						SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
-					}
-					FlipActorDirection();
+					SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 				}
-
+				FlipActorDirection();
 			}
 			break;
 		case Types::OT_PROB:
@@ -119,7 +91,11 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				break;
 			case Collider::COLLISION_LEFT:
+				SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
+				FlipActorDirection();
+				break;
 			case Collider::COLLISION_RIGHT:
+				SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 				FlipActorDirection();
 				break;
 			}
@@ -135,7 +111,7 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			break;
 		case Types::OT_BLOCK:
 		{
-			auto pBlock = static_cast<CBlock*>(pOther);
+			auto pBlock = static_cast<CRandomBlock*>(pOther);
 			if (!pBlock->IsHiding())
 			{
 				switch (type) {
@@ -151,18 +127,12 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 					break;
 				case Collider::COLLISION_LEFT:
+					SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
 					FlipActorDirection();
-					if (m_ObjectState == Types::OS_DAMAGED)
-					{
-						pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
-					}
 					break;
 				case Collider::COLLISION_RIGHT:
+					SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 					FlipActorDirection();
-					if (m_ObjectState == Types::OS_DAMAGED)
-					{
-						pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
-					}
 					break;
 				}
 			}
@@ -171,24 +141,40 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		case Types::OT_PLAYER:
 			switch (type) {
 			case Collider::COLLISION_TOP:
-				SetObjectState(Types::OS_DEAD);
-				GetComponent<ColliderBox>().lock()->SetActive(false);
-				pPhysics->SetCurSpeed(0.f);
-				pPhysics->SetCurJumpForce(300.f);
-				pPhysics->SetGrounded(false);
-				CScoreManager::GetInstance()->IncreaseScore(200);
+				if (static_cast<CActor*>(pOther)->GetActorAct() != Types::ACT_DESTROY)
+				{
+					HandlingEvent(Types::EVENT_DEAD);
+				}
+				else
+				{
+					HandlingEvent(Types::EVENT_DESTROY);
+				}
 				break;
 			}
 			break;
 			case Types::OT_BULLET:
-				SetObjectState(Types::OS_DEAD);
-				GetComponent<ColliderBox>().lock()->SetActive(false);
-				pPhysics->SetCurSpeed(0.f);
-				pPhysics->SetCurJumpForce(300.f);
-				pPhysics->SetGrounded(false);
-				CScoreManager::GetInstance()->IncreaseScore(200);
+				HandlingEvent(Types::EVENT_DEAD);
 				break;
+			case Types::OT_PICKABLE:
+				if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
+				{
+					HandlingEvent(Types::EVENT_DEAD);
+				}
+				else
+				{
+					if (type == Collider::COLLISION_LEFT)
+					{
+						SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
+					}
+					else if (type == Collider::COLLISION_RIGHT)
+					{
+						SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
+					}
+					FlipActorDirection();
+				}
+				break; 
 		}
+		
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
@@ -208,6 +194,12 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkRight"),   true, TEXT("JumpRight")))
 		return false;
 	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("GoombaWalkLeft"),   true, TEXT("JumpLeft")))
+		return false;
+	if (!pRender->AddAnimation(0.25f, TEXT("GoombaNormal"), TEXT("EffectDestroyEnemy"), false,TEXT("Destroy"), false))
+		return false;
+	if (!pRender->AddAnimation(0.25f, TEXT("GoombaDamaged"), TEXT("GoombaTurnOverLeft"), true, TEXT("TurnOverLeft")))
+		return false;
+	if (!pRender->AddAnimation(0.25f, TEXT("GoombaDamaged"), TEXT("GoombaTurnOverRight"), true, TEXT("TurnOverRight")))
 		return false;
 	pRender->SetExpansionRatio(2.5f);
 	pRender->SetPivotRatio(0.5f, 1.f);
@@ -240,9 +232,59 @@ void CGoomba::ActorBehavior(double dDeltaTime)
 {
 	auto pPhysics = GetComponent<PhysicsComponent>().lock();
 	auto pTransform = GetTransform().lock();
-	if (m_ObjectState != Types::OS_DEAD)
+	
+	switch (m_ObjectState)
 	{
-		if (m_ObjectState != Types::OS_DAMAGED)
+	case Types::OS_DEAD:
+		{
+			auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
+			POSITION position = pTransform->GetScreenPosition();
+			if (position.y > pCamera->GetCameraHeight() + m_iObjectHeight)
+			{
+				m_bActive = false;
+				return;
+			}
+			if (position.x < 0.f - m_iObjectWidth || position.x > pCamera->GetCameraWidth() + m_iObjectWidth)
+			{
+				m_bActive = false;
+				return;
+			}
+		}
+		break;
+	case Types::OS_DESTROYED:
+		if (GetComponent<AnimationRender>().lock()->IsCurAnimationEnd())
+		{
+			puts("Inactive");
+			SetActive(false);
+		}
+		break;
+	//case Types::OS_DAMAGED:
+	//	if (m_Direction == Types::DIR_LEFT)
+	//	{
+	//		if (pPhysics->GetCurSpeed() < 0.f)
+	//		{
+	//			pPhysics->AddForceX(50.f);
+	//			if (pPhysics->GetCurSpeed() > 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(0.f);
+	//			}
+	//		}
+	//		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("TurnOverLeft"));
+	//	}
+	//	else if (m_Direction == Types::DIR_RIGHT)
+	//	{
+	//		if (pPhysics->GetCurSpeed() > 0.f)
+	//		{
+	//			pPhysics->AddForceX(-50.f);
+	//			if (pPhysics->GetCurSpeed() < 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(0.f);
+	//			}
+	//		}
+	//		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("TurnOverRight"));
+	//	}
+	//	break;
+	default:
 		{
 			float fWalkSpeed = pPhysics->GetSpeed();
 
@@ -258,29 +300,42 @@ void CGoomba::ActorBehavior(double dDeltaTime)
 			}
 
 		}
-
-	}
-	else
-	{
-		auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
-		POSITION position = pTransform->GetScreenPosition();
-		if (position.y > pCamera->GetCameraHeight() + m_iObjectHeight)
-		{
-			m_bActive = false;
-			return;
-		}
-		if (position.x < 0.f - m_iObjectWidth || position.x > pCamera->GetCameraWidth() + m_iObjectWidth)
-		{
-			m_bActive = false;
-			return;
-		}
-
+		break;
 	}
 
 	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
-
 }
 
 void CGoomba::DeadProcess(double dDeltaTime)
 {
+}
+
+void CGoomba::HandlingEvent(EVENT_TYPE type)
+{
+	auto pPhysics = GetComponent<PhysicsComponent>().lock();
+	switch (type)
+	{
+	case Types::EVENT_DAMAGED:
+		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("GoombaDamaged"));
+		pPhysics->SetCurSpeed(0.f);
+		SetObjectState(Types::OS_DAMAGED);
+		m_ObjectType = Types::OT_PICKABLE;
+		break;
+	case Types::EVENT_DEAD:
+		SetObjectState(Types::OS_DEAD);
+		GetComponent<ColliderBox>().lock()->SetActive(false);
+		pPhysics->SetCurSpeed(0.f);
+		pPhysics->SetCurJumpForce(300.f);
+		pPhysics->SetGrounded(false);
+		CScoreManager::GetInstance()->IncreaseScore(200);
+		break;
+	case Types::EVENT_DESTROY:
+		SetObjectState(Types::OS_DESTROYED);
+		pPhysics->SetActive(false);
+		GetComponent<ColliderBox>().lock()->SetActive(false);
+		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("GoombaNormal"), TEXT("Destroy"));
+		CScoreManager::GetInstance()->IncreaseScore(200);
+		break;
+	}
+
 }

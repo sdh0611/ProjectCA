@@ -11,12 +11,13 @@ class CPlayer : public CActor {
 
 	friend void CFireball::SetFireballInactive();
 
-	enum PlayerState {
-		PS_SMALL, PS_BIG, PS_FLOWER
-	};
-
 	enum PlayerEvent {
 		PE_IDLE, PE_PIPE, PE_DAMAGED, PE_TRANSFORM
+	};
+
+public:
+	enum PlayerState {
+		PS_SMALL, PS_BIG, PS_FLOWER
 	};
 
 public:
@@ -47,6 +48,7 @@ public:
 	PlayerState	GetPlayerState();
 	bool			IsDead();
 	bool			IsRequestInterrupt();
+	bool			IsPickingObject();
 	std::weak_ptr<CObject> GetStoredPickup();
 
 

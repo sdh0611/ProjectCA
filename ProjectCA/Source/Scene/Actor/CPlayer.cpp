@@ -2,7 +2,7 @@
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\..\Include\Scene\Actor\CPickup.h"
-#include "..\..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"
@@ -91,7 +91,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			switch (type) {
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
-				pPhysics->SetCurJumpForce(0.f);
+				//pPhysics->SetCurJumpForce(0.f);
 				SetActorVerticalState(Types::VS_IDLE);
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				break;
@@ -113,7 +113,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			break;
 		case Types::OT_BLOCK:
 		{
-			auto pBlock = static_cast<CBlock*>(pOther);
+			auto pBlock = static_cast<CRandomBlock*>(pOther);
 
 			if (pBlock->IsHiding())
 			{
@@ -136,7 +136,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 					break;
 				case Collider::COLLISION_BOT:
 					pPhysics->SetGrounded(true);
-					pPhysics->SetCurJumpForce(0.f);
+					//pPhysics->SetCurJumpForce(0.f);
 					SetActorVerticalState(Types::VS_IDLE);
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 					break;
@@ -219,7 +219,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			{
 				if (m_pPickObjectPtr.expired())
 				{
-					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() == 0.f)
+					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() == 0.f && m_ActType != Types::ACT_DESTROY)
 					{
 						if (CInputManager::GetInstance()->IsKeyDown(TEXT("ACCEL")))
 						{
@@ -227,6 +227,12 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 							m_pPickObjectPtr.lock()->SetOwnerObject(m_pOwnerScene->FindObjectFromScene(m_ObjectID).lock());
 							m_pPickObjectPtr.lock()->GetComponent<PhysicsComponent>().lock()->SetStatic(true);
 						}
+					}
+					else if (type == Collider::COLLISION_BOT)
+					{
+						SetActorVerticalState(Types::VS_JUMP);
+						pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+						break;
 					}
 				}
 			}
@@ -1052,7 +1058,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			if (fCurSpeed < -1 * fWalkSpeed)
 				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
 			else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
 			else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
 				pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
 
@@ -1061,13 +1067,13 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		{
 			if (fCurSpeed < 0.f)
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 5.f);
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
 				if (pPhysics->GetCurSpeed() > 0.f)
 					pPhysics->SetCurSpeed(0.f);
 			}
 			else if (fCurSpeed > 0.f)
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 5.f);
+				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
 				if (pPhysics->GetCurSpeed() < 0.f)
 					pPhysics->SetCurSpeed(0.f);
 			}
@@ -1085,7 +1091,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			if (fCurSpeed > fWalkSpeed)
 				pPhysics->SetCurSpeed(fCurSpeed - 10.f);
 			else if (fCurSpeed < fWalkSpeed)
-				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
+				pPhysics->SetCurSpeed(fCurSpeed + 10.f);
 			else if (fCurSpeed >= fWalkSpeed)
 				pPhysics->SetCurSpeed(fWalkSpeed);
 		}
@@ -1159,11 +1165,13 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 				//pPhysics->SetCurJumpForce(0.f);
 				if (m_Direction == Types::DIR_LEFT)
 				{
+					STATIC_POINTER_CAST(CActor, m_pPickObjectPtr.lock())->SetActorDirection(Types::DIR_LEFT);
 					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
 					pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
 				}
 				else if (m_Direction == Types::DIR_RIGHT)
 				{
+					STATIC_POINTER_CAST(CActor, m_pPickObjectPtr.lock())->SetActorDirection(Types::DIR_RIGHT);
 					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
 					pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
 				}
@@ -1319,6 +1327,11 @@ bool CPlayer::IsDead()
 bool CPlayer::IsRequestInterrupt()
 {
 	return m_bInterrupt;
+}
+
+bool CPlayer::IsPickingObject()
+{
+	return !m_pPickObjectPtr.expired();
 }
 
 std::weak_ptr<CObject> CPlayer::GetStoredPickup()

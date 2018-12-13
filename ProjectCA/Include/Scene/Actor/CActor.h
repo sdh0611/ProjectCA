@@ -12,7 +12,7 @@
 //#include "CActorManager.h"
 
 
-class CWorld;
+//class CWorld;
 class CGameScene;
 class ComponentBase;
 

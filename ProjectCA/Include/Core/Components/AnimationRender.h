@@ -37,6 +37,7 @@ public:
 	
 
 public:
+	bool					IsCurAnimationEnd() const;
 	const TSTRING&	GetAnimTag() const;
 
 

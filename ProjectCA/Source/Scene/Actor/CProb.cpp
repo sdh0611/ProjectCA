@@ -34,20 +34,20 @@ bool CProb::PostInit(const OBJECT_DATA& data, CScene* pScene)
 	return true;
 }
 
-void CProb::Init()
+//void CProb::Init()
+//{
+//
+//}
+
+void CProb::Update(double dDeltaTime)
 {
-
+	CObject::Update(dDeltaTime);
 }
-
-void CProb::Update(double fDeltaTime)
-{
-	CObject::Update(fDeltaTime);
-}
-
-void CProb::Render(const HDC & hDC)
-{
-	POSITION pivot = GetComponent<TransformComponent>().lock()->GetScreenPivot();
-
-	Rectangle(hDC, pivot.x, pivot.y, pivot.x + m_iObjectWidth, pivot.y + m_iObjectHeight);
-
-}
+//
+//void CProb::Render(const HDC & hDC)
+//{
+//	POSITION pivot = GetComponent<TransformComponent>().lock()->GetScreenPivot();
+//
+//	Rectangle(hDC, pivot.x, pivot.y, pivot.x + m_iObjectWidth, pivot.y + m_iObjectHeight);
+//
+//}

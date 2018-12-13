@@ -20,7 +20,8 @@ bool CCoin::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!CPickup::PostInit(data, pScene))
 		return false;
 
-	m_Type = PT_COIN;
+	m_iScore		= 10;
+	m_Type		= PT_COIN;
 
 	auto pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))

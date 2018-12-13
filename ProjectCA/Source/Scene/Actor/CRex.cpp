@@ -1,6 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CRex.h"
-#include "..\..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
@@ -108,7 +108,7 @@ bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			break;
 		case Types::OT_BLOCK:
 		{
-			auto pBlock = static_cast<CBlock*>(pOther);
+			auto pBlock = static_cast<CRandomBlock*>(pOther);
 			if (!pBlock->IsHiding())
 			{
 				switch (type) {
@@ -125,17 +125,9 @@ bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					break;
 				case Collider::COLLISION_LEFT:
 					FlipActorDirection();
-					if (m_ObjectState == Types::OS_DAMAGED)
-					{
-						pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
-					}
 					break;
 				case Collider::COLLISION_RIGHT:
 					FlipActorDirection();
-					if (m_ObjectState == Types::OS_DAMAGED)
-					{
-						pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
-					}
 					break;
 				}
 			}
@@ -144,27 +136,27 @@ bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		case Types::OT_PLAYER:
 			switch (type) {
 			case Collider::COLLISION_TOP:
-				if (m_RexState != REX_DAMAGED)
+				if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_DESTROY)
 				{
-					m_RexState = REX_DAMAGED;
-					GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetObjectHeight() * 0.5f);
-					GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("RexDamaged"));
+					HandlingEvent(Types::EVENT_DESTROY);
 				}
 				else
 				{
-					SetObjectState(Types::OS_DEAD);
-					GetComponent<ColliderBox>().lock()->SetActive(false);
-					pPhysics->SetStatic(true);
-					pPhysics->SetCurSpeed(0.f);
-					//pPhysics->SetCurJumpForce(300.f);
-					//pPhysics->SetGrounded(false);
-					if (m_Direction == Types::DIR_RIGHT)
+					if (m_RexState != REX_DAMAGED)
 					{
-						GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("DeadRight"));
+						HandlingEvent(Types::EVENT_DAMAGED);
 					}
-					else if (m_Direction == Types::DIR_LEFT)
+					else
 					{
-						GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("DeadLeft"));
+						HandlingEvent(Types::EVENT_DEAD);
+						if (m_Direction == Types::DIR_RIGHT)
+						{
+							GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("DeadRight"));
+						}
+						else if (m_Direction == Types::DIR_LEFT)
+						{
+							GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("DeadLeft"));
+						}
 					}
 				}
 				CScoreManager::GetInstance()->IncreaseScore(200);
@@ -172,12 +164,26 @@ bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			}
 			break;
 		case Types::OT_BULLET:
-			SetObjectState(Types::OS_DEAD);
-			GetComponent<ColliderBox>().lock()->SetActive(false);
-			pPhysics->SetCurSpeed(0.f);
-			pPhysics->SetCurJumpForce(300.f);
-			pPhysics->SetGrounded(false);
+			HandlingEvent(Types::EVENT_DEAD);
 			CScoreManager::GetInstance()->IncreaseScore(200);
+			break;
+		case Types::OT_PICKABLE:
+			if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
+			{
+				HandlingEvent(Types::EVENT_DEAD);
+			}
+			else
+			{
+				if (type == Collider::COLLISION_LEFT)
+				{
+					SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
+				}
+				else if (type == Collider::COLLISION_RIGHT)
+				{
+					SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
+				}
+				FlipActorDirection();
+			}
 			break;
 		}
 	};
@@ -195,6 +201,8 @@ bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->AddAnimation(0.25f, TEXT("RexNormal"), TEXT("RexMoveRight"), true, TEXT("MoveRight")))
 		return false;
 	if (!pRender->AddAnimation(0.25f, TEXT("RexNormal"), TEXT("RexMoveLeft"), true, TEXT("MoveLeft")))
+		return false;
+	if (!pRender->AddAnimation(0.25f, TEXT("RexNormal"), TEXT("EffectDestroyEnemy"), false, TEXT("Destroy"), false))
 		return false;
 	if (!pRender->AddAnimation(0.15f, TEXT("RexDamaged"), TEXT("RexDamagedMoveRight"), true, TEXT("MoveRight")))
 		return false;
@@ -244,10 +252,34 @@ void CRex::ActorBehavior(double dDeltaTime)
 {
 	auto pPhysics = GetComponent<PhysicsComponent>().lock();
 	auto pTransform = GetTransform().lock();
-	if (m_ObjectState != Types::OS_DEAD)
+
+	switch (m_ObjectState)
 	{
+	case Types::OS_DEAD:
+		{
+			auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
+			POSITION position = pTransform->GetScreenPosition();
+			if (position.y > pCamera->GetCameraHeight() + m_iObjectHeight)
+			{
+				m_bActive = false;
+				return;
+			}
+			if (position.x < 0.f - m_iObjectWidth || position.x > pCamera->GetCameraWidth() + m_iObjectWidth)
+			{
+				m_bActive = false;
+				return;
+			}
+		}
+		break;
+	case Types::OS_DESTROYED:
+		if (GetComponent<AnimationRender>().lock()->IsCurAnimationEnd())
+		{
+			SetActive(false);
+		}
+		break;
+	default:
 		float fSpeed;
-		if (m_ObjectState != Types::OS_DAMAGED)
+		if (m_RexState != REX_DAMAGED)
 		{
 			fSpeed = pPhysics->GetSpeed();
 			if (m_Direction == Types::DIR_LEFT)
@@ -275,15 +307,7 @@ void CRex::ActorBehavior(double dDeltaTime)
 				GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("MoveRight"));
 			}
 		}
-	}
-	else
-	{
-		m_dElapsedTime += dDeltaTime;
-		if (m_dElapsedTime > 0.5f)
-		{
-			m_dElapsedTime = 0.f;
-			SetActive(false);
-		}
+		break;
 	}
 
 	GetTransform().lock()->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
@@ -294,4 +318,37 @@ void CRex::ActorBehavior(double dDeltaTime)
 void CRex::DeadProcess(double dDeltaTime)
 {
 	
+}
+
+void CRex::HandlingEvent(EVENT_TYPE type)
+{
+	auto pPhysics = GetComponent<PhysicsComponent>().lock();
+
+	switch (type)
+	{
+	case Types::EVENT_DAMAGED:
+		m_RexState = REX_DAMAGED;
+		GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetObjectHeight() * 0.5f);
+		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("RexDamaged"));
+		break;
+	case Types::EVENT_DEAD:
+		SetObjectState(Types::OS_DEAD);
+		GetComponent<ColliderBox>().lock()->SetActive(false);
+		pPhysics->SetCurSpeed(0.f);
+		pPhysics->SetCurJumpForce(300.f);
+		pPhysics->SetGrounded(false);
+		break;
+	case Types::EVENT_DESTROY:
+		SetObjectState(Types::OS_DESTROYED);
+		pPhysics->SetActive(false);
+		GetComponent<ColliderBox>().lock()->SetActive(false);
+		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("RexNormal"), TEXT("Destroy"));
+		CScoreManager::GetInstance()->IncreaseScore(200);
+		break;
+	}
+}
+
+CRex::RexState CRex::GetRexState() const
+{
+	return m_RexState;
 }

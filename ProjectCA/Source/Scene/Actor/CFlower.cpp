@@ -1,6 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CFlower.h"
-#include "..\..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
@@ -75,7 +75,7 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		{
 			if (!IsStored())
 			{
-				auto pBlock = static_cast<CBlock*>(pOther);
+				auto pBlock = static_cast<CRandomBlock*>(pOther);
 				if (!pBlock->IsHiding())
 				{
 					switch (type) {

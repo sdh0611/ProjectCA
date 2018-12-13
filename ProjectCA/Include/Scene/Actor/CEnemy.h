@@ -31,13 +31,14 @@ public:
 	void SetEnemyDamage(float fDamage) { if (fDamage < 0.f) return; m_fDamage = fDamage; }
 	virtual void DeadProcess(double dDeltaTime) = 0;
 
+
 protected:
 	virtual void ActorBehavior(double dDeltaTime) = 0;
 
 
 protected:
 	float m_fDamage;
-
+	double m_dTimeElapsed;
 
 
 };

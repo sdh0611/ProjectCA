@@ -1,7 +1,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CMushroom.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
-#include "..\..\..\Include\Scene\Actor\CBlock.h"
+#include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
@@ -56,7 +56,11 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					SetActorVerticalState(Types::VS_IDLE);
 					break;
 				case Collider::COLLISION_LEFT:
+					SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
+					FlipActorDirection();
+					break;
 				case Collider::COLLISION_RIGHT:
+					SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 					FlipActorDirection();
 					break;
 				case Collider::COLLISION_TOP:
@@ -68,7 +72,7 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		case Types::OT_BLOCK:
 			if (!IsStored())
 			{
-				auto pBlock = static_cast<CBlock*>(pOther);
+				auto pBlock = static_cast<CRandomBlock*>(pOther);
 				if (!pBlock->IsHiding())
 				{
 					switch (type)
@@ -79,7 +83,11 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						SetActorVerticalState(Types::VS_IDLE);
 						break;
 					case Collider::COLLISION_LEFT:
+						SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
+						FlipActorDirection();
+						break;
 					case Collider::COLLISION_RIGHT:
+						SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 						FlipActorDirection();
 						break;
 					case Collider::COLLISION_TOP:

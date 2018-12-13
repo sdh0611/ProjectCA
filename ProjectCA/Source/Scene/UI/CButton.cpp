@@ -37,6 +37,8 @@ void CButton::Update(double dDeltaTime)
 {
 	if (m_bActive)
 	{
+		CInterface::Update(dDeltaTime);
+
 		if (IsClickOnButton())
 		{
 			m_OnClick();

@@ -1,7 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CEndPickup.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
-#include "..\..\..\Include\Scene\Actor\CBlock.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
