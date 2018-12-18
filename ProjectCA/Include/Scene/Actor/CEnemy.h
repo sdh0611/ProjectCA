@@ -24,6 +24,7 @@ public:
 	virtual void Init() override;
 	virtual void Update(double fDeltaTime) override;
 	virtual void Render(const HDC& hDC) override;
+	virtual void LateUpdate() override;
 
 
 public:

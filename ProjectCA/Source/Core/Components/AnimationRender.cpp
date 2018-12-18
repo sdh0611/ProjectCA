@@ -90,6 +90,52 @@ void AnimationRender::Draw(const HDC & hDC)
 	}
 }
 
+void AnimationRender::Draw(const HDC & hDC, POSITION position)
+{
+	if (m_bActive)
+	{
+
+		//POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
+		if (!m_pCurAnimation.expired())
+			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, position, m_iDrawWidth, m_iDrawHeight);
+
+		//POSITION position = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
+		//std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
+		//std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
+
+		//if (pCollider)
+		//{
+		//	pCollider->DrawCollider(hDC, position);
+
+		//	if (pCollider->IsCollision())
+		//	{
+		//		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+		//	}
+		//	else
+		//	{
+		//		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+		//	}
+
+		//}
+
+		//if (pPhysics)
+		//{
+		//	if (pPhysics->IsGrounded())
+		//	{
+		//		TextOut(hDC, position.x, position.y + 20, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+		//	}
+		//	else
+		//	{
+		//		TextOut(hDC, position.x, position.y + 20, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+		//	}
+
+		//}
+
+
+
+	}
+}
+
 bool AnimationRender::AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName, 
 	bool bLoop, const TSTRING & strAnimTag, bool bInterrupt)
 {

@@ -1,5 +1,9 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CEnemy.h"
+#include "..\..\..\Include\Scene\Actor\CPlayer.h"
+#include "..\..\..\Include\Scene\Actor\CCamera.h"
+#include "..\..\..\Include\Scene\CCameraManager.h"
+#include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
@@ -63,6 +67,48 @@ void CEnemy::Render(const HDC & hDC)
 	}
 	else {
 		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
+	}
+
+}
+
+void CEnemy::LateUpdate()
+{
+	CObject::LateUpdate();
+
+	POSITION onScreenPosition = GetTransform().lock()->GetScreenPosition();
+	auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
+
+	if (IsActive())
+	{
+		if (onScreenPosition.x <  0.f - MAX_WIDTH / 2.f || onScreenPosition.x > pCamera->GetCameraWidth() + MAX_WIDTH / 2.f)
+		{
+			Init();
+			puts("InActive");
+			SetActive(false);
+			return;
+		}
+		else if (onScreenPosition.y <  0.f - MAX_HEIGHT / 2.f || onScreenPosition.y > pCamera->GetCameraHeight() + MAX_HEIGHT / 2.f)
+		{
+			Init();
+			puts("InActive");
+			SetActive(false);
+			return;
+		}
+	}
+	else
+	{
+		if (m_ObjectState != Types::OS_DAMAGED || m_ObjectState != Types::OS_DESTROYED)
+		{
+			auto pPlayer = static_cast<CGameScene*>(m_pOwnerScene)->GetPlayerPtr().lock();
+			POSITION playerPosition = pPlayer->GetObjectPosition();
+
+			if (playerPosition.x > GetObjectPosition().x + pCamera->GetCameraWidth()
+				|| playerPosition.x < GetObjectPosition().x - pCamera->GetCameraWidth())
+			{
+				puts("Active");
+				SetActive(true);
+			}
+		}
 	}
 
 }

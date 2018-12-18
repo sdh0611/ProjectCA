@@ -103,6 +103,9 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		case Types::OT_GROUND:
 			if (type == Collider::COLLISION_BOT)
 			{
+				if (GetObjectPosition().y > pOther->GetObjectPosition().y + fIntersectLength
+					|| pPhysics->GetCurJumpForce() > 0.f)
+					return;
 				pPhysics->SetGrounded(true);
 				pPhysics->SetCurJumpForce(0.f);
 				SetActorVerticalState(Types::VS_IDLE);
@@ -254,7 +257,6 @@ void CGoomba::ActorBehavior(double dDeltaTime)
 	case Types::OS_DESTROYED:
 		if (GetComponent<AnimationRender>().lock()->IsCurAnimationEnd())
 		{
-			puts("Inactive");
 			SetActive(false);
 		}
 		break;

@@ -19,13 +19,13 @@ public:
 public:
 	virtual bool PostInit(const OBJECT_DATA& objectData, CScene* pScene);
 	virtual void Init();
-	virtual void Update(double dDeltaTime);
+	virtual void Update(double dDeltaTime) = 0;
 	virtual void Render(const HDC& hDC);
 	virtual void LateUpdate();
 
 
 public:
-	void SetStoredPickup(std::shared_ptr<CPickup> pPickup);
+	//void SetStoredPickup(std::shared_ptr<CPickup> pPickup);
 	void SetHide();
 
 
@@ -34,14 +34,14 @@ public:
 
 
 protected:
-	void SetDead();
-	virtual void HandlingEvent(EVENT_TYPE type) override;
+	//void SetDead();
+	//virtual void HandlingEvent(EVENT_TYPE type) override;
 
 
 protected:
 	bool							m_bHiding;
 	BlockType					m_Type;
-	std::weak_ptr<CPickup> m_pPickup;
+	//std::weak_ptr<CPickup> m_pPickup;
 
 
 };

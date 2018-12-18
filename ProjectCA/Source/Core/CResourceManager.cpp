@@ -489,6 +489,21 @@ bool CResourceManager::LoadGroundTileImageInfo()
 		return false;
 
 
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Tiles/ground_edge2_right_top.bmp"), TEXT("GroundEdgeRightTop2")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Tiles/ground_edge2_left_top.bmp"), TEXT("GroundEdgeLeftTop2")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Tiles/ground_line2_right.bmp"), TEXT("GroundLineRight2")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Tiles/ground_line2_left.bmp"), TEXT("GroundLineLeft2")))
+		return false;
+
+	
+
 	return true;
 }
 

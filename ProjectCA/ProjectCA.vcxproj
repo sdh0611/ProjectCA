@@ -168,6 +168,7 @@
     <ClCompile Include="Source\Scene\Actor\CActor.cpp" />
     <ClCompile Include="Source\Scene\Actor\CBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCoinBlock.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CPickupBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CRandomBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCoin.cpp" />
     <ClCompile Include="Source\Scene\Actor\CEndPickup.cpp" />

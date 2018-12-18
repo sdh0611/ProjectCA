@@ -100,6 +100,9 @@ bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 		case Types::OT_GROUND:
 			if (type == Collider::COLLISION_BOT)
 			{
+				if (GetObjectPosition().y > pOther->GetObjectPosition().y + fIntersectLength
+					|| pPhysics->GetCurJumpForce() > 0.f)
+					return;
 				pPhysics->SetGrounded(true);
 				pPhysics->SetCurJumpForce(0.f);
 				SetActorVerticalState(Types::VS_IDLE);

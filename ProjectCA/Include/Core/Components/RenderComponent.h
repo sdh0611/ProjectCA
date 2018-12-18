@@ -30,7 +30,11 @@ public:
 	void SetWidthPivotRatio(float fRatio);
 	void SetHeightPivotRatio(float fRatio);
 	void SetPivotRatio(float fWidthRatio, float fHeightRatio);
-	
+	void MovePivot(float fx, float fy);
+
+
+public:
+	const POSITION& GetDrawPivot() const;
 
 
 protected:

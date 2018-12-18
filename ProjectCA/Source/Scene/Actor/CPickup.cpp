@@ -1,5 +1,8 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CPickup.h"
+#include "..\..\..\Include\Scene\Actor\CCamera.h"
+#include "..\..\..\Include\Scene\CCameraManager.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 
 
@@ -32,6 +35,25 @@ void CPickup::Init()
 void CPickup::Update(double dDeltaTime)
 {
 	CActor::Update(dDeltaTime);
+}
+
+void CPickup::LateUpdate()
+{
+	CObject::LateUpdate();
+
+	POSITION onScreenPosition = GetTransform().lock()->GetScreenPosition();
+
+	if (onScreenPosition.x <  0.f - MAX_WIDTH / 2.f || onScreenPosition.x >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth() + MAX_WIDTH / 2.f)
+	{
+		SetActive(false);
+		return;
+	}
+	else if (onScreenPosition.y <  0.f - MAX_HEIGHT / 2.f || onScreenPosition.y >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight() + MAX_HEIGHT / 2.f)
+	{
+		SetActive(false);
+		return;
+	}
+
 }
 
 void CPickup::SetStored()

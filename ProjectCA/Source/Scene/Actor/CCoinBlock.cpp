@@ -31,8 +31,18 @@ bool CCoinBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	m_dTimeElapsed	= 0.f;
 	m_dLimitTime		= 0.f;
 	
+
+	//auto pPhysics = std::make_shared<PhysicsComponent>();
+	//if (!pPhysics->PostInit(this, 0.f, 0.f, 1300.f, 200.f))
+	//	return false;
+	//if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
+	//	return false;
+
+
 	auto onCollision = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
 
+		auto pPhysics = GetComponent<PhysicsComponent>().lock();
+		
 		if (m_ObjectState != Types::OS_DEAD)
 		{
 			switch (pOther->GetObjectType())
@@ -47,12 +57,13 @@ bool CCoinBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 						if (pPlayer->GetComponent<PhysicsComponent>().lock()->GetCurJumpForce() >= 0.f)
 						{
 							HandlingEvent(Types::EVENT_DAMAGED);
+							//pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 							m_bHiding = false;
 						}
 					}
 					else
 					{
-						SetDead();
+						HandlingEvent(Types::EVENT_DAMAGED);
 					}
 				}
 			}
@@ -72,7 +83,9 @@ bool CCoinBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 			}
 		}
 	};
+	GetComponent<ColliderBox>().lock()->SetOnCollision(onCollision);
 
+	m_DrawPosition = GetComponent<AnimationRender>().lock()->GetDrawPivot();
 
 	return true;
 }
@@ -94,19 +107,20 @@ void CCoinBlock::Update(double dDeltaTime)
 
 void CCoinBlock::Render(const HDC & hDC)
 {
-	if (m_bActive)
+	if (!m_bHiding)
 	{
-		GetComponent<AnimationRender>().lock()->Draw(hDC);
+		if (m_bActive)
+		{
+			auto pRender = GetComponent<AnimationRender>().lock();
+			if (pRender->IsActive())
+			{
+				pRender->Draw(hDC);
+			}
+
+		}
 	}
 }
 
-void CCoinBlock::LateUpdate()
-{
-	if (m_bActive)
-	{
-		CObject::LateUpdate();
-	}
-}
 
 void CCoinBlock::SetLimitTime(double dTime)
 {
@@ -120,9 +134,10 @@ void CCoinBlock::Behavior(double dDeltaTime)
 	switch (m_ObjectState)
 	{
 	case Types::OS_DAMAGED:
-		if (m_dTimeElapsed > m_dLimitTime)
+		if (m_dTimeElapsed >= m_dLimitTime)
 		{
-			SetObjectState(Types::OS_DEAD);
+			GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
+			HandlingEvent(Types::EVENT_DEAD);
 			m_dTimeElapsed = 0.f;
 		}
 		else
@@ -130,11 +145,20 @@ void CCoinBlock::Behavior(double dDeltaTime)
 			m_dTimeElapsed += dDeltaTime;
 		}
 		break;
-	default:
+	//default:
 
-		break;		
+	//	break;		
 	}
 
+	//{
+	//	auto pRender = GetComponent<AnimationRender>().lock();
+	//	auto pPhysics = GetComponent<PhysicsComponent>().lock();
+	//	if (pRender->GetDrawPivot().y != m_DrawPosition.y)
+	//	{
+	//		m_DrawPosition.y -= pPhysics->GetCurJumpForce();
+	//	}
+
+	//}
 }
 
 void CCoinBlock::HandlingEvent(EVENT_TYPE type)
@@ -142,11 +166,16 @@ void CCoinBlock::HandlingEvent(EVENT_TYPE type)
 	switch (type)
 	{
 	case Types::EVENT_DAMAGED:
+		CScoreManager::GetInstance()->IncreaseScore(10);
+		CScoreManager::GetInstance()->IncreaseCoinCount();
 		SetObjectState(Types::OS_DAMAGED);
 		break;
 	case Types::EVENT_DEAD:
+		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Dead"));
+		CScoreManager::GetInstance()->IncreaseScore(10);
+		CScoreManager::GetInstance()->IncreaseCoinCount();
 		SetObjectState(Types::OS_DEAD);
-		SetActive(false);
+		//SetActive(false);
 		break;
 	}
 }

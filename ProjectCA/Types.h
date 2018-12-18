@@ -91,6 +91,13 @@ namespace Types {
 			return false;
 		}
 
+		bool operator !=(const Point& other) {
+			if (this->x != other.x || this->y != other.y)
+				return true;
+
+			return false;
+		}
+
 		Point operator +(const Point& other) {
 			return Point(this->x + other.x, this->y + other.y);
 		}

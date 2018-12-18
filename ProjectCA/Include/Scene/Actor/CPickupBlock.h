@@ -3,6 +3,7 @@
 #include "..\..\..\stdafx.h"
 #include "CRandomBlock.h"
 
+class CPickup;
 
 class CPickupBlock : public CRandomBlock
 {
@@ -15,9 +16,14 @@ public:
 	virtual bool PostInit(const OBJECT_DATA& objectData, CScene* pScene);
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
-	virtual void Render(const HDC& hDC);
-	virtual void LateUpdate();
+	
+
+public:
+	void			SetStoredPickup(std::shared_ptr<CPickup> pPickup);
+	virtual void	HandlingEvent(EVENT_TYPE type) override;
 
 
+private:
+	std::weak_ptr<CPickup> m_pPickup;
 
 };

@@ -18,10 +18,11 @@ public:
 
 public:
 	virtual bool	PostInit(CObject* pOwner, const TSTRING& strTag = TEXT("RenderComponent")) override;
-	virtual void Init() override;
-	virtual void Update(double dDeltaTIme) override;
-	virtual void Draw(const HDC& hDC) override;
-	
+	virtual void	Init() override;
+	virtual void	Update(double dDeltaTIme) override;
+	virtual void	Draw(const HDC& hDC) override;
+	void			Draw(const HDC& hDC, POSITION position);
+
 
 public:
 	bool AddAnimation(double dPlayTime, const TSTRING& strMapName, const TSTRING& strSpriteName,

@@ -111,12 +111,7 @@ bool CMushroom::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			}
 			break;
 		case Types::OT_PLAYER:
-			if (!IsStored())
-			{
-				CScoreManager::GetInstance()->IncreaseScore(m_iScore);
-				SetStored();
-			}
-			SetActive(false);
+			HandlingEvent(Types::EVENT_DEAD);
 			break;
 		}
 		
@@ -185,6 +180,23 @@ void CMushroom::ActorBehavior(double dDeltaTime)
 	else
 	{
 		GetTransform().lock()->Move(0.f, -200.f * dDeltaTime);
+	}
+
+}
+
+void CMushroom::HandlingEvent(EVENT_TYPE type)
+{
+	switch (type)
+	{
+	case Types::EVENT_DEAD:
+		if (!IsStored())
+		{
+			CScoreManager::GetInstance()->IncreaseScore(m_iScore);
+			SetStored();
+		}
+		SetObjectState(Types::OS_DEAD);
+		SetActive(false);
+		break;
 	}
 
 }

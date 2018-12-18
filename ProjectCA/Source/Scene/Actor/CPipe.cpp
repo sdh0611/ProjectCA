@@ -23,6 +23,12 @@ CPipe::~CPipe()
 
 bool CPipe::PostInit(const OBJECT_DATA & data, CScene * pScene)
 {
+	UINT& iWidth = const_cast<UINT&>(data.m_iObjectWidth);
+	UINT& iHeight = const_cast<UINT&>(data.m_iObjectHeight);
+
+	iWidth = data.m_iObjectWidth * PIPE_UNIT_WIDTH;
+	iHeight = data.m_iObjectHeight * PIPE_UNIT_HEIGHT;
+
 	if (!CProb::PostInit(data, pScene))
 		return false;
 
@@ -35,16 +41,12 @@ bool CPipe::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	if(!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
+
 	//Pipe image 정보 초기화
 	//기본은 3단계 높이의 파이프
 	{
-		auto pObjMgr = CResourceManager::GetInstance();
-		m_PipeImageList.emplace_back(pObjMgr->GetWeakSprtiePtr(TEXT("PipeHead")));
-
-		for (int i = 0; i < 2; ++i)
-		{
-			m_PipeImageList.emplace_back(pObjMgr->GetWeakSprtiePtr(TEXT("PipeBody")));
-		}
+		m_PipeType = PIPE_TOP;
+		GeneratePipe(data.m_iObjectHeight);
 
 	}
 
@@ -68,20 +70,54 @@ void CPipe::Render(const HDC & hDC)
 {
 	if (m_bActive)
 	{
-		auto pRender = GetComponent<ImageRender>().lock();
-		auto position = GetTransform().lock()->GetScreenPivot();
+		auto pRender			= GetComponent<ImageRender>().lock();
+		POSITION position	= GetTransform().lock()->GetScreenPivot();
 
 		//Rectangle(hDC, position.x, position.y, position.x + m_iObjectWidth, position.y + m_iObjectHeight);
 
 		size_t size = m_PipeImageList.size();
-		position.y -= (m_iObjectHeight / size);
+		position.y -= PIPE_UNIT_HEIGHT;
 		for (auto it = m_PipeImageList.cbegin(); it != m_PipeImageList.cend(); ++it)
 		{
 			pRender->Draw(hDC, position, it->lock());
-			position.y += (m_iObjectHeight / size);
+			position.y += PIPE_UNIT_HEIGHT;
 		}
 	}
 
+}
+
+void CPipe::LateUpdate()
+{
+	CObject::LateUpdate();
+
+	POSITION onScreenPosition = GetTransform().lock()->GetScreenPosition();
+
+	if (onScreenPosition.x <  0.f - MAX_WIDTH / 2.f || onScreenPosition.x >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth() + MAX_WIDTH / 2.f)
+	{
+		if (IsActive())
+		{
+			Init();
+			SetActive(false);
+		}
+		return;
+	}
+	else if (onScreenPosition.y <  0.f - MAX_HEIGHT / 2.f || onScreenPosition.y >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight() + MAX_HEIGHT / 2.f)
+	{
+		if (IsActive())
+		{
+			Init();
+			SetActive(false);
+		}
+		return;
+	}
+	else
+	{
+		if (!IsActive())
+		{
+			SetActive(true);
+		}
+
+	}
 }
 
 void CPipe::SetPipeSize(int iSize)
@@ -90,4 +126,16 @@ void CPipe::SetPipeSize(int iSize)
 		return;
 
 	m_iObjectHeight = SPRITE_HEIGHT * 0.5f * iSize;
+}
+
+void CPipe::GeneratePipe(UINT iHeight)
+{
+	auto pObjMgr = CResourceManager::GetInstance();
+	m_PipeImageList.emplace_back(pObjMgr->GetWeakSprtiePtr(TEXT("PipeHead")));
+
+	for (int i = 0; i < (iHeight / PIPE_UNIT_HEIGHT)-1; ++i)
+	{
+		m_PipeImageList.emplace_back(pObjMgr->GetWeakSprtiePtr(TEXT("PipeBody")));
+	}
+
 }

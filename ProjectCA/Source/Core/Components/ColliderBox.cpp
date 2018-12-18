@@ -26,12 +26,15 @@ bool ColliderBox::PostInit(CObject* pOwner, const Types::tstring& strTag)
 	m_fWidth					= m_fCurWidth = m_pOwner->GetObjectWidth();
 	m_fHeight					= m_fCurHeight =m_pOwner->GetObjectHeight();
 
+	float fPivotWidthRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
+	float fPivotHeightRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
+
 	m_CurColliderPoint		= m_pOwner->GetObjectPosition();
 
-	m_ColliderRect.left			= m_CurColliderPoint.x - m_fCurWidth / 2;
-	m_ColliderRect.top		= m_CurColliderPoint.y - m_fCurHeight;
-	m_ColliderRect.right		= m_CurColliderPoint.x + m_fCurWidth / 2;
-	m_ColliderRect.bottom	= m_CurColliderPoint.y;
+	m_ColliderRect.left			= m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
+	m_ColliderRect.top		= m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
+	m_ColliderRect.right		= m_CurColliderPoint.x + m_fCurWidth * (1.f - fPivotWidthRatio);
+	m_ColliderRect.bottom	= m_CurColliderPoint.y + m_fCurHeight * (1.f - fPivotHeightRatio);;
 
 	m_bCollision				= false;
 	m_bUseTrigger				= false;
@@ -41,14 +44,17 @@ bool ColliderBox::PostInit(CObject* pOwner, const Types::tstring& strTag)
 
 void ColliderBox::Init()
 {
-	m_CurColliderPoint = m_pOwner->GetObjectPosition();
-	m_fCurWidth = m_fWidth;
-	m_fCurHeight = m_fHeight;
+	m_CurColliderPoint		= m_pOwner->GetObjectPosition();
+	m_fCurWidth				= m_fWidth;
+	m_fCurHeight				= m_fHeight;
 	
-	m_ColliderRect.left = m_ColliderPoint.x - m_fWidth * 0.5f;
-	m_ColliderRect.top = m_ColliderPoint.y - m_fHeight;
-	m_ColliderRect.right = m_ColliderPoint.x + m_fWidth * 0.5f;
-	m_ColliderRect.bottom = m_ColliderPoint.y;
+	float fPivotWidthRatio	= m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
+	float fPivotHeightRatio	= m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
+
+	m_ColliderRect.left			= m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
+	m_ColliderRect.top		= m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
+	m_ColliderRect.right		= m_CurColliderPoint.x + m_fCurWidth * (1.f - fPivotWidthRatio);
+	m_ColliderRect.bottom	= m_CurColliderPoint.y + m_fCurHeight * (1.f - fPivotHeightRatio);
 	m_bActive = true;
 }
 
@@ -65,8 +71,25 @@ void ColliderBox::Update(double dDeltaTime)
 
 		m_ColliderRect.left = m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
 		m_ColliderRect.top = m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
-		m_ColliderRect.right = m_CurColliderPoint.x + m_fCurWidth * fPivotWidthRatio;
-		m_ColliderRect.bottom = m_CurColliderPoint.y;
+		m_ColliderRect.right = m_CurColliderPoint.x + m_fCurWidth * (1.f - fPivotWidthRatio);
+		m_ColliderRect.bottom = m_CurColliderPoint.y + m_fCurHeight * (1.f - fPivotHeightRatio);
+		
+		
+		//m_CurColliderPoint = m_pOwner->GetObjectPosition();
+
+		//auto pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
+		//if (pPhysics)
+		//{
+		//	float fSpeed = pPhysics->GetCurSpeed();
+		//	float fJump = pPhysics->GetCurJumpForce();
+
+		//	m_ColliderRect.left += fSpeed * dDeltaTime;
+		//	m_ColliderRect.top -= fJump * dDeltaTime;
+		//	m_ColliderRect.right +=  fSpeed * dDeltaTime;
+		//	m_ColliderRect.bottom -= fJump * dDeltaTime;
+
+		//}
+
 	}
 }
 
@@ -81,14 +104,27 @@ void ColliderBox::LateUpdate()
 
 		m_ColliderRect.left = m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
 		m_ColliderRect.top = m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
-		m_ColliderRect.right = m_CurColliderPoint.x + m_fCurWidth * fPivotWidthRatio;
-		m_ColliderRect.bottom = m_CurColliderPoint.y;
+		m_ColliderRect.right = m_CurColliderPoint.x + m_fCurWidth * (1.f - fPivotWidthRatio);
+		m_ColliderRect.bottom = m_CurColliderPoint.y + m_fCurHeight * (1.f - fPivotHeightRatio);
+
+		//auto pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
+		//if (pPhysics)
+		//{
+		//	float fSpeed = pPhysics->GetCurSpeed();
+		//	float fJump = pPhysics->GetCurJumpForce();
+
+		//	m_ColliderRect.left = m_CurColliderPoint.x + fSpeed * dDeltaTime;
+		//	m_ColliderRect.top = m_CurColliderPoint.y + fJump * dDeltaTime;
+		//	m_ColliderRect.right = m_CurColliderPoint.x + fSpeed * dDeltaTime;
+		//	m_ColliderRect.bottom = m_CurColliderPoint.y + fJump * dDeltaTime;
+
+		//}
 	}
 }
 
 void ColliderBox::DrawCollider(const HDC & hDC, const POSITION& position)
 {
-	Rectangle(hDC, position.x - m_fCurWidth/2.f, position.y - m_fCurHeight, position.x + m_fCurWidth/2.f, position.y );
+	Rectangle(hDC, m_ColliderRect.left, m_ColliderRect.top, m_ColliderRect.right, m_ColliderRect.bottom);
 
 }
 

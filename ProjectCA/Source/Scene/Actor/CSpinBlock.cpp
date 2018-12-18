@@ -87,6 +87,7 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 void CSpinBlock::Init()
 {
 	m_dTimeElapsed = 0.f;
+	GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Idle"));
 	SetActive(true);
 	SetObjectState(Types::OS_IDLE);
 }

@@ -1,7 +1,9 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
+#include "..\..\..\Include\Scene\Actor\CCamera.h"
 //#include "..\..\..\Include\Scene\CWorld.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\CLayer.h"
 //#include "..\..\..\Include\Scene\Actor\CActorFactory.h"
 #include "..\..\..\Include\Core\Components\InputComponent.h"
@@ -10,7 +12,6 @@
 
 
 CActor::CActor() 
-	:m_ActorCurVerticalState(Types::VS_IDLE), m_ActorHorizonalState(Types::HS_IDLE)
 {
 }
 
@@ -66,12 +67,28 @@ void CActor::Update(double dDeltaTime)
 
 }
 
-//void CActor::LateUpdate(double dDeltaTime)
+//void CActor::LateUpdate()
 //{
-//	for (auto& it : m_ComponentTable)
+//	CObject::LateUpdate();
+//	POSITION onScreenPosition = GetTransform().lock()->GetScreenPosition();
+//
+//	if (onScreenPosition.x <  0.f - MAX_WIDTH/2.f || onScreenPosition.x >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth() + MAX_WIDTH/2.f)
 //	{
-//		it.second->LateUpdate(dDeltaTime);
+//		puts("false");
+//		SetActive(false);
+//		return;
 //	}
+//	else if (onScreenPosition.y <  0.f - MAX_HEIGHT/2.f || onScreenPosition.y >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight() + MAX_HEIGHT/2.f)
+//	{
+//		puts("false");
+//		SetActive(false);
+//		return;
+//	}
+//	else
+//	{
+//		SetActive(true);
+//	}
+//
 //
 //}
 

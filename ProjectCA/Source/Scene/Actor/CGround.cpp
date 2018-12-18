@@ -22,6 +22,8 @@ bool CGround::PostInit(const OBJECT_DATA &data, CScene *pScene)
 	if (!CProb::PostInit(data, pScene))
 		return false;
 
+	GetTransform().lock()->SetPivotRatio(0.f, 0.f);
+
 	//ImageRender Ãß°¡
 	auto pRender = std::make_shared<ImageRender>();
 	if (!pRender->PostInit(this))
@@ -83,6 +85,11 @@ bool CGround::LoadTileImage()
 	m_TileSpriteTable.push_back(pResourceMgr->GetWeakSprtiePtr(TEXT("GroundLineLeft")));
 	m_TileSpriteTable.push_back(pResourceMgr->GetWeakSprtiePtr(TEXT("GroundLineBot")));
 	m_TileSpriteTable.push_back(pResourceMgr->GetWeakSprtiePtr(TEXT("GroundLineRight")));
+	m_TileSpriteTable.push_back(pResourceMgr->GetWeakSprtiePtr(TEXT("GroundEdgeRightTop2")));
+	m_TileSpriteTable.push_back(pResourceMgr->GetWeakSprtiePtr(TEXT("GroundEdgeLeftTop2")));
+	m_TileSpriteTable.push_back(pResourceMgr->GetWeakSprtiePtr(TEXT("GroundLineRight2")));
+	m_TileSpriteTable.push_back(pResourceMgr->GetWeakSprtiePtr(TEXT("GroundLineLeft2")));
+
 
 
 	for (int row = 0; row < m_iObjectHeight / TILE_HEIGHT; ++row)
@@ -92,17 +99,35 @@ bool CGround::LoadTileImage()
 		{
 			if (row == 0)
 			{
-				if (tileIndex == 0)
+				if (m_ObjectType == Types::OT_PROB)
 				{
-					m_TileInfoList[row].push_back(GI_EDGE_LEFT_TOP);
+					if (tileIndex == 0)
+					{
+						m_TileInfoList[row].push_back(GI_EDGE_LEFT_TOP);
+					}
+					else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+					{
+						m_TileInfoList[row].push_back(GI_EDGE_RIGHT_TOP);
+					}
+					else
+					{
+						m_TileInfoList[row].push_back(GI_LINE_TOP);
+					}
 				}
-				else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+				else if (m_ObjectType == Types::OT_GROUND)
 				{
-					m_TileInfoList[row].push_back(GI_EDGE_RIGHT_TOP);
-				}
-				else
-				{
-					m_TileInfoList[row].push_back(GI_LINE_TOP);
+					if (tileIndex == 0)
+					{
+						m_TileInfoList[row].push_back(GI_EDGE_LEFT_TOP2);
+					}
+					else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+					{
+						m_TileInfoList[row].push_back(GI_EDGE_RIGHT_TOP2);
+					}
+					else
+					{
+						m_TileInfoList[row].push_back(GI_LINE_TOP);
+					}
 				}
 			}
 			else if (row == m_iObjectHeight / TILE_HEIGHT - 1)
@@ -122,23 +147,38 @@ bool CGround::LoadTileImage()
 			}
 			else
 			{
-				if (tileIndex == 0)
+				if (m_ObjectType == Types::OT_PROB)
 				{
-					m_TileInfoList[row].push_back(GI_LINE_LEFT);
+					if (tileIndex == 0)
+					{
+						m_TileInfoList[row].push_back(GI_LINE_LEFT);
+					}
+					else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+					{
+						m_TileInfoList[row].push_back(GI_LINE_RIGHT);
+					}
+					else
+					{
+						m_TileInfoList[row].push_back(GI_INNER);
+					}
 				}
-				else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+				else if (m_ObjectType == Types::OT_GROUND)
 				{
-					m_TileInfoList[row].push_back(GI_LINE_RIGHT);
-				}
-				else
-				{
-					m_TileInfoList[row].push_back(GI_INNER);
-				}
-
+					if (tileIndex == 0)
+					{
+						m_TileInfoList[row].push_back(GI_LINE_LEFT2);
+					}
+					else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+					{
+						m_TileInfoList[row].push_back(GI_LINE_RIGHT2);
+					}
+					else
+					{
+						m_TileInfoList[row].push_back(GI_INNER);
+					}
+				}				
 			}
-
 		}
-
 	}
 
 	return true;

@@ -33,51 +33,51 @@ bool CRandomBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	m_Type		= BT_DEFAULT;
 
 
-	auto colliderCallback = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
-		
-		if (m_ObjectState != Types::OS_DEAD)
-		{
-			switch (pOther->GetObjectType())
-			{
-			case Types::OT_PLAYER:
-			{
-				auto pPlayer = static_cast<CPlayer*>(pOther);
-				if (type == Collider::COLLISION_BOT)
-				{
-					if (m_bHiding)//Hiding Block일 때
-					{
-						if (pPlayer->GetComponent<PhysicsComponent>().lock()->GetCurJumpForce() >= 0.f)
-						{
-							HandlingEvent(Types::EVENT_DEAD);
-							m_bHiding = false;
-						}
-					}
-					else
-					{
-						SetDead();
-					}
-				}
-			}
-				break;
-			case Types::OT_PICKABLE:
-				if (!m_bHiding)//Hiding상태가 아닐 경우에만 반응
-				{
-					if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
-					{
-						if (type != Collider::COLLISION_TOP)
-						{
-							HandlingEvent(Types::EVENT_DEAD);
-						}
-					}
-				}
-				break;
+	//auto colliderCallback = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
+	//	
+	//	if (m_ObjectState != Types::OS_DEAD)
+	//	{
+	//		switch (pOther->GetObjectType())
+	//		{
+	//		case Types::OT_PLAYER:
+	//		{
+	//			auto pPlayer = static_cast<CPlayer*>(pOther);
+	//			if (type == Collider::COLLISION_BOT)
+	//			{
+	//				if (m_bHiding)//Hiding Block일 때
+	//				{
+	//					if (pPlayer->GetComponent<PhysicsComponent>().lock()->GetCurJumpForce() >= 0.f)
+	//					{
+	//						HandlingEvent(Types::EVENT_DEAD);
+	//						m_bHiding = false;
+	//					}
+	//				}
+	//				else
+	//				{
+	//					HandlingEvent(Types::EVENT_DEAD);
+	//				}
+	//			}
+	//		}
+	//			break;
+	//		case Types::OT_PICKABLE:
+	//			if (!m_bHiding)//Hiding상태가 아닐 경우에만 반응
+	//			{
+	//				if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
+	//				{
+	//					if (type != Collider::COLLISION_TOP)
+	//					{
+	//						HandlingEvent(Types::EVENT_DEAD);
+	//					}
+	//				}
+	//			}
+	//			break;
 
-			}
+	//		}
 
-		}
-	};
+	//	}
+	//};
 
-	GetComponent<ColliderBox>().lock()->SetOnCollision(colliderCallback);
+	//GetComponent<ColliderBox>().lock()->SetOnCollision(colliderCallback);
 
 	//RenderComponent
 	auto pRender = std::make_shared<AnimationRender>();
@@ -101,10 +101,6 @@ bool CRandomBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 void CRandomBlock::Init()
 {
 	CObject::Init();
-	if (!m_pPickup.expired())
-	{
-		m_pPickup.lock()->SetActive(false);
-	}
 	m_ObjectState = Types::OS_IDLE;
 	if (m_Type == BT_HIDE)
 	{
@@ -112,15 +108,6 @@ void CRandomBlock::Init()
 	}
 	GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Idle"));
 	m_bActive = true;
-
-}
-
-void CRandomBlock::Update(double dDeltaTime)
-{
-	if (m_bActive)
-	{
-		CObject::Update(dDeltaTime);
-	}
 
 }
 
@@ -149,11 +136,11 @@ void CRandomBlock::LateUpdate()
 
 }
 
-void CRandomBlock::SetStoredPickup(std::shared_ptr<CPickup> pPickup)
-{
-	m_pPickup = pPickup;
-	m_pPickup.lock()->SetActive(false);
-}
+//void CRandomBlock::SetStoredPickup(std::shared_ptr<CPickup> pPickup)
+//{
+//	m_pPickup = pPickup;
+//	m_pPickup.lock()->SetActive(false);
+//}
 
 void CRandomBlock::SetHide()
 {
@@ -167,40 +154,40 @@ bool CRandomBlock::IsHiding() const
 	return m_bHiding;
 }
 
-void CRandomBlock::SetDead()
-{
-	CScoreManager::GetInstance()->IncreaseScore(10);
-	GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
-	if (m_pPickup.lock()->GetPickupType() != CPickup::PickupType::PT_COIN)
-	{
-		m_pPickup.lock()->SetActive(true);
-	}
-	else
-	{
+//void CRandomBlock::SetDead()
+//{
+//	CScoreManager::GetInstance()->IncreaseScore(10);
+//	GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
+//	if (m_pPickup.lock()->GetPickupType() != CPickup::PickupType::PT_COIN)
+//	{
+//		m_pPickup.lock()->SetActive(true);
+//	}
+//	else
+//	{
+//
+//	}
+//	m_ObjectState = Types::OS_DEAD;
+//
+//
+//}
 
-	}
-	m_ObjectState = Types::OS_DEAD;
-
-
-}
-
-void CRandomBlock::HandlingEvent(EVENT_TYPE type)
-{
-	switch (type)
-	{
-	case Types::EVENT_DEAD:
-		CScoreManager::GetInstance()->IncreaseScore(10);
-		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
-		if (m_pPickup.lock()->GetPickupType() != CPickup::PickupType::PT_COIN)
-		{
-			m_pPickup.lock()->SetActive(true);
-		}
-		else
-		{
-
-		}
-		m_ObjectState = Types::OS_DEAD;
-		break;
-
-	}
-}
+//void CRandomBlock::HandlingEvent(EVENT_TYPE type)
+//{
+//	switch (type)
+//	{
+//	case Types::EVENT_DEAD:
+//		CScoreManager::GetInstance()->IncreaseScore(10);
+//		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
+//		if (m_pPickup.lock()->GetPickupType() != CPickup::PickupType::PT_COIN)
+//		{
+//			m_pPickup.lock()->SetActive(true);
+//		}
+//		else
+//		{
+//
+//		}
+//		m_ObjectState = Types::OS_DEAD;
+//		break;
+//
+//	}
+//}

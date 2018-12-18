@@ -15,8 +15,7 @@ public:
 	virtual bool PostInit(const OBJECT_DATA& objectData, CScene* pScene);
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
-	virtual void Render(const HDC& hDC);
-	virtual void LateUpdate();
+	virtual void Render(const HDC& hDC) override;
 
 
 public:
@@ -30,8 +29,8 @@ private:
 
 
 private:
-	double m_dTimeElapsed;
-	double m_dLimitTime;
-
+	double		m_dTimeElapsed;
+	double		m_dLimitTime;
+	POSITION	m_DrawPosition;
 
 };

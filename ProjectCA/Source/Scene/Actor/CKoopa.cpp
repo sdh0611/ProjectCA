@@ -26,8 +26,10 @@ CKoopa::~CKoopa()
 
 bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
+	puts("KoopaInit");
 	//기본 Actor의 속성 초기화
-	CActor::PostInit(data, pScene);
+	if (!CActor::PostInit(data, pScene))
+		return false;
 
 	//PhysicsComponent 초기화
 	auto pPhysics = std::make_shared<PhysicsComponent>();
@@ -136,7 +138,8 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			case Types::OT_GROUND:
 				if (type == Collider::COLLISION_BOT)
 				{
-					if (GetObjectPosition().y > pOther->GetObjectPosition().y - pOther->GetObjectHeight() + fIntersectLength)
+					if (GetObjectPosition().y > pOther->GetObjectPosition().y + fIntersectLength
+						|| pPhysics->GetCurJumpForce() > 0.f)
 						return;
 					pPhysics->SetGrounded(true);
 					pPhysics->SetCurJumpForce(0.f);
@@ -266,8 +269,10 @@ void CKoopa::Init()
 
 void CKoopa::Update(double dDeltaTime)
 {
-	CEnemy::Update(dDeltaTime);
-
+	if (m_bActive)
+	{
+		CEnemy::Update(dDeltaTime);
+	}
 }
 
 void CKoopa::Render(const HDC & hDC)
@@ -317,7 +322,6 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 	case Types::OS_DESTROYED:
 		if (GetComponent<AnimationRender>().lock()->IsCurAnimationEnd())
 		{
-			puts("Inactive");
 			SetActive(false);
 		}
 		break;

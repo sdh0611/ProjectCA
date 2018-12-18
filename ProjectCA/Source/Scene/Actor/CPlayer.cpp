@@ -90,6 +90,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		case Types::OT_PROB:
 			switch (type) {
 			case Collider::COLLISION_BOT:
+				//printf("ID : %d\n", pOther->GetObjectID());
 				pPhysics->SetGrounded(true);
 				//pPhysics->SetCurJumpForce(0.f);
 				SetActorVerticalState(Types::VS_IDLE);
@@ -121,6 +122,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				{
 					if (type == Collider::COLLISION_TOP)
 					{
+						pPhysics->SetCurJumpForce(0.f);
 						SetActorVerticalState(Types::VS_FALL);
 						SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 						break;
@@ -157,7 +159,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		case Types::OT_GROUND:
 			if (type == Collider::COLLISION_BOT)
 			{
-				if (GetObjectPosition().y > pOther->GetObjectPosition().y - pOther->GetObjectHeight() + fIntersectLength)
+				if (GetObjectPosition().y > pOther->GetObjectPosition().y+ fIntersectLength
+					|| GetActorVerticalState() == Types::VS_JUMP)
 					return;
 				pPhysics->SetGrounded(true);
 				pPhysics->SetCurJumpForce(0.f);
@@ -562,7 +565,7 @@ void CPlayer::Init()
 	m_ActType						= Types::ACT_IDLE;
 	m_ObjectState					= Types::OS_IDLE;
 	m_dTimeElapsed				= 0.f;
-	m_iAvailableFireballCount	= 5;
+	m_iAvailableFireballCount	= 3;
 
 	m_pCurPickupPtr.reset();
 	m_pStoredPickupPtr.reset();
@@ -669,7 +672,7 @@ void CPlayer::DeadProcess(double dDeltaTime)
 		}
 
 	}
-
+	LateUpdate();
 }
 
 void CPlayer::InterruptProecess(double dDeltaTime)
@@ -735,7 +738,7 @@ void CPlayer::Attack()
 
 bool CPlayer::GenerateFireball()
 {
-	m_iAvailableFireballCount = 5;
+	m_iAvailableFireballCount = 3;
 
 	std::shared_ptr<CFireball> pFire;
 	for (int i = 0; i < m_iAvailableFireballCount; ++i)
@@ -1029,6 +1032,7 @@ void CPlayer::PopStoredPickup()
 	POSITION position((2.f * pCamera->GetCameraPosition().x + pCamera->GetCameraWidth()) / 2.f, 70.f);
 
 	m_pStoredPickupPtr.lock()->GetTransform().lock()->SetPosition(position);
+	m_pStoredPickupPtr.lock()->SetObjectState(Types::OS_IDLE);
 	m_pStoredPickupPtr.lock()->SetActive(true);
 	m_pStoredPickupPtr.reset();
 }

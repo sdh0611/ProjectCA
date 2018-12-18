@@ -50,3 +50,8 @@ void CEndPickup::Render(const HDC & hDC)
 		GetComponent<ImageRender>().lock()->Draw(hDC);
 	}
 }
+
+void CEndPickup::LateUpdate()
+{
+	CObject::LateUpdate();
+}

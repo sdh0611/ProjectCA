@@ -125,6 +125,7 @@ CObject * CObject::Clone()
 
 void CObject::SetActive(bool bActive)
 {
+	//puts("SetActive");
 	for (const auto& component : m_ComponentTable)
 	{
 		component.second->SetActive(bActive);

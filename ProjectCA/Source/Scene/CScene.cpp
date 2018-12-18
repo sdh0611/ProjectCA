@@ -47,10 +47,11 @@ void CScene::Update(double dDeltaTime)
 void CScene::Render(const HDC& hDC)
 {
 	if (!m_LayerList.empty())
-		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
+		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it)
+		{
 			(*m_it)->Render(hDC);
-			
 		}
+
 }
 
 //CLayer 클래스의 friend 메소드.

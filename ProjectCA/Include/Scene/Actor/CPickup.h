@@ -23,6 +23,7 @@ public:
 	virtual void Init() override;
 	virtual void Update(double dDeltaTime) override;
 	virtual void Render(const HDC& hDC) override = 0 ;
+	virtual void LateUpdate() override;
 
 
 public:

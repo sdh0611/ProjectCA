@@ -36,6 +36,7 @@ bool RenderComponent::PostInit(CObject * pOwner, const TSTRING & strTag)
 	m_fWidthExpansionRatio		= 1.f;
 	m_fHeightExpansionRatio	= 1.f;
 	SetPivotRatio(0.f, 0.f);
+	LateUpdate();
 
 	return true;
 }
@@ -129,3 +130,15 @@ void RenderComponent::SetPivotRatio(float fWidthRatio, float fHeightRatio)
 	SetWidthPivotRatio(fWidthRatio);
 	SetHeightPivotRatio(fHeightRatio);
 }
+
+void RenderComponent::MovePivot(float fx, float fy)
+{
+	m_DrawPivot.x += fx;
+	m_DrawPivot.y -= fy;
+}
+
+const POSITION & RenderComponent::GetDrawPivot() const
+{
+	return m_DrawPivot;
+}
+
