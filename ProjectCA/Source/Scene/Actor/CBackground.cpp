@@ -78,7 +78,7 @@ void CBackground::Render(const HDC & hDC)
 		UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
 		POSITION position = GetObjectPosition();
 		//카메라 좌측 맵출력
-		pRender->Draw(hDC, POSITION(position.x - m_iObjectWidth, position.y));
+		pRender->Draw(hDC, POSITION(position.x - m_iEntityWidth, position.y));
 		//카메라 출력부분
 		pRender->Draw(hDC, position);
 

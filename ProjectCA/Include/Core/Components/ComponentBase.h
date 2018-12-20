@@ -7,7 +7,7 @@
 
 #include "..\..\..\stdafx.h"
 
-class CObject;
+class CEntity;
 
 class ComponentBase {
 
@@ -23,8 +23,8 @@ public:
 
 
 public:
-	CObject* const GetOwner() { return m_pOwner; }
-	void SetOwner(CObject* pOwner) { m_pOwner = pOwner; }
+	CEntity* const GetOwner() { return m_pOwner; }
+	void SetOwner(CEntity* pOwner) { m_pOwner = pOwner; }
 	const TSTRING& GetComponentTag() const { return m_strComponentTag; }
 	void SetComponentName(const TSTRING& strTag) { m_strComponentTag = strTag; }
 	void SetActive(bool bActive) { m_bActive = bActive; }
@@ -34,7 +34,7 @@ public:
 protected:
 	bool					m_bActive;
 	TSTRING				m_strComponentTag;
-	CObject*				m_pOwner;
+	CEntity*				m_pOwner;
 
 
 };

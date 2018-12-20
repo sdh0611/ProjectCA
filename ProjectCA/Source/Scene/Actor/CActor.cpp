@@ -150,12 +150,12 @@ Types::Direction CActor::GetActorDirection() const
 
 UINT CActor::GetActorWidth() const
 {
-	return m_iObjectWidth;
+	return m_iEntityWidth;
 }
 
 UINT CActor::GetActorHeight() const
 {
-	return m_iObjectHeight;
+	return m_iEntityHeight;
 }
 
 

@@ -160,7 +160,7 @@ void CGameScene::SetIsGameClear()
 
 std::weak_ptr<CPlayer> CGameScene::GetPlayerPtr()
 {
-	return m_pPlayer.lock();
+	return m_pPlayer;
 }
 
 
@@ -295,47 +295,47 @@ bool CGameScene::BuildWorld()
 		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		m_ObjectPtrList.emplace_back(pPickup);
 
-		////테스트용 Flower 생성
-		//pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+		//////테스트용 Flower 생성
+		////pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+		////if (pPickup == nullptr)
+		////	return false;
+		////FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		////m_ObjectPtrList.emplace_back(pPickup);
+
+		//////테스트용 Coin 생성
+		////pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 330.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		////if (pPickup == nullptr)
+		////	return false;
+		////FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		////m_ObjectPtrList.emplace_back(pPickup);
+
+		//////테스트용 Coin 생성
+		////pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 370.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		////if (pPickup == nullptr)
+		////	return false;
+		////FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		////m_ObjectPtrList.emplace_back(pPickup);
+
+		//////테스트용 Coin 생성
+		////pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 410.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		////if (pPickup == nullptr)
+		////	return false;
+		////FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		////m_ObjectPtrList.emplace_back(pPickup);
+
+		//////테스트용 Coin 생성
+		////pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 450.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
+		////if (pPickup == nullptr)
+		////	return false;
+		////FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+		////m_ObjectPtrList.emplace_back(pPickup);
+
+		////테스트용 EndPickup 생성
+		//pPickup = m_pObjectManager->CreateActor<CEndPickup>(SPRITE_WIDTH, SPRITE_HEIGHT, 8170.f, 444.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("EndPickup"), this);
 		//if (pPickup == nullptr)
 		//	return false;
 		//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 		//m_ObjectPtrList.emplace_back(pPickup);
-
-		////테스트용 Coin 생성
-		//pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 330.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
-		//if (pPickup == nullptr)
-		//	return false;
-		//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-		//m_ObjectPtrList.emplace_back(pPickup);
-
-		////테스트용 Coin 생성
-		//pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 370.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
-		//if (pPickup == nullptr)
-		//	return false;
-		//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-		//m_ObjectPtrList.emplace_back(pPickup);
-
-		////테스트용 Coin 생성
-		//pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 410.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
-		//if (pPickup == nullptr)
-		//	return false;
-		//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-		//m_ObjectPtrList.emplace_back(pPickup);
-
-		////테스트용 Coin 생성
-		//pPickup = m_pObjectManager->CreateActor<CCoin>(SPRITE_WIDTH, SPRITE_HEIGHT, 450.f, 150.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Coin"), this);
-		//if (pPickup == nullptr)
-		//	return false;
-		//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-		//m_ObjectPtrList.emplace_back(pPickup);
-
-		//테스트용 EndPickup 생성
-		pPickup = m_pObjectManager->CreateActor<CEndPickup>(SPRITE_WIDTH, SPRITE_HEIGHT, 8170.f, 444.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("EndPickup"), this);
-		if (pPickup == nullptr)
-			return false;
-		FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-		m_ObjectPtrList.emplace_back(pPickup);
 	}
 
 	//Enemy 생성
@@ -351,15 +351,7 @@ bool CGameScene::BuildWorld()
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 200.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-
-		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 150.f, 250.f, Types::OT_ENEMY,
+		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 200.f, 250.f, Types::OT_ENEMY,
 		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		//if (pEnemy == nullptr)
 		//	return false;
@@ -367,45 +359,53 @@ bool CGameScene::BuildWorld()
 		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 300.f, 250.f, Types::OT_ENEMY,
+		////pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 150.f, 250.f, Types::OT_ENEMY,
+		////	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		////if (pEnemy == nullptr)
+		////	return false;
+		////m_ObjectPtrList.emplace_back(pEnemy);
+		////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		////pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 300.f, 250.f, Types::OT_ENEMY,
+		////	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		////if (pEnemy == nullptr)
+		////	return false;
+		////m_ObjectPtrList.emplace_back(pEnemy);
+		////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		////pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 450.f, Types::OT_ENEMY,
+		////	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		////if (pEnemy == nullptr)
+		////	return false;
+		////m_ObjectPtrList.emplace_back(pEnemy);
+		////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		////pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 500.f, 444.f, Types::OT_ENEMY,
+		////	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
+		////if (pEnemy == nullptr)
+		////	return false;
+		////m_ObjectPtrList.emplace_back(pEnemy);
+		////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		////pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 550.f, 444.f, Types::OT_ENEMY,
+		////	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		////if (pEnemy == nullptr)
+		////	return false;
+		////m_ObjectPtrList.emplace_back(pEnemy);
+		////FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+
+		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 570.f, 444.f, Types::OT_ENEMY,
 		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		//if (pEnemy == nullptr)
 		//	return false;
 		//m_ObjectPtrList.emplace_back(pEnemy);
 		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-
-		//pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 450.f, Types::OT_ENEMY,
-		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
-		//if (pEnemy == nullptr)
-		//	return false;
-		//m_ObjectPtrList.emplace_back(pEnemy);
-		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-
-		//pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 500.f, 444.f, Types::OT_ENEMY,
-		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
-		//if (pEnemy == nullptr)
-		//	return false;
-		//m_ObjectPtrList.emplace_back(pEnemy);
-		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-
-		//pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 550.f, 444.f, Types::OT_ENEMY,
-		//	Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		//if (pEnemy == nullptr)
-		//	return false;
-		//m_ObjectPtrList.emplace_back(pEnemy);
-		//FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-
-
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 570.f, 444.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
-		if (pEnemy == nullptr)
-			return false;
-		m_ObjectPtrList.emplace_back(pEnemy);
-		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-		
+		//
 	}
 
 	//Prob 생성
@@ -479,37 +479,37 @@ bool CGameScene::BuildWorld()
 			FindLayer(TEXT("Block"))->AddActor(pBlock);
 
 
-			pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 460.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
-			if (pBlock == nullptr)
-				return false;
-			//Block에 저장시켜놓을 Pickup 생성
-			pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
-				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
-			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-			m_ObjectPtrList.emplace_back(pPickup);
-			if (pPickup == nullptr)
-				return false;
-			//Pickup set
-			pBlock->SetStoredPickup(pPickup);
-			m_ObjectPtrList.push_back(pBlock);
-			FindLayer(TEXT("Block"))->AddActor(pBlock);
+			//pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 460.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			//if (pBlock == nullptr)
+			//	return false;
+			////Block에 저장시켜놓을 Pickup 생성
+			//pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
+			//	pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+			//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+			//m_ObjectPtrList.emplace_back(pPickup);
+			//if (pPickup == nullptr)
+			//	return false;
+			////Pickup set
+			//pBlock->SetStoredPickup(pPickup);
+			//m_ObjectPtrList.push_back(pBlock);
+			//FindLayer(TEXT("Block"))->AddActor(pBlock);
 
 
-			pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 520.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
-			if (pBlock == nullptr)
-				return false;
-			//Block에 저장시켜놓을 Pickup 생성
-			pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
-				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
-			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-			m_ObjectPtrList.emplace_back(pPickup);
-			if (pPickup == nullptr)
-				return false;
-			//Pickup set
-			pBlock->SetStoredPickup(pPickup);
-			pBlock->SetHide();
-			m_ObjectPtrList.push_back(pBlock);
-			FindLayer(TEXT("Block"))->AddActor(pBlock);
+			//pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 520.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			//if (pBlock == nullptr)
+			//	return false;
+			////Block에 저장시켜놓을 Pickup 생성
+			//pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
+			//	pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+			//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+			//m_ObjectPtrList.emplace_back(pPickup);
+			//if (pPickup == nullptr)
+			//	return false;
+			////Pickup set
+			//pBlock->SetStoredPickup(pPickup);
+			//pBlock->SetHide();
+			//m_ObjectPtrList.push_back(pBlock);
+			//FindLayer(TEXT("Block"))->AddActor(pBlock);
 		}
 
 		//Coin block
@@ -545,14 +545,14 @@ bool CGameScene::BuildWorld()
 		if (!CreateLayer(TEXT("Ground"), 10))
 			return false;
 
-		auto pGround = m_pObjectManager->CreateObject<CGround>(25, 14, 600.f, 250.f, Types::OT_GROUND, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//auto pGround = m_pObjectManager->CreateObject<CGround>(25, 14, 600.f, 250.f, Types::OT_GROUND, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(100, 8, 0.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		auto pGround = m_pObjectManager->CreateObject<CGround>(100, 8, 0.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		m_ObjectPtrList.push_back(pGround);
@@ -566,118 +566,118 @@ bool CGameScene::BuildWorld()
 		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 3250.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 3250.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
 
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 3400.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 3400.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(20, 8, 3660.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(20, 8, 3660.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(10, 2, 3980.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(10, 2, 3980.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(8, 2, 4044.f, 416.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(8, 2, 4044.f, 416.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(6, 2, 4108.f, 452.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(6, 2, 4108.f, 452.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(4, 2, 4172.f, 388.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(4, 2, 4172.f, 388.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(2, 2, 4236.f, 324.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(2, 2, 4236.f, 324.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(15, 8, 4736.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(15, 8, 4736.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5300.f, 270.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5500.f, 200.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5300.f, 270.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5900.f, 220.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5500.f, 200.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(10, 4, 6100.f, 400.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5900.f, 220.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(3, 8, 6600.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(10, 4, 6100.f, 400.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(30, 8, 6750.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(3, 8, 6600.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(10, 8, 8010.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		m_ObjectPtrList.push_back(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
+		//pGround = m_pObjectManager->CreateObject<CGround>(30, 8, 6750.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		//pGround = m_pObjectManager->CreateObject<CGround>(10, 8, 8010.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//m_ObjectPtrList.push_back(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 	}
 
 	//Backgorund 생성

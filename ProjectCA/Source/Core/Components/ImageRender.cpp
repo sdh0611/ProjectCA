@@ -15,7 +15,7 @@ ImageRender::~ImageRender()
 {
 }
 
-bool ImageRender::PostInit(CObject * pOwner, const Types::tstring & strTag)
+bool ImageRender::PostInit(CEntity * pOwner, const Types::tstring & strTag)
 {
 	if (!RenderComponent::PostInit(pOwner, strTag))
 		return false;

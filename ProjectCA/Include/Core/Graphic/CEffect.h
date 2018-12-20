@@ -2,7 +2,7 @@
 
 #include "..\..\..\stdafx.h"
 
-class CObject;
+class CEntity;
 
 class CEffect
 {
@@ -12,7 +12,7 @@ public:
 
 
 public:
-	bool Init(CObject* pOwner);
+	bool Init(CEntity* pOwner);
 	void Update(double dDeltaTime);
 	void Render(const HDC& hDC);
 
@@ -23,7 +23,7 @@ public:
 
 private:
 	TSTRING												m_strEffectName;
-	CObject*												m_pOwnerObject;
+	CEntity*												m_pOwnerObject;
 	std::unique_ptr<class AnimationRender>	m_pAnimationRender;
 
 };

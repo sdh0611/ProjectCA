@@ -20,7 +20,7 @@ Collider::~Collider()
 	CCollisionManager::GetInstance()->DeleteCollider(this);
 }
 
-bool Collider::PostInit(CObject * pOwner, const Types::tstring & strTag)
+bool Collider::PostInit(CEntity * pOwner, const Types::tstring & strTag)
 {
 	m_pOwner				= pOwner;
 	m_strComponentTag = strTag;

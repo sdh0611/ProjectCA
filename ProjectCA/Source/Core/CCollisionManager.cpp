@@ -222,8 +222,8 @@ bool CCollisionManager::BoxAndBox(ColliderBox* pCollider, ColliderBox* pOther)
 
 	pCollider->SetIsCollision(true);
 	pOther->SetIsCollision(true);
-	pCollider->ResolveCollision(pOther->GetOwner(), (fIntersecRectWidth < fIntersecRectHeight ? fIntersecRectWidth : fIntersecRectHeight));
-	pOther->ResolveCollision(pCollider->GetOwner(), (fIntersecRectWidth < fIntersecRectHeight ? fIntersecRectWidth : fIntersecRectHeight));
+	pCollider->ResolveCollision(static_cast<CObject*>(pOther->GetOwner()), (fIntersecRectWidth < fIntersecRectHeight ? fIntersecRectWidth : fIntersecRectHeight));
+	pOther->ResolveCollision(static_cast<CObject*>(pCollider->GetOwner()), (fIntersecRectWidth < fIntersecRectHeight ? fIntersecRectWidth : fIntersecRectHeight));
 
 	return true;
 

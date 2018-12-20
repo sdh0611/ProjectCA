@@ -13,7 +13,7 @@ public:
 
 	
 public:
-	virtual bool PostInit(CObject* pOwner, const Types::tstring& strTag = TEXT("InputComponent"));
+	virtual bool PostInit(CEntity* pOwner, const Types::tstring& strTag = TEXT("InputComponent"));
 	virtual void Update(double fDeltaTime) = 0;
 	virtual void LateUpdate() = 0;
 

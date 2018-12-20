@@ -61,7 +61,7 @@ void CEnemy::Render(const HDC & hDC)
 {
 	POSITION position = GetComponent<TransformComponent>().lock()->GetPosition();
 
-	Rectangle(hDC, position.x, position.y, position.x + m_iObjectWidth, position.y + m_iObjectHeight);
+	Rectangle(hDC, position.x, position.y, position.x + m_iEntityWidth, position.y + m_iEntityHeight);
 	if (GetComponent<Collider>().lock()->IsCollision()) {
 		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
 	}

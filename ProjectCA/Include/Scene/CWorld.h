@@ -35,8 +35,8 @@ public:
 
 public:
 	void AddActor(std::shared_ptr<CActor> pActor);
-	std::weak_ptr<CActor> FindObject(OBJECT_ID iOBjectID);
-	bool DeleteObject(OBJECT_ID iObjectID);
+	std::weak_ptr<CActor> FindObject(ENTITY_ID iOBjectID);
+	bool DeleteObject(ENTITY_ID iObjectID);
 	bool DeleteObject(std::weak_ptr<CActor> pActor);
 	bool CollisionUpdate();
 	bool SetWolrdGravity(float fGravity);

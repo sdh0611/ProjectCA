@@ -56,7 +56,7 @@ public:
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
 		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, state, 
-			Types::ACT_IDLE, vertical, horizonal, dir, m_iLastObjectID++,strTag);
+			Types::ACT_IDLE, vertical, horizonal, dir, m_LastEntityID++,strTag);
 
 		if (!pActor->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -73,7 +73,7 @@ public:
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
 		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, Types::OS_IDLE, Types::ACT_IDLE,
-			Types::VS_IDLE, Types::HS_IDLE, dir, m_iLastObjectID++, strTag);
+			Types::VS_IDLE, Types::HS_IDLE, dir, m_LastEntityID++, strTag);
 
 		if (!pActor->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -90,7 +90,7 @@ public:
 		std::shared_ptr<T> pActor = std::make_shared<T>();
 
 		Types::ActorData data(iWidth, iHeight, POSITION(fx, fy), type, Types::OS_IDLE, act,
-			Types::VS_IDLE, Types::HS_IDLE, dir, m_iLastObjectID++, strTag);
+			Types::VS_IDLE, Types::HS_IDLE, dir, m_LastEntityID++, strTag);
 
 		if (!pActor->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -105,7 +105,7 @@ public:
 
 		std::shared_ptr<T> pObject = std::make_shared<T>();
 
-		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, m_iLastObjectID++,type, state);
+		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, m_LastEntityID++,type, state);
 
 		if (!pObject->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -120,7 +120,7 @@ public:
 
 		std::shared_ptr<T> pObject = std::make_shared<T>();
 
-		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, m_iLastObjectID++, type, Types::OS_IDLE);
+		Types::ObjectData data(iWidth, iHeight, POSITION(fx, fy), strTag, m_LastEntityID++, type, Types::OS_IDLE);
 
 		if (!pObject->PostInit(data, pScene))
 			return std::shared_ptr<T>();
@@ -129,7 +129,19 @@ public:
 		return pObject;
 	}
 
+	template<typename T>
+	std::shared_ptr<T> CreateEntity(UINT iWidth, UINT iHeight, float fx, float fy, const TSTRING& strName, CScene* pScene) {
 
+		std::shared_ptr<T> pEntity = std::make_shared<T>();
+
+		Types::EntityData data(iWidth, iHeight, POSITION(fx, fy), strName, m_LastEntitytID++);
+
+		if (!pEntity->PostInit(data, pScene))
+			return std::shared_ptr<T>();
+
+
+		return pObject;
+	}
 
 private:
 
@@ -137,7 +149,7 @@ private:
 
 private:
 	//std::list<StrongObjectPtr>		m_strongActorPtrList;
-	static OBJECT_ID			m_iLastObjectID;
+	static ENTITY_ID			m_LastEntityID;
 	
 };
 

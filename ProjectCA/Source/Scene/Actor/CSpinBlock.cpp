@@ -32,28 +32,28 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 		switch (pOther->GetObjectType())
 		{
 		case Types::OT_PLAYER:
+		{
+			auto pPlayer = static_cast<CPlayer*>(pOther);
+			if (pPlayer->GetActorAct() == Types::ACT_DESTROY)
 			{
-				auto pPlayer = static_cast<CPlayer*>(pOther);
-				if (pPlayer->GetActorAct() == Types::ACT_DESTROY)
+				if (pPlayer->GetPlayerState() != CPlayer::PS_SMALL)
 				{
-					if (pPlayer->GetPlayerState() != CPlayer::PS_SMALL)
+					if (type == Collider::COLLISION_TOP)
 					{
-						if (type == Collider::COLLISION_TOP)
-						{
-							pPlayer->GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(300.f);
-							HandlingEvent(Types::EVENT_DESTROY);
-						}
-					}
-				}
-				else
-				{
-					if (type == Collider::COLLISION_BOT)
-					{
-						HandlingEvent(Types::EVENT_DAMAGED);
+						pPlayer->GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(300.f);
+						HandlingEvent(Types::EVENT_DESTROY);
 					}
 				}
 			}
-			break;
+			else
+			{
+				if (type == Collider::COLLISION_BOT)
+				{
+					HandlingEvent(Types::EVENT_DAMAGED);
+				}
+			}
+		}
+		break;
 		case Types::OT_PICKABLE:
 			if (type != Collider::COLLISION_TOP)
 			{
@@ -82,8 +82,9 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	m_dTimeElapsed = 0.f;
 
 	return true;
-}
 
+}
+	
 void CSpinBlock::Init()
 {
 	m_dTimeElapsed = 0.f;

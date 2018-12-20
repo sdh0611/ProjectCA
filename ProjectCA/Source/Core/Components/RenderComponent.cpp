@@ -21,7 +21,7 @@ RenderComponent::~RenderComponent()
 		DeleteObject(m_hRenderDC);
 }
 
-bool RenderComponent::PostInit(CObject * pOwner, const TSTRING & strTag)
+bool RenderComponent::PostInit(CEntity * pOwner, const TSTRING & strTag)
 {
 	m_pOwner						= pOwner;
 

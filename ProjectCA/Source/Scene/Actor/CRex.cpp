@@ -262,12 +262,12 @@ void CRex::ActorBehavior(double dDeltaTime)
 		{
 			auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
 			POSITION position = pTransform->GetScreenPosition();
-			if (position.y > pCamera->GetCameraHeight() + m_iObjectHeight)
+			if (position.y > pCamera->GetCameraHeight() + m_iEntityHeight)
 			{
 				m_bActive = false;
 				return;
 			}
-			if (position.x < 0.f - m_iObjectWidth || position.x > pCamera->GetCameraWidth() + m_iObjectWidth)
+			if (position.x < 0.f - m_iEntityWidth || position.x > pCamera->GetCameraWidth() + m_iEntityWidth)
 			{
 				m_bActive = false;
 				return;

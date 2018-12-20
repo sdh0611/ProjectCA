@@ -33,4 +33,5 @@ private:
 	double		m_dLimitTime;
 	POSITION	m_DrawPosition;
 
+
 };

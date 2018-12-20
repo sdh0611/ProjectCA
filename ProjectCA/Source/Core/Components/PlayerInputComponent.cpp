@@ -14,7 +14,7 @@ PlayerInputComponent::~PlayerInputComponent()
 {
 }
 
-bool PlayerInputComponent::PostInit(CObject* pOwner, const Types::tstring & strTag)
+bool PlayerInputComponent::PostInit(CEntity* pOwner, const Types::tstring & strTag)
 {
 	
 	if (!InputComponent::PostInit(pOwner, strTag))

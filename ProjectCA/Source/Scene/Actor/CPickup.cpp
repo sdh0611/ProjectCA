@@ -70,7 +70,7 @@ void CPickup::LateUpdate()
 
 void CPickup::SetStored()
 {
-	printf("Stored : %d\n", m_ObjectID);
+	printf("Stored : %d\n", m_EntityID);
 	if (!GetComponent<PhysicsComponent>().expired())
 	{
 		GetComponent<PhysicsComponent>().lock()->SetActive(false);

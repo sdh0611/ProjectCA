@@ -23,11 +23,11 @@ CPipe::~CPipe()
 
 bool CPipe::PostInit(const OBJECT_DATA & data, CScene * pScene)
 {
-	UINT& iWidth = const_cast<UINT&>(data.m_iObjectWidth);
-	UINT& iHeight = const_cast<UINT&>(data.m_iObjectHeight);
+	UINT& iWidth = const_cast<UINT&>(data.m_iEntityWidth);
+	UINT& iHeight = const_cast<UINT&>(data.m_iEntityHeight);
 
-	iWidth = data.m_iObjectWidth * PIPE_UNIT_WIDTH;
-	iHeight = data.m_iObjectHeight * PIPE_UNIT_HEIGHT;
+	iWidth = data.m_iEntityWidth * PIPE_UNIT_WIDTH;
+	iHeight = data.m_iEntityHeight * PIPE_UNIT_HEIGHT;
 
 	if (!CProb::PostInit(data, pScene))
 		return false;
@@ -46,7 +46,7 @@ bool CPipe::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	//기본은 3단계 높이의 파이프
 	{
 		m_PipeType = PIPE_TOP;
-		GeneratePipe(data.m_iObjectHeight);
+		GeneratePipe(data.m_iEntityHeight);
 
 	}
 
@@ -73,7 +73,7 @@ void CPipe::Render(const HDC & hDC)
 		auto pRender			= GetComponent<ImageRender>().lock();
 		POSITION position	= GetTransform().lock()->GetScreenPivot();
 
-		//Rectangle(hDC, position.x, position.y, position.x + m_iObjectWidth, position.y + m_iObjectHeight);
+		//Rectangle(hDC, position.x, position.y, position.x + m_iEntityWidth, position.y + m_iEntityHeight);
 
 		size_t size = m_PipeImageList.size();
 		position.y -= PIPE_UNIT_HEIGHT;
@@ -125,7 +125,7 @@ void CPipe::SetPipeSize(int iSize)
 	if (iSize < 1)
 		return;
 
-	m_iObjectHeight = SPRITE_HEIGHT * 0.5f * iSize;
+	m_iEntityHeight = SPRITE_HEIGHT * 0.5f * iSize;
 }
 
 void CPipe::GeneratePipe(UINT iHeight)

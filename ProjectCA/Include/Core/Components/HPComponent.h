@@ -14,7 +14,7 @@ public:
 
 
 public:
-	bool PostInit(CObject* pOwner, float fHP, float fMaxHP, int iLifeCount,
+	bool PostInit(CEntity* pOwner, float fHP, float fMaxHP, int iLifeCount,
 		const TSTRING& strTag = TEXT("HPComponent"));
 	virtual void Init();
 	virtual void Update(double dDeltaTime) override;

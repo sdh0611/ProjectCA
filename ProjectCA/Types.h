@@ -13,24 +13,24 @@
 #define STATIC_POINTER_CAST(type, value)		std::tr1::static_pointer_cast<type>(value)
 #define DYNAMIC_POINTER_CAST(type, value)		std::tr1::dynamic_pointer_cast<T>(value)
 
-const unsigned int MAX_WIDTH			= 1024;
-const unsigned int MAX_HEIGHT			= 720;
-const unsigned int MAX_ACTOR_SIZE	= 3000;
+const unsigned int MAX_WIDTH = 1024;
+const unsigned int MAX_HEIGHT = 720;
+const unsigned int MAX_ACTOR_SIZE = 3000;
 
-const unsigned int SPRITE_WIDTH		= 32;
-const unsigned int SPRITE_HEIGHT		= 32;
+const unsigned int SPRITE_WIDTH = 32;
+const unsigned int SPRITE_HEIGHT = 32;
 
-const unsigned int TILE_WIDTH			= 32;
-const unsigned int TILE_HEIGHT			= 32;
+const unsigned int TILE_WIDTH = 32;
+const unsigned int TILE_HEIGHT = 32;
 
-const unsigned int FONT_SIZE				= 8;
+const unsigned int FONT_SIZE = 8;
 
 
 namespace Types {
 
 	typedef std::basic_string<TCHAR> tstring;
 
-	typedef unsigned long ObjectID;
+	typedef unsigned long EntityID;
 	typedef unsigned long CameraID;
 
 	////Object 타입 정의
@@ -42,8 +42,10 @@ namespace Types {
 	//Actor 타입 정의
 	//enum ActorType { AT_PLAYER, AT_ENEMY, AT_PROB, AT_PICKUP, AT_BULLET, AT_BACKGROUND };
 
-	enum ObjectType { OT_PLAYER, OT_ENEMY, OT_PROB, OT_WALL, OT_GROUND, 
-		OT_PICKUP, OT_BULLET, OT_BACKGROUND, OT_BLOCK, OT_PICKABLE, OT_UI };
+	enum ObjectType {
+		OT_PLAYER, OT_ENEMY, OT_PROB, OT_WALL, OT_GROUND,
+		OT_PICKUP, OT_BULLET, OT_BACKGROUND, OT_BLOCK, OT_PICKABLE, OT_UI
+	};
 #ifndef TYPE_ACTION 
 	//오브젝트 상태 정의
 	enum ActorState { AS_IDLE, AS_MOVE, AS_ATTACK, AS_DAMAGED, AS_DEAD };
@@ -58,11 +60,13 @@ namespace Types {
 	enum VerticalState { VS_IDLE, VS_JUMP, VS_FALL };
 
 	//수평상의 이동 상태를 구분하기 위한 열거체 (10.13)
-	enum HorizonalState{ HS_IDLE, HS_WALK, HS_RUN, HS_TURN };
+	enum HorizonalState { HS_IDLE, HS_WALK, HS_RUN, HS_TURN };
 #endif
 	//Animation관련 
-	enum AnimationMotion { AM_IDLE, AM_WALK, AM_RUN, AM_TURN, AM_LOOKUP, AM_SITDOWN 
-		,AM_JUMP, AM_FALL, AM_ATTACK, AM_DAMAGED, AM_DEAD};
+	enum AnimationMotion {
+		AM_IDLE, AM_WALK, AM_RUN, AM_TURN, AM_LOOKUP, AM_SITDOWN
+		, AM_JUMP, AM_FALL, AM_ATTACK, AM_DAMAGED, AM_DEAD
+	};
 
 	//방향 열거체 정의
 	enum Direction { DIR_DOWN = -1, DIR_IDLE, DIR_UP, DIR_LEFT, DIR_RIGHT };
@@ -121,8 +125,8 @@ namespace Types {
 		}
 
 	};
-	   
-	
+
+
 
 	//Rect구조체 정의
 	struct Rect {
@@ -131,22 +135,22 @@ namespace Types {
 		float right;
 		float bottom;
 
-		Rect(float _left, float _top, float _right, float _bottom) 
+		Rect(float _left, float _top, float _right, float _bottom)
 		{
 			left = _left;
 			top = _top;
 			right = _right;
 			bottom = _bottom;
 		}
-		~Rect(){ }
+		~Rect() { }
 
 		Rect(const Rect& other) :
 			Rect(other.left, other.top, other.right, other.bottom)
 		{	}
 
 		bool operator ==(const Rect& other) {
-			if ( (left == other.left) && (top = other.top) 
-				&& (right == other.right) && (bottom = other.bottom) )
+			if ((left == other.left) && (top = other.top)
+				&& (right == other.right) && (bottom = other.bottom))
 				return true;
 
 			return false;
@@ -178,35 +182,54 @@ namespace Types {
 
 	};
 
-	struct ObjectData {
+	struct EntityData {
+
+		UINT			m_iEntityWidth;
+		UINT			m_iEntityHeight;
+		Point			m_EntityPoint;
+		tstring		m_strEntityName;
+		EntityID		m_EntityID;
+
+		EntityData(UINT iWidth, UINT iHeight, Point point, const tstring& strName, EntityID id)
+			: m_iEntityWidth(iWidth), m_iEntityHeight(iHeight), m_EntityPoint(point), 
+			m_strEntityName(strName), m_EntityID(id)
+		{
+		}
+
+		EntityData& operator=(const EntityData& other)
+		{
+			m_iEntityWidth = other.m_iEntityWidth;
+			m_iEntityHeight = other.m_iEntityHeight;
+			m_EntityPoint = other.m_EntityPoint;
+			m_EntityID = other.m_EntityID;
+			m_strEntityName = other.m_strEntityName;
+		}
+
+	};
+
+	struct ObjectData : public EntityData {
 		class CGameScene;
 
-		UINT			m_iObjectWidth;
-		UINT			m_iObjectHeight;
-		Point			m_ObjectPoint;
-		tstring		m_strObjectName;
-		ObjectID		m_iObjectID;
 		ObjectType	m_ObjectType;
 		ObjectState m_ObjectState;
 
-		ObjectData(UINT iWidth, UINT iHeight, Point point, const tstring& strName, 
-			ObjectID id, ObjectType type,ObjectState state)
-			: m_iObjectWidth(iWidth), m_iObjectHeight(iHeight), m_ObjectPoint(point),
-			m_strObjectName(strName), m_iObjectID(id), m_ObjectType(type), m_ObjectState(state)
+		ObjectData(UINT iWidth, UINT iHeight, Point point, const tstring& strName,
+			EntityID id, ObjectType type, ObjectState state)
+			: EntityData(iWidth, iHeight, point, strName, id),
+			m_ObjectType(type), m_ObjectState(state)
 		{
 		}
 
 		ObjectData& operator=(const ObjectData& other)
 		{
-			m_iObjectWidth		= other.m_iObjectWidth;
-			m_iObjectHeight		= other.m_iObjectHeight;
-			m_ObjectPoint			= other.m_ObjectPoint;
-			m_strObjectName		= other.m_strObjectName;
-			m_iObjectID				= other.m_iObjectID;
-			m_ObjectType			= other.m_ObjectType;
-			m_ObjectState			= other.m_ObjectState;
+			m_iEntityWidth = other.m_iEntityWidth;
+			m_iEntityHeight = other.m_iEntityHeight;
+			m_EntityPoint = other.m_EntityPoint;
+			m_EntityID = other.m_EntityID;
+			m_strEntityName = other.m_strEntityName;
+			m_ObjectType = other.m_ObjectType;
+			m_ObjectState = other.m_ObjectState;
 		}
-
 
 	};
 
@@ -222,40 +245,41 @@ namespace Types {
 
 		ActorData(UINT iWidth, UINT iHeight, Point point, ObjectType type, ObjectState state,
 			ActType act, VerticalState vertical, HorizonalState horizonal, Direction dir,
-			ObjectID id, const tstring& strName)
+			EntityID id, const tstring& strName)
 			:ObjectData(iWidth, iHeight, point, strName, id, type, state),
-			m_ActorType(type), m_ActorState(state), 
+			m_ActorType(type), m_ActorState(state),
 			m_ActType(act), m_VerticalState(vertical), m_HorizonalState(horizonal),
 			m_Direction(dir)
-		{			
+		{
 		}
 
 		ActorData& operator=(const ActorData& other) {
-			m_iObjectWidth		= other.m_iObjectWidth;
-			m_iObjectHeight		= other.m_iObjectHeight;
-			m_ObjectPoint			= other.m_ObjectPoint;
-			m_iObjectID				= other.m_iObjectID;
-			m_strObjectName		= other.m_strObjectName;
-			m_ActorType			= other.m_ActorType;
-			m_ActorState			= other.m_ActorState;
-			m_ActType				= other.m_ActType;
-			m_VerticalState			= other.m_VerticalState;
-			m_HorizonalState		= other.m_HorizonalState;
-			m_Direction				= other.m_Direction;
+			m_iEntityWidth = other.m_iEntityWidth;
+			m_iEntityHeight = other.m_iEntityHeight;
+			m_EntityPoint = other.m_EntityPoint;
+			m_strEntityName = other.m_strEntityName;
+			m_EntityID = other.m_EntityID;
+			m_ActorType = other.m_ActorType;
+			m_ActorState = other.m_ActorState;
+			m_ActType = other.m_ActType;
+			m_VerticalState = other.m_VerticalState;
+			m_HorizonalState = other.m_HorizonalState;
+			m_Direction = other.m_Direction;
 		}
 		//CWorld*					m_pOwnerWorld;
 	};
-	
 
 }
 
 typedef Types::tstring					TSTRING;
 typedef Types::UIType				UI_TYPE;
 typedef Types::Point					POSITION;
+typedef Types::CameraID				CAMERA_ID;
+typedef Types::EntityID				ENTITY_ID;
+typedef Types::EntityData			ENTITY_DATA;
 typedef Types::ObjectType			OBEJCT_TYPE;
 typedef Types::ObjectType			OBJECT_TYPE;
 typedef Types::ObjectData			OBJECT_DATA;
-typedef Types::ObjectID				OBJECT_ID;
 typedef Types::ObjectState			OBJECT_STATE;
 typedef Types::ActorData			ACTOR_DATA;
 typedef Types::ActType				ACT;

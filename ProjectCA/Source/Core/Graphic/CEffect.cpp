@@ -11,7 +11,7 @@ CEffect::~CEffect()
 {
 }
 
-bool CEffect::Init(CObject* pOwner)
+bool CEffect::Init(CEntity* pOwner)
 {
 	m_pOwnerObject = pOwner;
 

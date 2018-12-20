@@ -17,7 +17,7 @@ PhysicsComponent::~PhysicsComponent()
 {
 }
 
-bool PhysicsComponent::PostInit(CObject* pOwner, float fSpeed, float fMaxSpeed, 
+bool PhysicsComponent::PostInit(CEntity* pOwner, float fSpeed, float fMaxSpeed, 
 	float fGravity, float fJumpForce, const Types::tstring& strTag)
 {
 

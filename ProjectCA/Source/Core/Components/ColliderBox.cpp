@@ -15,7 +15,7 @@ ColliderBox::~ColliderBox()
 {
 }
 
-bool ColliderBox::PostInit(CObject* pOwner, const Types::tstring& strTag)
+bool ColliderBox::PostInit(CEntity* pOwner, const Types::tstring& strTag)
 {
 
 	//m_ColliderPoint = point;
@@ -23,13 +23,13 @@ bool ColliderBox::PostInit(CObject* pOwner, const Types::tstring& strTag)
 		return false;
 
 	//처음 Init할 때 기본값으로 Actor의 너비, 높이를 따라가도록 함.
-	m_fWidth					= m_fCurWidth = m_pOwner->GetObjectWidth();
-	m_fHeight					= m_fCurHeight =m_pOwner->GetObjectHeight();
+	m_fWidth					= m_fCurWidth = m_pOwner->GetEntityWidth();
+	m_fHeight					= m_fCurHeight =m_pOwner->GetEntityHeight();
 
 	float fPivotWidthRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
 	float fPivotHeightRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
 
-	m_CurColliderPoint		= m_pOwner->GetObjectPosition();
+	m_CurColliderPoint		= m_pOwner->GetEntityPosition();
 
 	m_ColliderRect.left			= m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
 	m_ColliderRect.top		= m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
@@ -44,7 +44,7 @@ bool ColliderBox::PostInit(CObject* pOwner, const Types::tstring& strTag)
 
 void ColliderBox::Init()
 {
-	m_CurColliderPoint		= m_pOwner->GetObjectPosition();
+	m_CurColliderPoint		= m_pOwner->GetEntityPosition();
 	m_fCurWidth				= m_fWidth;
 	m_fCurHeight				= m_fHeight;
 	
@@ -67,7 +67,7 @@ void ColliderBox::Update(double dDeltaTime)
 		float fPivotWidthRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
 		float fPivotHeightRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
 
-		m_CurColliderPoint = m_pOwner->GetObjectPosition();
+		m_CurColliderPoint = m_pOwner->GetEntityPosition();
 
 		m_ColliderRect.left = m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
 		m_ColliderRect.top = m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
@@ -75,7 +75,7 @@ void ColliderBox::Update(double dDeltaTime)
 		m_ColliderRect.bottom = m_CurColliderPoint.y + m_fCurHeight * (1.f - fPivotHeightRatio);
 		
 		
-		//m_CurColliderPoint = m_pOwner->GetObjectPosition();
+		//m_CurColliderPoint = m_pOwner->GetEntityPosition();
 
 		//auto pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
 		//if (pPhysics)
@@ -100,7 +100,7 @@ void ColliderBox::LateUpdate()
 		float fPivotWidthRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotWidthRatio();
 		float fPivotHeightRatio = m_pOwner->GetComponent<TransformComponent>().lock()->GetPivotHeightRatio();
 
-		m_CurColliderPoint = m_pOwner->GetObjectPosition();
+		m_CurColliderPoint = m_pOwner->GetEntityPosition();
 
 		m_ColliderRect.left = m_CurColliderPoint.x - m_fCurWidth * fPivotWidthRatio;
 		m_ColliderRect.top = m_CurColliderPoint.y - m_fCurHeight * fPivotHeightRatio;
@@ -122,7 +122,7 @@ void ColliderBox::LateUpdate()
 	}
 }
 
-void ColliderBox::DrawCollider(const HDC & hDC, const POSITION& position)
+void ColliderBox::DrawCollider(const HDC & hDC)
 {
 	Rectangle(hDC, m_ColliderRect.left, m_ColliderRect.top, m_ColliderRect.right, m_ColliderRect.bottom);
 

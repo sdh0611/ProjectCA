@@ -82,7 +82,7 @@ void CWorld::AddActor(std::shared_ptr<CActor> pActor)
 
 //해당 Actor의 weak_ptr를 찾은 경우 weak_ptr값을 반환하고, 못찾은 경우 default생성자값을 반환
 // -> lock()메소드 사용시 nullptr 반환
-std::weak_ptr<CActor>  CWorld::FindObject(OBJECT_ID iObjectID)
+std::weak_ptr<CActor>  CWorld::FindObject(ENTITY_ID iObjectID)
 {
 	for (auto& it : m_ActorList)
 		if (it.lock()->GetObjectID() == iObjectID)
@@ -91,7 +91,7 @@ std::weak_ptr<CActor>  CWorld::FindObject(OBJECT_ID iObjectID)
 	return std::weak_ptr<CActor>();
 }
 
-bool CWorld::DeleteObject(OBJECT_ID iObjectID)
+bool CWorld::DeleteObject(ENTITY_ID iObjectID)
 {
 	std::weak_ptr<CActor> pActor = FindObject(iObjectID);
 	if (pActor.lock() == nullptr)	//

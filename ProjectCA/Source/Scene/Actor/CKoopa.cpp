@@ -224,7 +224,7 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
-	//pCollider->SetSize(m_iObjectWidth*0.45, m_iObjectHeight*0.8);
+	//pCollider->SetSize(m_iEntityWidth*0.45, m_iEntityHeight*0.8);
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
@@ -307,12 +307,12 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 		{
 			auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
 			POSITION position = pTransform->GetScreenPosition();
-			if (position.y > pCamera->GetCameraHeight() + m_iObjectHeight)
+			if (position.y > pCamera->GetCameraHeight() + m_iEntityHeight)
 			{
 				SetActive(false);
 				return;
 			}
-			if (position.x < 0.f - m_iObjectWidth || position.x > pCamera->GetCameraWidth() + m_iObjectWidth)
+			if (position.x < 0.f - m_iEntityWidth || position.x > pCamera->GetCameraWidth() + m_iEntityWidth)
 			{
 				SetActive(false);
 				return;

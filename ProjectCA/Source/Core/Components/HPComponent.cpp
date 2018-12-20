@@ -10,7 +10,7 @@ HPComponent::~HPComponent()
 {
 }
 
-bool HPComponent::PostInit(CObject* pOwner, float fHP, float fMaxHP, int iLifeCount,
+bool HPComponent::PostInit(CEntity* pOwner, float fHP, float fMaxHP, int iLifeCount,
 	const TSTRING & strTag)
 {
 	m_pOwner = pOwner;

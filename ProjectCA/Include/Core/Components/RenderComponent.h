@@ -13,7 +13,7 @@ public:
 
 
 public:
-	virtual bool	PostInit(CObject* pOwner, const TSTRING& strTag = TEXT("RenderComponent"));
+	virtual bool	PostInit(CEntity* pOwner, const TSTRING& strTag = TEXT("RenderComponent"));
 	virtual void	Init() override;
 	virtual void	Update(double dDeltaTime) override;
 	virtual void	LateUpdate() override;

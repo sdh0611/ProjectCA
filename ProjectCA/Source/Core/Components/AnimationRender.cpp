@@ -20,7 +20,7 @@ AnimationRender::~AnimationRender()
 }
 
 
-bool AnimationRender::PostInit(CObject * pOwner, const TSTRING & strTag)
+bool AnimationRender::PostInit(CEntity * pOwner, const TSTRING & strTag)
 {
 	if (!RenderComponent::PostInit(pOwner, strTag))
 		return false;
@@ -59,7 +59,7 @@ void AnimationRender::Draw(const HDC & hDC)
 
 		//if (pCollider)
 		//{
-		//	pCollider->DrawCollider(hDC, position);
+		//	pCollider->DrawCollider(hDC);
 
 		//	if (pCollider->IsCollision())
 		//	{

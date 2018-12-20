@@ -190,6 +190,7 @@
     <ClCompile Include="Source\Scene\Actor\CShell.cpp" />
     <ClCompile Include="Source\Scene\Actor\CSpinBlock.cpp" />
     <ClCompile Include="Source\Scene\CCameraManager.cpp" />
+    <ClCompile Include="Source\Scene\CEntity.cpp" />
     <ClCompile Include="Source\Scene\CGameScene.cpp" />
     <ClCompile Include="Source\Scene\CLayer.cpp" />
     <ClCompile Include="Source\Scene\CObject.cpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Include\Scene\Actor\CShell.h" />
     <ClInclude Include="Include\Scene\Actor\CSpinBlock.h" />
     <ClInclude Include="Include\Scene\CCameraManager.h" />
+    <ClInclude Include="Include\Scene\CEntity.h" />
     <ClInclude Include="Include\Scene\CGameScene.h" />
     <ClInclude Include="Include\Scene\CLayer.h" />
     <ClInclude Include="Include\Scene\CObject.h" />

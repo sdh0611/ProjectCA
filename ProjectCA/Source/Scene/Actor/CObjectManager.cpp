@@ -10,7 +10,7 @@
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 
 
-OBJECT_ID CObjectManager::m_iLastObjectID = 0;
+ENTITY_ID CObjectManager::m_LastEntityID = 0;
 
 CObjectManager::CObjectManager()
 {
@@ -52,5 +52,5 @@ bool CObjectManager::Init() {
 //
 void CObjectManager::Clear()
 {
-	m_iLastObjectID = 0;
+	m_LastEntityID = 0;
 }

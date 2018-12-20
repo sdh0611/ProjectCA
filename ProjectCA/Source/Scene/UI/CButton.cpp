@@ -70,10 +70,10 @@ bool CButton::IsClickOnButton()
 	GetCursorPos(&point);
 	ScreenToClient(MainWindow::GetInstance()->GetWindowHandle(), &point);
 
-	if (point.x < buttonPosition.x || point.x >(buttonPosition.x + (float)m_iObjectWidth))
+	if (point.x < buttonPosition.x || point.x >(buttonPosition.x + (float)m_iEntityWidth))
 		return false;
 
-	if (point.y < buttonPosition.y || point.y >(buttonPosition.y + (float)m_iObjectHeight))
+	if (point.y < buttonPosition.y || point.y >(buttonPosition.y + (float)m_iEntityHeight))
 		return false;
 
 	return CInputManager::GetInstance()->IsMouseDown(TEXT("LBUTTON_DBCLK"));

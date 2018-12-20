@@ -22,7 +22,7 @@ bool CInterface::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	auto pRender = std::make_shared<ImageRender>();
 	if (!pRender->PostInit(this))
 		return false;
-	pRender->SetDrawSize(m_iObjectWidth, m_iObjectHeight);
+	pRender->SetDrawSize(m_iEntityWidth, m_iEntityHeight);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 

@@ -13,8 +13,8 @@
 
 bool CGround::PostInit(const OBJECT_DATA &data, CScene *pScene)
 {
-	UINT& iWidth = const_cast<UINT&>(data.m_iObjectWidth);
-	UINT& iHeight = const_cast<UINT&>(data.m_iObjectHeight);
+	UINT& iWidth = const_cast<UINT&>(data.m_iEntityWidth);
+	UINT& iHeight = const_cast<UINT&>(data.m_iEntityHeight);
 
 	iWidth *= TILE_WIDTH;
 	iHeight *= TILE_HEIGHT;
@@ -68,6 +68,8 @@ void CGround::Render(const HDC & hDC)
 		outputPosition.x = fOriginPositionX;
 	}
 
+	//GetComponent<ColliderBox>().lock()->DrawCollider(hDC);
+
 }
 
 bool CGround::LoadTileImage()
@@ -92,10 +94,10 @@ bool CGround::LoadTileImage()
 
 
 
-	for (int row = 0; row < m_iObjectHeight / TILE_HEIGHT; ++row)
+	for (int row = 0; row < m_iEntityHeight / TILE_HEIGHT; ++row)
 	{
 		m_TileInfoList.emplace_back();
-		for (int tileIndex = 0; tileIndex < m_iObjectWidth / TILE_WIDTH; ++tileIndex)
+		for (int tileIndex = 0; tileIndex < m_iEntityWidth / TILE_WIDTH; ++tileIndex)
 		{
 			if (row == 0)
 			{
@@ -105,7 +107,7 @@ bool CGround::LoadTileImage()
 					{
 						m_TileInfoList[row].push_back(GI_EDGE_LEFT_TOP);
 					}
-					else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+					else if (tileIndex == m_iEntityWidth / TILE_WIDTH - 1)
 					{
 						m_TileInfoList[row].push_back(GI_EDGE_RIGHT_TOP);
 					}
@@ -120,7 +122,7 @@ bool CGround::LoadTileImage()
 					{
 						m_TileInfoList[row].push_back(GI_EDGE_LEFT_TOP2);
 					}
-					else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+					else if (tileIndex == m_iEntityWidth / TILE_WIDTH - 1)
 					{
 						m_TileInfoList[row].push_back(GI_EDGE_RIGHT_TOP2);
 					}
@@ -130,13 +132,13 @@ bool CGround::LoadTileImage()
 					}
 				}
 			}
-			else if (row == m_iObjectHeight / TILE_HEIGHT - 1)
+			else if (row == m_iEntityHeight / TILE_HEIGHT - 1)
 			{
 				if (tileIndex == 0)
 				{
 					m_TileInfoList[row].push_back(GI_EDGE_LEFT_BOT);
 				}
-				else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+				else if (tileIndex == m_iEntityWidth / TILE_WIDTH - 1)
 				{
 					m_TileInfoList[row].push_back(GI_EDGE_RIGHT_BOT);
 				}
@@ -153,7 +155,7 @@ bool CGround::LoadTileImage()
 					{
 						m_TileInfoList[row].push_back(GI_LINE_LEFT);
 					}
-					else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+					else if (tileIndex == m_iEntityWidth / TILE_WIDTH - 1)
 					{
 						m_TileInfoList[row].push_back(GI_LINE_RIGHT);
 					}
@@ -168,7 +170,7 @@ bool CGround::LoadTileImage()
 					{
 						m_TileInfoList[row].push_back(GI_LINE_LEFT2);
 					}
-					else if (tileIndex == m_iObjectWidth / TILE_WIDTH - 1)
+					else if (tileIndex == m_iEntityWidth / TILE_WIDTH - 1)
 					{
 						m_TileInfoList[row].push_back(GI_LINE_RIGHT2);
 					}

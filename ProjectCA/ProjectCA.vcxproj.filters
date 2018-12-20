@@ -315,6 +315,9 @@
     <ClCompile Include="Source\Scene\Actor\CPickupBlock.cpp">
       <Filter>소스 파일\Scene\Actors\Block</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\CEntity.cpp">
+      <Filter>소스 파일\Scene\Actors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -526,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CPickupBlock.h">
       <Filter>헤더 파일\Scene\Actors\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CEntity.h">
+      <Filter>헤더 파일\Scene\Actors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

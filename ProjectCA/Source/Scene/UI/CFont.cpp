@@ -101,8 +101,8 @@ bool CFont::PostInit(const OBJECT_DATA & data, CScene * pScene)
 
 
 	m_iFontInterval		= m_FontTable['a'].lock()->GetBitWidth();
-	m_iFontWidth		= m_iObjectWidth;
-	m_iFontHeight		= m_iObjectHeight;
+	m_iFontWidth		= m_iEntityWidth;
+	m_iFontHeight		= m_iEntityHeight;
 	m_strSentence		= TEXT("");
 
 	return true;
@@ -149,7 +149,7 @@ void CFont::ResizeFontContainer()
 
 
 
-	m_iObjectWidth = m_strSentence.length() * m_iFontWidth;
+	m_iEntityWidth = m_strSentence.length() * m_iFontWidth;
 	GetTransform().lock()->AdjustPivot();
 }
 

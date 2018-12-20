@@ -5,6 +5,8 @@
 
 //ColliderType에 Trigger도 추가해보자.
 
+class CObject;
+
 class Collider : public ComponentBase {
 
 public:
@@ -23,11 +25,11 @@ public:
 
 
 public:
-	virtual bool PostInit(CObject* pOwner, const Types::tstring& strTag = TEXT("Collider"));
+	virtual bool PostInit(CEntity* pOwner, const Types::tstring& strTag = TEXT("Collider"));
 	virtual void Update(double dDeltaTime) = 0;
 	virtual void LateUpdate() override;
 	virtual void ResolveCollision(CObject* pOther, float fintersectLength);
-	virtual void DrawCollider(const HDC& hDC, const POSITION& position) = 0;
+	virtual void DrawCollider(const HDC& hDC) = 0;
 
 
 public:

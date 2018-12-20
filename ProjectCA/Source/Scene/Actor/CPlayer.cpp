@@ -37,8 +37,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	//m_bProtected			= false;
 
 	m_dTimeElapsed		= 0.f;
-	m_iSmallStateWidth	= m_iObjectWidth;
-	m_iSmallStateHeight	= m_iObjectHeight * 0.6;
+	m_iSmallStateWidth	= m_iEntityWidth;
+	m_iSmallStateHeight	= m_iEntityHeight * 0.6;
 
 	//PlayerInputComponent (InputComponent) √ ±‚»≠
 	std::shared_ptr<PlayerInputComponent> pInput = std::make_shared<PlayerInputComponent>();
@@ -88,7 +88,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			}
 			break;
 		case Types::OT_PROB:
-			switch (type) {
+		switch (type) {
 			case Collider::COLLISION_BOT:
 				//printf("ID : %d\n", pOther->GetObjectID());
 				pPhysics->SetGrounded(true);
@@ -227,7 +227,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 						if (CInputManager::GetInstance()->IsKeyDown(TEXT("ACCEL")))
 						{
 							m_pPickObjectPtr = m_pOwnerScene->FindObjectFromScene(pOther->GetObjectID()).lock();
-							m_pPickObjectPtr.lock()->SetOwnerObject(m_pOwnerScene->FindObjectFromScene(m_ObjectID).lock());
+							m_pPickObjectPtr.lock()->SetOwnerObject(m_pOwnerScene->FindObjectFromScene(m_EntityID).lock());
 							m_pPickObjectPtr.lock()->GetComponent<PhysicsComponent>().lock()->SetStatic(true);
 						}
 					}
@@ -244,7 +244,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
-	//pCollider->SetSize(m_iObjectWidth*0.35, m_iObjectHeight*0.8);
+	//pCollider->SetSize(m_iEntityWidth*0.35, m_iEntityHeight*0.8);
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
@@ -1134,11 +1134,11 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		{
 			if (m_Direction == Types::DIR_LEFT)
 			{
-				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 20.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
+				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 20.f, GetObjectPosition().y - m_iEntityHeight * 0.15f);
 			}
 			else if (m_Direction == Types::DIR_RIGHT)
 			{
-				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 20.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
+				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 20.f, GetObjectPosition().y - m_iEntityHeight * 0.15f);
 			}
 		}
 		else
@@ -1148,7 +1148,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			pPhysics->SetStatic(false);
 			if (CInputManager::GetInstance()->IsKeyDown(TEXT("UP")))
 			{
-				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - m_iObjectHeight * 0.4f);
+				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - m_iEntityHeight * 0.4f);
 				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 
 			}
@@ -1157,11 +1157,11 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 				//pPhysics->SetCurJumpForce(0.f);
 				if (m_Direction == Types::DIR_LEFT)
 				{
-					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iObjectHeight * 0.1f);
+					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iEntityHeight * 0.1f);
 				}
 				else if (m_Direction == Types::DIR_RIGHT)
 				{
-					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iObjectHeight * 0.1f);
+					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iEntityHeight * 0.1f);
 				}
 			}
 			else
@@ -1170,13 +1170,13 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 				if (m_Direction == Types::DIR_LEFT)
 				{
 					STATIC_POINTER_CAST(CActor, m_pPickObjectPtr.lock())->SetActorDirection(Types::DIR_LEFT);
-					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
+					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iEntityHeight * 0.15f);
 					pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
 				}
 				else if (m_Direction == Types::DIR_RIGHT)
 				{
 					STATIC_POINTER_CAST(CActor, m_pPickObjectPtr.lock())->SetActorDirection(Types::DIR_RIGHT);
-					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iObjectHeight * 0.15f);
+					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iEntityHeight * 0.15f);
 					pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
 				}
 			}
@@ -1277,7 +1277,7 @@ void CPlayer::SetPlayerState(PlayerState state)
 	case PS_BIG:
 		if (m_PlayerState == PS_SMALL)
 		{
-			pCollider->SetHeight(m_iObjectHeight*0.8);
+			pCollider->SetHeight(m_iEntityHeight*0.8);
 		}
 
 		if (m_PlayerState != PS_BIG)
@@ -1288,7 +1288,7 @@ void CPlayer::SetPlayerState(PlayerState state)
 	case PS_FLOWER:
 		if (m_PlayerState == PS_SMALL)
 		{
-			pCollider->SetHeight(m_iObjectHeight*0.8);
+			pCollider->SetHeight(m_iEntityHeight*0.8);
 		}
 
 		if (m_PlayerState != PS_FLOWER)

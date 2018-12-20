@@ -25,22 +25,25 @@ bool CObject::PostInit(const OBJECT_DATA & data, CScene* pScene)
 {
 	//Object 속성 초기화 및 Transform 컴포넌트 추가
 	//Pivot ratio는 외부에서 따로 지정해줄 것.
-	m_bActive				= true;
-	m_iObjectWidth		= data.m_iObjectWidth;
-	m_iObjectHeight		= data.m_iObjectHeight;
-	m_strObjectName		= data.m_strObjectName;
+	if (!CEntity::PostInit(data, pScene))
+	{
+		return false;
+	}
+	//m_bActive				= true;
+	//m_iObjectWidth		= data.m_iObjectWidth;
+	//m_iObjectHeight		= data.m_iObjectHeight;
+	//m_strObjectName		= data.m_strObjectName;
 	m_ObjectType			= data.m_ObjectType;
 	m_ObjectState			= data.m_ObjectState;
-	m_ObjectID				= data.m_iObjectID;
-	m_strLayerTag			= TEXT("default");
-	m_pOwnerScene		= pScene;
+	//m_ObjectID				= data.m_iObjectID;
+	//m_pOwnerScene		= pScene;
 
-	auto pTransform = std::make_shared<TransformComponent>();
-	if (!pTransform->PostInit(this, data.m_ObjectPoint))
-		return false;
+	//auto pTransform = std::make_shared<TransformComponent>();
+	//if (!pTransform->PostInit(this, data.m_ObjectPoint))
+	//	return false;
 
-	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
-		return false;
+	//if (!AddComponent(pTransform, pTransform->GetComponentTag()))
+	//	return false;
 
 	return true;
 }
@@ -61,60 +64,61 @@ void CObject::Init()
 
 void CObject::Update(double dDeltaTime)
 {
-	for (const auto& component : m_ComponentTable)
-	{
-		component.second->Update(dDeltaTime);
-	}
+	CEntity::Update(dDeltaTime);
+	//for (const auto& component : m_ComponentTable)
+	//{
+	//	component.second->Update(dDeltaTime);
+	//}
 }
 
 void CObject::LateUpdate()
 {
-	if (CCameraManager::GetInstance()->GetMainCamera().expired())
-		return;
+	//if (CCameraManager::GetInstance()->GetMainCamera().expired())
+	//	return;
 
-	GetTransform().lock()->AdjustScreenPosition();
+	//GetTransform().lock()->AdjustScreenPosition();
 
-	//auto pCollider = GetComponent(TEXT("Collider"));
-	//if (!pCollider.expired())
+	////auto pCollider = GetComponent(TEXT("Collider"));
+	////if (!pCollider.expired())
+	////{
+	////	pCollider.lock()->LateUpdate();
+	////}
+
+	//auto pRender = GetComponent(TEXT("RenderComponent"));
+	//if (!pRender.expired())
 	//{
-	//	pCollider.lock()->LateUpdate();
+	//	pRender.lock()->LateUpdate();
 	//}
-
-	auto pRender = GetComponent(TEXT("RenderComponent"));
-	if (!pRender.expired())
-	{
-		pRender.lock()->LateUpdate();
-	}
-
+	CEntity::LateUpdate();
 }
 
-
-std::weak_ptr<ComponentBase> CObject::GetComponent(const TSTRING& strTag)
-{
-	auto it = m_ComponentTable.find(strTag);
-
-	if (it == m_ComponentTable.end())
-		return std::weak_ptr<ComponentBase>();
-
-	return it->second;
-}
-
-bool CObject::AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag)
-{
-	return m_ComponentTable.insert(std::make_pair(strTag, pComponent)).second;
-}
-
-bool CObject::DeleteComponent(const TSTRING & strTag)
-{
-	ComponentTable::iterator it = m_ComponentTable.find(strTag);
-
-	if (it == m_ComponentTable.end())
-		return false;
-
-	m_ComponentTable.erase(strTag);
-
-	return true;
-}
+//
+//std::weak_ptr<ComponentBase> CObject::GetComponent(const TSTRING& strTag)
+//{
+//	auto it = m_ComponentTable.find(strTag);
+//
+//	if (it == m_ComponentTable.end())
+//		return std::weak_ptr<ComponentBase>();
+//
+//	return it->second;
+//}
+//
+//bool CObject::AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag)
+//{
+//	return m_ComponentTable.insert(std::make_pair(strTag, pComponent)).second;
+//}
+//
+//bool CObject::DeleteComponent(const TSTRING & strTag)
+//{
+//	ComponentTable::iterator it = m_ComponentTable.find(strTag);
+//
+//	if (it == m_ComponentTable.end())
+//		return false;
+//
+//	m_ComponentTable.erase(strTag);
+//
+//	return true;
+//}
 
 CObject * CObject::Clone()
 {
@@ -136,18 +140,18 @@ void CObject::SetActive(bool bActive)
 
 void CObject::SetObjectSize(UINT iWidth, UINT iHeight)
 {
-	m_iObjectWidth = iWidth;
-	m_iObjectHeight = iHeight;
+	m_iEntityWidth		= iWidth;
+	m_iEntityHeight	= iHeight;
 }
 
 void CObject::SetObjectWidth(UINT iWidth)
 {
-	m_iObjectWidth = iWidth;
+	m_iEntityWidth = iWidth;
 }
 
 void CObject::SetObjectHeight(UINT iHeight)
 {
-	m_iObjectHeight = iHeight;
+	m_iEntityHeight = iHeight;
 }
 
 void CObject::SetObjectPosition(POSITION position)
@@ -167,20 +171,12 @@ void CObject::SetObjectState(OBJECT_STATE state)
 
 void CObject::SetObjectName(const TSTRING & strName)
 {
-	m_strObjectName = strName;
+	m_strEntityName = strName;
 }
 
 void CObject::SetOwnerLayer(CLayer * pLayer)
 {
 	m_pOwnerLayer = pLayer;
-	if (pLayer)
-	{
-		m_strLayerTag = pLayer->GetLayerTag();
-	}
-	else
-	{
-		m_strLayerTag = TEXT("Default");
-	}
 }
 
 void CObject::SetOwnerScene(CScene * pScene)
@@ -190,10 +186,6 @@ void CObject::SetOwnerScene(CScene * pScene)
 
 void CObject::SetOwnerObject(std::shared_ptr<CObject> pOwner)
 {
-	if (pOwner == nullptr)
-	{
-
-	}
 	m_pOwnerObject = pOwner;
 }
 
@@ -219,12 +211,12 @@ bool CObject::IsSubordinate()
 
 UINT CObject::GetObjectWidth() const
 {
-	return m_iObjectWidth;
+	return m_iEntityWidth;
 }
 
 UINT CObject::GetObjectHeight() const
 {
-	return m_iObjectHeight;
+	return m_iEntityHeight;
 }
 
 POSITION CObject::GetObjectPosition()
@@ -232,9 +224,9 @@ POSITION CObject::GetObjectPosition()
 	return GetTransform().lock()->GetPosition();
 }
 
-OBJECT_ID CObject::GetObjectID() const
+ENTITY_ID CObject::GetObjectID() const
 {
-	return m_ObjectID;
+	return m_EntityID;
 }
 
 OBJECT_TYPE CObject::GetObjectType() const
@@ -259,20 +251,20 @@ CScene * const CObject::GetOwnerScene() const
 
 const TSTRING & CObject::GetObjectName()
 {
-	return m_strObjectName;
+	return m_strEntityName;
 }
 
-std::weak_ptr<TransformComponent> CObject::GetTransform()
-{
-	return GetComponent<TransformComponent>();
-}
+//std::weak_ptr<TransformComponent> CObject::GetTransform()
+//{
+//	return GetComponent<TransformComponent>();
+//}
 
 std::weak_ptr<CObject> CObject::GetOwnerObject()
 {
 	return m_pOwnerObject.lock();
 }
 
-std::weak_ptr<CCamera> CObject::GetCamera()
-{
-	return m_pCamera.lock();
-}
+//std::weak_ptr<CCamera> CObject::GetCamera()
+//{
+//	return m_pCamera.lock();
+//}

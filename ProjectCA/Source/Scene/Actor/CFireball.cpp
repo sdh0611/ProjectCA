@@ -40,7 +40,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	auto pCollider = std::make_shared<ColliderBox>();
 	if (!pCollider->PostInit(this))
 		return false;
-	pCollider->SetSize(m_iObjectWidth * 0.23f, m_iObjectHeight * 0.23f);
+	pCollider->SetSize(m_iEntityWidth * 0.23f, m_iEntityHeight * 0.23f);
 
 	auto onCollision = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
 

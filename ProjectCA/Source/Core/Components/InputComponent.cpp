@@ -15,7 +15,7 @@ InputComponent::InputComponent()
 //
 //}
 
-bool InputComponent::PostInit(CObject* pOwner, const Types::tstring & strTag)
+bool InputComponent::PostInit(CEntity* pOwner, const Types::tstring & strTag)
 {
 	m_pOwner = pOwner;
 	m_strComponentTag = strTag;
