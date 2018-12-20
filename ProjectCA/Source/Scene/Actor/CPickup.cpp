@@ -40,20 +40,32 @@ void CPickup::Update(double dDeltaTime)
 void CPickup::LateUpdate()
 {
 	CObject::LateUpdate();
-
-	POSITION onScreenPosition = GetTransform().lock()->GetScreenPosition();
-
-	if (onScreenPosition.x <  0.f - MAX_WIDTH / 2.f || onScreenPosition.x >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth() + MAX_WIDTH / 2.f)
+	if (m_ObjectState != Types::OS_DEAD && m_ObjectState != Types::OS_DESTROYED)
 	{
-		SetActive(false);
-		return;
-	}
-	else if (onScreenPosition.y <  0.f - MAX_HEIGHT / 2.f || onScreenPosition.y >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight() + MAX_HEIGHT / 2.f)
-	{
-		SetActive(false);
-		return;
-	}
+		UINT cameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
+		UINT cameraHeight = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight();
+		POSITION cameraPosition = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraPosition();
+		POSITION position = GetObjectPosition();
 
+		if (IsActive())
+		{
+			if (position.x <  cameraPosition.x - cameraWidth
+				|| position.x > cameraPosition.x + 2 * cameraWidth)
+			{
+				puts("InActive");
+				SetActive(false);
+				return;
+			}
+			else if (position.y < cameraPosition.y - cameraHeight
+				|| position.y > cameraPosition.y + 2 * cameraHeight)
+			{
+				puts("InActive");
+				SetActive(false);
+				SetObjectState(Types::OS_DEAD);
+				return;
+			}
+		}
+	}
 }
 
 void CPickup::SetStored()

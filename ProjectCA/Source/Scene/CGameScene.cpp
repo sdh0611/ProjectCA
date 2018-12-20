@@ -733,9 +733,10 @@ void CGameScene::GameUpdate(double dDeltaTime)
 		//Adjust position on screen 
 		for (auto it = m_ObjectPtrList.cbegin(); it != m_ObjectPtrList.cend(); ++it)
 		{
-			//if ((*it)->IsActive())
+			//OBJECT_STATE state = (*it)->GetObjectState();
+			//if (state != Types::OS_DEAD && state != Types::OS_DESTROYED)
 			//{
-			(*it)->LateUpdate();
+				(*it)->LateUpdate();
 			//}
 		}
 

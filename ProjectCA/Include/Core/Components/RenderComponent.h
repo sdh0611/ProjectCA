@@ -45,7 +45,7 @@ protected:
 	float			m_fHeightExpansionRatio;
 	float			m_fWidthPivotRatio;
 	float			m_fHeightPivotRatio;
-	POSITION	m_DrawPivot;
+	POSITION	m_DrawPivot;		
 
 
 private:

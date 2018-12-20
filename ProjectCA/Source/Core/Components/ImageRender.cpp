@@ -40,7 +40,7 @@ void ImageRender::Draw(const HDC & hDC)
 	{
 		if (!m_pWeakSprite.expired())
 		{
-			//POSITION point = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
+			//POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
 			HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
 
 			TransparentBlt(hDC, m_DrawPivot.x, m_DrawPivot.y,

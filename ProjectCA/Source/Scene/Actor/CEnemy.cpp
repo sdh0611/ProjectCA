@@ -75,42 +75,46 @@ void CEnemy::LateUpdate()
 {
 	CObject::LateUpdate();
 
-	POSITION onScreenPosition = GetTransform().lock()->GetScreenPosition();
-	auto pCamera = CCameraManager::GetInstance()->GetMainCamera().lock();
+	if (m_ObjectState != Types::OS_DEAD && m_ObjectState != Types::OS_DESTROYED)
+	{
+		UINT cameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
+		UINT cameraHeight = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight();
+		POSITION cameraPosition = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraPosition();
+		POSITION position = GetObjectPosition();
 
-	if (IsActive())
-	{
-		if (onScreenPosition.x <  0.f - MAX_WIDTH / 2.f || onScreenPosition.x > pCamera->GetCameraWidth() + MAX_WIDTH / 2.f)
+
+		if (IsActive())
 		{
-			Init();
-			puts("InActive");
-			SetActive(false);
-			return;
+			if (position.x <  cameraPosition.x - cameraWidth
+				|| position.x > cameraPosition.x + 2 * cameraWidth)
+			{
+				puts("InActive");
+				SetActive(false);
+				return;
+			}
+			else if (position.y < cameraPosition.y - cameraHeight
+				|| position.y > cameraPosition.y + 2 * cameraHeight)
+			{
+				puts("InActive");
+				SetActive(false);
+				SetObjectState(Types::OS_DEAD);
+				return;
+			}
 		}
-		else if (onScreenPosition.y <  0.f - MAX_HEIGHT / 2.f || onScreenPosition.y > pCamera->GetCameraHeight() + MAX_HEIGHT / 2.f)
-		{
-			Init();
-			puts("InActive");
-			SetActive(false);
-			return;
-		}
-	}
-	else
-	{
-		if (m_ObjectState != Types::OS_DAMAGED || m_ObjectState != Types::OS_DESTROYED)
+		else
 		{
 			auto pPlayer = static_cast<CGameScene*>(m_pOwnerScene)->GetPlayerPtr().lock();
 			POSITION playerPosition = pPlayer->GetObjectPosition();
 
-			if (playerPosition.x > GetObjectPosition().x + pCamera->GetCameraWidth()
-				|| playerPosition.x < GetObjectPosition().x - pCamera->GetCameraWidth())
+			if (position.x > cameraPosition.x - cameraWidth
+				&& position.x < cameraPosition.x + 2 * cameraWidth)
 			{
 				puts("Active");
+				Init();
 				SetActive(true);
 			}
 		}
 	}
-
 }
 
 
