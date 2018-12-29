@@ -48,6 +48,7 @@ private:
 
 private:
 	void GameUpdate(double dDeltaTime);
+	void ClearGame(double dDeltaTime);
 	virtual void ResetScene() override;
 
 

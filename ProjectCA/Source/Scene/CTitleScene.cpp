@@ -31,9 +31,9 @@ bool CTitleScene::Init()
 		return false;
 	}
 
-	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMTitle"));
 	//CSoundManager::GetInstance()->StopChannel(CSoundManager::SoundType::SOUND_BGM);
 	//CSoundManager::GetInstance()->SoundPlay(TEXT("BGMTitle"));
+	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMTitle"));
 
 	auto pObjMgr = CObjectManager::GetInstance();
 
@@ -147,7 +147,6 @@ bool CTitleScene::Init()
 
 void CTitleScene::Update(double dDeltaTime)
 {
-	CSoundManager::GetInstance()->Update();
 	for (const auto& obj : m_EntityPtrList)
 	{
 		obj->Update(dDeltaTime);

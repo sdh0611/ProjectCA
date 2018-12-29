@@ -53,9 +53,12 @@ public:
 	inline int GetLayerOrder() { return m_iOrder; }
 	inline void SetLayerOrder(int order) { if (order >= 0) m_iOrder = order; }
 	inline UINT GetLastActorNumber() const { return m_iActorNumber; }
-
+	inline void SetVisible(bool bVisible) { m_bVisible = bVisible; }
+	inline bool IsVisivle() const{ return m_bVisible; }
+	
 
 private:
+	bool											m_bVisible;
 	int												m_iOrder;
 	UINT											m_iActorNumber;	//안쓰게될 것 같음.(08.14)
 	Types::tstring								m_strLayerTag;

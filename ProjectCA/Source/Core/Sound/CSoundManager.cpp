@@ -128,6 +128,14 @@ bool CSoundManager::ReleaseSound(const TSTRING & strSoundName)
 	return false;
 }
 
+bool CSoundManager::IsChannelPlaying(SoundType type)
+{
+	bool bPlaying;
+	m_ChannelList[type]->isPlaying(&bPlaying);
+	
+	return bPlaying;
+}
+
 //bool CSoundManager::CreateChannelGroup(const char * strGroupName)
 //{
 //	FMOD::ChannelGroup* pGroup;
@@ -149,7 +157,7 @@ void CSoundManager::SoundPlay(const TSTRING & strSoundName)
 	if (!pSound.expired())
 	{
 		//PlaySound
-		auto result = m_pFMODSystem->playSound(pSound.lock()->m_pSound, nullptr, false, &m_ChannelList[pSound.lock()->m_SoundType]);
+		auto result = m_pFMODSystem->playSound(pSound.lock()->m_pSound,0, false, &m_ChannelList[pSound.lock()->m_SoundType]);
 		if (result != FMOD_OK)
 		{
 			printf("[ERROR] (%d) %s\n", result, FMOD_ErrorString(result));
@@ -164,8 +172,12 @@ void CSoundManager::SoundPlay(const TSTRING & strSoundName)
 			return;
 		}
 		printf("Channel : %d\n", pSound.lock()->m_iChannelIndex);
+		int iChannelIsPlaying;
+		m_pFMODSystem->getChannelsPlaying(&iChannelIsPlaying);
+		printf("ChannelIsPlaing : %d\n", iChannelIsPlaying);
 	}
 	
+
 }
 
 void CSoundManager::ChangeBGM(const TSTRING & strSoundName)
@@ -284,8 +296,7 @@ bool CSoundManager::LoadAttackSFX()
 	{
 		return false;
 	}
-
-
+	
 	return true;
 }
 

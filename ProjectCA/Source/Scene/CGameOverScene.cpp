@@ -28,8 +28,6 @@ bool CGameOverScene::Init()
 	{
 		return false;
 	}
-	//CSoundManager::GetInstance()->StopChannel(CSoundManager::SoundType::SOUND_BGM);
-	//CSoundManager::GetInstance()->SoundPlay(TEXT("BGMGameOver"));
 	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMGameOver"));
 
 	auto pObjMgr = CObjectManager::GetInstance();

@@ -58,9 +58,7 @@ bool CGameScene::Init()
 	{
 		return false;
 	}
-	//CSoundManager::GetInstance()->StopChannel(CSoundManager::SoundType::SOUND_BGM);
-	//CSoundManager::GetInstance()->SoundPlay(TEXT("BGMOverworld"));
-	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
+	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
 
 
 	if (!CCollisionManager::GetInstance()->Init())
@@ -435,7 +433,6 @@ bool CGameScene::BuildWorld()
 	{
 		if (!CreateLayer(TEXT("Pickup"), 3))
 			return false;
-
 		//테스트용 Mushroom 생성
 		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 150.f, Types::OT_PICKUP,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
@@ -826,9 +823,7 @@ void CGameScene::GameUpdate(double dDeltaTime)
 
 void CGameScene::ResetScene()
 {
-	//CSoundManager::GetInstance()->StopChannel(CSoundManager::SoundType::SOUND_BGM);
-	//CSoundManager::GetInstance()->SoundPlay(TEXT("BGMOverworld"));
-	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
+	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
 	m_bClear				= false;
 	m_iRemainTime	= 999;
 	m_dTimeElapsed	= 0.f;

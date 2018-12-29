@@ -46,6 +46,7 @@ public:
 public:
 	bool LoadSound(const char* strPath, const TSTRING& strSoundName, SoundType type, FMOD_MODE mode);
 	bool ReleaseSound(const TSTRING& strSoundName);
+	bool IsChannelPlaying(SoundType type);
 
 
 public:

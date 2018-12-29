@@ -52,6 +52,7 @@ void CSceneManager::Update(double fDeltaTime)
 	else
 	{
 		m_pScene->Update(fDeltaTime);
+		CSoundManager::GetInstance()->Update();
 	}
 
 }

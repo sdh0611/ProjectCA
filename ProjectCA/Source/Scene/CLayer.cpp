@@ -53,9 +53,10 @@ bool CLayer::Init(const Types::tstring& strTag, UINT iOrder)
 			//}
 
 		//}
-	m_strLayerTag = strTag;
-	m_iOrder = iOrder;
-	m_iActorNumber = 0;
+	m_bVisible			= true;
+	m_iOrder				= iOrder;
+	m_strLayerTag		= strTag;
+	m_iActorNumber	= 0;
 
 	return true;
 }
@@ -92,14 +93,16 @@ void CLayer::Render(const HDC& hDC)
 	//	for (m_it = m_ObjectList.begin(); m_it != m_ObjectList.end(); ++m_it) {
 	//		(*m_it)->Render(hDC);
 	//	}
-
-	if (!m_EntityList.empty())
+	if (m_bVisible)
 	{
-		for (const auto& entity : m_EntityList)
+		if (!m_EntityList.empty())
 		{
-			if (entity.lock()->IsActive())
+			for (const auto& entity : m_EntityList)
 			{
-				entity.lock()->Render(hDC);
+				if (entity.lock()->IsActive())
+				{
+					entity.lock()->Render(hDC);
+				}
 			}
 		}
 	}
