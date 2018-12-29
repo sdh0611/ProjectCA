@@ -81,7 +81,7 @@ private:
 	FireballPool						m_FireballPool;
 	UINT								m_iAvailableFireballCount;
 	std::weak_ptr<CCamera>	m_pCamera;
-
+	class CSoundManager*		m_pSoundManager;
 
 
 };

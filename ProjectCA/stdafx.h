@@ -26,6 +26,7 @@
 #include	<chrono>
 #include <functional>
 #include <fstream>
+#include <fmod.hpp>
 #include "Types.h"
 #include	"Include\Core\Math\CVector.h"
 #include "Include\Event.h"

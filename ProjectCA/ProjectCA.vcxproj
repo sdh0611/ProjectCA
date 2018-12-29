@@ -75,6 +75,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)\FMOD\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\FMOD\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,10 +102,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\FMOD\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,11 +160,14 @@
     <ClCompile Include="Source\Core\CResourceManager.cpp" />
     <ClCompile Include="Source\Core\Debuging\Debug.cpp" />
     <ClCompile Include="Source\Core\Graphic\CAnim.cpp" />
-    <ClCompile Include="Source\Core\Graphic\CEffect.cpp" />
+    <ClCompile Include="Source\Core\Graphic\CBlockParticle.cpp" />
+    <ClCompile Include="Source\Core\Graphic\CCoinParticle.cpp" />
+    <ClCompile Include="Source\Core\Graphic\CParticle.cpp" />
     <ClCompile Include="Source\Core\Graphic\CEffectManager.cpp" />
     <ClCompile Include="Source\Core\Graphic\CSprite.cpp" />
     <ClCompile Include="Source\Core\CInputManager.cpp" />
     <ClCompile Include="Source\Core\Math\CVector.cpp" />
+    <ClCompile Include="Source\Core\Sound\CSoundManager.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
     <ClCompile Include="Source\Core\Window\BackBuffer.cpp" />
     <ClCompile Include="Source\Core\Window\MainWindow.cpp" />
@@ -226,11 +233,14 @@
     <ClInclude Include="Include\Core\CResourceManager.h" />
     <ClInclude Include="Include\Core\Debuging\Debug.h" />
     <ClInclude Include="Include\Core\Graphic\CAnim.h" />
-    <ClInclude Include="Include\Core\Graphic\CEffect.h" />
+    <ClInclude Include="Include\Core\Graphic\CBlockParticle.h" />
+    <ClInclude Include="Include\Core\Graphic\CCoinParticle.h" />
+    <ClInclude Include="Include\Core\Graphic\CParticle.h" />
     <ClInclude Include="Include\Core\Graphic\CEffectManager.h" />
     <ClInclude Include="Include\Core\Graphic\CSprite.h" />
     <ClInclude Include="Include\Core\CInputManager.h" />
     <ClInclude Include="Include\Core\Math\CVector.h" />
+    <ClInclude Include="Include\Core\Sound\CSoundManager.h" />
     <ClInclude Include="Include\Core\Timer.h" />
     <ClInclude Include="Include\Core\Window\BackBuffer.h" />
     <ClInclude Include="Include\Core\Window\MainWindow.h" />

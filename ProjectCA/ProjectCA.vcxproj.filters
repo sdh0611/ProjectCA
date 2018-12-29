@@ -109,6 +109,18 @@
     <Filter Include="헤더 파일\Scene\Actors\Block">
       <UniqueIdentifier>{f32c4193-e287-4e35-bfb3-d0f375ad9bf2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Core\Graphic\Particle">
+      <UniqueIdentifier>{49c04d8e-a600-4184-8651-b3f4c30165ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\Graphic\Particle">
+      <UniqueIdentifier>{44a81507-63e1-4970-9a04-34584d8309ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Core\Sound">
+      <UniqueIdentifier>{e0c1c6c9-f8c2-42de-9c04-4cbf5fd8b3c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\Sound">
+      <UniqueIdentifier>{c0eee12b-a7d1-426b-a38f-554e08016be2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -297,9 +309,6 @@
     <ClCompile Include="Source\Scene\Actor\CRex.cpp">
       <Filter>소스 파일\Scene\Actors\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Graphic\CEffect.cpp">
-      <Filter>소스 파일\Core\Graphic</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CRandomBlock.cpp">
       <Filter>소스 파일\Scene\Actors\Block</Filter>
     </ClCompile>
@@ -317,6 +326,18 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\CEntity.cpp">
       <Filter>소스 파일\Scene\Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Graphic\CParticle.cpp">
+      <Filter>소스 파일\Core\Graphic\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Graphic\CCoinParticle.cpp">
+      <Filter>소스 파일\Core\Graphic\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Graphic\CBlockParticle.cpp">
+      <Filter>소스 파일\Core\Graphic\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Sound\CSoundManager.cpp">
+      <Filter>소스 파일\Core\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -512,9 +533,6 @@
     <ClInclude Include="Include\Scene\Actor\CRex.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Core\Graphic\CEffect.h">
-      <Filter>헤더 파일\Core\Graphic</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CSpinBlock.h">
       <Filter>헤더 파일\Scene\Actors\Block</Filter>
     </ClInclude>
@@ -532,6 +550,18 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\CEntity.h">
       <Filter>헤더 파일\Scene\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Graphic\CParticle.h">
+      <Filter>헤더 파일\Core\Graphic\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Graphic\CCoinParticle.h">
+      <Filter>헤더 파일\Core\Graphic\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Graphic\CBlockParticle.h">
+      <Filter>헤더 파일\Core\Graphic\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Sound\CSoundManager.h">
+      <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

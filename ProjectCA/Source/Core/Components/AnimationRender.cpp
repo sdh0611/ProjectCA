@@ -90,7 +90,7 @@ void AnimationRender::Draw(const HDC & hDC)
 	}
 }
 
-void AnimationRender::Draw(const HDC & hDC, POSITION position)
+void AnimationRender::Draw(const HDC & hDC, const POSITION& position)
 {
 	if (m_bActive)
 	{

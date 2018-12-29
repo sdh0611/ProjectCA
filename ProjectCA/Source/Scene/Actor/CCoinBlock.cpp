@@ -12,6 +12,8 @@
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
+#include "..\..\..\Include\Core\Graphic\CCoinParticle.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 
 
 
@@ -87,6 +89,18 @@ bool CCoinBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 
 	m_DrawPosition = GetComponent<AnimationRender>().lock()->GetDrawPivot();
 
+	//Particle 설정
+	auto pParticle = CObjectManager::GetInstance()->CreateEntity<CCoinParticle>(SPRITE_WIDTH, SPRITE_HEIGHT, GetEntityPosition().x, GetEntityPosition().y, TEXT("CoinParticle"), m_pOwnerScene);
+	if (pParticle == nullptr)
+	{
+		return false;
+	}
+	pParticle->SetActive(false);
+	m_pOwnerScene->AddEntityToScene(pParticle);
+	m_pOwnerScene->FindLayer(TEXT("Block"))->AddActor(pParticle);
+	//m_pOwnerLayer->AddActor(pParticle);
+	AddParticle(pParticle);
+
 	return true;
 }
 
@@ -105,21 +119,21 @@ void CCoinBlock::Update(double dDeltaTime)
 	}
 }
 
-void CCoinBlock::Render(const HDC & hDC)
-{
-	if (!m_bHiding)
-	{
-		if (m_bActive)
-		{
-			auto pRender = GetComponent<AnimationRender>().lock();
-			if (pRender->IsActive())
-			{
-				pRender->Draw(hDC);
-			}
-
-		}
-	}
-}
+//void CCoinBlock::Render(const HDC & hDC)
+//{
+//	if (!m_bHiding)
+//	{
+//		if (m_bActive)
+//		{
+//			auto pRender = GetComponent<AnimationRender>().lock();
+//			if (pRender->IsActive())
+//			{
+//				pRender->Draw(hDC);
+//			}
+//
+//		}
+//	}
+//}
 
 
 void CCoinBlock::SetLimitTime(double dTime)
@@ -134,9 +148,11 @@ void CCoinBlock::Behavior(double dDeltaTime)
 	switch (m_ObjectState)
 	{
 	case Types::OS_DAMAGED:
+		auto pRender = GetComponent<AnimationRender>().lock();
+
 		if (m_dTimeElapsed >= m_dLimitTime)
 		{
-			GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
+			pRender->ChangeAnimation(TEXT("Hit"));
 			HandlingEvent(Types::EVENT_DEAD);
 			m_dTimeElapsed = 0.f;
 		}
@@ -144,21 +160,23 @@ void CCoinBlock::Behavior(double dDeltaTime)
 		{
 			m_dTimeElapsed += dDeltaTime;
 		}
+		//if (m_DrawPivot.y > pRender->GetDrawPivot().y)
+		//{
+		//	m_DrawPivot = pRender->GetDrawPivot();
+		//	m_fYSpeed = m_fBumpForce;
+		//	HandlingEvent(Types::EVENT_DEAD);
+		//}
+		//else
+		//{
+		//	m_DrawPivot.y -= m_fYSpeed * dDeltaTime;
+		//	m_fYSpeed -= 20.f;
+		//}
+	
 		break;
 	//default:
 
 	//	break;		
 	}
-
-	//{
-	//	auto pRender = GetComponent<AnimationRender>().lock();
-	//	auto pPhysics = GetComponent<PhysicsComponent>().lock();
-	//	if (pRender->GetDrawPivot().y != m_DrawPosition.y)
-	//	{
-	//		m_DrawPosition.y -= pPhysics->GetCurJumpForce();
-	//	}
-
-	//}
 }
 
 void CCoinBlock::HandlingEvent(EVENT_TYPE type)
@@ -166,6 +184,7 @@ void CCoinBlock::HandlingEvent(EVENT_TYPE type)
 	switch (type)
 	{
 	case Types::EVENT_DAMAGED:
+		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Hit"));
 		CScoreManager::GetInstance()->IncreaseScore(10);
 		CScoreManager::GetInstance()->IncreaseCoinCount();
 		SetObjectState(Types::OS_DAMAGED);
@@ -175,7 +194,9 @@ void CCoinBlock::HandlingEvent(EVENT_TYPE type)
 		CScoreManager::GetInstance()->IncreaseScore(10);
 		CScoreManager::GetInstance()->IncreaseCoinCount();
 		SetObjectState(Types::OS_DEAD);
-		//SetActive(false);
+		m_pParticle.lock()->SetActive(true);
+		//이 부분은 CoinParticle이 활성화 될 때 CoinParticle 객체 내에서 실행하게끔 바꿀 필요가 있음.
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXCoin"));
 		break;
 	}
 }

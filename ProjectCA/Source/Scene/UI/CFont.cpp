@@ -14,7 +14,7 @@ CFont::~CFont()
 {
 }
 
-bool CFont::PostInit(const OBJECT_DATA & data, CScene * pScene)
+bool CFont::PostInit(const ENTITY_DATA & data, CScene * pScene)
 {
 	if (!CInterface::PostInit(data, pScene))
 		return false;

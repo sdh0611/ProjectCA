@@ -21,7 +21,7 @@ public:
 	virtual void	Init() override;
 	virtual void	Update(double dDeltaTIme) override;
 	virtual void	Draw(const HDC& hDC) override;
-	void			Draw(const HDC& hDC, POSITION position);
+	void			Draw(const HDC& hDC, const POSITION& position);
 
 
 public:

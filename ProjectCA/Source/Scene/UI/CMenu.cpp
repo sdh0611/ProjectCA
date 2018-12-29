@@ -17,9 +17,9 @@ CMenu::~CMenu()
 {
 }
 
-bool CMenu::PostInit(const OBJECT_DATA & data, CScene * pScene)
+bool CMenu::PostInit(const ENTITY_DATA & data, CScene * pScene)
 {
-	if (!CObject::PostInit(data, pScene))
+	if (!CEntity::PostInit(data, pScene))
 		return false;
 
 

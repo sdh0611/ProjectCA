@@ -94,6 +94,12 @@ bool CRandomBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
+	//m_DrawPivot				= pRender->GetDrawPivot();
+
+	//m_fYSpeed					= 0.f;
+	//m_fBumpForce				= 200.f;
+	//m_dBumpTimeElapsed	= 0.f;
+	//m_dBumpTimeLimit		= 0.1f;
 
 	return true;
 }
@@ -101,14 +107,15 @@ bool CRandomBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 void CRandomBlock::Init()
 {
 	CObject::Init();
-	m_ObjectState = Types::OS_IDLE;
 	if (m_Type == BT_HIDE)
 	{
 		m_bHiding = true;
 	}
 	GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("Idle"));
-	m_bActive = true;
-
+	m_bActive					= true;
+	//m_dBumpTimeElapsed	= 0.f;
+	m_ObjectState				= Types::OS_IDLE;
+	
 }
 
 void CRandomBlock::Render(const HDC & hDC)
@@ -144,14 +151,19 @@ void CRandomBlock::LateUpdate()
 
 void CRandomBlock::SetHide()
 {
-	m_bHiding = true;
-	m_Type = BT_HIDE;
+	m_bHiding	= true;
+	m_Type		= BT_HIDE;
 
 }
 
 bool CRandomBlock::IsHiding() const
 {
 	return m_bHiding;
+}
+
+void CRandomBlock::Bump(double dDeltaTime)
+{
+
 }
 
 //void CRandomBlock::SetDead()

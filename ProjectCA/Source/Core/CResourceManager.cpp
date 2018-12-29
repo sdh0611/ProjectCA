@@ -978,6 +978,8 @@ bool CResourceManager::LoadEffectImageInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Effects/effect_throw.bmp"), TEXT("EffectThrow")))
 		return false;
 
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Effects/block_broken_peace.bmp"), TEXT("EffectBrokenBlockPeace")))
+		return false;
 
 	return true;
 }

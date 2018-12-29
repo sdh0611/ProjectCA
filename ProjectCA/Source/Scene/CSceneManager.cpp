@@ -2,6 +2,7 @@
 #include "..\..\Include\Scene\CSceneManager.h"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\Include\Core\Sound\CSoundManager.h"
 #include "..\..\Include\Scene\CScene.h"
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\CGameOverScene.h"
@@ -19,21 +20,24 @@ CSceneManager::~CSceneManager() {
 	SAFE_DELETE(m_pNextScene);
 	CObjectManager::GetInstance()->Destroy();
 	CCameraManager::GetInstance()->Destroy();
+	CSoundManager::GetInstance()->Destroy();
 
 }
 
 bool CSceneManager::Init(Types::SceneType type) 
 {
-
-	if (!CreateScene(type))
-		return false;
-
 	if (!CObjectManager::GetInstance()->Init())
 		return false;
 
 	if (!CCameraManager::GetInstance()->Init())
 		return false;
 
+	if (!CSoundManager::GetInstance()->Init())
+		return false;
+
+	if (!CreateScene(type))
+		return false;
+	
 	m_bReadyToChageScene = false;
 
 	return true;

@@ -3,6 +3,7 @@
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\CInputManager.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
@@ -51,6 +52,7 @@ void PlayerInputComponent::KeyProcess()
 
 	Types::Direction dir = pOwner->GetActorDirection();
 
+	auto pSoundManager = CSoundManager::GetInstance();
 
 	if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 	{
@@ -117,6 +119,7 @@ void PlayerInputComponent::KeyProcess()
 		if (pOwner->GetActorVerticalState() == Types::VS_IDLE)
 		{
 			pOwner->SetActorVerticalState(Types::VS_JUMP);
+			pSoundManager->SoundPlay(TEXT("SFXJump"));
 		}
 	}
 	else if (m_pInputManager->IsKeyDown(TEXT("SPIN_JUMP")))
@@ -126,6 +129,7 @@ void PlayerInputComponent::KeyProcess()
 			if (!static_cast<CPlayer*>(m_pOwner)->IsPickingObject())
 			{
 				pOwner->SetActorAct(Types::ACT_DESTROY);
+				pSoundManager->SoundPlay(TEXT("SFXSpinJump"));
 			}
 			pOwner->SetActorVerticalState(Types::VS_JUMP);
 		}

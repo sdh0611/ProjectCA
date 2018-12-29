@@ -11,6 +11,7 @@
 #include "..\..\Include\Scene\UI\CFont.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
 #include "..\..\Include\Scene\CLayer.h"
+#include "..\..\Include\Core\Sound\CSoundManager.h"
 
 
 CTitleScene::CTitleScene()
@@ -25,6 +26,15 @@ CTitleScene::~CTitleScene()
 
 bool CTitleScene::Init()
 {
+	if (!CScene::Init())
+	{
+		return false;
+	}
+
+	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMTitle"));
+	//CSoundManager::GetInstance()->StopChannel(CSoundManager::SoundType::SOUND_BGM);
+	//CSoundManager::GetInstance()->SoundPlay(TEXT("BGMTitle"));
+
 	auto pObjMgr = CObjectManager::GetInstance();
 
 	auto pCamera = CCameraManager::GetInstance()->CreateCamera(nullptr, MAX_WIDTH, MAX_HEIGHT);
@@ -34,20 +44,20 @@ bool CTitleScene::Init()
 
 	//Title logo持失
 	{
-		if (!CreateLayer(TEXT("Title"), 0))
+		if (!CreateLayer(TEXT("Title"), 1))
 			return false;
 	
 		auto pTitle = pObjMgr->CreateObject<CInterface>( MAX_WIDTH * 0.7f, MAX_HEIGHT * 0.3f , MAX_WIDTH / 2.f, MAX_HEIGHT / 3.f, Types::OT_UI, TEXT("Logo"), this);
 		if (pTitle == nullptr)
 			return false;
 		pTitle->SetImage(TEXT("Logo2"));
-		m_ObjectPtrList.emplace_back(pTitle);
+		m_EntityPtrList.emplace_back(pTitle);
 		FindLayer(TEXT("Title"))->AddActor(pTitle);
 	}
 
 	//Test遂 獄動 持失
 	{
-		if (!CreateLayer(TEXT("Button"), 1))
+		if (!CreateLayer(TEXT("Button"), 2))
 			return false;
 
 		//Start button
@@ -63,7 +73,7 @@ bool CTitleScene::Init()
 		pButton->SetImage(TEXT("StartButton"));
 		pButton->SetOnClickCallback(startButtonCallback);
 
-		m_ObjectPtrList.emplace_back(pButton);
+		m_EntityPtrList.emplace_back(pButton);
 		FindLayer(TEXT("Button"))->AddActor(pButton);
 
 		
@@ -79,13 +89,13 @@ bool CTitleScene::Init()
 		pButton->SetImage(TEXT("ExitButton"));
 		pButton->SetOnClickCallback(exitButtonCallback);
 
-		m_ObjectPtrList.emplace_back(pButton);
+		m_EntityPtrList.emplace_back(pButton);
 		FindLayer(TEXT("Button"))->AddActor(pButton);
 	}
 
 	//Font 持失
 	{
-		if (!CreateLayer(TEXT("Font"), 2))
+		if (!CreateLayer(TEXT("Font"), 3))
 			return false;
 
 		auto pFont = pObjMgr->CreateObject<CFont>(128, SPRITE_HEIGHT / 2, MAX_WIDTH / 2.f , MAX_HEIGHT / 2.f + 250, Types::OT_UI, TEXT("Font"), this);
@@ -94,7 +104,7 @@ bool CTitleScene::Init()
 		pFont->SetFontSize(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);
 		pFont->SetFontInterval(SPRITE_WIDTH / 2);
 		pFont->SetSentence(TEXT("-Made by SDH-"));
-		m_ObjectPtrList.emplace_back(pFont);
+		m_EntityPtrList.emplace_back(pFont);
 		FindLayer(TEXT("Font"))->AddActor(pFont);
 
 		pFont = pObjMgr->CreateObject<CFont>(128, SPRITE_HEIGHT / 2, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 280, Types::OT_UI, TEXT("Font"), this);
@@ -103,7 +113,7 @@ bool CTitleScene::Init()
 		pFont->SetFontSize(SPRITE_WIDTH / 4, SPRITE_HEIGHT / 4);
 		pFont->SetFontInterval(SPRITE_WIDTH / 4);
 		pFont->SetSentence(TEXT("Since 2018"));
-		m_ObjectPtrList.emplace_back(pFont);
+		m_EntityPtrList.emplace_back(pFont);
 		FindLayer(TEXT("Font"))->AddActor(pFont);
 	}
 
@@ -114,7 +124,7 @@ bool CTitleScene::Init()
 	//	auto pGround = pObjMgr->CreateObject<CGround>(MAX_WIDTH, 256, MAX_WIDTH / 2.f, 700.f, Types::OT_GROUND, TEXT("Ground"), this);
 	//	if (pGround == nullptr)
 	//		return false;
-	//	m_ObjectPtrList.push_back(pGround);
+	//	m_EntityPtrList.push_back(pGround);
 	//	FindLayer(TEXT("Ground"))->AddActor(pGround);
 	//}
 
@@ -128,7 +138,7 @@ bool CTitleScene::Init()
 			return false;
 		pBackground->SetBackgroundImage(TEXT("BackgroundMountain2"));
 		pBackground->SetStatic(true);
-		m_ObjectPtrList.emplace_back(pBackground);
+		m_EntityPtrList.emplace_back(pBackground);
 		FindLayer(TEXT("Background"))->AddActor(pBackground);
 	}
 
@@ -137,7 +147,8 @@ bool CTitleScene::Init()
 
 void CTitleScene::Update(double dDeltaTime)
 {
-	for (const auto& obj : m_ObjectPtrList)
+	CSoundManager::GetInstance()->Update();
+	for (const auto& obj : m_EntityPtrList)
 	{
 		obj->Update(dDeltaTime);
 	}

@@ -134,13 +134,13 @@ public:
 
 		std::shared_ptr<T> pEntity = std::make_shared<T>();
 
-		Types::EntityData data(iWidth, iHeight, POSITION(fx, fy), strName, m_LastEntitytID++);
+		Types::EntityData data(iWidth, iHeight, POSITION(fx, fy), strName, m_LastEntityID++);
 
 		if (!pEntity->PostInit(data, pScene))
 			return std::shared_ptr<T>();
 
 
-		return pObject;
+		return pEntity;
 	}
 
 private:

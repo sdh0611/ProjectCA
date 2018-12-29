@@ -15,6 +15,7 @@
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\CInputManager.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 
 
 
@@ -34,6 +35,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	//TransformComponent 추가
 	CActor::PostInit(data, pScene);
 
+	m_pSoundManager	= CSoundManager::GetInstance();
 	//m_bProtected			= false;
 
 	m_dTimeElapsed		= 0.f;
@@ -89,7 +91,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			break;
 		case Types::OT_PROB:
 		switch (type) {
-			case Collider::COLLISION_BOT:
+			m_pSoundManager->SoundPlay(TEXT("SFXSheelRicochet"));
+		case Collider::COLLISION_BOT:
 				//printf("ID : %d\n", pOther->GetObjectID());
 				pPhysics->SetGrounded(true);
 				//pPhysics->SetCurJumpForce(0.f);
@@ -122,6 +125,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				{
 					if (type == Collider::COLLISION_TOP)
 					{
+						m_pSoundManager->SoundPlay(TEXT("SFXSheelRicochet"));
 						pPhysics->SetCurJumpForce(0.f);
 						SetActorVerticalState(Types::VS_FALL);
 						SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
@@ -135,6 +139,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 				case Collider::COLLISION_TOP:
 					SetActorVerticalState(Types::VS_FALL);
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
+					m_pSoundManager->SoundPlay(TEXT("SFXSheelRicochet"));
 					break;
 				case Collider::COLLISION_BOT:
 					pPhysics->SetGrounded(true);
@@ -182,7 +187,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 					{
 						SetPlayerState(PS_FLOWER);
 					}
-					m_pCurPickupPtr = m_pOwnerScene->FindObjectFromScene(pOther->GetObjectID()).lock();
+					m_pCurPickupPtr = STATIC_POINTER_CAST(CObject, m_pOwnerScene->FindEntityFromScene(pOther->GetObjectID()).lock());
 					break;
 				case PS_BIG:
 					if (pOther->GetObjectName() == TEXT("Flower"))
@@ -190,15 +195,17 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 						SetPlayerState(PS_FLOWER);
 					}
 					SetStoredPickup(m_pCurPickupPtr.lock());
-					m_pCurPickupPtr = m_pOwnerScene->FindObjectFromScene(pOther->GetObjectID()).lock();
+					m_pCurPickupPtr = STATIC_POINTER_CAST(CObject, m_pOwnerScene->FindEntityFromScene(pOther->GetObjectID()).lock());
+					//m_pCurPickupPtr = m_pOwnerScene->FindEntityFromScene(pOther->GetObjectID()).lock();
 					break;
 				case PS_FLOWER:
 					if (pOther->GetObjectName() != TEXT("Coin"))
 					{
-						SetStoredPickup(m_pOwnerScene->FindObjectFromScene(pOther->GetObjectID()).lock());
+						SetStoredPickup(STATIC_POINTER_CAST(CObject, m_pOwnerScene->FindEntityFromScene(pOther->GetObjectID()).lock()));
 					}
 					break;
 				}
+				m_pSoundManager->SoundPlay(TEXT("SFXPowerUp"));
 			}
 			break;
 		case Types::OT_PICKABLE:
@@ -226,8 +233,8 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 					{
 						if (CInputManager::GetInstance()->IsKeyDown(TEXT("ACCEL")))
 						{
-							m_pPickObjectPtr = m_pOwnerScene->FindObjectFromScene(pOther->GetObjectID()).lock();
-							m_pPickObjectPtr.lock()->SetOwnerObject(m_pOwnerScene->FindObjectFromScene(m_EntityID).lock());
+							m_pPickObjectPtr = STATIC_POINTER_CAST(CObject, m_pOwnerScene->FindEntityFromScene(pOther->GetObjectID()).lock());
+							m_pPickObjectPtr.lock()->SetOwnerObject(STATIC_POINTER_CAST(CObject, m_pOwnerScene->FindEntityFromScene(m_EntityID).lock()));
 							m_pPickObjectPtr.lock()->GetComponent<PhysicsComponent>().lock()->SetStatic(true);
 						}
 					}
@@ -644,6 +651,9 @@ void CPlayer::LateUpdate()
 
 void CPlayer::SetPlayerDead()
 {
+	//m_pSoundManager->StopChannel(CSoundManager::SoundType::SOUND_BGM);
+	//m_pSoundManager->SoundPlay(TEXT("BGMDead"));
+	m_pSoundManager->ChangeBGM(TEXT("BGMDead"));
 	m_ObjectState = Types::OS_DEAD;
 	GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("MarioSmall"), TEXT("DeadAnimation"));
 	GetComponent<AnimationRender>().lock()->SetPauseAnimation(true);
@@ -656,7 +666,7 @@ void CPlayer::DeadProcess(double dDeltaTime)
 {
 		m_dTimeElapsed += dDeltaTime;
 	
-	if (m_dTimeElapsed > 0.8f)
+	if (m_dTimeElapsed > 0.5f)
 	{
 		GetComponent<AnimationRender>().lock()->SetPauseAnimation(false);
 		if (m_dTimeElapsed < 4.0f)
@@ -1150,6 +1160,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			{
 				m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - m_iEntityHeight * 0.4f);
 				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+				m_pSoundManager->SoundPlay(TEXT("SFXKick"));
 
 			}
 			else if (CInputManager::GetInstance()->IsKeyDown(TEXT("DOWN")))
@@ -1179,6 +1190,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x + 50.f, GetObjectPosition().y - m_iEntityHeight * 0.15f);
 					pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
 				}
+				m_pSoundManager->SoundPlay(TEXT("SFXKick"));
 			}
 			m_pPickObjectPtr.lock()->SetOwnerObject(nullptr);
 			m_pPickObjectPtr.reset();
@@ -1188,15 +1200,19 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	//Jump 관련 연산
 	if (!pPhysics->IsGrounded())
 	{
-		if (m_ActorCurVerticalState == Types::VS_FALL)
+		if (pPhysics->GetCurJumpForce() < 0.f)
 		{
-			if (pPhysics->GetCurJumpForce() > 0.f)
+			SetActorVerticalState(Types::VS_FALL);
+		}
+		else if (pPhysics->GetCurJumpForce() > 0.f)
+		{
+			if (m_ActorCurVerticalState == Types::VS_FALL)
 			{
 				pPhysics->SetCurJumpForce(0.f);
 			}
 		}
 	}
-	
+
 	//Collider 변환 관련 Player로직
 	{
 		auto pCollider = GetComponent<ColliderBox>().lock();
@@ -1219,6 +1235,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			if (m_ActType == Types::ACT_ATTACK && m_iAvailableFireballCount > 0)
 			{
 				Attack();
+				m_pSoundManager->SoundPlay(TEXT("SFXFireball"));
 			}
 		}
 	}
@@ -1226,6 +1243,7 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	if (CInputManager::GetInstance()->IsKeyDown(TEXT("FUNC1")))
 	{
 		PopStoredPickup();
+		m_pSoundManager->SoundPlay(TEXT("SFXReserveItemReleaseUp"));
 	}
 
 	ChangeAnimationClip(fCurSpeed, fWalkSpeed, fMaxSpeed, fCurJumpForce);
@@ -1272,6 +1290,7 @@ void CPlayer::SetPlayerState(PlayerState state)
 		{
 			pRender->ChangeAnimationTable(TEXT("MarioSmall"));
 			pCollider->SetHeight(m_iSmallStateHeight);
+			m_pSoundManager->SoundPlay(TEXT("SFXPipe"));
 		}
 		break;
 	case PS_BIG:
@@ -1294,6 +1313,7 @@ void CPlayer::SetPlayerState(PlayerState state)
 		if (m_PlayerState != PS_FLOWER)
 		{
 			pRender->ChangeAnimationTable(TEXT("MarioFlower"));
+			//m_pSoundManager->SoundPlay(TEXT("SFXPowerUp"));
 		}
 		break;
 	}

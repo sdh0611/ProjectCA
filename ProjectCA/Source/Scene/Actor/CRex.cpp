@@ -11,6 +11,7 @@
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 
 CRex::CRex()
 {
@@ -92,7 +93,11 @@ bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				break;
 			case Collider::COLLISION_LEFT:
+				SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
+				FlipActorDirection();
+				break;
 			case Collider::COLLISION_RIGHT:
+				SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 				FlipActorDirection();
 				break;
 			}
@@ -333,6 +338,7 @@ void CRex::HandlingEvent(EVENT_TYPE type)
 		m_RexState = REX_DAMAGED;
 		GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetObjectHeight() * 0.5f);
 		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("RexDamaged"));
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXStomp"));
 		break;
 	case Types::EVENT_DEAD:
 		SetObjectState(Types::OS_DEAD);
@@ -340,6 +346,7 @@ void CRex::HandlingEvent(EVENT_TYPE type)
 		pPhysics->SetCurSpeed(0.f);
 		pPhysics->SetCurJumpForce(300.f);
 		pPhysics->SetGrounded(false);
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXStomp"));
 		break;
 	case Types::EVENT_DESTROY:
 		SetObjectState(Types::OS_DESTROYED);
@@ -347,6 +354,7 @@ void CRex::HandlingEvent(EVENT_TYPE type)
 		GetComponent<ColliderBox>().lock()->SetActive(false);
 		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("RexNormal"), TEXT("Destroy"));
 		CScoreManager::GetInstance()->IncreaseScore(200);
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXSpinStomp"));
 		break;
 	}
 }

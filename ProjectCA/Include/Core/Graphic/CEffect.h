@@ -1,14 +1,15 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
+#include "..\..\Scene\CEntity.h"
 
 class CEntity;
 
-class CEffect
+class CParticle
 {
 public:
-	CEffect();
-	~CEffect();
+	CParticle();
+	~CParticle();
 
 
 public:

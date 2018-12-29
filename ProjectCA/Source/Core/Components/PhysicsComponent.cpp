@@ -23,7 +23,7 @@ bool PhysicsComponent::PostInit(CEntity* pOwner, float fSpeed, float fMaxSpeed,
 
 	m_pOwner = pOwner;
 
-	if (fSpeed < 0.f || fMaxSpeed < 0.f || fGravity < 0.f)
+	if (fGravity < 0.f)
 		return false;
 
 	m_bGrounded				= false;
@@ -190,10 +190,6 @@ float PhysicsComponent::GetJumpForce() const
 
 void PhysicsComponent::Gravity(double dDeltaTime)
 {
-	CActor* pOwner = static_cast<CActor*>(m_pOwner);
-
-	Types::VerticalState state = pOwner->GetActorVerticalState();
-
 	if (m_bGrounded)
 	{
 		m_fYSpeed = 0.f;
@@ -203,10 +199,6 @@ void PhysicsComponent::Gravity(double dDeltaTime)
 		if (m_fYSpeed > -1 * m_fMaxYSpeed)
 		{
 			m_fYSpeed -= m_fGravity * dDeltaTime;
-			if (m_fYSpeed < 0.f)
-			{
-				pOwner->SetActorVerticalState(Types::VS_FALL);
-			}
 		}
 
 	}

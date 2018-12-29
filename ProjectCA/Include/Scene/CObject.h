@@ -3,11 +3,8 @@
 #include "..\..\stdafx.h"
 #include "CEntity.h"
 
-class CLayer;
-class CScene;
-class CCamera;
 class ComponentBase;
-class TransformComponent;
+class CParticle;
 
 class CObject : public CEntity
 {
@@ -24,24 +21,6 @@ public:
 	virtual void LateUpdate();
 
 
-//public:
-//	std::weak_ptr<ComponentBase>	GetComponent(const TSTRING& strTag);
-//	bool										AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag);
-//	bool										DeleteComponent(const TSTRING& strTag);
-//	template<typename T>
-//	std::weak_ptr<T>	GetComponent() const
-//	{
-//		const std::type_info& type = typeid(T);
-//		for (auto& it : m_ComponentTable)
-//		{
-//			if (typeid(*(it.second)) == type)
-//				return STATIC_POINTER_CAST(T, it.second);
-//		}
-//
-//		return std::weak_ptr<T>();
-//	}
-
-
 public:
 	CObject * Clone();
 
@@ -55,11 +34,7 @@ public:
 	void			SetObjectPosition(float fx, float fy);
 	void			SetObjectState(OBJECT_STATE state); 
 	void			SetObjectName(const TSTRING& strName);
-	void			SetOwnerLayer(CLayer* pLayer);
-	void			SetOwnerScene(CScene* pScene);
-	bool			AttachCamera(std::shared_ptr<CCamera> pCamera);
 	virtual void SetOwnerObject(std::shared_ptr<CObject> pOwner);
-
 
 
 public:
@@ -74,9 +49,12 @@ public:
 	CLayer* const									GetOwnerLayer() const;
 	CScene* const									GetOwnerScene() const;
 	const TSTRING&								GetObjectName();
-	//std::weak_ptr<TransformComponent>	GetTransform();
 	std::weak_ptr<CObject>						GetOwnerObject();
-	//std::weak_ptr<CCamera>					GetCamera();
+
+
+public:
+	void	AddParticle(std::shared_ptr<CParticle> pParticle);
+	void	DeleteParticle();
 
 
 protected:
@@ -84,25 +62,10 @@ protected:
 
 
 protected:
-	//bool								m_bActive;
-	//UINT								m_iObjectWidth;
-	//UINT								m_iObjectHeight;
-	//TSTRING							m_strObjectName;
-	//OBJECT_ID						m_ObjectID;
 	OBJECT_TYPE					m_ObjectType;
 	OBJECT_STATE					m_ObjectState;
-	//CScene*							m_pOwnerScene;
 	std::weak_ptr<CObject>		m_pOwnerObject;
-	//std::weak_ptr<CCamera>	m_pCamera;
-
-
-//protected:
-//	typedef std::unordered_map<Types::tstring, std::shared_ptr<ComponentBase>> ComponentTable;
-//	ComponentTable	m_ComponentTable;
-
-
-//private:
-//	CLayer*						m_pOwnerLayer;
+	std::weak_ptr<CParticle>		m_pParticle;
 
 
 private:

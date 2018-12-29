@@ -13,9 +13,10 @@
 class CObject;
 class CCamera;
 class CLayer;
+class CEntity;
 
-typedef std::shared_ptr<CObject> ObjectPtr;
-typedef std::weak_ptr<CObject> WeakObjPtr;
+typedef std::shared_ptr<CEntity> EntityPtr;
+typedef std::weak_ptr<CEntity> WeakEntityPtr;
 
 class CScene {
 
@@ -32,21 +33,21 @@ public:
 	
 
 public:
-	bool		CreateLayer(const Types::tstring& tag, int order);	//Layer생성이 가능한 유일한 메소드
-	bool		DeleteLayer(const Types::tstring& tag);
+	bool		CreateLayer(const TSTRING& strTag, int order);	//Layer생성이 가능한 유일한 메소드
+	bool		DeleteLayer(const TSTRING& strTag);
 	CLayer*	FindLayer(const TSTRING& strTag);
 
 
 public:
-	void				AddObjectToScene(CObject* pObject);
-	void				AddObjectToScene(std::shared_ptr<CObject> pObject);
-	bool				DeleteObjectFromScene(CObject* pObject);
-	bool				DeleteObjectFromScene(UINT iObjectID);
-	WeakObjPtr		FindObjectFromScene(CObject* pObject);
-	WeakObjPtr		FindObjectFromScene(const TSTRING& strObjectName);
-	WeakObjPtr		FindObjectFromScene(UINT iObjectID);
-	WeakObjPtr		FindInactiveObjectFromScene(CObject* pObject);
-	WeakObjPtr		FindInactiveObjectFromScene(const TSTRING& strObjectName);
+	void				AddEntityToScene(CEntity* pEntity);
+	void				AddEntityToScene(std::shared_ptr<CEntity> pEntity);
+	bool				DeleteEntityFromScene(CEntity* pEntity);
+	bool				DeleteEntityFromScene(UINT entityID);
+	WeakEntityPtr	FindEntityFromScene(CEntity* pEntity);
+	WeakEntityPtr	FindEntityFromScene(const TSTRING& strEntityName);
+	WeakEntityPtr	FindEntityFromScene(UINT entityID);
+	WeakEntityPtr	FindInactiveEntityFromScene(CEntity* pEntity);
+	WeakEntityPtr	FindInactiveEntityFromScene(const TSTRING& strEntityName);
 
 
 public:
@@ -55,6 +56,10 @@ public:
 
 public:
 	virtual void ResetScene();
+
+
+protected:
+	void CheckGarbage();
 
 
 private:
@@ -71,7 +76,7 @@ protected:
 
 
 protected:
-	typedef std::list<ObjectPtr>	StrongObjecPtrList;
-	StrongObjecPtrList				m_ObjectPtrList;
+	typedef std::list<EntityPtr>	StrongEntityPtrList;
+	StrongEntityPtrList					m_EntityPtrList;
 
 };

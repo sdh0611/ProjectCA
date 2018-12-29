@@ -36,7 +36,7 @@ bool RenderComponent::PostInit(CEntity * pOwner, const TSTRING & strTag)
 	m_fWidthExpansionRatio		= 1.f;
 	m_fHeightExpansionRatio	= 1.f;
 	SetPivotRatio(0.f, 0.f);
-	LateUpdate();
+	//LateUpdate();
 
 	return true;
 }
@@ -111,7 +111,8 @@ void RenderComponent::SetWidthPivotRatio(float fRatio)
 		return;
 
 	m_fWidthPivotRatio = fRatio;
-	m_DrawPivot.x -= (m_iDrawWidth * fRatio);
+	//m_DrawPivot.x -= (m_iDrawWidth * fRatio);
+	m_DrawPivot.x = m_pOwner->GetEntityPosition().x - m_iDrawWidth * fRatio;
 
 }
 
@@ -121,8 +122,8 @@ void RenderComponent::SetHeightPivotRatio(float fRatio)
 		return;
 
 	m_fHeightPivotRatio = fRatio;
-	m_DrawPivot.y -= (m_iDrawHeight * fRatio);
-
+	//m_DrawPivot.y -= (m_iDrawHeight * fRatio);
+	m_DrawPivot.x = m_pOwner->GetEntityPosition().y - m_iDrawHeight * fRatio;
 }
 
 void RenderComponent::SetPivotRatio(float fWidthRatio, float fHeightRatio)

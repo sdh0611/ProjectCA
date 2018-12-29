@@ -16,14 +16,14 @@ CEntity::~CEntity()
 
 bool CEntity::PostInit(const ENTITY_DATA & data, CScene * pScene)
 {
-	m_bActive = true;
-	m_iEntityWidth = data.m_iEntityWidth;
-	m_iEntityHeight = data.m_iEntityHeight;
-	m_EntityID = data.m_EntityID;
-	m_strEntityName = data.m_strEntityName;
+	m_bActive			= true;
+	m_iEntityWidth		= data.m_iEntityWidth;
+	m_iEntityHeight	= data.m_iEntityHeight;
+	m_EntityID			= data.m_EntityID;
+	m_strEntityName	= data.m_strEntityName;
 
-	m_pOwnerScene = pScene;
-	m_pOwnerLayer = nullptr;
+	m_pOwnerScene	= pScene;
+	m_pOwnerLayer	= nullptr;
 
 	auto pTransform = std::make_shared<TransformComponent>();
 	if (!pTransform->PostInit(this, data.m_EntityPoint))
@@ -34,7 +34,7 @@ bool CEntity::PostInit(const ENTITY_DATA & data, CScene * pScene)
 	if (!AddComponent(pTransform, pTransform->GetComponentTag()))
 	{
 		return false;
-	}
+	}	
 
 	return true;
 }
@@ -58,6 +58,7 @@ void CEntity::Update(double dDeltaTime)
 
 void CEntity::Render(const HDC & hDC)
 {
+
 }
 
 void CEntity::LateUpdate()

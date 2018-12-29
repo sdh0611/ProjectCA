@@ -1,10 +1,14 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CCoin.h"
+#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
+#include "..\..\..\Include\Core\Graphic\CCoinParticle.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
+#include "..\..\..\Include\Scene\CLayer.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 
 
 CCoin::CCoin()
@@ -34,6 +38,9 @@ bool CCoin::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			CScoreManager::GetInstance()->IncreaseCoinCount();
 			CScoreManager::GetInstance()->IncreaseScore(m_iScore);
 			SetActive(false);
+			m_pParticle.lock()->SetActive(true);
+			//이 부분은 CoinParticle 객채 내에서 실행되는 코드로 바꿀 필요가 있음.
+			CSoundManager::GetInstance()->SoundPlay(TEXT("SFXCoin"));
 		}
 
 	};
@@ -45,14 +52,26 @@ bool CCoin::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pRender->PostInit(this))
 		return false;
 
-	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("CoinAnimation"),   true, TEXT("IdleLeft")))
+	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("CoinAnimation"),   true, TEXT("Idle")))
 		return false;
-	if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("CoinAnimation"),   true, TEXT("IdleRight")))
-		return false;
+	//if (!pRender->AddAnimation(0.5f, TEXT("Default"), TEXT("CoinAnimation"),   true, TEXT("IdleRight")))
+	//	return false;
 	pRender->SetExpansionRatio(2.5f);
 	pRender->SetPivotRatio(0.5f, 1.f);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
+
+	//Particle 설정
+	auto pParticle = CObjectManager::GetInstance()->CreateEntity<CCoinParticle>(SPRITE_WIDTH, SPRITE_HEIGHT, GetEntityPosition().x, GetEntityPosition().y, TEXT("CoinParticle"), m_pOwnerScene);
+	if (pParticle == nullptr)
+	{
+		return false;
+	}
+	pParticle->SetActive(false);
+	m_pOwnerScene->AddEntityToScene(pParticle);
+	m_pOwnerScene->FindLayer(TEXT("Pickup"))->AddActor(pParticle);
+	//m_pOwnerLayer->AddActor(pParticle);
+	AddParticle(pParticle);
 
 	return true;
 }

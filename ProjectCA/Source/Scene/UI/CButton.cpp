@@ -18,7 +18,7 @@ CButton::~CButton()
 	puts("Button Destroy");
 }
 
-bool CButton::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
+bool CButton::PostInit(const ENTITY_DATA & objectData, CScene * pScene)
 {
 	if (!CInterface::PostInit(objectData, pScene))
 		return false;

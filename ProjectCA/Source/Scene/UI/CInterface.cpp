@@ -12,9 +12,9 @@ CInterface::~CInterface()
 {
 }
 
-bool CInterface::PostInit(const OBJECT_DATA & data, CScene * pScene)
+bool CInterface::PostInit(const ENTITY_DATA & data, CScene * pScene)
 {
-	if (!CObject::PostInit(data, pScene))
+	if (!CEntity::PostInit(data, pScene))
 		return false;
 
 	GetTransform().lock()->SetPivotRatio(0.5f, 0.5f);
@@ -31,12 +31,12 @@ bool CInterface::PostInit(const OBJECT_DATA & data, CScene * pScene)
 
 void CInterface::Init()
 {
-	CObject::Init();
+	CEntity::Init();
 }
 
 void CInterface::Update(double dDeltaTime)
 {
-	CObject::Update(dDeltaTime);
+	CEntity::Update(dDeltaTime);
 }
 
 void CInterface::Render(const HDC & hDC)

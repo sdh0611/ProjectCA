@@ -16,7 +16,7 @@ CItemInfo::~CItemInfo()
 {
 }
 
-bool CItemInfo::PostInit(const OBJECT_DATA & data, CScene * pScene)
+bool CItemInfo::PostInit(const ENTITY_DATA & data, CScene * pScene)
 {
 	if (!CInterface::PostInit(data, pScene))
 		return false;

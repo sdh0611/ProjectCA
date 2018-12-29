@@ -6,11 +6,13 @@
 #include "..\..\..\Include\Scene\Actor\CFlower.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
+#include "..\..\..\Include\Core\Graphic\CBlockParticle.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"
 #include "..\..\..\Include\Scene\CLayer.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 #include "..\..\..\Include\Scene\Actor\CObjectManager.h"
 
 
@@ -26,7 +28,8 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 {
 	if (!CProb::PostInit(data, pScene))
 		return false;
-
+	
+	//Collider에 OnCollision 콜백 메소드 설정
 	auto onCollision = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
 
 		switch (pOther->GetObjectType())
@@ -55,9 +58,12 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 		}
 		break;
 		case Types::OT_PICKABLE:
-			if (type != Collider::COLLISION_TOP)
+			if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
 			{
-				HandlingEvent(Types::EVENT_DAMAGED);
+				if (type != Collider::COLLISION_TOP)
+				{
+					HandlingEvent(Types::EVENT_DAMAGED);
+				}
 			}
 			break;
 		}
@@ -65,7 +71,7 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	};
 	GetComponent<ColliderBox>().lock()->SetOnCollision(onCollision);
 
-
+	//RenderComponent
 	auto pRender = std::make_shared<AnimationRender>();
 	if (!pRender->PostInit(this))
 		return false;
@@ -78,6 +84,17 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
 
+	//Particle 설정
+	auto pParticle = CObjectManager::GetInstance()->CreateEntity<CBlockParticle>(SPRITE_WIDTH, SPRITE_HEIGHT, GetEntityPosition().x, GetEntityPosition().y, TEXT("BlockParticle"), m_pOwnerScene);
+	if (pParticle == nullptr)
+	{
+		return false;
+	}
+	pParticle->SetActive(false);
+	m_pOwnerScene->AddEntityToScene(pParticle);
+	m_pOwnerScene->FindLayer(TEXT("Block"))->AddActor(pParticle);
+	//m_pOwnerLayer->AddActor(pParticle);
+	AddParticle(pParticle);
 
 	m_dTimeElapsed = 0.f;
 
@@ -95,8 +112,11 @@ void CSpinBlock::Init()
 
 void CSpinBlock::Update(double dDeltaTime)
 {
-	BlockBehavior(dDeltaTime);
-	CProb::Update(dDeltaTime);
+	if (m_bActive)
+	{
+		BlockBehavior(dDeltaTime);
+		CProb::Update(dDeltaTime);
+	}
 }
 
 void CSpinBlock::Render(const HDC & hDC)
@@ -138,6 +158,8 @@ void CSpinBlock::HandlingEvent(EVENT_TYPE type)
 	case Types::EVENT_DESTROY:
 		SetObjectState(Types::OS_DESTROYED);
 		SetActive(false);
+		m_pParticle.lock()->SetActive(true);
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXBreakBlock"));
 		break;
 	}
 }

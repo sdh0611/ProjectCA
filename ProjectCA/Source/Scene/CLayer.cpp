@@ -1,5 +1,5 @@
 #include "..\..\Include\Scene\CLayer.h"
-#include "..\..\Include\Scene\CObject.h"
+#include "..\..\Include\Scene\CEntity.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CWorld.h"
 //#include "..\..\Include\Scene\Object\CObject.h"
@@ -28,7 +28,7 @@ CLayer::~CLayer()
 	//		SAFE_DELETE(it)
 
 	Destroy();
-	m_ObjectList.clear();
+	m_EntityList.clear();
 
 }
 
@@ -77,10 +77,10 @@ void CLayer::Update(double fDeltaTime)
 	//		it->LateUpdate(fDeltaTime);
 	//}
 
-	if (!m_ObjectList.empty())
-		for (auto it = m_ObjectList.begin(); it != m_ObjectList.end(); ++it) {
+	if (!m_EntityList.empty())
+		for (auto it = m_EntityList.begin(); it != m_EntityList.end(); ++it) {
 			if ((*it).expired()) {
-				m_ObjectList.erase(it);
+				m_EntityList.erase(it);
 				break;
 			}
 		}
@@ -93,13 +93,13 @@ void CLayer::Render(const HDC& hDC)
 	//		(*m_it)->Render(hDC);
 	//	}
 
-	if (!m_ObjectList.empty())
+	if (!m_EntityList.empty())
 	{
-		for (auto& it : m_ObjectList)
+		for (const auto& entity : m_EntityList)
 		{
-			if (it.lock()->IsActive())
+			if (entity.lock()->IsActive())
 			{
-				it.lock()->Render(hDC);
+				entity.lock()->Render(hDC);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ void CLayer::Render(const HDC& hDC)
 
 void CLayer::Destroy()
 {
-	for(auto it = m_ObjectList.begin(); it != m_ObjectList.end(); ++it)
+	for(auto it = m_EntityList.begin(); it != m_EntityList.end(); ++it)
 	{
 		if (!it->expired())
 		{
@@ -117,10 +117,14 @@ void CLayer::Destroy()
 	}
 }
 
-void CLayer::AddActor(std::shared_ptr<CObject> pObject)
+void CLayer::AddActor(std::shared_ptr<CEntity> pEntity)
 {
-	pObject->SetOwnerLayer(this);
-	m_ObjectList.emplace_back(pObject);
+	if (pEntity->GetOwnerLayer())
+	{
+		pEntity->GetOwnerLayer()->DeleteActor(pEntity);
+	}
+	pEntity->SetOwnerLayer(this);
+	m_EntityList.emplace_back(pEntity);
 
 }
 
@@ -142,20 +146,22 @@ void CLayer::AddActor(std::shared_ptr<CObject> pObject)
 //	return true;
 //}
 
-bool CLayer::DeleteActor(std::shared_ptr<CObject>& pObject)
+bool CLayer::DeleteActor(std::shared_ptr<CEntity>& pEntity)
 {
-	if (FindObject(pObject).lock() == nullptr)
+	if (FindEntity(pEntity).lock() == nullptr)
 		return false;
 
-	for (auto it = m_ObjectList.begin(); it != m_ObjectList.end(); ) {
-		if (it->lock() == pObject) 
+	for (auto it = m_EntityList.begin(); it != m_EntityList.end(); ) {
+		if (it->lock() == pEntity)
 		{
 			it->lock()->SetOwnerLayer(nullptr);
-			m_ObjectList.erase(it);
+			m_EntityList.erase(it);
 			break;
 		}
 		else
+		{
 			++it;
+		}
 	}
 
 
@@ -182,19 +188,19 @@ bool CLayer::DeleteActor(std::shared_ptr<CObject>& pObject)
 //	return std::weak_ptr<CActor>();	//return nullptr
 //}
 
-std::weak_ptr<CObject> CLayer::FindObject(const std::shared_ptr<CObject>& pObject)
+std::weak_ptr<CEntity> CLayer::FindEntity(const std::shared_ptr<CEntity>& pEntity)
 {
-	for (const auto& it : m_ObjectList) {
-		if (it.lock() == pObject)
+	for (const auto& it : m_EntityList) {
+		if (it.lock() == pEntity)
 			return it;
 	}
 
 	return std::weak_ptr<CActor>();	//return nullptr
 }
 
-const std::list<std::weak_ptr<CObject>>& CLayer::GetActorList() const
+const std::list<std::weak_ptr<CEntity>>& CLayer::GetEntityList() const
 {
-	return m_ObjectList;
+	return m_EntityList;
 }
 
 //void CLayer::AddObjectToLayer(CObject * object)

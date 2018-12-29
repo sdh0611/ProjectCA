@@ -12,6 +12,7 @@
 
 class CActor;
 class CObject;
+class CEntity;
 
 class CLayer {
 	//Scene Class에서만 Layer 생성, 파괴 가능.
@@ -34,21 +35,21 @@ public:
 
 
 public:
-	void AddActor(std::shared_ptr<CObject> pActor);
+	void AddActor(std::shared_ptr<CEntity> pEntity);
 	//Actor삭제 메소드는 2가지의 오버로딩 버전 제공.
 	//bool DeleteActor(Types::ActorID actorID);
-	bool DeleteActor(std::shared_ptr<CObject>& pActor);
+	bool DeleteActor(std::shared_ptr<CEntity>& pEntity);
 
 
 public:
 	//std::weak_ptr<CObject> FindObject(Types::ActorID actorID);
-	std::weak_ptr<CObject> FindObject(const std::shared_ptr<CObject>& pActor);
-	const std::list<std::weak_ptr<CObject>>& GetActorList() const;
+	std::weak_ptr<CEntity> FindEntity(const std::shared_ptr<CEntity>& pEntity);
+	const std::list<std::weak_ptr<CEntity>>& GetEntityList() const;
 
 
 public:
-	inline const Types::tstring& GetLayerTag() const { return m_strLayerTag; }
-	inline void SetLayerTag(const Types::tstring& tag) { m_strLayerTag = tag; }
+	inline const TSTRING& GetLayerTag() const { return m_strLayerTag; }
+	inline void SetLayerTag(const TSTRING& tag) { m_strLayerTag = tag; }
 	inline int GetLayerOrder() { return m_iOrder; }
 	inline void SetLayerOrder(int order) { if (order >= 0) m_iOrder = order; }
 	inline UINT GetLastActorNumber() const { return m_iActorNumber; }
@@ -58,7 +59,7 @@ private:
 	int												m_iOrder;
 	UINT											m_iActorNumber;	//안쓰게될 것 같음.(08.14)
 	Types::tstring								m_strLayerTag;
-	std::list<std::weak_ptr<CObject>>		m_ObjectList;
+	std::list<std::weak_ptr<CEntity>>		m_EntityList;
 
 
 };

@@ -12,6 +12,7 @@
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 
 
 CKoopa::CKoopa()
@@ -65,9 +66,16 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 						SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 					}
 					FlipActorDirection();
-				}
+				} 
 				break;
 			case Types::OT_PROB:
+				if (GetKoopaState() == KOOPA_SHELL)
+				{
+					if (type != Collider::COLLISION_BOT)
+					{
+						CSoundManager::GetInstance()->SoundPlay(TEXT("SFXShellRicochet"));
+					}
+				}
 				switch (type) {
 				case Collider::COLLISION_BOT:
 					pPhysics->SetGrounded(true);
@@ -103,6 +111,10 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				auto pBlock = static_cast<CRandomBlock*>(pOther);
 				if (!pBlock->IsHiding())
 				{
+					if (GetKoopaState() == KOOPA_SHELL)
+					{
+						CSoundManager::GetInstance()->SoundPlay(TEXT("SFXShellRicochet"));
+					}
 					switch (type) {
 					case Collider::COLLISION_BOT:
 						pPhysics->SetGrounded(true);
@@ -160,25 +172,15 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					}
 					break;
 				case Collider::COLLISION_RIGHT:
-					if (GetKoopaState() == KOOPA_SHELL)
+					if (pOther->GetObjectState() != Types::OS_DAMAGED)
 					{
-						if (pPhysics->GetCurSpeed() == 0.f)
-						{
-							SetObjectPosition(pOther->GetObjectPosition().x - 70, GetObjectPosition().y);
-							pPhysics->SetCurSpeed(-1 * pPhysics->GetMaxSpeed());
-							m_Direction = Types::DIR_LEFT;
-						}
+						HandlingEvent(Types::EVENT_DAMAGED);
 					}
 					break;
 				case Collider::COLLISION_LEFT:
-					if (GetKoopaState() == KOOPA_SHELL)
+					if (pOther->GetObjectState() != Types::OS_DAMAGED)
 					{
-						if (pPhysics->GetCurSpeed() == 0.f)
-						{
-							SetObjectPosition(pOther->GetObjectPosition().x + 70, GetObjectPosition().y);
-							pPhysics->SetCurSpeed(pPhysics->GetMaxSpeed());
-							m_Direction = Types::DIR_RIGHT;
-						}
+						HandlingEvent(Types::EVENT_DAMAGED);
 					}
 					break;
 				}
@@ -186,12 +188,12 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			case Types::OT_PICKABLE:
 				if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
 				{
-					//puts("Dead");
-					SetObjectState(Types::OS_DEAD);
-					GetComponent<ColliderBox>().lock()->SetActive(false);
-					pPhysics->SetCurJumpForce(300.f);
-					pPhysics->SetGrounded(false);
-					CScoreManager::GetInstance()->IncreaseScore(200);
+					//SetObjectState(Types::OS_DEAD);
+					//GetComponent<ColliderBox>().lock()->SetActive(false);
+					//pPhysics->SetCurJumpForce(300.f);
+					//pPhysics->SetGrounded(false);
+					//CScoreManager::GetInstance()->IncreaseScore(200);
+					HandlingEvent(Types::EVENT_DEAD);
 				}
 				else
 				{
@@ -428,6 +430,15 @@ void CKoopa::HandlingEvent(EVENT_TYPE type)
 				}
 			}
 		}
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXStomp"));
+		break;
+	case Types::EVENT_DEAD:
+		SetObjectState(Types::OS_DEAD);
+		GetComponent<ColliderBox>().lock()->SetActive(false);
+		pPhysics->SetCurJumpForce(300.f);
+		pPhysics->SetGrounded(false);
+		CScoreManager::GetInstance()->IncreaseScore(200);
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXStomp"));
 		break;
 	case Types::EVENT_DESTROY:
 		SetObjectState(Types::OS_DESTROYED);
@@ -435,6 +446,7 @@ void CKoopa::HandlingEvent(EVENT_TYPE type)
 		GetComponent<ColliderBox>().lock()->SetActive(false);
 		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaNormal"), TEXT("Destroy"));
 		CScoreManager::GetInstance()->IncreaseScore(200);
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXSpinStomp"));
 		break;
 	}
 	

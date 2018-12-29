@@ -10,6 +10,7 @@
 #include "..\..\..\Include\Scene\CLayer.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 #include "..\..\..\Include\Scene\Actor\CObjectManager.h"
 
 
@@ -113,6 +114,7 @@ void CPickupBlock::HandlingEvent(EVENT_TYPE type)
 		if (m_pPickup.lock()->GetPickupType() != CPickup::PickupType::PT_COIN)
 		{
 			m_pPickup.lock()->SetActive(true);
+			CSoundManager::GetInstance()->SoundPlay(TEXT("SFXPowerUpAppear"));
 		}
 		else
 		{

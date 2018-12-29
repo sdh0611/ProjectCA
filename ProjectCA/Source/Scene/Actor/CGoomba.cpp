@@ -12,6 +12,7 @@
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
+#include "..\..\..\Include\Core\Sound\CSoundManager.h"
 
 
 CGoomba::CGoomba()
@@ -322,6 +323,7 @@ void CGoomba::HandlingEvent(EVENT_TYPE type)
 		pPhysics->SetCurSpeed(0.f);
 		SetObjectState(Types::OS_DAMAGED);
 		m_ObjectType = Types::OT_PICKABLE;
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXStomp"));
 		break;
 	case Types::EVENT_DEAD:
 		SetObjectState(Types::OS_DEAD);
@@ -330,6 +332,7 @@ void CGoomba::HandlingEvent(EVENT_TYPE type)
 		pPhysics->SetCurJumpForce(300.f);
 		pPhysics->SetGrounded(false);
 		CScoreManager::GetInstance()->IncreaseScore(200);
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXStomp"));
 		break;
 	case Types::EVENT_DESTROY:
 		SetObjectState(Types::OS_DESTROYED);
@@ -337,6 +340,7 @@ void CGoomba::HandlingEvent(EVENT_TYPE type)
 		GetComponent<ColliderBox>().lock()->SetActive(false);
 		GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("GoombaNormal"), TEXT("Destroy"));
 		CScoreManager::GetInstance()->IncreaseScore(200);
+		CSoundManager::GetInstance()->SoundPlay(TEXT("SFXSpinStomp"));
 		break;
 	}
 

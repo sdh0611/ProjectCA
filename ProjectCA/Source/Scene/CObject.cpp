@@ -29,21 +29,9 @@ bool CObject::PostInit(const OBJECT_DATA & data, CScene* pScene)
 	{
 		return false;
 	}
-	//m_bActive				= true;
-	//m_iObjectWidth		= data.m_iObjectWidth;
-	//m_iObjectHeight		= data.m_iObjectHeight;
-	//m_strObjectName		= data.m_strObjectName;
+
 	m_ObjectType			= data.m_ObjectType;
 	m_ObjectState			= data.m_ObjectState;
-	//m_ObjectID				= data.m_iObjectID;
-	//m_pOwnerScene		= pScene;
-
-	//auto pTransform = std::make_shared<TransformComponent>();
-	//if (!pTransform->PostInit(this, data.m_ObjectPoint))
-	//	return false;
-
-	//if (!AddComponent(pTransform, pTransform->GetComponentTag()))
-	//	return false;
 
 	return true;
 }
@@ -54,71 +42,20 @@ void CObject::Init()
 	{
 		component.second->Init();
 	}
-
-	//if (!m_pCamera.expired())
-	//{
-	//	m_pCamera.lock()->Init();
-	//}
 }
 
 
 void CObject::Update(double dDeltaTime)
 {
 	CEntity::Update(dDeltaTime);
-	//for (const auto& component : m_ComponentTable)
-	//{
-	//	component.second->Update(dDeltaTime);
-	//}
 }
 
 void CObject::LateUpdate()
 {
-	//if (CCameraManager::GetInstance()->GetMainCamera().expired())
-	//	return;
-
-	//GetTransform().lock()->AdjustScreenPosition();
-
-	////auto pCollider = GetComponent(TEXT("Collider"));
-	////if (!pCollider.expired())
-	////{
-	////	pCollider.lock()->LateUpdate();
-	////}
-
-	//auto pRender = GetComponent(TEXT("RenderComponent"));
-	//if (!pRender.expired())
-	//{
-	//	pRender.lock()->LateUpdate();
-	//}
 	CEntity::LateUpdate();
 }
 
-//
-//std::weak_ptr<ComponentBase> CObject::GetComponent(const TSTRING& strTag)
-//{
-//	auto it = m_ComponentTable.find(strTag);
-//
-//	if (it == m_ComponentTable.end())
-//		return std::weak_ptr<ComponentBase>();
-//
-//	return it->second;
-//}
-//
-//bool CObject::AddComponent(std::shared_ptr<ComponentBase> pComponent, const TSTRING& strTag)
-//{
-//	return m_ComponentTable.insert(std::make_pair(strTag, pComponent)).second;
-//}
-//
-//bool CObject::DeleteComponent(const TSTRING & strTag)
-//{
-//	ComponentTable::iterator it = m_ComponentTable.find(strTag);
-//
-//	if (it == m_ComponentTable.end())
-//		return false;
-//
-//	m_ComponentTable.erase(strTag);
-//
-//	return true;
-//}
+
 
 CObject * CObject::Clone()
 {
@@ -174,30 +111,11 @@ void CObject::SetObjectName(const TSTRING & strName)
 	m_strEntityName = strName;
 }
 
-void CObject::SetOwnerLayer(CLayer * pLayer)
-{
-	m_pOwnerLayer = pLayer;
-}
-
-void CObject::SetOwnerScene(CScene * pScene)
-{
-	m_pOwnerScene = pScene;
-}
-
 void CObject::SetOwnerObject(std::shared_ptr<CObject> pOwner)
 {
 	m_pOwnerObject = pOwner;
 }
 
-bool CObject::AttachCamera(std::shared_ptr<CCamera> pCamera)
-{
-	if (!m_pCamera.expired())
-		return false;
-
-	m_pCamera = pCamera;
-
-	return true;
-}
 
 bool CObject::IsActive()
 {
@@ -263,6 +181,17 @@ std::weak_ptr<CObject> CObject::GetOwnerObject()
 {
 	return m_pOwnerObject.lock();
 }
+
+void CObject::AddParticle(std::shared_ptr<CParticle> pParticle)
+{
+	m_pParticle = pParticle;
+}
+
+void CObject::DeleteParticle()
+{
+	m_pParticle.reset();
+}
+
 
 //std::weak_ptr<CCamera> CObject::GetCamera()
 //{

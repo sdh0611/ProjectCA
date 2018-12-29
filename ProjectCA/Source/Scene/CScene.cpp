@@ -19,7 +19,7 @@ CScene::~CScene()
 
 	m_LayerList.clear();
 	//CCameraManager::GetInstance()->Clear();
-	m_ObjectPtrList.clear();
+	m_EntityPtrList.clear();
 	CObjectManager::GetInstance()->Clear();
 }
 
@@ -31,6 +31,13 @@ void CScene::StartScene()
 
 bool CScene::Init()
 {
+	//Default 레이어 생성.
+	//모든 Entity들은 생성시 기본적으로 DefaultLayer로 들어가게됨.
+	if (!CreateLayer(TEXT("Default"), 0))
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -56,13 +63,13 @@ void CScene::Render(const HDC& hDC)
 
 //CLayer 클래스의 friend 메소드.
 //CreateLayer메소드를 통해서만 Layer 생성이 가능하게끔 만든다.
-bool CScene::CreateLayer(const Types::tstring & tag, int order)
+bool CScene::CreateLayer(const TSTRING & strTag, int order)
 {
-	if (FindLayer(tag))
+	if (FindLayer(strTag))
 		return false;
 
 	CLayer* pLayer = new CLayer;
-	pLayer->Init(tag, order);
+	pLayer->Init(strTag, order);
 
 	m_LayerList.emplace_back(pLayer);
 	SortLayer();
@@ -70,9 +77,9 @@ bool CScene::CreateLayer(const Types::tstring & tag, int order)
 	return true;
 }
 
-bool CScene::DeleteLayer(const Types::tstring & tag)
+bool CScene::DeleteLayer(const TSTRING & strTag)
 {
-	if (!FindLayer(tag))
+	if (!FindLayer(strTag))
 		return false;
 
 	SAFE_DELETE((*m_it));
@@ -91,67 +98,68 @@ CLayer * CScene::FindLayer(const TSTRING & strTag)
 	return nullptr;
 }
 
-void CScene::AddObjectToScene(CObject * pObject)
+void CScene::AddEntityToScene(CEntity * pEntity)
 {
-	m_ObjectPtrList.emplace_back(pObject);
+	m_EntityPtrList.emplace_back(pEntity);
 }
 
-void CScene::AddObjectToScene(std::shared_ptr<CObject> pObject)
+void CScene::AddEntityToScene(std::shared_ptr<CEntity> pEntity)
 {
-	m_ObjectPtrList.push_back(pObject);
+	FindLayer(TEXT("Default"))->AddActor(pEntity);
+	m_EntityPtrList.push_back(pEntity);
 }
 
-WeakObjPtr CScene::FindObjectFromScene(CObject * pObject)
+WeakEntityPtr CScene::FindEntityFromScene(CEntity * pEntity)
 {
-	for (const auto& obj : m_ObjectPtrList)
+	for (const auto& obj : m_EntityPtrList)
 	{
-		if (obj.get() == pObject)
+		if (obj.get() == pEntity)
 		{
 			return obj;
 		}
 	}
 
-	return WeakObjPtr();
+	return WeakEntityPtr();
 }
 
-WeakObjPtr CScene::FindObjectFromScene(const TSTRING & strObjectName)
+WeakEntityPtr CScene::FindEntityFromScene(const TSTRING & strEntityName)
 {
-	for (const auto& obj : m_ObjectPtrList)
+	for (const auto& obj : m_EntityPtrList)
 	{
-		if (obj->GetObjectName() == strObjectName)
+		if (obj->GetEntityName() == strEntityName)
 		{
 			return obj;
 		}
 	}
 
-	return WeakObjPtr();
+	return WeakEntityPtr();
 }
 
-WeakObjPtr CScene::FindInactiveObjectFromScene(CObject * pObject)
+WeakEntityPtr CScene::FindInactiveEntityFromScene(CEntity * pEntity)
 {
-	for (const auto& obj : m_ObjectPtrList)
+	for (const auto& obj : m_EntityPtrList)
 	{
-		if (obj.get() == pObject)
+		if (obj.get() == pEntity)
 		{
 			return obj;
 		}
 	}
 
-	return WeakObjPtr();
+	return WeakEntityPtr();
 }
 
-WeakObjPtr CScene::FindInactiveObjectFromScene(const TSTRING & strObjectName)
+WeakEntityPtr CScene::FindInactiveEntityFromScene(const TSTRING & strEntityName)
 {
-	for (const auto& obj : m_ObjectPtrList)
+	for (const auto& obj : m_EntityPtrList)
 	{
-		if (obj->GetObjectName() == strObjectName)
+		if (obj->GetEntityName() == strEntityName)
 		{
 			return obj;
 		}
 	}
 	
 
-	return WeakObjPtr();
+	return WeakEntityPtr();
 }
 
 void CScene::SetSceneMainCamera(std::shared_ptr<CCamera> pCamera)
@@ -159,37 +167,45 @@ void CScene::SetSceneMainCamera(std::shared_ptr<CCamera> pCamera)
 	m_pMainCameraPtr = pCamera;
 }
 
-WeakObjPtr CScene::FindObjectFromScene(UINT iObjectID)
+WeakEntityPtr CScene::FindEntityFromScene(UINT entityID)
 {
-	for (const auto& obj : m_ObjectPtrList)
+	for (const auto& obj : m_EntityPtrList)
 	{
-		if (obj->GetObjectID() == iObjectID)
+		if (obj->GetEntityID() == entityID)
 		{
 			return obj;
 		}
 
 	}
 
-	return WeakObjPtr();
+	return WeakEntityPtr();
 }
 
-bool CScene::DeleteObjectFromScene(CObject * pObject)
+bool CScene::DeleteEntityFromScene(CEntity * pEntity)
 {
-	for (auto it = m_ObjectPtrList.cbegin(); it != m_ObjectPtrList.cend(); )
+	for (auto it = m_EntityPtrList.cbegin(); it != m_EntityPtrList.cend(); ++it)
 	{
-		if (it->get() == pObject)
+		if (it->get() == pEntity)
 		{
-			m_ObjectPtrList.erase(it);
+			m_EntityPtrList.erase(it);
 			return true;
 		}
-
 	}
 
 	return false;
 }
 
-bool CScene::DeleteObjectFromScene(UINT iObjectID)
+bool CScene::DeleteEntityFromScene(UINT entityID)
 {
+	for (auto it = m_EntityPtrList.cbegin(); it != m_EntityPtrList.cend(); ++it)
+	{
+		if ((*it)->GetEntityID() == entityID)
+		{
+			m_EntityPtrList.erase(it);
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -202,7 +218,7 @@ void CScene::ResetScene()
 	//	Init();
 	//}	
 
-	for (const auto& actor : m_ObjectPtrList) {
+	for (const auto& actor : m_EntityPtrList) {
 		actor->Init();
 	}
 
@@ -214,4 +230,20 @@ void CScene::ResetScene()
 bool CScene::CompareLayer(CLayer * first, CLayer * second)
 {
 	return (first->GetLayerOrder() > second->GetLayerOrder()); 
+}
+
+void CScene::CheckGarbage()
+{
+	for (auto it = m_EntityPtrList.cbegin(); it != m_EntityPtrList.cend(); )
+	{
+		if ((*it) == nullptr)
+		{
+			it = m_EntityPtrList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
 }

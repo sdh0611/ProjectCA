@@ -1,9 +1,11 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CGround.h"
+#include "..\..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\ImageRender.h"
 #include "..\..\..\Include\Core\Graphic\CSprite.h"
 #include "..\..\..\Include\Scene\CTile.h"
+#include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Core\CResourceManager.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
@@ -69,6 +71,49 @@ void CGround::Render(const HDC & hDC)
 	}
 
 	//GetComponent<ColliderBox>().lock()->DrawCollider(hDC);
+
+}
+
+void CGround::LateUpdate()
+{
+	CObject::LateUpdate();
+
+	UINT cameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
+	UINT cameraHeight = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight();
+	POSITION cameraPosition = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraPosition();
+	POSITION position = GetObjectPosition();
+
+	if (IsActive())
+	{
+		if (position.x + m_iEntityWidth <  cameraPosition.x - cameraWidth
+			|| position.x > cameraPosition.x + 2 * cameraWidth)
+		{
+			puts("InActive");
+			SetActive(false);
+			return;
+		}
+		else if (position.y < cameraPosition.y - cameraHeight
+			|| position.y + m_iEntityHeight > cameraPosition.y + 2 * cameraHeight)
+		{
+			puts("InActive");
+			SetActive(false);
+			//SetObjectState(Types::OS_DEAD);
+			return;
+		}
+	}
+	else
+	{
+		auto pPlayer = static_cast<CGameScene*>(m_pOwnerScene)->GetPlayerPtr().lock();
+		POSITION playerPosition = pPlayer->GetObjectPosition();
+
+		if (position.x + m_iEntityWidth > cameraPosition.x - cameraWidth
+			&& position.x < cameraPosition.x + 2 * cameraWidth)
+		{
+			puts("Active");
+			//Init();
+			SetActive(true);
+		}
+	}
 
 }
 
