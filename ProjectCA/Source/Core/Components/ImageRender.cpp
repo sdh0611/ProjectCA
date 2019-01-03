@@ -30,10 +30,6 @@ void ImageRender::Init()
 	RenderComponent::Init();
 }
 
-void ImageRender::Update(double dDeltaTIme)
-{
-}
-
 void ImageRender::Draw(const HDC & hDC)
 {
 	if (m_bActive)
@@ -43,11 +39,30 @@ void ImageRender::Draw(const HDC & hDC)
 			//POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
 			HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
 
-			TransparentBlt(hDC, m_DrawPivot.x, m_DrawPivot.y,
-				m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
-				m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
-				m_ColorRef);
+			if (m_RenderMode == RenderMode::RENDER_DEFAULT)
+			{
+				TransparentBlt(hDC, m_DrawPivot.x, m_DrawPivot.y,
+					m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+					m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
+					m_ColorRef);
+				}
+			else
+			{
+				HBITMAP hTempBit = CreateCompatibleBitmap(hDC, MAX_WIDTH, MAX_HEIGHT);
+				HBITMAP hOldBitmap = (HBITMAP)SelectObject(m_hBlendingDC, hTempBit);
 
+				BitBlt(m_hBlendingDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, hDC, 0, 0, SRCCOPY);
+
+				TransparentBlt(m_hBlendingDC, m_DrawPivot.x, m_DrawPivot.y,
+					m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+					m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(), m_ColorRef);
+
+				AlphaBlend(hDC, m_DrawPivot.x, m_DrawPivot.y,
+					m_iDrawWidth, m_iDrawHeight, m_hBlendingDC, 0, 0,
+					m_iDrawWidth, m_iDrawHeight, m_BlendFunction);
+
+				DeleteObject(SelectObject(m_hBlendingDC, hOldBitmap));
+			}
 			SelectObject(m_hRenderDC, hOldBit);
 		}
 	}
@@ -62,11 +77,31 @@ void ImageRender::Draw(const HDC& hDC, const POSITION& position)
 		{
 			HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
 
-			TransparentBlt(hDC, position.x, position.y,
-				m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
-				m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
-				m_ColorRef);
+			if (m_RenderMode == RenderMode::RENDER_DEFAULT)
+			{
+				TransparentBlt(hDC, position.x, position.y,
+					m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+					m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(),
+					m_ColorRef);
+			}
+			else
+			{
+				HBITMAP hTempBit = CreateCompatibleBitmap(hDC, MAX_WIDTH, MAX_HEIGHT);
+				HBITMAP hOldBitmap = (HBITMAP)SelectObject(m_hBlendingDC, hTempBit);
 
+				BitBlt(m_hBlendingDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, hDC, 0, 0, SRCCOPY);
+
+				TransparentBlt(m_hBlendingDC, position.x, position.y,
+					m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+					m_pWeakSprite.lock()->GetBitWidth(), m_pWeakSprite.lock()->GetBitHeight(), m_ColorRef);
+
+				AlphaBlend(hDC, position.x, position.y,
+					m_iDrawWidth, m_iDrawHeight, m_hBlendingDC, 0, 0,
+					m_iDrawWidth, m_iDrawHeight, m_BlendFunction);
+
+				DeleteObject(SelectObject(m_hBlendingDC, hOldBitmap));
+
+			}
 			SelectObject(m_hRenderDC, hOldBit);
 		}
 	}
@@ -79,13 +114,32 @@ void ImageRender::Draw(const HDC & hDC, const POSITION & position, std::weak_ptr
 	{
 		HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, pSprite.lock()->GetBitmap());
 
-		TransparentBlt(hDC, position.x, position.y,
-			m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
-			pSprite.lock()->GetBitWidth(), pSprite.lock()->GetBitHeight(),
-			m_ColorRef);
+		if (m_RenderMode == RenderMode::RENDER_DEFAULT)
+		{
+			TransparentBlt(hDC, position.x, position.y,
+				m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+				pSprite.lock()->GetBitWidth(), pSprite.lock()->GetBitHeight(),
+				m_ColorRef);
 
+		}
+		else
+		{
+			HBITMAP hTempBit = CreateCompatibleBitmap(hDC, MAX_WIDTH, MAX_HEIGHT);
+			HBITMAP hOldBitmap = (HBITMAP)SelectObject(m_hBlendingDC, hTempBit);
+
+			BitBlt(m_hBlendingDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, hDC, 0, 0, SRCCOPY);
+
+			TransparentBlt(m_hBlendingDC, position.x, position.y,
+				m_iDrawWidth, m_iDrawHeight, m_hRenderDC, 0, 0,
+				pSprite.lock()->GetBitWidth(), pSprite.lock()->GetBitHeight(), m_ColorRef);
+
+			AlphaBlend(hDC, position.x, position.y,
+				m_iDrawWidth, m_iDrawHeight, m_hBlendingDC, 0, 0,
+				m_iDrawWidth, m_iDrawHeight, m_BlendFunction);
+
+			DeleteObject(SelectObject(m_hBlendingDC, hOldBitmap));
+		}
 		SelectObject(m_hRenderDC, hOldBit);
-
 	}
 
 }

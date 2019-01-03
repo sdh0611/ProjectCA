@@ -45,7 +45,7 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	m_iHeight = iHeight;
 
 	//생성 실패할 경우 return false
-	if (!CreateMyWindow(TEXT("MainWindowClass"), TEXT("MainWindow"), TRUE))
+	if (!CreateMyWindow(TEXT("MainWindowClass"), TEXT("SuperMarioWorld! - sdh-"), TRUE))
 		return false;
 
 	m_hDC = GetDC(m_hWnd);
@@ -59,14 +59,9 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 	m_pInputManager			= CInputManager::GetInstance();
 	m_pBackBuffer				= BackBuffer::GetInstance();
 
+	//Initializing Manager Classes
 	if (!m_pResourceManager->Init())
 		return false;
-
-	//Initializing Manager Classes
-	if (!m_pSceneManager->Init(Types::ST_TITLE))
-		return false;
-	//if (!m_pSceneManager->CreateNextScene(Types::ST_GAME))
-	//	return false;
 
 	if (!m_pTimer->Init())
 		return false;
@@ -76,9 +71,11 @@ bool MainWindow::Init(HINSTANCE hInstance, UINT iWidth, UINT iHeight)
 
 	if (!m_pBackBuffer->Init(m_hDC))
 		return false;
-
 	m_hBrush = (HBRUSH)GetStockObject(NULL_BRUSH);
 
+	if (!m_pSceneManager->Init(Types::ST_TITLE))
+		return false;
+	
 
 	return true;
 }

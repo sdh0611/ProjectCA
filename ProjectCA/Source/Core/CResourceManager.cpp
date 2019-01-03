@@ -543,7 +543,7 @@ bool CResourceManager::LoadBackgroundImageInfo()
 
 bool CResourceManager::LoadUIImageInfo()
 {
-	//UI TestButton
+	//UI Button
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/button.bmp"), TEXT("TestButton")))
 		return false;
 
@@ -557,6 +557,9 @@ bool CResourceManager::LoadUIImageInfo()
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/gotitle.bmp"), TEXT("GoTitleButton")))
+		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Title/title_pointer.bmp"), TEXT("Pointer")))
 		return false;
 
 
@@ -881,7 +884,9 @@ bool CResourceManager::LoadUIImageInfo()
 
 		if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Font/ui_font_outline_z.bmp"), TEXT("UIFontOutlineZ")))
 			return false;
-
+		
+		if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Font/ui_font_outline_equal.bmp"), TEXT("UIFontOutlineEqual")))
+			return false;
 
 		//UI Font etc
 		if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Font/ui_font_em.bmp"), TEXT("UIFontEM")))
@@ -894,8 +899,7 @@ bool CResourceManager::LoadUIImageInfo()
 			return false;
 
 		if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Font/ui_font_line.bmp"), TEXT("UIFontLine")))
-			return false;
-				
+			return false;			
 	}
 
 	//UI Etc
@@ -913,6 +917,10 @@ bool CResourceManager::LoadUIImageInfo()
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_coin.bmp"), TEXT("UICoin")))
 		return false;
+
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/UI/Game/ui_clock.bmp"), TEXT("UIClock")))
+		return false;
+
 
 	return true;
 }

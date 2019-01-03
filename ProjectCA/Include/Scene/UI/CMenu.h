@@ -1,11 +1,12 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "CInterface.h"
+#include "CUI.h"
 
 class CButton;
+class CInterface;
 
-class CMenu : public CInterface
+class CMenu : public CUI
 {
 public:
 	CMenu();
@@ -14,7 +15,6 @@ public:
 
 public:
 	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene);
-	virtual void Init();
 	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC);
 	virtual void LateUpdate();
@@ -24,6 +24,7 @@ public:
 	void AddButton(std::shared_ptr<CButton> pButton);
 	void DeleteButton(std::shared_ptr<CButton> pButton);
 	void SetFocusPointer(std::shared_ptr<CInterface> pFocus);
+	void SetInterval(float fInterval);
 
 
 public:
@@ -32,7 +33,7 @@ public:
 
 private:
 	void MenuBehavior();
-
+	void LiningButton();
 
 
 private:
@@ -40,5 +41,8 @@ private:
 	ButtonList							m_ButtonList;
 	std::weak_ptr<CButton>			m_FocusButton;
 	std::shared_ptr<CInterface>		m_pFocusPointer;
+	int										m_iCurFocusButtonIndex;
+	int										m_iNumberOfButton;
+	float									m_fInterval;
 
 };

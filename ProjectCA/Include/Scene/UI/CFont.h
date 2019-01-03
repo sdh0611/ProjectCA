@@ -5,10 +5,10 @@
 
 
 #include "..\..\..\stdafx.h"
-#include "CInterface.h"
+#include "CUI.h"
 
 
-class CFont: public CInterface
+class CFont: public CUI
 {
 
 public:
@@ -17,10 +17,8 @@ public:
 
 
 public:
-	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene);
-	virtual void Init();
-	virtual void Update(double dDeltaTime);
-	virtual void Render(const HDC& hDC);
+	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene) override;
+	virtual void Render(const HDC& hDC) override;
 
 
 public:

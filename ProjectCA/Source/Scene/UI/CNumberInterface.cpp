@@ -17,7 +17,7 @@ CNumberInterface::~CNumberInterface()
 
 bool CNumberInterface::PostInit(const ENTITY_DATA & data, CScene * pScene)
 {
-	if (!CInterface::PostInit(data, pScene))
+	if (!CUI::PostInit(data, pScene))
 		return false;
 
 	auto pResourceMgr = CResourceManager::GetInstance();
@@ -56,17 +56,6 @@ bool CNumberInterface::PostInit(const ENTITY_DATA & data, CScene * pScene)
 	m_FontType			= FONT_WHITE;
 
 	return true;
-}
-
-void CNumberInterface::Init()
-{
-	CInterface::Init();
-}
-
-void CNumberInterface::Update(double dDeltaTime)
-{
-	CInterface::Update(dDeltaTime);
-
 }
 
 void CNumberInterface::Render(const HDC & hDC)

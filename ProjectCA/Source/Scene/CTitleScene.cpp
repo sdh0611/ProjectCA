@@ -9,6 +9,7 @@
 #include "..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\Include\Scene\UI\CButton.h"
 #include "..\..\Include\Scene\UI\CFont.h"
+#include "..\..\Include\Scene\UI\CMenu.h"
 #include "..\..\Include\Scene\Actor\CBackground.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Core\Sound\CSoundManager.h"
@@ -31,9 +32,10 @@ bool CTitleScene::Init()
 		return false;
 	}
 
-	//CSoundManager::GetInstance()->StopChannel(CSoundManager::SoundType::SOUND_BGM);
-	//CSoundManager::GetInstance()->SoundPlay(TEXT("BGMTitle"));
-	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMTitle"));
+	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMTitle"));
+	
+	CInputManager::GetInstance()->SetKeyCheckMode(VK_UP, true);
+	CInputManager::GetInstance()->SetKeyCheckMode(VK_DOWN, true);
 
 	auto pObjMgr = CObjectManager::GetInstance();
 
@@ -47,7 +49,7 @@ bool CTitleScene::Init()
 		if (!CreateLayer(TEXT("Title"), 1))
 			return false;
 	
-		auto pTitle = pObjMgr->CreateObject<CInterface>( MAX_WIDTH * 0.7f, MAX_HEIGHT * 0.3f , MAX_WIDTH / 2.f, MAX_HEIGHT / 3.f, Types::OT_UI, TEXT("Logo"), this);
+		auto pTitle = pObjMgr->CreateEntity<CInterface>( MAX_WIDTH * 0.7f, MAX_HEIGHT * 0.3f , MAX_WIDTH / 2.f, MAX_HEIGHT / 3.f, TEXT("Logo"), this);
 		if (pTitle == nullptr)
 			return false;
 		pTitle->SetImage(TEXT("Logo2"));
@@ -55,42 +57,69 @@ bool CTitleScene::Init()
 		FindLayer(TEXT("Title"))->AddActor(pTitle);
 	}
 
-	//Test遂 獄動 持失
+	//Menu 持失
 	{
-		if (!CreateLayer(TEXT("Button"), 2))
+		if (!CreateLayer(TEXT("Menu"), 2))
 			return false;
 
+		auto pMenu = pObjMgr->CreateEntity<CMenu>(SPRITE_WIDTH * 9, SPRITE_HEIGHT, MAX_WIDTH * 0.5f, MAX_HEIGHT * 0.5f + 80, TEXT("Button"), this);
+		if (pMenu == nullptr)
+		{
+			return false;
+		}
+
+		//Pointer
+		auto pInterface = pObjMgr->CreateEntity<CInterface>(SPRITE_WIDTH*2, SPRITE_HEIGHT*2, 0, 0, TEXT("Pointer"), this);
+		if (pInterface == nullptr)
+		{
+			return false;
+		}
+		pInterface->SetImage(TEXT("Pointer"));
+		pMenu->SetFocusPointer(pInterface);
+		AddEntityToScene(pMenu);
+		FindLayer(TEXT("Menu"))->AddActor(pMenu);
+
 		//Start button
-		auto pButton = pObjMgr->CreateObject<CButton>(SPRITE_WIDTH * 9, SPRITE_HEIGHT, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 120, Types::OT_UI, TEXT("Button"), this);
+		auto pButton = pObjMgr->CreateEntity<CButton>(SPRITE_WIDTH * 9, SPRITE_HEIGHT, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 120, TEXT("Button"), this);
 		if (pButton == nullptr)
 			return false;
 
 		auto startButtonCallback = []()->void {
 			puts("Start");
+			CSoundManager::GetInstance()->SoundPlay(TEXT("SFXButtonActivated"));
 			CSceneManager::GetInstance()->CreateNextScene(Types::ST_GAME);
 			CSceneManager::GetInstance()->SetReadyToChangeScene(true);
 		};
 		pButton->SetImage(TEXT("StartButton"));
 		pButton->SetOnClickCallback(startButtonCallback);
-
-		m_EntityPtrList.emplace_back(pButton);
-		FindLayer(TEXT("Button"))->AddActor(pButton);
+		pMenu->AddButton(pButton);
+		//m_EntityPtrList.emplace_back(pButton);
+		//FindLayer(TEXT("Button"))->AddActor(pButton);
 
 		
 		//Exit button
-		pButton = pObjMgr->CreateObject<CButton>(SPRITE_WIDTH * 8, SPRITE_HEIGHT, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 180, Types::OT_UI, TEXT("Button"), this);
+		pButton = pObjMgr->CreateEntity<CButton>(SPRITE_WIDTH * 8, SPRITE_HEIGHT, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 180, TEXT("Button"), this);
 		if (pButton == nullptr)
 			return false;
 
 		auto exitButtonCallback = []()->void {
 			puts("Exit");
+			CSoundManager::GetInstance()->SoundPlay(TEXT("SFXButtonActivated"));
 			PostMessage(HWND_DESKTOP, WM_QUIT, NULL, NULL);
 		};
 		pButton->SetImage(TEXT("ExitButton"));
 		pButton->SetOnClickCallback(exitButtonCallback);
+		pMenu->AddButton(pButton);
 
-		m_EntityPtrList.emplace_back(pButton);
-		FindLayer(TEXT("Button"))->AddActor(pButton);
+		//m_EntityPtrList.emplace_back(pButton);
+		//FindLayer(TEXT("Button"))->AddActor(pButton);
+	}
+
+	//Test遂 Menu Box持失
+	{
+
+
+
 	}
 
 	//Font 持失
@@ -98,7 +127,7 @@ bool CTitleScene::Init()
 		if (!CreateLayer(TEXT("Font"), 3))
 			return false;
 
-		auto pFont = pObjMgr->CreateObject<CFont>(128, SPRITE_HEIGHT / 2, MAX_WIDTH / 2.f , MAX_HEIGHT / 2.f + 250, Types::OT_UI, TEXT("Font"), this);
+		auto pFont = pObjMgr->CreateEntity<CFont>(128, SPRITE_HEIGHT / 2, MAX_WIDTH / 2.f , MAX_HEIGHT / 2.f + 250, TEXT("Font"), this);
 		if (pFont == nullptr)
 			return false;
 		pFont->SetFontSize(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);
@@ -107,7 +136,7 @@ bool CTitleScene::Init()
 		m_EntityPtrList.emplace_back(pFont);
 		FindLayer(TEXT("Font"))->AddActor(pFont);
 
-		pFont = pObjMgr->CreateObject<CFont>(128, SPRITE_HEIGHT / 2, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 280, Types::OT_UI, TEXT("Font"), this);
+		pFont = pObjMgr->CreateEntity<CFont>(128, SPRITE_HEIGHT / 2, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 280, TEXT("Font"), this);
 		if (pFont == nullptr)
 			return false;
 		pFont->SetFontSize(SPRITE_WIDTH / 4, SPRITE_HEIGHT / 4);

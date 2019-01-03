@@ -113,7 +113,10 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				{
 					if (GetKoopaState() == KOOPA_SHELL)
 					{
-						CSoundManager::GetInstance()->SoundPlay(TEXT("SFXShellRicochet"));
+						if (type != Collider::COLLISION_BOT)
+						{
+							CSoundManager::GetInstance()->SoundPlay(TEXT("SFXShellRicochet"));
+						}
 					}
 					switch (type) {
 					case Collider::COLLISION_BOT:

@@ -131,6 +131,10 @@ void PlayerInputComponent::KeyProcess()
 				pOwner->SetActorAct(Types::ACT_DESTROY);
 				pSoundManager->SoundPlay(TEXT("SFXSpinJump"));
 			}
+			else
+			{
+				pSoundManager->SoundPlay(TEXT("SFXJump"));
+			}
 			pOwner->SetActorVerticalState(Types::VS_JUMP);
 		}
 	}

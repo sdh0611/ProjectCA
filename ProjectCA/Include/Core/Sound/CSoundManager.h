@@ -12,7 +12,7 @@ class CSoundManager : public Singleton<CSoundManager>
 public:
 	enum SoundType {
 		SOUND_BGM = 0, SOUND_SFX_PLAYER, SOUND_SFX_ENEMY, SOUND_SFX_PICKUP, 
-		SOUND_SFX_ATTACK, SOUND_SFX_BLOCK
+		SOUND_SFX_ATTACK, SOUND_SFX_BLOCK, SOUND_SFX_UI
 	};
 
 
@@ -69,7 +69,9 @@ private:
 	bool LoadPickupSFX();
 	bool LoadAttackSFX();
 	bool LoadBlockSFX();
+	bool LoadUISFX();
 	bool LoadBGM();
+
 
 
 private:

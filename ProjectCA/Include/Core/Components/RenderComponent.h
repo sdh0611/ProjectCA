@@ -8,6 +8,11 @@
 class RenderComponent : public ComponentBase {
 
 public:
+	enum RenderMode {
+		RENDER_DEFAULT, RENDER_BLEND, RENDER_FADE_OUT, RENDER_FADE_IN
+	};
+
+public:
 	RenderComponent();
 	virtual ~RenderComponent();
 
@@ -21,6 +26,8 @@ public:
 
 
 public:
+	//void SetBlending(bool bBlending);
+	void SetRenderMode(RenderMode mode);
 	void SetDrawWidth(UINT iWidth);
 	void SetDrawHeight(UINT iHeight);
 	void SetDrawWidthRatio(float fRatio);
@@ -30,22 +37,33 @@ public:
 	void SetWidthPivotRatio(float fRatio);
 	void SetHeightPivotRatio(float fRatio);
 	void SetPivotRatio(float fWidthRatio, float fHeightRatio);
+	void SetAlpha(int iAlpha);
 	void MovePivot(float fx, float fy);
 
 
+
 public:
+	//bool					IsBlending() const;
 	const POSITION& GetDrawPivot() const;
+	
+
+public:
+	void SwitchBlending();
 
 
 protected:
-	HDC			m_hRenderDC;		//Backbuffer의 m_hMemDC에 대한 Compatible DC
-	UINT			m_iDrawWidth;
-	UINT			m_iDrawHeight;
-	float			m_fWidthExpansionRatio;
-	float			m_fHeightExpansionRatio;
-	float			m_fWidthPivotRatio;
-	float			m_fHeightPivotRatio;
-	POSITION	m_DrawPivot;		
+	//bool						m_bBlending;
+	RenderMode			m_RenderMode;
+	HDC						m_hRenderDC;		//Backbuffer의 m_hMemDC에 대한 Compatible DC
+	HDC						m_hBlendingDC;	//Backbuffer의 m_hBlendingDC에 대한 Compatible DC
+	UINT						m_iDrawWidth;
+	UINT						m_iDrawHeight;
+	float						m_fWidthExpansionRatio;
+	float						m_fHeightExpansionRatio;
+	float						m_fWidthPivotRatio;
+	float						m_fHeightPivotRatio;
+	POSITION				m_DrawPivot;		
+	BLENDFUNCTION		m_BlendFunction;
 
 
 private:

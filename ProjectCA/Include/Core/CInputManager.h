@@ -15,7 +15,7 @@ class CInputManager : public Singleton<CInputManager> {
 	DECLARE_SINGLETON(CInputManager)
 
 	struct InputInfo {
-		InputInfo(const Types::tstring& strInputname, SHORT iInputCode, bool bCheckOnce = false, bool bPressed = false)
+		InputInfo(const TSTRING& strInputname, SHORT iInputCode, bool bCheckOnce = false, bool bPressed = false)
 			:m_strInputName(strInputname), m_iInputCode(iInputCode), 
 			m_bCheckOnce(bCheckOnce), m_bPressed(bPressed)
 		{
@@ -62,6 +62,8 @@ public:
 
 public:
 	void AddKey(const TSTRING& strKeyName, SHORT keyCode);
+	void SetKeyCheckMode(const TSTRING& strKeyName, bool bCheckOnce);
+	void SetKeyCheckMode(SHORT keyCode, bool bCheckOnce);
 	bool DeleteKey(const TSTRING& strKeyName);
 	bool ChangeKeyCode(const TSTRING& strKeyName, SHORT inputCode);
 	SHORT FindKeyCode(const TSTRING& strKeyName);
@@ -80,6 +82,8 @@ public:
 private:
 	void KeyProcess();
 	void UpdateKeyDown();
+	InputInfo* GetKeyInfo(const TSTRING& strKeyName);
+	InputInfo* GetKeyInfo(SHORT keyCode);
 
 
 private:

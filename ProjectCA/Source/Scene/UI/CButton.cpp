@@ -23,14 +23,10 @@ bool CButton::PostInit(const ENTITY_DATA & objectData, CScene * pScene)
 	if (!CInterface::PostInit(objectData, pScene))
 		return false;
 
-	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
+	//GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
 
 	return true;
 
-}
-
-void CButton::Init()
-{
 }
 
 void CButton::Update(double dDeltaTime)
@@ -47,19 +43,25 @@ void CButton::Update(double dDeltaTime)
 	
 }
 
-void CButton::Render(const HDC & hDC)
-{
-	if (m_bActive)
-	{
-		//POSITION position = GetTransform().lock()->GetPosition();
-		GetComponent<ImageRender>().lock()->Draw(hDC, GetTransform().lock()->GetPivot());
-	}
-
-}
+//void CButton::Render(const HDC & hDC)
+//{
+//	if (m_bActive)
+//	{
+//		POSITION position = GetEntityPosition();
+//		Rectangle(hDC, position.x - m_iEntityWidth * 0.5, position.y - m_iEntityHeight * 0.5f,
+//			position.x + m_iEntityWidth * 0.5, position.y + m_iEntityHeight * 0.5);
+//		GetComponent<ImageRender>().lock()->Draw(hDC);
+//	}
+//}
 
 void CButton::SetOnClickCallback(Callback callback)
 {
 	m_OnClick = callback;
+}
+
+Callback CButton::GetOnClick() const
+{
+	return m_OnClick;
 }
 
 

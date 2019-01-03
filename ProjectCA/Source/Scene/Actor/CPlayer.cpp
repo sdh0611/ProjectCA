@@ -174,7 +174,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			}
 			break;
 		case Types::OT_PICKUP:
-			if (pOther->GetObjectName() != TEXT("Coin"))
+			if (pOther->GetObjectName() != TEXT("Coin") && pOther->GetObjectName() != TEXT("EndPickup"))
 			{
 				switch (m_PlayerState)
 				{
@@ -600,9 +600,13 @@ void CPlayer::Update(double dDeltaTime)
 		//무적시간 관련 연산
 		if (GetObjectState() == Types::OS_DAMAGED)
 		{
+			//GetComponent<AnimationRender>().lock()->SwitchBlending();
+			GetComponent<AnimationRender>().lock()->SwitchBlending();
 			m_dTimeElapsed += dDeltaTime;
 			if (m_dTimeElapsed > 3.f)
 			{
+				//GetComponent<AnimationRender>().lock()->SetBlending(false);
+				GetComponent<AnimationRender>().lock()->SetRenderMode(RenderComponent::RenderMode::RENDER_DEFAULT);
 				m_dTimeElapsed = 0.f;
 				SetObjectState(Types::OS_IDLE);
 			}

@@ -15,10 +15,8 @@ public:
 
 
 public:
-	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene);
-	virtual void Init();
-	virtual void Update(double dDeltaTime);
-	virtual void Render(const HDC& hDC);
+	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene) override;
+	virtual void Update(double dDeltaTime) override;
 
 
 public:

@@ -15,13 +15,12 @@ public:
 
 public:
 	virtual bool PostInit(const ENTITY_DATA& objectData, CScene* pScene);
-	virtual void Init();
 	virtual void Update(double dDeltaTime);
-	virtual void Render(const HDC& hDC);
-
+	//virtual void Render(const HDC& hDC);
 
 public:
 	void SetOnClickCallback(Callback callback);
+	Callback GetOnClick() const;
 
 
 private:

@@ -20,6 +20,7 @@ bool CInputManager::Init() {
 	m_KeyInputList.emplace_back(TEXT("JUMP"), 'X');
 	m_KeyInputList.emplace_back(TEXT("SPIN_JUMP"), VK_SHIFT);
 	m_KeyInputList.emplace_back(TEXT("ACCEL"), 'A');
+	m_KeyInputList.emplace_back(TEXT("ENTER"), VK_RETURN, true);
 	m_KeyInputList.emplace_back(TEXT("ATTACK"), 'C', true);
 	m_KeyInputList.emplace_back(TEXT("FUNC1"), VK_SPACE, true);
 	m_KeyInputList.emplace_back(TEXT("RESET"), VK_ESCAPE, true);
@@ -44,6 +45,24 @@ void CInputManager::AddKey(const TSTRING& strKeyName, SHORT keyCode)
 
 	m_KeyInputList.emplace_back(InputInfo(strKeyName, keyCode));
 
+}
+
+void CInputManager::SetKeyCheckMode(const TSTRING & strKeyName, bool bCheckOnce)
+{
+	auto pKeyInfo = GetKeyInfo(strKeyName);
+	if (pKeyInfo)
+	{
+		pKeyInfo->m_bCheckOnce = bCheckOnce;
+	}
+}
+
+void CInputManager::SetKeyCheckMode(SHORT keyCode, bool bCheckOnce)
+{
+	auto pKeyInfo = GetKeyInfo(keyCode);
+	if (pKeyInfo)
+	{
+		pKeyInfo->m_bCheckOnce = bCheckOnce;
+	}
 }
 
 bool CInputManager::DeleteKey(const TSTRING& strKeyName)
@@ -207,4 +226,30 @@ void CInputManager::UpdateKeyDown()
 		}
 	}
 
+}
+
+CInputManager::InputInfo * CInputManager::GetKeyInfo(const TSTRING & strKeyName)
+{
+	for (auto& key : m_KeyInputList)
+	{
+		if (key.m_strInputName == strKeyName)
+		{
+			return &key;
+		}
+	}
+
+	return nullptr;
+}
+
+CInputManager::InputInfo * CInputManager::GetKeyInfo(SHORT keyCode)
+{
+	for (auto& key : m_KeyInputList)
+	{
+		if (key.m_iInputCode == keyCode)
+		{
+			return &key;
+		}
+	}
+	
+	return nullptr;
 }

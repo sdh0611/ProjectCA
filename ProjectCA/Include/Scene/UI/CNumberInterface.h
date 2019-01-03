@@ -1,10 +1,10 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "CInterface.h"
+#include "CUI.h"
 
 
-class CNumberInterface : public CInterface
+class CNumberInterface : public CUI
 {
 public:
 	enum FontType {
@@ -17,9 +17,7 @@ public:
 
 
 public:
-	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene);
-	virtual void Init();
-	virtual void Update(double dDeltaTime);
+	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene) override;
 	virtual void Render(const HDC& hDC);
 
 

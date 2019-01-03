@@ -2,6 +2,7 @@
 #include "..\..\Include\Scene\CEntity.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CWorld.h"
+#include "..\..\Include\Core\Components\RenderComponent.h"
 //#include "..\..\Include\Scene\Object\CObject.h"
 
 
@@ -177,6 +178,23 @@ bool CLayer::DeleteActor(std::shared_ptr<CEntity>& pEntity)
 	//m_ObjectList.remove_if(func);
 
 	return true;
+}
+
+void CLayer::FadeOut()
+{
+	for (const auto& entity : m_EntityList)
+	{
+		STATIC_POINTER_CAST(RenderComponent, entity.lock()->GetComponent(TEXT("RenderComponent")).lock())->SetRenderMode(RenderComponent::RenderMode::RENDER_FADE_OUT);
+	}
+ 
+}
+
+void CLayer::FadeIn()
+{
+	for (const auto& entity : m_EntityList)
+	{
+		entity.lock()->GetComponent<RenderComponent>().lock()->SetRenderMode(RenderComponent::RenderMode::RENDER_FADE_IN);
+	}
 }
 
 

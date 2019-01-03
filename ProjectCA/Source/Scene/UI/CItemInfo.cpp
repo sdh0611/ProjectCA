@@ -38,21 +38,10 @@ bool CItemInfo::PostInit(const ENTITY_DATA & data, CScene * pScene)
 	return true;
 }
 
-void CItemInfo::Init()
-{
-	CInterface::Init();
-}
-
 void CItemInfo::Update(double dDeltaTime)
 {
 	CheckStoredPickup(); 
 	CInterface::Update(dDeltaTime);
-}
-
-void CItemInfo::Render(const HDC & hDC)
-{
-	CInterface::Render(hDC);
-
 }
 
 void CItemInfo::CheckStoredPickup()

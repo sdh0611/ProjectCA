@@ -41,7 +41,7 @@ bool CSoundManager::Init()
 	}
 
 	//ChannelList ÃÊ±âÈ­
-	m_ChannelList.assign(6, nullptr);
+	m_ChannelList.assign(7, nullptr);
 
 	//Load Sound
 	if (!LoadEnemySFX())
@@ -71,6 +71,12 @@ bool CSoundManager::Init()
 	if (!LoadBlockSFX())
 	{
 		printf("[ERROR] LoadBlockSFX Error.\n");
+		return false;
+	}
+
+	if (!LoadUISFX())
+	{
+		printf("[ERROR] LoadUISFX Error.\n");
 		return false;
 	}
 
@@ -171,10 +177,6 @@ void CSoundManager::SoundPlay(const TSTRING & strSoundName)
 			printf("[ERROR] (%d) %s\n", result, FMOD_ErrorString(result));
 			return;
 		}
-		printf("Channel : %d\n", pSound.lock()->m_iChannelIndex);
-		int iChannelIsPlaying;
-		m_pFMODSystem->getChannelsPlaying(&iChannelIsPlaying);
-		printf("ChannelIsPlaing : %d\n", iChannelIsPlaying);
 	}
 	
 
@@ -303,6 +305,26 @@ bool CSoundManager::LoadAttackSFX()
 bool CSoundManager::LoadBlockSFX()
 {
 	if (!LoadSound("./Resources/Sound/SFX/smw_break_block.wav", TEXT("SFXBreakBlock"), SOUND_SFX_BLOCK, FMOD_DEFAULT))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool CSoundManager::LoadUISFX()
+{
+	if (!LoadSound("./Resources/Sound/SFX/smw_switch_activated.wav", TEXT("SFXButtonActivated"), SOUND_SFX_UI, FMOD_DEFAULT))
+	{
+		return false;
+	}
+
+	if (!LoadSound("./Resources/Sound/SFX/smw_map_move_to_spot.wav", TEXT("SFXMovePointer"), SOUND_SFX_UI, FMOD_DEFAULT))
+	{
+		return false;
+	}
+
+	if (!LoadSound("./Resources/Sound/SFX/smw_message_block.wav", TEXT("SFXUIActivated"), SOUND_SFX_UI, FMOD_DEFAULT))
 	{
 		return false;
 	}

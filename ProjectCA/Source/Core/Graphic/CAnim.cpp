@@ -32,17 +32,8 @@ bool CAnim::Init(const TSTRING& strSpriteName, double dPlayTime, bool bLoop,cons
 	{
 		m_bReadyToChange	= false;
 	}
-	m_AnimMode									= ANIM_DEFAULT;
-
 	m_iMaxFrame									= m_pWeakSprite.lock()->GetBitWidth() / SPRITE_WIDTH;
-	//m_iDrawWidth									= iWidth;
-	//m_iDrawHeight									= iHeight;
-
 	m_ColorRef										= RGB(248, 7, 220);
-	m_BlendFunction.BlendOp					= AC_SRC_OVER;
-	m_BlendFunction.BlendFlags				= 0;
-	m_BlendFunction.AlphaFormat				= 0;
-	m_BlendFunction.SourceConstantAlpha	= 185;
 
 	m_dPlayTime									= dPlayTime;
 	m_dPlaySpeed									= 1.f;
@@ -70,13 +61,88 @@ void CAnim::Update(double fDeltaTIme)
 	m_dTimeElapsed += fDeltaTIme;
 }
 
-void CAnim::Draw(const HDC & hDC, const HDC& hMemDC,const POSITION& point, UINT iWidth, UINT iHeight)
+
+void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const HDC& hBlendingDC,
+	const BLENDFUNCTION& blendFunction, const POSITION& point, UINT iWidth, UINT iHeight)
 {
-	if (!m_pWeakSprite.expired()) 
+	if (!m_bPause)
 	{
-		DrawAnimation(hDC, hMemDC, point, iWidth, iHeight);
+		if (m_dPlayTime != 0.f)
+		{
+			if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
+				m_dTimeElapsed = 0.f;
+				if (m_iCurFrame < m_iMaxFrame - 1)
+				{
+					++m_iCurFrame;
+				}
+				else
+				{
+					if (m_bLoop)
+					{
+						++m_iCurFrame %= m_iMaxFrame;
+					}
+					m_bReadyToChange = true;
+
+				}
+
+			}
+
+		}
 	}
+	HBITMAP hTempBit = CreateCompatibleBitmap(hDC, MAX_WIDTH, MAX_HEIGHT);
+	HBITMAP hOldBit = (HBITMAP)SelectObject(hMemDC, m_pWeakSprite.lock()->GetBitmap());
+	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hBlendingDC, hTempBit);
+
+	BitBlt(hBlendingDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, hDC, 0, 0, SRCCOPY);
+
+	TransparentBlt(hBlendingDC, point.x, point.y,
+		iWidth, iHeight, hMemDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
+		SPRITE_HEIGHT, m_ColorRef);
+
+	AlphaBlend(hDC, point.x, point.y, iWidth, iHeight, hBlendingDC, point.x, point.y, iWidth,
+		iHeight, blendFunction);
+
+	DeleteObject(SelectObject(hBlendingDC, hOldBitmap));
+	SelectObject(hMemDC, hOldBit);
+	//DeleteObject(hTempBit);
 }
+
+void CAnim::DrawAnimation(const HDC & hDC, const HDC & hMemDC, const POSITION & point, UINT iWidth, UINT iHeight)
+{
+	if (!m_bPause)
+	{
+		if (m_dPlayTime != 0.f)
+		{
+			if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
+				m_dTimeElapsed = 0.f;
+				if (m_iCurFrame < m_iMaxFrame - 1)
+				{
+					++m_iCurFrame;
+				}
+				else
+				{
+					if (m_bLoop)
+					{
+						++m_iCurFrame %= m_iMaxFrame;
+					}
+					m_bReadyToChange = true;
+
+				}
+
+			}
+
+		}
+	}
+
+	HBITMAP hOldBit = (HBITMAP)SelectObject(hMemDC, m_pWeakSprite.lock()->GetBitmap());
+	TransparentBlt(hDC, point.x, point.y,
+		iWidth, iHeight, hMemDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
+		SPRITE_HEIGHT, m_ColorRef);
+
+	SelectObject(hMemDC, hOldBit);
+}
+
+
 
 void CAnim::SetCanInterrupt(bool bInterrupt)
 {
@@ -121,27 +187,6 @@ bool CAnim::SetPlaySpeed(double dSpeed)
 	return true;
 }
 
-//void CAnim::SetDrawingWidth(UINT iWidth)
-//{
-//	if (iWidth < 0.f || iWidth >MAX_WIDTH)
-//		return;
-//
-//	m_iDrawWidth = iWidth;
-//}
-//
-//void CAnim::SetDrawingHeight(UINT iHeight)
-//{
-//	if (iHeight < 0.f || iHeight >MAX_HEIGHT)
-//		return;
-//
-//	m_iDrawHeight = iHeight;
-//}
-
-void CAnim::SetAnimMode(AnimMode mode)
-{
-	m_AnimMode = mode;
-}
-
 bool CAnim::IsCanInterrupt() const
 {
 	return m_bInterrupt;
@@ -157,25 +202,11 @@ bool CAnim::IsPauseAnimation() const
 	return m_bPause;
 }
 
-//UINT CAnim::GetDrawWidth() const
-//{
-//	return m_iDrawWidth;
-//}
-//
-//UINT CAnim::GetDrawHeight() const
-//{
-//	return m_iDrawHeight;
-//}
-
 const TSTRING& CAnim::GetAnimTag() const
 {
 	return m_strAnimTag;
 }
 
-CAnim::AnimMode CAnim::GetAnimMode() const
-{
-	return m_AnimMode;
-}
 
 void CAnim::ClearEleapsedTime()
 {
@@ -188,46 +219,3 @@ void CAnim::ClearEleapsedTime()
 	m_bPause = false;
 
 }
-
-void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const POSITION& point, UINT iWidth, UINT iHeight)
-{
-	if (!m_bPause)
-	{
-		if (m_dPlayTime != 0.f)
-		{
-			if (m_dTimeElapsed >= (m_dPlaySectionLength / m_dPlaySpeed)) {
-				m_dTimeElapsed = 0.f;
-				if (m_iCurFrame < m_iMaxFrame - 1)
-				{
-					++m_iCurFrame;
-				}
-				else
-				{
-					if (m_bLoop)
-					{
-						++m_iCurFrame %= m_iMaxFrame;
-					}
-					m_bReadyToChange = true;
-
-				}
-
-			}
-
-		}
-	}
-
-	HBITMAP hOldBit		= (HBITMAP)SelectObject(hMemDC, m_pWeakSprite.lock()->GetBitmap());
-
-	TransparentBlt(hDC, point.x, point.y,
-		iWidth, iHeight, hMemDC, SPRITE_WIDTH * m_iCurFrame, 0, SPRITE_WIDTH,
-		SPRITE_HEIGHT, m_ColorRef);
-
-	//if (m_AnimMode == ANIM_BLEND)
-	//{
-	//	AlphaBlend(h)
-	//}
-
-
-	SelectObject(hMemDC, hOldBit);
-}
-

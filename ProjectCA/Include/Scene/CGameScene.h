@@ -57,8 +57,9 @@ private:
 	int															m_iCoinCount;
 	int															m_iLife;
 	int															m_iRemainTime;
+	int															m_iTimeScore;
 	double													m_dTimeElapsed;
-
+	
 
 private:
 	bool														m_bClear;

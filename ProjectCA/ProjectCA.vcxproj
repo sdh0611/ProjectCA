@@ -214,6 +214,8 @@
     <ClCompile Include="Source\Scene\UI\CItemInfo.cpp" />
     <ClCompile Include="Source\Scene\UI\CMenu.cpp" />
     <ClCompile Include="Source\Scene\UI\CNumberInterface.cpp" />
+    <ClCompile Include="Source\Scene\UI\CPointer.cpp" />
+    <ClCompile Include="Source\Scene\UI\CUI.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -288,6 +290,8 @@
     <ClInclude Include="Include\Scene\UI\CItemInfo.h" />
     <ClInclude Include="Include\Scene\UI\CMenu.h" />
     <ClInclude Include="Include\Scene\UI\CNumberInterface.h" />
+    <ClInclude Include="Include\Scene\UI\CPointer.h" />
+    <ClInclude Include="Include\Scene\UI\CUI.h" />
     <ClInclude Include="Include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Types.h" />

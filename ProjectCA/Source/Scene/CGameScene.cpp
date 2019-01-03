@@ -35,6 +35,7 @@
 #include "..\..\Include\Scene\Actor\CCoin.h"
 #include "..\..\Include\Scene\UI\CItemInfo.h"
 #include "..\..\Include\Scene\UI\CNumberInterface.h"
+#include "..\..\Include\Scene\UI\CFont.h"
 
 
 
@@ -58,8 +59,11 @@ bool CGameScene::Init()
 	{
 		return false;
 	}
-	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
 
+	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
+
+	CInputManager::GetInstance()->SetKeyCheckMode(VK_UP, false);
+	CInputManager::GetInstance()->SetKeyCheckMode(VK_DOWN, false);
 
 	if (!CCollisionManager::GetInstance()->Init())
 		return false;
@@ -106,6 +110,7 @@ bool CGameScene::Init()
 	m_iCoinCount		= m_pScoreManager->GetCoinCount();
 	m_iLife				= m_pScoreManager->GetLifeCount();
 	m_iRemainTime	= 5;
+	m_iTimeScore		= 10000;
 	m_dTimeElapsed	= 0.f;
 
 	return true;
@@ -148,8 +153,36 @@ void CGameScene::Update(double dDeltaTime)
 	}
 	else
 	{
-		CSceneManager::GetInstance()->SetReadyToChangeScene(true);
-		CSceneManager::GetInstance()->CreateNextScene(Types::ST_GAMEOVER);
+		m_dTimeElapsed += dDeltaTime;
+		if (m_dTimeElapsed > 2.f && m_dTimeElapsed < 2.1f)
+		{
+			FindLayer(TEXT("UIClear"))->SetVisible(true);
+		}
+
+		if (m_dTimeElapsed > 3.f)
+		{
+			if (m_iTimeScore > 0)
+			{
+				if (m_iTimeScore >= 100)
+				{
+					m_pScoreManager->IncreaseScore(100);
+					m_iTimeScore -= 100;
+				}
+				else
+				{
+					m_pScoreManager->IncreaseScore(m_iTimeScore);
+					m_iTimeScore = 0;
+				}
+				m_iCurScore = m_pScoreManager->GetScore();
+			}
+
+			if(m_dTimeElapsed > 10.f)
+			{
+				CSceneManager::GetInstance()->SetReadyToChangeScene(true);
+				CSceneManager::GetInstance()->CreateNextScene(Types::ST_TITLE);
+
+			}
+		}
 	}
 }
 
@@ -162,7 +195,16 @@ void CGameScene::Render(const HDC& hDC)
 
 void CGameScene::SetIsGameClear()
 {
-	m_bClear = true;
+	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMCastleClear"));
+	m_iTimeScore	= m_iRemainTime * 50;
+	m_bClear			= true;
+	m_dTimeElapsed = 0.f;
+	
+	//FindLayer(TEXT("Background"))->FadeOut();
+	//for (const auto& layer : m_LayerList)
+	//{
+	//	layer->FadeOut();
+	//}
 }
 
 std::weak_ptr<CPlayer> CGameScene::GetPlayerPtr()
@@ -208,7 +250,7 @@ bool CGameScene::BuildUI()
 			return false;
 		FindLayer(TEXT("UI"))->AddActor(pInterface);
 
-		//Coint
+		//Coin
 		pInterface = m_pObjectManager->CreateEntity<CInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.5f, 45.f, TEXT("ImageCoin"), this);
 		if (pInterface == nullptr)
 			return false;
@@ -225,6 +267,8 @@ bool CGameScene::BuildUI()
 		if (!pInterface->SetImage(TEXT("UIX")))
 			return false;
 		FindLayer(TEXT("UI"))->AddActor(pInterface);
+
+
 	}
 
 	//NumberInterface 생성
@@ -264,7 +308,7 @@ bool CGameScene::BuildUI()
 		FindLayer(TEXT("UI"))->AddActor(pNumberInterface);
 
 		//Score
-		pNumberInterface = m_pObjectManager->CreateEntity<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.35f, 65.f, TEXT("NumberScore"), this);
+		pNumberInterface = m_pObjectManager->CreateEntity<CNumberInterface>(SPRITE_WIDTH / 2.f, SPRITE_HEIGHT / 2.f, MAX_WIDTH / 1.35f, 65.f, TEXT("NumberTotalScore"), this);
 		if (pNumberInterface == nullptr)
 			return false;
 		pNumberInterface->SetDigit(7);
@@ -284,6 +328,94 @@ bool CGameScene::BuildUI()
 		FindLayer(TEXT("UI"))->AddActor(pInfo);
 	}
 
+	//Clear시 나오는 UI 등록
+	{
+		if (!CreateLayer(TEXT("UIClear"), 1))
+		{
+			return false;
+		}
+		FindLayer(TEXT("UIClear"))->SetVisible(false);
+
+		// 'MARIO' 출력
+		auto pInterface = m_pObjectManager->CreateEntity<CInterface>(SPRITE_WIDTH * 5.f, SPRITE_HEIGHT * 2.5, MAX_WIDTH * 0.5f, MAX_HEIGHT * 0.3f, TEXT("FontMario"), this);
+		if (pInterface == nullptr)
+			return false;
+		AddEntityToScene(pInterface);
+		if (!pInterface->SetImage(TEXT("UIMario")))
+			return false;
+		FindLayer(TEXT("UIClear"))->AddActor(pInterface);
+
+		// 'Course Clear!' 출력
+		auto pFont = m_pObjectManager->CreateEntity<CFont>(SPRITE_WIDTH * 2, SPRITE_HEIGHT * 0.5f, MAX_WIDTH * 0.5f, MAX_HEIGHT * 0.35f, TEXT("Font"), this);
+		if (pFont == nullptr)
+			return false;
+		pFont->SetFontSize(SPRITE_WIDTH * 0.7f, SPRITE_HEIGHT * 0.7f);
+		pFont->SetFontInterval(SPRITE_WIDTH * 0.72f);
+		pFont->SetSentence(TEXT("COURSE CLEAR!"));
+		m_EntityPtrList.emplace_back(pFont);
+		FindLayer(TEXT("UIClear"))->AddActor(pFont);
+
+		// 시계그림
+		pInterface = m_pObjectManager->CreateEntity<CInterface>(SPRITE_WIDTH * 0.6f, SPRITE_HEIGHT * 0.6f, MAX_WIDTH * 0.38f, MAX_HEIGHT * 0.43f, TEXT("Clock"), this);
+		if (pInterface == nullptr)
+			return false;
+		AddEntityToScene(pInterface);
+		if (!pInterface->SetImage(TEXT("UIClock")))
+			return false;
+		FindLayer(TEXT("UIClear"))->AddActor(pInterface);
+
+		// 남은 시간값과 링크, 출력
+		auto pNumberInterface = m_pObjectManager->CreateEntity<CNumberInterface>(SPRITE_WIDTH * 0.5f, SPRITE_HEIGHT * 0.5f, MAX_WIDTH * 0.44f, MAX_HEIGHT * 0.425f, TEXT("NumberTime"), this);
+		if (pNumberInterface == nullptr)
+			return false;
+		pNumberInterface->SetDigit(3);
+		pNumberInterface->SetFontSize(SPRITE_WIDTH * 0.6f, SPRITE_HEIGHT * 0.6f);
+		pNumberInterface->SetFontInterval(SPRITE_WIDTH *0.65f);
+		pNumberInterface->LinkValuePtr(&m_iRemainTime);
+		AddEntityToScene(pNumberInterface);
+		FindLayer(TEXT("UIClear"))->AddActor(pNumberInterface);
+
+		// 'X' 출력
+		pInterface = m_pObjectManager->CreateEntity<CInterface>(SPRITE_WIDTH * 0.6f, SPRITE_HEIGHT * 0.6f, MAX_WIDTH * 0.465f, MAX_HEIGHT * 0.425f, TEXT("FontX"), this);
+		if (pInterface == nullptr)
+			return false;
+		AddEntityToScene(pInterface);
+		if (!pInterface->SetImage(TEXT("UIX")))
+			return false;
+		FindLayer(TEXT("UIClear"))->AddActor(pInterface);
+
+		// '50' 출력
+		pFont = m_pObjectManager->CreateEntity<CFont>(128, SPRITE_HEIGHT * 0.5f, MAX_WIDTH * 0.5f, MAX_HEIGHT * 0.425f, TEXT("Font"), this);
+		if (pFont == nullptr)
+			return false;
+		pFont->SetFontSize(SPRITE_WIDTH * 0.6f, SPRITE_HEIGHT * 0.6f);
+		pFont->SetFontInterval(SPRITE_WIDTH * 0.65f);
+		pFont->SetSentence(TEXT("50"));
+		AddEntityToScene(pFont);
+		FindLayer(TEXT("UIClear"))->AddActor(pFont);
+
+		// '=' 출력
+		pFont = m_pObjectManager->CreateEntity<CFont>(128, SPRITE_HEIGHT * 0.5f, MAX_WIDTH * 0.53f, MAX_HEIGHT * 0.425f, TEXT("Font"), this);
+		if (pFont == nullptr)
+			return false;
+		pFont->SetFontSize(SPRITE_WIDTH * 0.6f, SPRITE_HEIGHT * 0.6f);
+		pFont->SetFontInterval(SPRITE_WIDTH * 0.65f);
+		pFont->SetSentence(TEXT("="));
+		AddEntityToScene(pFont);
+		FindLayer(TEXT("UIClear"))->AddActor(pFont);
+
+		pNumberInterface = m_pObjectManager->CreateEntity<CNumberInterface>(SPRITE_WIDTH * 0.5f, SPRITE_HEIGHT * 0.5f, MAX_WIDTH * 0.63f, MAX_HEIGHT * 0.425f, TEXT("NumberTime"), this);
+		if (pNumberInterface == nullptr)
+			return false;
+		pNumberInterface->SetDigit(5);
+		pNumberInterface->SetFontSize(SPRITE_WIDTH * 0.6f, SPRITE_HEIGHT * 0.6f);
+		pNumberInterface->SetFontInterval(SPRITE_WIDTH *0.65f);
+		pNumberInterface->LinkValuePtr(&m_iTimeScore);
+		AddEntityToScene(pNumberInterface);
+		FindLayer(TEXT("UIClear"))->AddActor(pNumberInterface);
+
+	}
+
 	return true;
 }
 
@@ -300,132 +432,88 @@ bool CGameScene::BuildWorld()
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
+		pGround = m_pObjectManager->CreateObject<CGround>(20, 30, -768.f, -120.f, Types::OT_PROB, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		AddEntityToScene(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(100, 8, 0.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		pGround = m_pObjectManager->CreateObject<CGround>(70, 8, -128.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		AddEntityToScene(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+		pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 2290.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		AddEntityToScene(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+			
+
+
+		pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 2440.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		//pGround = m_pObjectManager->CreateObject<CGround>(20, 30, -640.f, -100.f, Types::OT_PROB, TEXT("Ground"), this);
+		pGround = m_pObjectManager->CreateObject<CGround>(20, 8, 2700.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		AddEntityToScene(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		//pGround = m_pObjectManager->CreateObject<CGround>(6, 2, 3148.f, 452.f, Types::OT_PROB, TEXT("Ground"), this);
 		//if (pGround == nullptr)
 		//	return false;
 		//AddEntityToScene(pGround);
 		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
-		pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 3250.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
+		//pGround = m_pObjectManager->CreateObject<CGround>(4, 2, 3212.f, 388.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//AddEntityToScene(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		//pGround = m_pObjectManager->CreateObject<CGround>(2, 2, 3276.f, 324.f, Types::OT_PROB, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//AddEntityToScene(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		pGround = m_pObjectManager->CreateObject<CGround>(15, 8, 3776.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
+
+		pGround = m_pObjectManager->CreateObject<CGround>(8, 12, 6050.f, 300.f, Types::OT_GROUND, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		AddEntityToScene(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
+
+
+		pGround = m_pObjectManager->CreateObject<CGround>(15, 8, 5700.f, 444.f, Types::OT_GROUND, TEXT("Ground"), this);
+		if (pGround == nullptr)
+			return false;
+		AddEntityToScene(pGround);
+		FindLayer(TEXT("Ground"))->AddActor(pGround);
 		
 
+		//pGround = m_pObjectManager->CreateObject<CGround>(10, 8, 7400.f, 500.f, Types::OT_GROUND, TEXT("Ground"), this);
+		//if (pGround == nullptr)
+		//	return false;
+		//AddEntityToScene(pGround);
+		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
-		pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 3400.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(20, 8, 3660.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(10, 2, 3980.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(8, 2, 4044.f, 416.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(6, 2, 4108.f, 452.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(4, 2, 4172.f, 388.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(2, 2, 4236.f, 324.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(15, 8, 4736.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-		pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5300.f, 270.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5500.f, 200.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(5, 4, 5900.f, 220.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(10, 4, 6100.f, 400.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(3, 8, 6600.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(30, 8, 6750.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		pGround = m_pObjectManager->CreateObject<CGround>(10, 8, 8010.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
-		if (pGround == nullptr)
-			return false;
-		AddEntityToScene(pGround);
-		FindLayer(TEXT("Ground"))->AddActor(pGround);
 	}
 
 
@@ -528,7 +616,7 @@ bool CGameScene::BuildWorld()
 		//
 
 		//테스트용 EndPickup 생성
-		pPickup = m_pObjectManager->CreateActor<CEndPickup>(SPRITE_WIDTH, SPRITE_HEIGHT, 8170.f, 444.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("EndPickup"), this);
+		pPickup = m_pObjectManager->CreateActor<CEndPickup>(SPRITE_WIDTH, SPRITE_HEIGHT, 8170.f, 500.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("EndPickup"), this);
 		if (pPickup == nullptr)
 			return false;
 		AddEntityToScene(pPickup);
@@ -602,59 +690,51 @@ bool CGameScene::BuildWorld()
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
-		
-	}
+	
 
-	//Prob 생성
-	{
-		if (!CreateLayer(TEXT("Prob"), 8))
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1000.f, 450.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		if (pEnemy == nullptr)
 			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-		auto pProb = m_pObjectManager->CreateObject<CPipe>(1, 7, 400.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1300.f, 450.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		if (pEnemy == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 3, 0.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1600.f, 450.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		if (pEnemy == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 3, 1000.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 3180.f, 300.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		if (pEnemy == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1200.f, 250.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 6250.f, 200.f, Types::OT_ENEMY,
+			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
+		if (pEnemy == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1300.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
-			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
-
-
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1600.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
-			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
 	}
 
 	//Block 생성
 	{
-		if (!CreateLayer(TEXT("Block"), 9))
+		if (!CreateLayer(TEXT("Block"), 8))
 			return false;
 
 		//Pickup block
@@ -692,21 +772,54 @@ bool CGameScene::BuildWorld()
 			//FindLayer(TEXT("Block"))->AddActor(pBlock);
 
 
-			//pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 520.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
-			//if (pBlock == nullptr)
-			//	return false;
-			////Block에 저장시켜놓을 Pickup 생성
-			//pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
-			//	pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
-			//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-			//AddEntityToScene(pPickup);
-			//if (pPickup == nullptr)
-			//	return false;
-			////Pickup set
-			//pBlock->SetStoredPickup(pPickup);
-			//pBlock->SetHide();
-			//AddEntityToScene(pBlock);
-			//FindLayer(TEXT("Block"))->AddActor(pBlock);
+			pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 150.f, 450.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			//Block에 저장시켜놓을 Pickup 생성
+			pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
+				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+			AddEntityToScene(pPickup);
+			if (pPickup == nullptr)
+				return false;
+			//Pickup set
+			pBlock->SetStoredPickup(pPickup);
+			pBlock->SetHide();
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 1700.f, 472.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			//Block에 저장시켜놓을 Pickup 생성
+			pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
+				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+			AddEntityToScene(pPickup);
+			if (pPickup == nullptr)
+				return false;
+			//Pickup set
+			pBlock->SetStoredPickup(pPickup);
+			pBlock->SetHide();
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 2730.f, 600.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			//Block에 저장시켜놓을 Pickup 생성
+			pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
+				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
+			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
+			AddEntityToScene(pPickup);
+			if (pPickup == nullptr)
+				return false;
+			//Pickup set
+			pBlock->SetStoredPickup(pPickup);
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
 		}
 
 		//Coin block
@@ -718,27 +831,29 @@ bool CGameScene::BuildWorld()
 			AddEntityToScene(pBlock);
 			FindLayer(TEXT("Block"))->AddActor(pBlock);
 
-			//pBlock = m_pObjectManager->CreateObject<CCoinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 660.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
-			//if (pBlock == nullptr)
-			//	return false;
-			//pBlock->SetHide();
-			//AddEntityToScene(pBlock);
-			//FindLayer(TEXT("Block"))->AddActor(pBlock);
+			pBlock = m_pObjectManager->CreateObject<CCoinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 3320.f, 530.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			pBlock->SetHide();
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+			pBlock = m_pObjectManager->CreateObject<CCoinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 7000.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			//pBlock->SetLimitTime(3.f);
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
 		}
 
 		//Spin block
 		{
-			auto pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 580.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			auto pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 70.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
 			if (pBlock == nullptr)
 				return false;
 			AddEntityToScene(pBlock);
 			FindLayer(TEXT("Block"))->AddActor(pBlock);
 
-			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 540.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
-			if (pBlock == nullptr)
-				return false;
-			AddEntityToScene(pBlock);
-			FindLayer(TEXT("Block"))->AddActor(pBlock);
 
 			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 500.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
 			if (pBlock == nullptr)
@@ -746,16 +861,190 @@ bool CGameScene::BuildWorld()
 			AddEntityToScene(pBlock);
 			FindLayer(TEXT("Block"))->AddActor(pBlock);
 
-			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 70.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 540.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
 			if (pBlock == nullptr)
 				return false;
 			AddEntityToScene(pBlock);
 			FindLayer(TEXT("Block"))->AddActor(pBlock);
 
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 580.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+			
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 4320.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 4360.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 4400.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 4620.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 4660.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 4700.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 4740.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 5100.f, 200.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 5140.f, 200.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+			
+
+			pBlock = m_pObjectManager->CreateObject<CSpinBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 5300.f, 400.f, Types::OT_BLOCK, TEXT("Block"), this);
+			if (pBlock == nullptr)
+				return false;
+			AddEntityToScene(pBlock);
+			FindLayer(TEXT("Block"))->AddActor(pBlock);
+			
 		}
 
 	}
 
+	//Prob 생성
+	{
+		if (!CreateLayer(TEXT("Prob"), 9))
+			return false;
+
+		auto pProb = m_pObjectManager->CreateObject<CPipe>(1, 7, 400.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 3, 0.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 3, 1000.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		//pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1200.f, 250.f, Types::OT_PROB, TEXT("PIPE"), this);
+		//if (pProb == nullptr)
+		//	return false;
+		//AddEntityToScene(pProb);
+		//FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1300.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1600.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 2, 3100.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 3180.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 3260.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7400.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 7, 7600.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 5, 7800.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 5, 8170.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+	}
 
 	//Backgorund 생성
 	{
@@ -792,8 +1081,8 @@ void CGameScene::GameUpdate(double dDeltaTime)
 			}
 		}
 		m_iCurScore = m_pScoreManager->GetScore();
-		m_iCoinCount = m_pScoreManager->GetCoinCount();
-		m_iLife = m_pScoreManager->GetLifeCount();
+		m_iCoinCount	= m_pScoreManager->GetCoinCount();
+		m_iLife			= m_pScoreManager->GetLifeCount();
 
 		//Actor Update
 		for (const auto& entity : m_EntityPtrList) {
@@ -823,7 +1112,7 @@ void CGameScene::GameUpdate(double dDeltaTime)
 
 void CGameScene::ResetScene()
 {
-	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
+	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
 	m_bClear				= false;
 	m_iRemainTime	= 999;
 	m_dTimeElapsed	= 0.f;

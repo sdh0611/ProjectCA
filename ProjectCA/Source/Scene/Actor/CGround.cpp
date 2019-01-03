@@ -179,17 +179,35 @@ bool CGround::LoadTileImage()
 			}
 			else if (row == m_iEntityHeight / TILE_HEIGHT - 1)
 			{
-				if (tileIndex == 0)
+				if (m_ObjectType == Types::OT_PROB)
 				{
-					m_TileInfoList[row].push_back(GI_EDGE_LEFT_BOT);
+					if (tileIndex == 0)
+					{
+						m_TileInfoList[row].push_back(GI_EDGE_LEFT_BOT);
+					}
+					else if (tileIndex == m_iEntityWidth / TILE_WIDTH - 1)
+					{
+						m_TileInfoList[row].push_back(GI_EDGE_RIGHT_BOT);
+					}
+					else
+					{
+						m_TileInfoList[row].push_back(GI_LINE_BOT);
+					}
 				}
-				else if (tileIndex == m_iEntityWidth / TILE_WIDTH - 1)
+				else if (m_ObjectType == Types::OT_GROUND)
 				{
-					m_TileInfoList[row].push_back(GI_EDGE_RIGHT_BOT);
-				}
-				else
-				{
-					m_TileInfoList[row].push_back(GI_LINE_BOT);
+					if (tileIndex == 0)
+					{
+						m_TileInfoList[row].push_back(GI_LINE_LEFT2);
+					}
+					else if (tileIndex == m_iEntityWidth / TILE_WIDTH - 1)
+					{
+						m_TileInfoList[row].push_back(GI_LINE_RIGHT2);
+					}
+					else
+					{
+						m_TileInfoList[row].push_back(GI_INNER);
+					}
 				}
 			}
 			else

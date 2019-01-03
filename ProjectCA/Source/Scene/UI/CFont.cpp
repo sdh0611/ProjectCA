@@ -16,7 +16,7 @@ CFont::~CFont()
 
 bool CFont::PostInit(const ENTITY_DATA & data, CScene * pScene)
 {
-	if (!CInterface::PostInit(data, pScene))
+	if (!CUI::PostInit(data, pScene))
 		return false;
 
 	auto pResourceMgr = CResourceManager::GetInstance();
@@ -97,6 +97,7 @@ bool CFont::PostInit(const ENTITY_DATA & data, CScene * pScene)
 	m_FontTable.emplace('!', pResourceMgr->GetWeakSprtiePtr(TEXT("UIFontEM")).lock());
 	m_FontTable.emplace('#', pResourceMgr->GetWeakSprtiePtr(TEXT("UIFontSharp")).lock());
 	m_FontTable.emplace('-', pResourceMgr->GetWeakSprtiePtr(TEXT("UIFontLine")).lock());
+	m_FontTable.emplace('=', pResourceMgr->GetWeakSprtiePtr(TEXT("UIFontOutlineEqual")).lock());
 
 
 
@@ -106,16 +107,6 @@ bool CFont::PostInit(const ENTITY_DATA & data, CScene * pScene)
 	m_strSentence		= TEXT("");
 
 	return true;
-}
-
-void CFont::Init()
-{
-	CInterface::Init();
-}
-
-void CFont::Update(double dDeltaTime)
-{
-	CInterface::Update(dDeltaTime);
 }
 
 void CFont::Render(const HDC & hDC)

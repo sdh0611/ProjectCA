@@ -41,13 +41,14 @@ bool CCamera::PostInit(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeigh
 		{
 			m_fCameraMaxSpeed = pPhysics.lock()->GetMaxSpeed()*2.f;
 		}
-		m_CameraPosition = POSITION(m_pOwner.lock()->GetObjectPosition().x - m_iWidth / 2.f, 0.f);
+		m_CameraPosition			= POSITION(m_pOwner.lock()->GetObjectPosition().x - m_iWidth / 2.f, 0.f);
+		//m_CameraPosition			= POSITION(0, 0.f);
 		m_OwnerScreenPosition = m_pOwner.lock()->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 	}
 	else
 	{
-		m_fCameraMaxSpeed = 0.f;
-		m_CameraPosition = 0.f;
+		m_fCameraMaxSpeed		= 0.f;
+		m_CameraPosition			= 0.f;
 		m_OwnerScreenPosition = 0.f;
 	}
 

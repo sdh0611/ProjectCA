@@ -39,6 +39,8 @@ public:
 	//Actor삭제 메소드는 2가지의 오버로딩 버전 제공.
 	//bool DeleteActor(Types::ActorID actorID);
 	bool DeleteActor(std::shared_ptr<CEntity>& pEntity);
+	void FadeOut();
+	void FadeIn();
 
 
 public:

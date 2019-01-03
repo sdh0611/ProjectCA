@@ -1,10 +1,10 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "..\CEntity.h"
+#include "CUI.h"
 
 
-class CInterface : public CEntity
+class CInterface : public CUI
 {
 public:
 	CInterface();
@@ -12,10 +12,6 @@ public:
 
 
 public:
-	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene);
-	virtual void Init();
-	virtual void Update(double dDeltaTime);
-	virtual void Render(const HDC& hDC);
 	virtual void LateUpdate();
 
 

@@ -39,6 +39,7 @@ void AnimationRender::Update(double dDeltaTime)
 {
 	if (m_bActive)
 	{
+		RenderComponent::Update(dDeltaTime);
 		m_pCurAnimation.lock()->Update(dDeltaTime);
 	}
 
@@ -51,8 +52,17 @@ void AnimationRender::Draw(const HDC & hDC)
 
 		//POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
 		if (!m_pCurAnimation.expired())
-			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, m_DrawPivot, m_iDrawWidth, m_iDrawHeight);
-
+		{
+			if (m_RenderMode == RenderMode::RENDER_DEFAULT)
+			{
+				m_pCurAnimation.lock()->DrawAnimation(hDC, m_hRenderDC, m_DrawPivot, m_iDrawWidth, m_iDrawHeight);
+				}
+			else
+			{
+				m_pCurAnimation.lock()->DrawAnimation(hDC, m_hRenderDC, m_hBlendingDC,
+					m_BlendFunction, m_DrawPivot, m_iDrawWidth, m_iDrawHeight);
+			}
+		}
 		//POSITION position = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 		//std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
 		//std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());
@@ -97,8 +107,17 @@ void AnimationRender::Draw(const HDC & hDC, const POSITION& position)
 
 		//POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
 		if (!m_pCurAnimation.expired())
-			m_pCurAnimation.lock()->Draw(hDC, m_hRenderDC, position, m_iDrawWidth, m_iDrawHeight);
-
+		{
+			if (m_RenderMode == RenderMode::RENDER_DEFAULT)
+			{
+				m_pCurAnimation.lock()->DrawAnimation(hDC, m_hRenderDC, position, m_iDrawWidth, m_iDrawHeight);
+			}
+			else
+			{
+				m_pCurAnimation.lock()->DrawAnimation(hDC, m_hRenderDC, m_hBlendingDC,
+					m_BlendFunction, position, m_iDrawWidth, m_iDrawHeight);
+			}
+		}
 		//POSITION position = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 		//std::shared_ptr<Collider> pCollider = STATIC_POINTER_CAST(Collider, m_pOwner->GetComponent(TEXT("Collider")).lock());
 		//std::shared_ptr<PhysicsComponent> pPhysics = STATIC_POINTER_CAST(PhysicsComponent, m_pOwner->GetComponent(TEXT("PhysicsComponent")).lock());

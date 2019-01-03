@@ -34,7 +34,6 @@ bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
 	pRender->SetDrawSize(MAX_WIDTH, MAX_HEIGHT);
 	if (!AddComponent(pRender, pRender->GetComponentTag()))
 		return false;
-
 	m_bStatic = false;
 	m_fScrollSpeed = 100.f;
 
@@ -58,9 +57,7 @@ void CBackground::Update(double dDeltaTIme)
 		{
 			GetTransform().lock()->Move(-1 * fSpeed * 0.2f* dDeltaTIme, 0);
 		}
-
 	}
-
 }
 
 void CBackground::Render(const HDC & hDC)
@@ -71,7 +68,8 @@ void CBackground::Render(const HDC & hDC)
 
 	if (m_bStatic)
 	{
-		pRender->Draw(hDC, GetObjectPosition());
+		//pRender->Draw(hDC, GetObjectPosition());
+		pRender->Draw(hDC);
 	}
 	else
 	{

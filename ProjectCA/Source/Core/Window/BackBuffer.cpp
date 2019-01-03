@@ -22,6 +22,9 @@ BackBuffer::~BackBuffer()
 	if (m_hDrawDC)
 		DeleteDC(m_hDrawDC);
 
+	if (m_hBlendDC)
+		DeleteDC(m_hBlendDC);
+
 }
 
 bool BackBuffer::Init(const HDC & hDC)
@@ -32,6 +35,10 @@ bool BackBuffer::Init(const HDC & hDC)
 	
 	m_hDrawDC = CreateCompatibleDC(hDC);
 	if (m_hDrawDC == NULL)
+		return false;
+
+	m_hBlendDC = CreateCompatibleDC(hDC);
+	if (m_hBlendDC == NULL)
 		return false;
 
 	return true;
@@ -72,5 +79,10 @@ const HDC & BackBuffer::GetMemDC() const
 const HDC & BackBuffer::GetDrawDC() const
 {
 	return m_hDrawDC;
+}
+
+const HDC & BackBuffer::GetBlendDC() const
+{
+	return m_hBlendDC;
 }
 
