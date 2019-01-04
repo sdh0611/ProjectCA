@@ -1,13 +1,13 @@
 #pragma once
 
-
 #include "..\..\stdafx.h"
+
+//NOTE: 프로그램 내의 대부분의 객체들의 상속받는 Class
 
 class CScene;
 class CLayer;
 class CCamera;
 class ComponentBase;
-
 
 class CEntity
 {

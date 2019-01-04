@@ -1,7 +1,6 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CCameraManager.h"
-#include "..\..\Include\Scene\CObject.h"
-#include "..\..\Include\Scene\Actor\CCamera.h"
+
 
 CCameraManager::CCameraManager()
 {
@@ -10,13 +9,12 @@ CCameraManager::CCameraManager()
 CCameraManager::~CCameraManager()
 {
 	Clear();
-	puts("CameraManager Destroy");
 }
 
 
 bool CCameraManager::Init()
 {
-	m_iLastCameraID = 0;
+	m_LastCameraID = 0;
 	
 
 	return true;
@@ -35,11 +33,11 @@ void CCameraManager::ResetCameraList()
 	}
 }
 
-WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeight)
+WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CEntity> pOwner, UINT iWidth, UINT iHeight)
 {
 	StrongCameraPtr pCamera = StrongCameraPtr(new CCamera);
 
-	if (!pCamera->PostInit(pOwner, iWidth, iHeight, m_iLastCameraID++))
+	if (!pCamera->PostInit(pOwner, iWidth, iHeight, m_LastCameraID++))
 	{
 		return StrongCameraPtr();
 	}
@@ -54,7 +52,7 @@ WeakCameraPtr CCameraManager::CreateCamera(std::shared_ptr<CObject> pOwner, UINT
 	return pCamera;
 }
 
-StrongCameraPtr CCameraManager::GetCamera(Types::CameraID id)
+StrongCameraPtr CCameraManager::GetCamera(CAMERA_ID id)
 {
 	for (auto& it : m_CameraList)
 	{
@@ -103,8 +101,14 @@ void CCameraManager::ChangeMainCamera(StrongCameraPtr pCamera)
 	m_pMainCamera = pCamera;
 }
 
+void CCameraManager::ChangeMainCameraMode(CCamera::CameraMode mode)
+{
+	m_pMainCamera.lock()->SetCameraMode(mode);
+}
+
 void CCameraManager::Clear()
 {
 	m_CameraList.clear();
 	m_pMainCamera.reset();
+	m_LastCameraID = 0;
 }

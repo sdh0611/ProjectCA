@@ -2,14 +2,15 @@
 
 #include "..\..\..\stdafx.h"
 
+//NOTE: Screen상에서 그려질 화면을 담는 Camera 객체 구현.
 
-class CObject;
+class CEntity;
 
 class CCamera {
 
 public:
 	enum CameraMode {
-		CM_DEFAULT, CM_SCROLL_HOR, CM_SCROLL_VER, CM_AUTO, CM_STATIC
+		CM_DEFAULT, CM_SCROLL_HOR, CM_SCROLL_HOR_VER, CM_AUTO, CM_STATIC
 	};
 
 public:
@@ -18,7 +19,7 @@ public:
 
 
 public:
-	bool PostInit(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id);
+	bool PostInit(std::shared_ptr<CEntity> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id);
 	void Init();
 	void Update(double dDeltaTime);
 
@@ -26,7 +27,7 @@ public:
 public:
 	void SetActive(bool bActive);
 	void SetCameraSize(UINT iWidth, UINT iHeight);
-	void SetOwner(std::shared_ptr<CObject> pOwner);
+	void SetOwner(std::shared_ptr<CEntity> pOwner);
 	void Move(float fx, float fy);
 	void SetCameraPosition(const POSITION& position);
 	void SetCameraPosition(float fx, float fy);
@@ -47,9 +48,9 @@ public:
 	UINT							GetCameraWidth() const;
 	UINT							GetCameraHeight() const;
 	float							GetCameraCurSpeed() const;
-	Types::CameraID			GetCameraID() const;
+	CAMERA_ID					GetCameraID() const;
 	const POSITION&			GetCameraPosition() const;
-	std::weak_ptr<CObject>	GetOwner();
+	std::weak_ptr<CEntity>	GetOwner();
 
 
 public:
@@ -67,8 +68,8 @@ private:
 	UINT								m_iHeight;
 	POSITION						m_CameraPosition;
 	POSITION						m_OwnerScreenPosition;
-	std::weak_ptr<CObject>		m_pOwner;
-	Types::CameraID				m_iCameraID;
+	std::weak_ptr<CEntity>		m_pOwner;
+	CAMERA_ID						m_iCameraID;
 	CameraMode					m_CameraMode;
 
 

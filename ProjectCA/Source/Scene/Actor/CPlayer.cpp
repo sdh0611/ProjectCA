@@ -33,10 +33,12 @@ CPlayer::~CPlayer()
 bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 {
 	//TransformComponent 추가
-	CActor::PostInit(data, pScene);
+	if (!CActor::PostInit(data, pScene))
+	{
+		return false;
+	}
 
 	m_pSoundManager	= CSoundManager::GetInstance();
-	//m_bProtected			= false;
 
 	m_dTimeElapsed		= 0.f;
 	m_iSmallStateWidth	= m_iEntityWidth;
@@ -93,9 +95,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 		switch (type) {
 			m_pSoundManager->SoundPlay(TEXT("SFXSheelRicochet"));
 		case Collider::COLLISION_BOT:
-				//printf("ID : %d\n", pOther->GetObjectID());
 				pPhysics->SetGrounded(true);
-				//pPhysics->SetCurJumpForce(0.f);
 				SetActorVerticalState(Types::VS_IDLE);
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				break;
@@ -196,7 +196,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 					}
 					SetStoredPickup(m_pCurPickupPtr.lock());
 					m_pCurPickupPtr = STATIC_POINTER_CAST(CObject, m_pOwnerScene->FindEntityFromScene(pOther->GetObjectID()).lock());
-					//m_pCurPickupPtr = m_pOwnerScene->FindEntityFromScene(pOther->GetObjectID()).lock();
 					break;
 				case PS_FLOWER:
 					if (pOther->GetObjectName() != TEXT("Coin"))
@@ -221,7 +220,9 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 					if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
 					{
 						if (GetObjectState() != Types::OS_DAMAGED)
+						{
 							HandlingEvent(Types::EVENT_DAMAGED);
+						}
 					}
 				}
 			}
@@ -251,7 +252,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	};
 
 	pCollider->SetDelegate(onCollisionDelegater);
-	//pCollider->SetSize(m_iEntityWidth*0.35, m_iEntityHeight*0.8);
 
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
@@ -319,7 +319,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallTurnLeft"),   false, TEXT("TurnLeft")))
 		return false;
 
-	//
 	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickIdleRight"),   false, TEXT("PickIdleRight")))
 		return false;
 
@@ -349,7 +348,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	if (!pRender->AddAnimation(0.f, TEXT("MarioSmall"), TEXT("PlayerSmallPickJumpLeft"),   false, TEXT("PickJumpLeft")))
 		return false;
-	//
 
 	if (!pRender->AddAnimation(0.05f, TEXT("MarioSmall"), TEXT("PlayerSmallSpin"),   true, TEXT("Spin"), false))
 		return false;
@@ -416,7 +414,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigTurnLeft"),   false, TEXT("TurnLeft")))
 		return false;
 
-	//
 	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickIdleRight"),   false, TEXT("PickIdleRight")))
 		return false;
 
@@ -446,8 +443,7 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	if (!pRender->AddAnimation(0.f, TEXT("MarioBig"), TEXT("PlayerBigPickJumpLeft"),   false, TEXT("PickJumpLeft")))
 		return false;
-	//
-
+	
 	if (!pRender->AddAnimation(0.05f, TEXT("MarioBig"), TEXT("PlayerBigSpin"),   true, TEXT("Spin"), false))
 		return false;
 
@@ -518,7 +514,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 	if (!pRender->AddAnimation(0.12f, TEXT("MarioFlower"), TEXT("PlayerFlowerJumpAttackLeft"),   false, TEXT("JumpAttackLeft"), false))
 		return false;
 
-	//
 	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickIdleRight"),   false, TEXT("PickIdleRight")))
 		return false;
 
@@ -548,7 +543,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 	if (!pRender->AddAnimation(0.f, TEXT("MarioFlower"), TEXT("PlayerFlowerPickJumpLeft"),   false, TEXT("PickJumpLeft")))
 		return false;
-	//
 
 	if (!pRender->AddAnimation(0.05f, TEXT("MarioFlower"), TEXT("PlayerFlowerSpin"),   true, TEXT("Spin"), false))
 		return false;
@@ -600,12 +594,10 @@ void CPlayer::Update(double dDeltaTime)
 		//무적시간 관련 연산
 		if (GetObjectState() == Types::OS_DAMAGED)
 		{
-			//GetComponent<AnimationRender>().lock()->SwitchBlending();
 			GetComponent<AnimationRender>().lock()->SwitchBlending();
 			m_dTimeElapsed += dDeltaTime;
 			if (m_dTimeElapsed > 3.f)
 			{
-				//GetComponent<AnimationRender>().lock()->SetBlending(false);
 				GetComponent<AnimationRender>().lock()->SetRenderMode(RenderComponent::RenderMode::RENDER_DEFAULT);
 				m_dTimeElapsed = 0.f;
 				SetObjectState(Types::OS_IDLE);
@@ -645,6 +637,14 @@ void CPlayer::Render(const HDC & hDC)
 
 void CPlayer::LateUpdate()
 {
+	if (!IsDead())
+	{
+		if (GetEntityPosition().y > MAX_HEIGHT * 1.5f)
+		{
+			SetPlayerDead();
+			return;
+		}
+	}
 	CObject::LateUpdate();
 	for (const auto& fire : m_FireballPool)
 	{
@@ -655,8 +655,6 @@ void CPlayer::LateUpdate()
 
 void CPlayer::SetPlayerDead()
 {
-	//m_pSoundManager->StopChannel(CSoundManager::SoundType::SOUND_BGM);
-	//m_pSoundManager->SoundPlay(TEXT("BGMDead"));
 	m_pSoundManager->ChangeBGM(TEXT("BGMDead"));
 	m_ObjectState = Types::OS_DEAD;
 	GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("MarioSmall"), TEXT("DeadAnimation"));
@@ -668,7 +666,7 @@ void CPlayer::SetPlayerDead()
 
 void CPlayer::DeadProcess(double dDeltaTime)
 {
-		m_dTimeElapsed += dDeltaTime;
+	m_dTimeElapsed += dDeltaTime;
 	
 	if (m_dTimeElapsed > 0.5f)
 	{
@@ -681,7 +679,6 @@ void CPlayer::DeadProcess(double dDeltaTime)
 		}
 		else
 		{
-			puts("inactive");
 			SetActive(false);
 		}
 
@@ -1056,30 +1053,38 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 {
 	//이동 및 물리처리 관련 Player로직
 
-	auto pTransform = GetComponent<TransformComponent>().lock();
-	auto pPhysics = GetComponent<PhysicsComponent>().lock();
+	auto pTransform		= GetComponent<TransformComponent>().lock();
+	auto pPhysics			= GetComponent<PhysicsComponent>().lock();
 
-	float fCurSpeed = pPhysics->GetCurSpeed();
-	float fMaxSpeed = pPhysics->GetMaxSpeed();
-	float fWalkSpeed = pPhysics->GetSpeed();
-	float fCurJumpForce = pPhysics->GetCurJumpForce();
+	float fCurSpeed		= pPhysics->GetCurSpeed();
+	float fMaxSpeed		= pPhysics->GetMaxSpeed();
+	float fWalkSpeed		= pPhysics->GetSpeed();
+	float fCurJumpForce	= pPhysics->GetCurJumpForce();
 
+	//수직상의 이동에 대한 연산
 	if (m_Direction == Types::DIR_LEFT)
 	{
 		if (m_ActorHorizonalState == Types::HS_RUN)
 		{
 			if (fCurSpeed > -1 * fMaxSpeed)
+			{
 				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+			}
 		}
 		else if (m_ActorHorizonalState == Types::HS_WALK)
 		{
 			if (fCurSpeed < -1 * fWalkSpeed)
+			{
 				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+			}
 			else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
+			{
 				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+			}
 			else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
+			{
 				pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
-
+			}
 		}
 		else if (m_ActorHorizonalState == Types::HS_IDLE)
 		{
@@ -1087,13 +1092,17 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			{
 				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
 				if (pPhysics->GetCurSpeed() > 0.f)
+				{
 					pPhysics->SetCurSpeed(0.f);
+				}
 			}
 			else if (fCurSpeed > 0.f)
 			{
 				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
 				if (pPhysics->GetCurSpeed() < 0.f)
+				{
 					pPhysics->SetCurSpeed(0.f);
+				}
 			}
 		}
 	}
@@ -1107,11 +1116,17 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		else if (m_ActorHorizonalState == Types::HS_WALK)
 		{
 			if (fCurSpeed > fWalkSpeed)
+			{
 				pPhysics->SetCurSpeed(fCurSpeed - 10.f);
+			}
 			else if (fCurSpeed < fWalkSpeed)
+			{
 				pPhysics->SetCurSpeed(fCurSpeed + 10.f);
+			}
 			else if (fCurSpeed >= fWalkSpeed)
+			{
 				pPhysics->SetCurSpeed(fWalkSpeed);
+			}
 		}
 		else if (m_ActorHorizonalState == Types::HS_IDLE)
 		{
@@ -1119,13 +1134,17 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			{
 				pPhysics->SetCurSpeed(fCurSpeed - 5.f);
 				if (pPhysics->GetCurSpeed() < 0.f)
+				{
 					pPhysics->SetCurSpeed(0.f);
+				}
 			}
 			else if (fCurSpeed < 0.f)
 			{
 				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
 				if (pPhysics->GetCurSpeed() > 0.f)
+				{
 					pPhysics->SetCurSpeed(0.f);
+				}
 			}
 		}
 	}
@@ -1169,7 +1188,6 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			}
 			else if (CInputManager::GetInstance()->IsKeyDown(TEXT("DOWN")))
 			{
-				//pPhysics->SetCurJumpForce(0.f);
 				if (m_Direction == Types::DIR_LEFT)
 				{
 					m_pPickObjectPtr.lock()->SetObjectPosition(GetObjectPosition().x - 50.f, GetObjectPosition().y - m_iEntityHeight * 0.1f);
@@ -1181,7 +1199,6 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 			}
 			else
 			{
-				//pPhysics->SetCurJumpForce(0.f);
 				if (m_Direction == Types::DIR_LEFT)
 				{
 					STATIC_POINTER_CAST(CActor, m_pPickObjectPtr.lock())->SetActorDirection(Types::DIR_LEFT);
@@ -1252,7 +1269,6 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 
 	ChangeAnimationClip(fCurSpeed, fWalkSpeed, fMaxSpeed, fCurJumpForce);
 
-	//m_ActType = Types::ACT_IDLE;
 }
 
 void CPlayer::HandlingEvent(EVENT_TYPE type)
@@ -1271,12 +1287,6 @@ void CPlayer::HandlingEvent(EVENT_TYPE type)
 		{
 			SetPlayerDead();
 		}
-		break;
-	case Types::EVENT_DESTROY:
-
-		break;
-	case Types::EVENT_INACTIVE:
-
 		break;
 	}
 
@@ -1317,7 +1327,6 @@ void CPlayer::SetPlayerState(PlayerState state)
 		if (m_PlayerState != PS_FLOWER)
 		{
 			pRender->ChangeAnimationTable(TEXT("MarioFlower"));
-			//m_pSoundManager->SoundPlay(TEXT("SFXPowerUp"));
 		}
 		break;
 	}
@@ -1334,22 +1343,12 @@ void CPlayer::SetRequestInterrupt(bool bInterrupt)
 
 void CPlayer::SetStoredPickup(std::shared_ptr<CObject> pPickup)
 {
-	wprintf(TEXT("Stored : %s\n"), pPickup->GetObjectName().c_str());
 	m_pStoredPickupPtr = pPickup;
-	//STATIC_POINTER_CAST(CPickup, m_pStoredPickupPtr.lock())->SetStored(true);
 }
 
 CPlayer::PlayerState CPlayer::GetPlayerState()
 {
 	return m_PlayerState;
-}
-
-bool CPlayer::IsDead()
-{
-	if (m_ObjectState == Types::OS_DEAD)
-		return true;
-
-	return false;
 }
 
 bool CPlayer::IsRequestInterrupt()

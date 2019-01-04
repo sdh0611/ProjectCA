@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "CPickup.h"
 
+//NOTE: CPickup을 상속받아 작성한 Pickup Class.
+//			동전을 구현함.
 
 class CCoin : public CPickup
 {

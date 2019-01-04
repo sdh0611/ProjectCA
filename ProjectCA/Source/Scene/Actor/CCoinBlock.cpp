@@ -33,14 +33,6 @@ bool CCoinBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 	m_dTimeElapsed	= 0.f;
 	m_dLimitTime		= 0.f;
 	
-
-	//auto pPhysics = std::make_shared<PhysicsComponent>();
-	//if (!pPhysics->PostInit(this, 0.f, 0.f, 1300.f, 200.f))
-	//	return false;
-	//if (!AddComponent(pPhysics, pPhysics->GetComponentTag()))
-	//	return false;
-
-
 	auto onCollision = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
 
 		auto pPhysics = GetComponent<PhysicsComponent>().lock();
@@ -119,22 +111,6 @@ void CCoinBlock::Update(double dDeltaTime)
 	}
 }
 
-//void CCoinBlock::Render(const HDC & hDC)
-//{
-//	if (!m_bHiding)
-//	{
-//		if (m_bActive)
-//		{
-//			auto pRender = GetComponent<AnimationRender>().lock();
-//			if (pRender->IsActive())
-//			{
-//				pRender->Draw(hDC);
-//			}
-//
-//		}
-//	}
-//}
-
 
 void CCoinBlock::SetLimitTime(double dTime)
 {
@@ -159,23 +135,8 @@ void CCoinBlock::Behavior(double dDeltaTime)
 		else
 		{
 			m_dTimeElapsed += dDeltaTime;
-		}
-		//if (m_DrawPivot.y > pRender->GetDrawPivot().y)
-		//{
-		//	m_DrawPivot = pRender->GetDrawPivot();
-		//	m_fYSpeed = m_fBumpForce;
-		//	HandlingEvent(Types::EVENT_DEAD);
-		//}
-		//else
-		//{
-		//	m_DrawPivot.y -= m_fYSpeed * dDeltaTime;
-		//	m_fYSpeed -= 20.f;
-		//}
-	
+		}	
 		break;
-	//default:
-
-	//	break;		
 	}
 }
 

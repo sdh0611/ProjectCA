@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "CProb.h"
 
+//NOTE: RandomBox들의 추상 클래스.
+
 class CPickup;
 
 class CRandomBlock : public CProb
@@ -25,7 +27,6 @@ public:
 
 
 public:
-	//void SetStoredPickup(std::shared_ptr<CPickup> pPickup);
 	void SetHide();
 
 
@@ -34,20 +35,8 @@ public:
 
 
 protected:
-	void Bump(double dDeltaTime);
-	//void SetDead();
-	//virtual void HandlingEvent(EVENT_TYPE type) override;
-
-
-protected:
 	bool							m_bHiding;
-	//float							m_fYSpeed;
-	//float							m_fBumpForce;
-	//double						m_dBumpTimeElapsed;
-	//double						m_dBumpTimeLimit;
 	BlockType					m_Type;
-	//POSITION					m_DrawPivot;
-	//std::weak_ptr<CPickup> m_pPickup;
 
 
 };

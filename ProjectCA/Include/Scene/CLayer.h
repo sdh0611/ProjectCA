@@ -22,7 +22,6 @@ class CLayer {
 
 private:
 	//상기 friend지정 메소드를 제외한 외부에서의 생성을 막기 위해 private으로 선언
-	//CLayer(int order, const Types::tstring& tag);
 	CLayer();
 	~CLayer();
 
@@ -36,15 +35,14 @@ public:
 
 public:
 	void AddActor(std::shared_ptr<CEntity> pEntity);
-	//Actor삭제 메소드는 2가지의 오버로딩 버전 제공.
-	//bool DeleteActor(Types::ActorID actorID);
+	bool DeleteActor(ENTITY_ID id);
 	bool DeleteActor(std::shared_ptr<CEntity>& pEntity);
 	void FadeOut();
 	void FadeIn();
 
 
 public:
-	//std::weak_ptr<CObject> FindObject(Types::ActorID actorID);
+	std::weak_ptr<CEntity> FindEntity(ENTITY_ID id);
 	std::weak_ptr<CEntity> FindEntity(const std::shared_ptr<CEntity>& pEntity);
 	const std::list<std::weak_ptr<CEntity>>& GetEntityList() const;
 
@@ -54,7 +52,6 @@ public:
 	inline void SetLayerTag(const TSTRING& tag) { m_strLayerTag = tag; }
 	inline int GetLayerOrder() { return m_iOrder; }
 	inline void SetLayerOrder(int order) { if (order >= 0) m_iOrder = order; }
-	inline UINT GetLastActorNumber() const { return m_iActorNumber; }
 	inline void SetVisible(bool bVisible) { m_bVisible = bVisible; }
 	inline bool IsVisivle() const{ return m_bVisible; }
 	
@@ -62,7 +59,6 @@ public:
 private:
 	bool											m_bVisible;
 	int												m_iOrder;
-	UINT											m_iActorNumber;	//안쓰게될 것 같음.(08.14)
 	Types::tstring								m_strLayerTag;
 	std::list<std::weak_ptr<CEntity>>		m_EntityList;
 

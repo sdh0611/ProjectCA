@@ -19,6 +19,8 @@ bool CPickup::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!CActor::PostInit(data, pScene))
 		return false;
 
+	//Score의 기본 값은 0
+	m_iScore			= 0;
 	m_ObjectType	= Types::OT_PICKUP;
 	m_bStored		= false;
 
@@ -52,14 +54,12 @@ void CPickup::LateUpdate()
 			if (position.x <  cameraPosition.x - cameraWidth
 				|| position.x > cameraPosition.x + 2 * cameraWidth)
 			{
-				puts("InActive");
 				SetActive(false);
 				return;
 			}
 			else if (position.y < cameraPosition.y - cameraHeight
 				|| position.y > cameraPosition.y + 2 * cameraHeight)
 			{
-				puts("InActive");
 				SetActive(false);
 				SetObjectState(Types::OS_DEAD);
 				return;
@@ -70,7 +70,6 @@ void CPickup::LateUpdate()
 
 void CPickup::SetStored()
 {
-	printf("Stored : %d\n", m_EntityID);
 	if (!GetComponent<PhysicsComponent>().expired())
 	{
 		GetComponent<PhysicsComponent>().lock()->SetActive(false);

@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "CParticle.h"
 
+//NOTE: CParticle을 상속받은 Particle객체.
+//			Block이 파괴될 때 나오는 Particle
 
 class CBlockParticle : public CParticle
 {

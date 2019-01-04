@@ -2,8 +2,7 @@
 
 /*
 	NOTE:
-		게임 내의 Frame 과 관련된 제어를 실시하는 Class
-		두 개 이상 존재할 필요가 없으므로 Singleton객체로 작성
+		게임 내의 시간, Frame등의 관리를 위한 Manager Class
 */
 
 

@@ -71,7 +71,6 @@ protected:
 	bool									m_bActive;
 	Types::SceneType					m_SceneType;
 	std::list<CLayer*>					m_LayerList;
-	std::list<CLayer*>::iterator		m_it;
 	std::weak_ptr<CCamera>		m_pMainCameraPtr;
 
 

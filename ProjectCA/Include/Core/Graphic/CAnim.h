@@ -2,6 +2,8 @@
 
 #include "..\..\..\stdafx.h"
 
+//NOTE: AnimationRender가 애니메이션을 그리기 위해 필요한 객체.
+
 class CSprite;
 class CActor;
 

@@ -3,6 +3,9 @@
 #include "..\..\..\stdafx.h"
 #include "CEnemy.h"
 
+//NOTE: CEnemy를 상속받아 작성한 Class.
+//			Rex를 구현.
+//			내부적으로 2가지의 상태값을 가짐.
 
 class CRex : public CEnemy
 {

@@ -56,7 +56,6 @@ void CObject::LateUpdate()
 }
 
 
-
 CObject * CObject::Clone()
 {
 	CObject* pClone(this);
@@ -127,6 +126,16 @@ bool CObject::IsSubordinate()
 	return !m_pOwnerObject.expired();
 }
 
+bool CObject::IsDead()
+{
+	if (m_ObjectState == Types::OS_DEAD || m_ObjectState == Types::ACT_DESTROY)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 UINT CObject::GetObjectWidth() const
 {
 	return m_iEntityWidth;
@@ -191,9 +200,3 @@ void CObject::DeleteParticle()
 {
 	m_pParticle.reset();
 }
-
-
-//std::weak_ptr<CCamera> CObject::GetCamera()
-//{
-//	return m_pCamera.lock();
-//}

@@ -2,9 +2,12 @@
 
 #include "..\..\stdafx.h"
 #include "..\Singleton.hpp"
+#include "Actor\CCamera.h"
 
-class CCamera;
-class CObject;
+//NOTE: Camera객체들을 관리하기 위한 Manager Class
+//			Camera의 생성, 삭제, MainCamera설정 등을 담당함.
+
+class CEntity;
 
 typedef std::shared_ptr<CCamera> StrongCameraPtr;
 typedef std::weak_ptr<CCamera> WeakCameraPtr;
@@ -21,16 +24,17 @@ public:
 
 public:
 	void					ResetCameraList();
-	WeakCameraPtr	CreateCamera(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeight);
+	WeakCameraPtr	CreateCamera(std::shared_ptr<CEntity> pOwner, UINT iWidth, UINT iHeight);
 	void					AddCamera(StrongCameraPtr pCamera);
 	bool					DeleteCamera(StrongCameraPtr pCamera);
 	void					ChangeMainCamera(StrongCameraPtr pCamera);
+	void					ChangeMainCameraMode(CCamera::CameraMode mode);
 	void					Clear();
 
 
 public:
 	WeakCameraPtr GetMainCamera();
-	StrongCameraPtr GetCamera(Types::CameraID);
+	StrongCameraPtr GetCamera(CAMERA_ID);
 
 
 private:
@@ -38,8 +42,8 @@ private:
 
 
 private:
-	StrongCameraList m_CameraList;
+	StrongCameraList	m_CameraList;
 	WeakCameraPtr	m_pMainCamera;
-	Types::CameraID	m_iLastCameraID;
+	CAMERA_ID			m_LastCameraID;
 
 };

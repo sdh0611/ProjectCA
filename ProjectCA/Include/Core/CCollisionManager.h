@@ -3,6 +3,8 @@
 #include "..\..\stdafx.h"
 #include "..\Singleton.hpp"
 
+//NOTE: Collider들 간의 충돌을 검출, 관리하기 위한 Manager Class
+
 class Collider;
 class ColliderBox;
 class ColliderCircle;
@@ -26,9 +28,7 @@ public:
 
 private:
 	void CheckCollisionType(Collider* pCollider, Collider* pOther);
-	//bool BoxAndBox(std::shared_ptr<CActor> pActor, std::shared_ptr<CActor> pOther);
 	bool BoxAndBox(ColliderBox* pCollider, ColliderBox* pOther);
-	//bool CircleToCircle(ColliderCircle* collider1, ColliderCircle* colldier2);
 
 
 private:

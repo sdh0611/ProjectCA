@@ -1,11 +1,9 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
-//#include "..\..\..\Include\Scene\CWorld.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\CLayer.h"
-//#include "..\..\..\Include\Scene\Actor\CActorFactory.h"
 #include "..\..\..\Include\Core\Components\InputComponent.h"
 #include "..\..\..\Include\Core\Components\ComponentBase.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
@@ -23,28 +21,30 @@ CActor::~CActor()
 //기본 Actor들의 속성 초기화 및 TranformComponent 생성, 기본PivotRatio은 0.5, 1.0으로
 bool CActor::PostInit(const Types::ActorData & data, CGameScene *pScene)
 {
+	if (!CObject::PostInit(data, pScene))
+		return false;
+
+	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);		//Actor들의 기본 PivotRatio는 0.5, 1.0으로 설정
+
 	//기본 Actor의 속성 초기화
 	m_ActType					= data.m_ActType;
 	m_ActorCurVerticalState = data.m_VerticalState;
 	m_ActorHorizonalState	= data.m_HorizonalState;
 	m_Direction					= data.m_Direction;
 	
-	if (!CObject::PostInit(data, pScene))
-		return false;	
-	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);		//Actor들의 기본 PivotRatio는 0.5, 1.0으로 설정
-
 	return true;
 }
 
 void CActor::Init()
 {
-	m_ActType = Types::ACT_IDLE;
 	CObject::Init();
+	m_ActType = Types::ACT_IDLE;
 }
 
 void CActor::Update(double dDeltaTime)
 {
-	if (m_bActive) {
+	if (m_bActive) 
+	{
 		std::weak_ptr<InputComponent> pInput =STATIC_POINTER_CAST(InputComponent, (GetComponent(TEXT("InputComponent")).lock()));
 		if (!pInput.expired())
 		{
@@ -67,42 +67,6 @@ void CActor::Update(double dDeltaTime)
 
 }
 
-//void CActor::LateUpdate()
-//{
-//	CObject::LateUpdate();
-//	POSITION onScreenPosition = GetTransform().lock()->GetScreenPosition();
-//
-//	if (onScreenPosition.x <  0.f - MAX_WIDTH/2.f || onScreenPosition.x >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth() + MAX_WIDTH/2.f)
-//	{
-//		puts("false");
-//		SetActive(false);
-//		return;
-//	}
-//	else if (onScreenPosition.y <  0.f - MAX_HEIGHT/2.f || onScreenPosition.y >CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight() + MAX_HEIGHT/2.f)
-//	{
-//		puts("false");
-//		SetActive(false);
-//		return;
-//	}
-//	else
-//	{
-//		SetActive(true);
-//	}
-//
-//
-//}
-
-//void CActor::Destroy()
-//{
-//	//if (!m_ComponentTable.empty())
-//	//	for (auto& it : m_ComponentTable)
-//	//		SAFE_DELETE(it.second)
-//
-//	m_ComponentTable.clear();
-//
-//}
-
-
 void CActor::SetActorAct(ACT act)
 {
 	m_ActType = act;
@@ -113,7 +77,6 @@ void CActor::SetActorDirection(DIRECTION dir)
 	m_Direction = dir;
 }
 
-
 void CActor::SetActorVerticalState(VER_STATE vertical)
 {
 	m_ActorCurVerticalState = vertical;;
@@ -123,10 +86,6 @@ void CActor::SetActorHorizonalState(HOR_STATE horizonal)
 {
 	m_ActorHorizonalState = horizonal;
 }
-
-//CWorld* const CActor::GetOwnerWorld() const { return m_pOwnerWorld; }
-//
-//void CActor::SetOwnerWorld(CWorld* pWorld) { m_pOwnerWorld = pWorld; }
 
 ACT CActor::GetActorAct() const
 {
@@ -157,7 +116,6 @@ UINT CActor::GetActorHeight() const
 {
 	return m_iEntityHeight;
 }
-
 
 void CActor::FlipActorDirection()
 {

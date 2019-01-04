@@ -9,14 +9,12 @@ CResourceManager::CResourceManager() {
 
 CResourceManager::~CResourceManager() {
 
-	m_strongSpriteTable.clear();
+	m_StrongSpriteTable.clear();
 
 }
 
-bool CResourceManager::Init() {
-
-	//if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Player/mario_big_idle_left.bmp"), TEXT("PlayerIdleLeft")))
-	//	return false;
+bool CResourceManager::Init() 
+{
 
 	if (!LoadPlayerSpriteInfo())
 		return false;
@@ -52,11 +50,11 @@ bool CResourceManager::Init() {
 WeakSpritePtr CResourceManager::GetWeakSprtiePtr(const Types::tstring & strName)
 {
 	//없는 경우 nullptr 반환
-	if(m_strongSpriteTable.find(strName) == m_strongSpriteTable.end())
+	if(m_StrongSpriteTable.find(strName) == m_StrongSpriteTable.end())
 		return WeakSpritePtr();
 
 	//있는 경우 해당 Sprite의 포인터 반환
-	return m_strongSpriteTable[strName];
+	return m_StrongSpriteTable[strName];
 }
 
 bool CResourceManager::AddSpritePtr(const Types::tstring & strName, CSprite * pSprite)
@@ -65,11 +63,11 @@ bool CResourceManager::AddSpritePtr(const Types::tstring & strName, CSprite * pS
 		return false;
 
 	//해당 키값에 대응하는 sprite가 이미 존재하는 경우
-	if(m_strongSpriteTable.find(strName) != m_strongSpriteTable.end())
+	if(m_StrongSpriteTable.find(strName) != m_StrongSpriteTable.end())
 		return false;
 
 	StrongSpritePtr pStrongSprite = std::shared_ptr<CSprite>(pSprite);
-	m_strongSpriteTable.insert(std::make_pair(strName, pStrongSprite));
+	m_StrongSpriteTable.insert(std::make_pair(strName, pStrongSprite));
 	
 	return true;
 }
@@ -77,10 +75,10 @@ bool CResourceManager::AddSpritePtr(const Types::tstring & strName, CSprite * pS
 bool CResourceManager::DeleteSpritePtr(const Types::tstring & strName)
 {
 	//이미 테이블에 존재하지 않는 경우
-	if (m_strongSpriteTable.find(strName) == m_strongSpriteTable.end())
+	if (m_StrongSpriteTable.find(strName) == m_StrongSpriteTable.end())
 		return false;
 
-	m_strongSpriteTable.erase(strName);
+	m_StrongSpriteTable.erase(strName);
 
 	return true;
 }
@@ -88,7 +86,7 @@ bool CResourceManager::DeleteSpritePtr(const Types::tstring & strName)
 bool CResourceManager::AddSpriteUsePath(const Types::tstring & strPath, const Types::tstring & strName)
 {
 	//이미 존재하는 경우
-	if (m_strongSpriteTable.find(strName) != m_strongSpriteTable.end())
+	if (m_StrongSpriteTable.find(strName) != m_StrongSpriteTable.end())
 		return false;
 
 	StrongSpritePtr pSprite = StrongSpritePtr(new CSprite);
@@ -96,7 +94,7 @@ bool CResourceManager::AddSpriteUsePath(const Types::tstring & strPath, const Ty
 	if(!pSprite->Init(strPath))
 		return false;
 	
-	m_strongSpriteTable.insert(std::make_pair(strName, pSprite));
+	m_StrongSpriteTable.insert(std::make_pair(strName, pSprite));
 
 	return true;
 

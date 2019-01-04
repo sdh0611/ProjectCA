@@ -4,21 +4,20 @@
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\Actor\CObjectManager.h"
 
+
 CScene::CScene(Types::SceneType type):
 	m_SceneType(type)
 {
-
 }
 
 CScene::~CScene()
 {
 	if(!m_LayerList.empty())
-		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-			SAFE_DELETE((*m_it))
+		for (auto it = m_LayerList.begin(); it != m_LayerList.end(); ++it) {
+			SAFE_DELETE((*it))
 		}
 
 	m_LayerList.clear();
-	//CCameraManager::GetInstance()->Clear();
 	m_EntityPtrList.clear();
 	CObjectManager::GetInstance()->Clear();
 }
@@ -44,21 +43,23 @@ bool CScene::Init()
 void CScene::Update(double dDeltaTime)
 {
 	if (!m_LayerList.empty())
-		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it) {
-			(*m_it)->Update(dDeltaTime);
-
+	{
+		for (const auto& layer : m_LayerList)
+		{
+			layer->Update(dDeltaTime);
 		}
-
+	}
 }
 
 void CScene::Render(const HDC& hDC)
 {
 	if (!m_LayerList.empty())
-		for (m_it = m_LayerList.begin(); m_it != m_LayerList.end(); ++m_it)
+	{
+		for (const auto& layer : m_LayerList)
 		{
-			(*m_it)->Render(hDC);
+			layer->Render(hDC);
 		}
-
+	}
 }
 
 //CLayer 클래스의 friend 메소드.
@@ -79,34 +80,43 @@ bool CScene::CreateLayer(const TSTRING & strTag, int order)
 
 bool CScene::DeleteLayer(const TSTRING & strTag)
 {
-	if (!FindLayer(strTag))
-		return false;
-
-	SAFE_DELETE((*m_it));
-	m_LayerList.erase(m_it);
-
-	return true;
+	for (auto it = m_LayerList.cbegin(); it != m_LayerList.cend(); ++it)
+	{
+		if((*it)->GetLayerTag() == strTag)
+		{
+			m_LayerList.erase(it);
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 CLayer * CScene::FindLayer(const TSTRING & strTag)
 {
-	for (const auto& layer : m_LayerList) {
+	for (const auto& layer : m_LayerList)
+	{
 		if (!layer->GetLayerTag().compare(strTag))
+		{
 			return layer;
+		}
 	}
 
 	return nullptr;
 }
 
+//Entity는 생성되어 Scene에 넣어질 시 Default Layer로 들어감.
 void CScene::AddEntityToScene(CEntity * pEntity)
 {
 	m_EntityPtrList.emplace_back(pEntity);
+	FindLayer(TEXT("Default"))->AddActor(FindEntityFromScene(pEntity->GetEntityID()).lock());
 }
 
+//Entity는 생성되어 Scene에 넣어질 시 Default Layer로 들어감.
 void CScene::AddEntityToScene(std::shared_ptr<CEntity> pEntity)
 {
-	FindLayer(TEXT("Default"))->AddActor(pEntity);
 	m_EntityPtrList.push_back(pEntity);
+	FindLayer(TEXT("Default"))->AddActor(pEntity);
 }
 
 WeakEntityPtr CScene::FindEntityFromScene(CEntity * pEntity)
@@ -212,18 +222,11 @@ bool CScene::DeleteEntityFromScene(UINT entityID)
 //해당 Scene을 리셋할 때 호출하는 메소드.
 void CScene::ResetScene()
 {
-	////Reset키 검사
-	//if (KEY_DOWN(VK_BACK)) {
-
-	//	Init();
-	//}	
-
 	for (const auto& actor : m_EntityPtrList) {
 		actor->Init();
 	}
 
 	CCameraManager::GetInstance()->ResetCameraList();
-	
 }
 
 //LayerOrder가 클수록 먼저 출력됨.

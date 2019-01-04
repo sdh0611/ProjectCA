@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "Collider.h"
 
+//NOTE : Collider를 상속받는 Component.
+//			Box형태의 Collider
 
 class ColliderBox : public Collider {
 	

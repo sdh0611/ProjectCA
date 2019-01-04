@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "CPickup.h"
 
+//NOTE: CPickup을 상속받아 작성한 Pickup Class
+//			Player가 습득하게 될 경우 FireMario가 됨.
 
 class CFlower : public CPickup {
 

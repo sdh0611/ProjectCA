@@ -19,12 +19,6 @@ class CResourceManager : public Singleton<CResourceManager> {
 	DECLARE_SINGLETON(CResourceManager)
 
 public:
-
-
-
-public:
-	//const Types::tstring& FindPath(const Types::tstring& path);
-	//bool AddPath(const Types::tstring& pathTag, const Types::tstring& path);
 	bool Init();
 	
 
@@ -49,10 +43,7 @@ private:
 
 
 private:
-	typedef std::unordered_map<Types::tstring, std::list<Types::tstring>>	ResourcePathTable;
-	ResourcePathTable				m_pathTable;	
-
-	typedef std::unordered_map<Types::tstring, StrongSpritePtr> StrongSpritePtrTable;
-	StrongSpritePtrTable				m_strongSpriteTable;
+	typedef std::unordered_map<TSTRING, StrongSpritePtr> StrongSpritePtrTable;
+	StrongSpritePtrTable				m_StrongSpriteTable;
 
 };

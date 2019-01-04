@@ -31,23 +31,28 @@ bool RenderComponent::PostInit(CEntity * pOwner, const TSTRING & strTag)
 	//m_bBlending					= false;
 	m_RenderMode				= RENDER_DEFAULT;
 	m_strComponentTag			= strTag;
+	//더블 버퍼링에서 BackDC에 그려넣기 위한 BackDC에 대한 CompatibleDC를 BackBuffer로부터 할당받음.
 	m_hRenderDC					= BackBuffer::GetInstance()->AllocationCompatibleDC();
 	if (m_hRenderDC == NULL)
 		return false;
+	//Blending을 위한 DC. BackBuffer로부터 BackDC에 대한 CompatibleDC를 할당받는다.
 	m_hBlendingDC				= BackBuffer::GetInstance()->AllocationCompatibleDC();
 	if (m_hBlendingDC == NULL)
 		return false;
 
-	m_BlendFunction.BlendOp = AC_SRC_OVER;
-	m_BlendFunction.BlendFlags = 0;
-	m_BlendFunction.AlphaFormat = 0;
-	m_BlendFunction.SourceConstantAlpha = 127;
+	m_BlendFunction.BlendOp					= AC_SRC_OVER;
+	m_BlendFunction.BlendFlags				= 0;
+	m_BlendFunction.AlphaFormat				= 0;
+	m_BlendFunction.SourceConstantAlpha	= 127;
 
 	m_bActive						= true;
+	//처음 초기화할 때는 기본적인 이미지의 크기값인 SPRITE_WIDTH, SPRITE_HEGITH로 각각 초기화
 	m_iDrawWidth					= SPRITE_WIDTH;
 	m_iDrawHeight					= SPRITE_HEIGHT;
+	//그림을 그릴 때 너비, 높이 각각의 확대비율. 기본값은 1.0
 	m_fWidthExpansionRatio		= 1.f;
 	m_fHeightExpansionRatio	= 1.f;
+	//Pivot 비율은 기본값으로 각각 0으로 초기화
 	SetPivotRatio(0.f, 0.f);
 	//LateUpdate();
 
@@ -67,6 +72,7 @@ void RenderComponent::Update(double dDeltaTime)
 	{
 		switch (m_RenderMode)
 		{
+			//FADE_OUT일 경우 Alpha값을 일정 비율만큼 계속 줄임.
 		case RenderMode::RENDER_FADE_OUT:
 			if (m_BlendFunction.SourceConstantAlpha > 0)
 			{
@@ -74,10 +80,12 @@ void RenderComponent::Update(double dDeltaTime)
 			}
 			else
 			{
+				//Alpha값이 0이면 보이지 않는 경우이므로 비활성화 시킴.
 				m_BlendFunction.SourceConstantAlpha = 0;
 				SetActive(false);
 			}
 			break;
+			//FADE_IN일 경우 Alpha값을 일정 비율만큼 계속 늘림.
 		case RenderMode::RENDER_FADE_IN:
 			if (m_BlendFunction.SourceConstantAlpha < 255)
 			{
@@ -101,11 +109,6 @@ void RenderComponent::LateUpdate()
 	m_DrawPivot.x = position.x - m_iDrawWidth * m_fWidthPivotRatio;
 	m_DrawPivot.y = position.y - m_iDrawHeight * m_fHeightPivotRatio;
 }
-
-//void RenderComponent::SetBlending(bool bBlending)
-//{
-//	m_bBlending = bBlending;
-//}
 
 void RenderComponent::SetRenderMode(RenderMode mode)
 {
@@ -161,13 +164,12 @@ void RenderComponent::SetExpansionRatio(float fRatio)
 
 void RenderComponent::SetWidthPivotRatio(float fRatio)
 {
+	//Pivot의 값은 0~1사이여야만 한다.
 	if (fRatio < 0.f || fRatio > 1.f)
 		return;
 
 	m_fWidthPivotRatio = fRatio;
-	//m_DrawPivot.x -= (m_iDrawWidth * fRatio);
 	m_DrawPivot.x = m_pOwner->GetEntityPosition().x - m_iDrawWidth * fRatio;
-
 }
 
 void RenderComponent::SetHeightPivotRatio(float fRatio)
@@ -200,11 +202,6 @@ void RenderComponent::MovePivot(float fx, float fy)
 	m_DrawPivot.y -= fy;
 }
 
-//bool RenderComponent::IsBlending() const
-//{
-//	return m_bBlending;
-//}
-
 const POSITION & RenderComponent::GetDrawPivot() const
 {
 	return m_DrawPivot;
@@ -212,7 +209,6 @@ const POSITION & RenderComponent::GetDrawPivot() const
 
 void RenderComponent::SwitchBlending()
 {
-	//m_bBlending = !m_bBlending;
 	if (m_RenderMode == RenderMode::RENDER_DEFAULT)
 	{
 		m_RenderMode = RenderMode::RENDER_BLEND;

@@ -3,6 +3,7 @@
 #include "..\..\stdafx.h"
 #include "..\Singleton.hpp"
 
+//NOTE: Game 내의 Score를 관리하기 위한 Manager Class
 
 class CScoreManager : public Singleton<CScoreManager> {
 

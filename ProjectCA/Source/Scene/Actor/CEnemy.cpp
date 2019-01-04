@@ -21,17 +21,8 @@ CEnemy::~CEnemy()
 {
 }
 
-//bool CEnemy::Init(const Types::ActorData &)
-//{
-//
-//
-//
-//	return true;
-//}
-
 bool CEnemy::PostInit(const Types::ActorData& data, CGameScene* pScene)
 {
-	m_fDamage			= 0.f;
 	m_dTimeElapsed	= 0.f;
 
 	return CActor::PostInit(data ,pScene);
@@ -71,6 +62,9 @@ void CEnemy::Render(const HDC & hDC)
 
 }
 
+//Player를 중심으로 한 일정 범위 내에 Enemy가 있는지 판단.
+//만약 범위 밖인 경우 비활성화
+//범위 안으로 들어오면 Init()후 활성화
 void CEnemy::LateUpdate()
 {
 	CObject::LateUpdate();
@@ -81,21 +75,18 @@ void CEnemy::LateUpdate()
 		UINT cameraHeight = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight();
 		POSITION cameraPosition = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraPosition();
 		POSITION position = GetObjectPosition();
-
-
+		
 		if (IsActive())
 		{
 			if (position.x <  cameraPosition.x - cameraWidth
 				|| position.x > cameraPosition.x + 2 * cameraWidth)
 			{
-				puts("InActive");
 				SetActive(false);
 				return;
 			}
 			else if (position.y < cameraPosition.y - cameraHeight
 				|| position.y > cameraPosition.y + 2 * cameraHeight)
 			{
-				puts("InActive");
 				SetActive(false);
 				SetObjectState(Types::OS_DEAD);
 				return;
@@ -109,7 +100,6 @@ void CEnemy::LateUpdate()
 			if (position.x > cameraPosition.x - cameraWidth
 				&& position.x < cameraPosition.x + 2 * cameraWidth)
 			{
-				puts("Active");
 				Init();
 				SetActive(true);
 			}

@@ -88,16 +88,13 @@ void CGround::LateUpdate()
 		if (position.x + m_iEntityWidth <  cameraPosition.x - cameraWidth
 			|| position.x > cameraPosition.x + 2 * cameraWidth)
 		{
-			puts("InActive");
 			SetActive(false);
 			return;
 		}
 		else if (position.y < cameraPosition.y - cameraHeight
 			|| position.y + m_iEntityHeight > cameraPosition.y + 2 * cameraHeight)
 		{
-			puts("InActive");
 			SetActive(false);
-			//SetObjectState(Types::OS_DEAD);
 			return;
 		}
 	}
@@ -109,8 +106,6 @@ void CGround::LateUpdate()
 		if (position.x + m_iEntityWidth > cameraPosition.x - cameraWidth
 			&& position.x < cameraPosition.x + 2 * cameraWidth)
 		{
-			puts("Active");
-			//Init();
 			SetActive(true);
 		}
 	}

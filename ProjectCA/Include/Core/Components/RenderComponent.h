@@ -4,6 +4,8 @@
 #include "..\..\..\stdafx.h"
 #include "ComponentBase.h"
 
+//NOTE: Rendering을 담당하는 컴포넌트.
+//			Rendering을 위한 좌표값을 따로 가지고 있음.
 
 class RenderComponent : public ComponentBase {
 
@@ -26,7 +28,6 @@ public:
 
 
 public:
-	//void SetBlending(bool bBlending);
 	void SetRenderMode(RenderMode mode);
 	void SetDrawWidth(UINT iWidth);
 	void SetDrawHeight(UINT iHeight);
@@ -43,7 +44,6 @@ public:
 
 
 public:
-	//bool					IsBlending() const;
 	const POSITION& GetDrawPivot() const;
 	
 
@@ -52,7 +52,6 @@ public:
 
 
 protected:
-	//bool						m_bBlending;
 	RenderMode			m_RenderMode;
 	HDC						m_hRenderDC;		//Backbuffer의 m_hMemDC에 대한 Compatible DC
 	HDC						m_hBlendingDC;	//Backbuffer의 m_hBlendingDC에 대한 Compatible DC

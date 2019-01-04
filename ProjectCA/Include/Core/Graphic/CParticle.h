@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\Scene\CEntity.h"
 
+//NOTE: Particle들이 상속받게 되는 추상 클래스
+
 class CScene;
 
 class CParticle : public CEntity

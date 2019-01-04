@@ -8,13 +8,6 @@ InputComponent::InputComponent()
 
 }
 
-//void InputComponent::Init()
-//{
-//	//m_pOwner = owner;
-//
-//
-//}
-
 bool InputComponent::PostInit(CEntity* pOwner, const Types::tstring & strTag)
 {
 	m_pOwner = pOwner;

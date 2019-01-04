@@ -3,7 +3,6 @@
 /*
 	NOTE:
 		Scene들의 생성, 교체, 파괴를 담당하는 Manager Class.
-		Rumtime에서 Instance는 2개 이상은 필요 없으므로 Singleton으로 작성 
 */
 
 

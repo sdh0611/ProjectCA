@@ -1,8 +1,10 @@
 #pragma once
 
-
 #include "..\..\..\stdafx.h"
 #include "..\..\Singleton.hpp"
+
+//NOTE: 프로그램의 Sound를 총괄하는 Manager Class.
+//			FMOD 사용
 
 
 class CSoundManager : public Singleton<CSoundManager>

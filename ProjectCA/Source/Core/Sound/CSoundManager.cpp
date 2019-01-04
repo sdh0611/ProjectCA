@@ -339,6 +339,11 @@ bool CSoundManager::LoadBGM()
 		return false;
 	}
 
+	if (!LoadSound("./Resources/Sound/BGM/smw_athletic.mp3", TEXT("BGMAthletic"), SOUND_BGM, FMOD_LOOP_NORMAL))
+	{
+		return false;
+	}
+
 	if (!LoadSound("./Resources/Sound/BGM/smw_overworld.mp3", TEXT("BGMOverworld"), SOUND_BGM, FMOD_LOOP_NORMAL))
 	{
 		return false;

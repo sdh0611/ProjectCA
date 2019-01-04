@@ -4,6 +4,8 @@
 #include "..\..\..\stdafx.h"
 #include "CActor.h"
 
+//NOTE: FireMario가 공격할 때 나오는 불꽃을 구현한 Class
+//			Player객체가 관리함.
 
 class CFireball : public CActor {
 

@@ -59,8 +59,10 @@ bool CGameScene::Init()
 	{
 		return false;
 	}
+	m_pObjectManager = CObjectManager::GetInstance();
 
-	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
+	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
+	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMAthletic"));
 
 	CInputManager::GetInstance()->SetKeyCheckMode(VK_UP, false);
 	CInputManager::GetInstance()->SetKeyCheckMode(VK_DOWN, false);
@@ -102,9 +104,6 @@ bool CGameScene::Init()
 	if (!BuildWorld())
 		return false;
 
-	//CSoundManager::GetInstance()->StopChannel(CSoundManager::SoundType::SOUND_BGM);
-
-	//For test
 	m_bClear				= false;
 	m_iCurScore			= m_pScoreManager->GetScore();
 	m_iCoinCount		= m_pScoreManager->GetCoinCount();
@@ -123,7 +122,7 @@ void CGameScene::Update(double dDeltaTime)
 		CheckGarbage();
 		if (m_pPlayer.lock()->IsActive())
 		{
-			//1. 입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
+			//입력에 따른 동작 수행 후 충돌 검사 및 그에 따른 Actor들과 하위 컴포넌트 동작 Update
 			GameUpdate(dDeltaTime);
 
 			//Layer Update -> Rendering을 수행하기 전 expired된 객체가 있는지 검사
@@ -131,6 +130,7 @@ void CGameScene::Update(double dDeltaTime)
 		}
 		else
 		{
+			//Life가 아직 남아있는 경우 Life값을 감소시키고 Scene을 다시 시작함.
 			if (m_iLife > 0)
 			{
 				m_pScoreManager->DecreaseLifeCount();
@@ -138,11 +138,13 @@ void CGameScene::Update(double dDeltaTime)
 			}
 			else
 			{
+				//Life가 없는 경우 GameOver
 				CSceneManager::GetInstance()->SetReadyToChangeScene(true);
 				CSceneManager::GetInstance()->CreateNextScene(Types::ST_GAMEOVER);
 			}
 		}
 
+		//Reset키에 반응.
 		if (CInputManager::GetInstance()->IsKeyDown(TEXT("RESET")))
 		{
 			puts("reset");
@@ -156,9 +158,10 @@ void CGameScene::Update(double dDeltaTime)
 		m_dTimeElapsed += dDeltaTime;
 		if (m_dTimeElapsed > 2.f && m_dTimeElapsed < 2.1f)
 		{
+			//게임 클리어 시점에서 2초 후 사전에 생성해 두었던 UIClear Layer에 있는 UI객체들을 보이게끔 설정함.
 			FindLayer(TEXT("UIClear"))->SetVisible(true);
 		}
-
+		//게임 클리어 시점에서 3초 후 점수 계산.
 		if (m_dTimeElapsed > 3.f)
 		{
 			if (m_iTimeScore > 0)
@@ -186,25 +189,12 @@ void CGameScene::Update(double dDeltaTime)
 	}
 }
 
-void CGameScene::Render(const HDC& hDC)
-{
-	//Layer객체가 관리하는 Actor들을 Rendering
-	CScene::Render(hDC);
-
-}
-
 void CGameScene::SetIsGameClear()
 {
 	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMCastleClear"));
 	m_iTimeScore	= m_iRemainTime * 50;
 	m_bClear			= true;
 	m_dTimeElapsed = 0.f;
-	
-	//FindLayer(TEXT("Background"))->FadeOut();
-	//for (const auto& layer : m_LayerList)
-	//{
-	//	layer->FadeOut();
-	//}
 }
 
 std::weak_ptr<CPlayer> CGameScene::GetPlayerPtr()
@@ -404,6 +394,7 @@ bool CGameScene::BuildUI()
 		AddEntityToScene(pFont);
 		FindLayer(TEXT("UIClear"))->AddActor(pFont);
 
+		//클리어 시간 값 출력
 		pNumberInterface = m_pObjectManager->CreateEntity<CNumberInterface>(SPRITE_WIDTH * 0.5f, SPRITE_HEIGHT * 0.5f, MAX_WIDTH * 0.63f, MAX_HEIGHT * 0.425f, TEXT("NumberTime"), this);
 		if (pNumberInterface == nullptr)
 			return false;
@@ -424,7 +415,9 @@ bool CGameScene::BuildWorld()
 	//Ground생성
 	{
 		if (!CreateLayer(TEXT("Ground"), 10))
+		{
 			return false;
+		}
 
 		auto pGround = m_pObjectManager->CreateObject<CGround>(25, 14, 600.f, 250.f, Types::OT_GROUND, TEXT("Ground"), this);
 		if (pGround == nullptr)
@@ -432,11 +425,13 @@ bool CGameScene::BuildWorld()
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
+
 		pGround = m_pObjectManager->CreateObject<CGround>(20, 30, -768.f, -120.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
+
 
 		pGround = m_pObjectManager->CreateObject<CGround>(70, 8, -128.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
@@ -444,13 +439,13 @@ bool CGameScene::BuildWorld()
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
 
+
 		pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 2290.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
 			return false;
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
-			
-
+		
 
 		pGround = m_pObjectManager->CreateObject<CGround>(2, 8, 2440.f, 600.f, Types::OT_PROB, TEXT("Ground"), this);
 		if (pGround == nullptr)
@@ -464,27 +459,6 @@ bool CGameScene::BuildWorld()
 			return false;
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		//pGround = m_pObjectManager->CreateObject<CGround>(6, 2, 3148.f, 452.f, Types::OT_PROB, TEXT("Ground"), this);
-		//if (pGround == nullptr)
-		//	return false;
-		//AddEntityToScene(pGround);
-		//FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		//pGround = m_pObjectManager->CreateObject<CGround>(4, 2, 3212.f, 388.f, Types::OT_PROB, TEXT("Ground"), this);
-		//if (pGround == nullptr)
-		//	return false;
-		//AddEntityToScene(pGround);
-		//FindLayer(TEXT("Ground"))->AddActor(pGround);
-
-
-		//pGround = m_pObjectManager->CreateObject<CGround>(2, 2, 3276.f, 324.f, Types::OT_PROB, TEXT("Ground"), this);
-		//if (pGround == nullptr)
-		//	return false;
-		//AddEntityToScene(pGround);
-		//FindLayer(TEXT("Ground"))->AddActor(pGround);
 
 
 		pGround = m_pObjectManager->CreateObject<CGround>(15, 8, 3776.f, 444.f, Types::OT_PROB, TEXT("Ground"), this);
@@ -507,13 +481,6 @@ bool CGameScene::BuildWorld()
 		AddEntityToScene(pGround);
 		FindLayer(TEXT("Ground"))->AddActor(pGround);
 		
-
-		//pGround = m_pObjectManager->CreateObject<CGround>(10, 8, 7400.f, 500.f, Types::OT_GROUND, TEXT("Ground"), this);
-		//if (pGround == nullptr)
-		//	return false;
-		//AddEntityToScene(pGround);
-		//FindLayer(TEXT("Ground"))->AddActor(pGround);
-
 	}
 
 
@@ -626,7 +593,9 @@ bool CGameScene::BuildWorld()
 	//Enemy 생성
 	{
 		if (!CreateLayer(TEXT("Enemy"), 4))
+		{
 			return false;
+		}
 
 		std::shared_ptr<CEnemy> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 250.f, 250.f, Types::OT_ENEMY,
 			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
@@ -735,7 +704,9 @@ bool CGameScene::BuildWorld()
 	//Block 생성
 	{
 		if (!CreateLayer(TEXT("Block"), 8))
+		{
 			return false;
+		}
 
 		//Pickup block
 		{
@@ -754,22 +725,6 @@ bool CGameScene::BuildWorld()
 			pBlock->SetStoredPickup(pPickup);
 			AddEntityToScene(pBlock);
 			FindLayer(TEXT("Block"))->AddActor(pBlock);
-
-
-			//pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 460.f, 300.f, Types::OT_BLOCK, TEXT("Block"), this);
-			//if (pBlock == nullptr)
-			//	return false;
-			////Block에 저장시켜놓을 Pickup 생성
-			//pPickup = m_pObjectManager->CreateActor<CFlower>(SPRITE_WIDTH, SPRITE_HEIGHT,
-			//	pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Flower"), this);
-			//FindLayer(TEXT("Pickup"))->AddActor(pPickup);
-			//AddEntityToScene(pPickup);
-			//if (pPickup == nullptr)
-			//	return false;
-			////Pickup set
-			//pBlock->SetStoredPickup(pPickup);
-			//AddEntityToScene(pBlock);
-			//FindLayer(TEXT("Block"))->AddActor(pBlock);
 
 
 			pBlock = m_pObjectManager->CreateObject<CPickupBlock>(SPRITE_WIDTH*1.2, SPRITE_HEIGHT*1.2, 150.f, 450.f, Types::OT_BLOCK, TEXT("Block"), this);
@@ -975,13 +930,6 @@ bool CGameScene::BuildWorld()
 		FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 
-		//pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1200.f, 250.f, Types::OT_PROB, TEXT("PIPE"), this);
-		//if (pProb == nullptr)
-		//	return false;
-		//AddEntityToScene(pProb);
-		//FindLayer(TEXT("Prob"))->AddActor(pProb);
-
-
 		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1300.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
 		if (pProb == nullptr)
 			return false;
@@ -1051,7 +999,7 @@ bool CGameScene::BuildWorld()
 		if (!CreateLayer(TEXT("Background"), 99))
 			return false;
 
-		auto pBack = m_pObjectManager->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, Types::OT_BACKGROUND, TEXT("Background"), this);
+		auto pBack = m_pObjectManager->CreateEntity<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0.f, 0.f, TEXT("Background"), this);
 		if (pBack == nullptr)
 			return false;
 		pBack->SetBackgroundImage(TEXT("BackgroundMountain2"));
@@ -1080,11 +1028,11 @@ void CGameScene::GameUpdate(double dDeltaTime)
 				m_pPlayer.lock()->SetPlayerDead();
 			}
 		}
-		m_iCurScore = m_pScoreManager->GetScore();
+		m_iCurScore		= m_pScoreManager->GetScore();
 		m_iCoinCount	= m_pScoreManager->GetCoinCount();
 		m_iLife			= m_pScoreManager->GetLifeCount();
 
-		//Actor Update
+		//Scene내의 Entity Update
 		for (const auto& entity : m_EntityPtrList) {
 			if (entity->IsActive())
 			{
@@ -1112,7 +1060,8 @@ void CGameScene::GameUpdate(double dDeltaTime)
 
 void CGameScene::ResetScene()
 {
-	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
+	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
+	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMAthletic"));
 	m_bClear				= false;
 	m_iRemainTime	= 999;
 	m_dTimeElapsed	= 0.f;

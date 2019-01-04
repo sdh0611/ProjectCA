@@ -3,6 +3,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\CObject.h"
 
+//NOTE: 게임 내 Ground, Block 등 물체들이 상속받게 될 Class
 
 class CProb : public CObject {
 
@@ -13,9 +14,7 @@ public:
 
 public:
 	virtual bool PostInit(const OBJECT_DATA&, CScene*) override;
-	//virtual void Init() override;
 	virtual void Update(double dDeltaTime) override;
-	//virtual void Render(const HDC& hDC) override;
 
 
 };

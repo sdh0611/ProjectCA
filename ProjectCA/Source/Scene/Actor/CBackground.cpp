@@ -21,9 +21,9 @@ CBackground::~CBackground()
 {
 }
 
-bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
+bool CBackground::PostInit(const ENTITY_DATA& data, CScene * pScene)
 {
-	if (!CObject::PostInit(data, pScene))
+	if (!CEntity::PostInit(data, pScene))
 	{
 		return false;
 	}
@@ -38,11 +38,6 @@ bool CBackground::PostInit(const Types::ObjectData & data, CScene * pScene)
 	m_fScrollSpeed = 100.f;
 
 	return true;;
-}
-
-void CBackground::Init()
-{
-	CObject::Init();
 }
 
 void CBackground::Update(double dDeltaTIme)
@@ -74,7 +69,7 @@ void CBackground::Render(const HDC & hDC)
 	else
 	{
 		UINT iCameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
-		POSITION position = GetObjectPosition();
+		POSITION position = GetEntityPosition();
 		//카메라 좌측 맵출력
 		pRender->Draw(hDC, POSITION(position.x - m_iEntityWidth, position.y));
 		//카메라 출력부분
@@ -96,7 +91,6 @@ void CBackground::Render(const HDC & hDC)
 
 bool CBackground::SetBackgroundImage(const TSTRING & strImageName)
 {
-
 	if (!GetComponent<ImageRender>().lock()->SetSprite(strImageName))
 	{
 		return false;

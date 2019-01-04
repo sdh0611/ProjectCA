@@ -62,7 +62,7 @@ bool CGameOverScene::Init()
 			return false;
 		}
 
-		//Pointer
+		//Menu¿¡¼­ ¾µ Pointer
 		auto pInterface = pObjMgr->CreateEntity<CInterface>(SPRITE_WIDTH * 2, SPRITE_HEIGHT * 2, 0, 0, TEXT("Pointer"), this);
 		if (pInterface == nullptr)
 		{

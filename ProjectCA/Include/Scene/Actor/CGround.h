@@ -3,8 +3,10 @@
 #include "..\..\..\stdafx.h"
 #include "CProb.h"
 
+//NOTE: Ground를 구현한 Class.
+//			타일의 집합체로 이루어져있으며, ObjectType(Ground, Prob)에 따라 타일값이 조금 달라짐
+//			생성할 때는 Width와 Height값이 각각 타일의 개수여야 함.
 class CSprite;
-
 
 class CGround : public CProb {
 	enum GroundInfo { 

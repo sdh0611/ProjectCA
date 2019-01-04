@@ -22,14 +22,12 @@ CKoopa::CKoopa()
 
 CKoopa::~CKoopa()
 {
-	puts("Koopa Destroy");
 }
 
 bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
-	puts("KoopaInit");
 	//기본 Actor의 속성 초기화
-	if (!CActor::PostInit(data, pScene))
+	if (!CEnemy::PostInit(data, pScene))
 		return false;
 
 	//PhysicsComponent 초기화
@@ -191,11 +189,6 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			case Types::OT_PICKABLE:
 				if (static_cast<CActor*>(pOther)->GetActorAct() == Types::ACT_ATTACK)
 				{
-					//SetObjectState(Types::OS_DEAD);
-					//GetComponent<ColliderBox>().lock()->SetActive(false);
-					//pPhysics->SetCurJumpForce(300.f);
-					//pPhysics->SetGrounded(false);
-					//CScoreManager::GetInstance()->IncreaseScore(200);
 					HandlingEvent(Types::EVENT_DEAD);
 				}
 				else
@@ -213,24 +206,8 @@ bool CKoopa::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				break;
 			}
 		}
-		//else
-		//{
-		//	if (pOther->GetObjectType() == Types::OT_ENEMY)
-		//	{
-		//		SetObjectState(Types::OS_DEAD);
-		//		GetComponent<ColliderBox>().lock()->SetActive(false);
-		//		pPhysics->SetCurJumpForce(300.f);
-		//		pPhysics->SetGrounded(false);
-		//		CScoreManager::GetInstance()->IncreaseScore(200);
-		//	}
-
-		//}
-
 	};
-
 	pCollider->SetDelegate(onCollisionDelegater);
-	//pCollider->SetSize(m_iEntityWidth*0.45, m_iEntityHeight*0.8);
-
 	if (!AddComponent(pCollider, pCollider->GetComponentTag()))
 		return false;
 
@@ -272,14 +249,6 @@ void CKoopa::Init()
 	GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaNormal"), TEXT("WalkLeft"));
 }
 
-void CKoopa::Update(double dDeltaTime)
-{
-	if (m_bActive)
-	{
-		CEnemy::Update(dDeltaTime);
-	}
-}
-
 void CKoopa::Render(const HDC & hDC)
 {
 	auto pRender = GetComponent<AnimationRender>().lock();
@@ -293,18 +262,11 @@ CKoopa::KoopaState CKoopa::GetKoopaState()
 	return m_KoopaState;
 }
 
-void CKoopa::ChangeAnimationClip()
-{
-
-
-}
-
 void CKoopa::ActorBehavior(double dDeltaTime)
 {
-	auto pPhysics = GetComponent<PhysicsComponent>().lock();
-	auto pTransform = GetTransform().lock();
-	auto pRender = GetComponent<AnimationRender>().lock();
-	//float fSpeed = 0.f;
+	auto pPhysics		= GetComponent<PhysicsComponent>().lock();
+	auto pTransform	= GetTransform().lock();
+	auto pRender		= GetComponent<AnimationRender>().lock();
 
 	switch (m_ObjectState)
 	{
@@ -349,17 +311,14 @@ void CKoopa::ActorBehavior(double dDeltaTime)
 		}
 		else
 		{
-			//fSpeed = pPhysics->GetMaxSpeed();
 			if (pPhysics->GetCurSpeed() != 0.f)
 			{
 				if (m_Direction == Types::DIR_LEFT)
 				{
-					//pPhysics->SetCurSpeed(-1 * fSpeed);
 					pRender->ChangeAnimation(TEXT("ThrownLeft"));
 				}
 				else if (m_Direction == Types::DIR_RIGHT)
 				{
-					//pPhysics->SetCurSpeed(fSpeed);
 					pRender->ChangeAnimation(TEXT("ThrownRight"));
 				}
 			}
@@ -382,7 +341,6 @@ void CKoopa::DeadProcess(double dDeltaTime)
 {
 	if (GetComponent<AnimationRender>().lock()->IsCurAnimationEnd())
 	{
-		puts("Inactive");
 		CScoreManager::GetInstance()->IncreaseScore(200);
 		SetActive(false);
 	}
@@ -401,7 +359,6 @@ void CKoopa::HandlingEvent(EVENT_TYPE type)
 		{
 			m_KoopaState = KOOPA_SHELL;
 			m_ObjectType = Types::OT_PICKABLE;
-			//SetObjectState(Types::OS_DAMAGED);
 			GetComponent<ColliderBox>().lock()->SetCurRectHeight(GetComponent<ColliderBox>().lock()->GetHeight() / 2.f);
 			pPhysics->SetCurSpeed(0.f);
 			GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("KoopaShell"), TEXT("ShellIdle"));
@@ -438,6 +395,7 @@ void CKoopa::HandlingEvent(EVENT_TYPE type)
 	case Types::EVENT_DEAD:
 		SetObjectState(Types::OS_DEAD);
 		GetComponent<ColliderBox>().lock()->SetActive(false);
+		pPhysics->SetCurSpeed(0.f);
 		pPhysics->SetCurJumpForce(300.f);
 		pPhysics->SetGrounded(false);
 		CScoreManager::GetInstance()->IncreaseScore(200);

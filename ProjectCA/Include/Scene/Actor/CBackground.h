@@ -1,12 +1,15 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "..\CObject.h"
+#include "..\CEntity.h"
+
+//NOTE: 배경을 그리는 기능들을 구현한 Class.
+//			MainCamera의 이동속도에 맞춰 스크롤함.
 
 class CSprite;
 class CScene;
 
-class CBackground : public CObject {
+class CBackground : public CEntity {
 
 public:
 	CBackground();
@@ -14,8 +17,7 @@ public:
 
 
 public:
-	virtual bool PostInit(const Types::ObjectData& data, CScene* pScene);
-	virtual void Init() override;
+	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene);
 	virtual void Update(double dDeltaTIme) override;
 	virtual void Render(const HDC& hDC) override;
 
@@ -32,8 +34,6 @@ public:
 private:
 	bool							m_bStatic;						//움직이는 배경인가 멈춰있는 배경인가
 	float							m_fScrollSpeed;
-	//COLORREF					m_ColorRef;
-	//std::weak_ptr<CSprite>	m_pBackgroundImage;
 	UINT							m_iBackgroundWidth;
 	UINT							m_iBackgroundHeight;
 

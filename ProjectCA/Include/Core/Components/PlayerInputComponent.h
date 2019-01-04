@@ -3,9 +3,7 @@
 #include "..\..\..\stdafx.h"
 #include "InputComponent.h"
 
-//TODO :	 InputManager와 연동해서 조작키 변경할 수 있게끔 만들자.
-
-
+//NOTE: 입력에 따른 Player의 움직임을 결정하기 위한 Component
 
 class PlayerInputComponent : public InputComponent {
 
@@ -22,7 +20,6 @@ public:
 
 
 private:
-	//void UpdateKeyDown();
 	void KeyProcess();
 
 

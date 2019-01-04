@@ -4,6 +4,8 @@
 #include "..\Components\ComponentBase.h"
 
 
+//NOTE: 물체의 물리적인 움직임을 담당하는 Component
+
 class PhysicsComponent :public ComponentBase {
 
 

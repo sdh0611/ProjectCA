@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "CEnemy.h"
 
+//NOTE: CEnemy를 상속받아 작성한 클래스.
+//			Goomba를 구현함.
 
 class CGoomba : public CEnemy
 {

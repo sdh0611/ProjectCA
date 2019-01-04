@@ -1,8 +1,7 @@
 #pragma once
 
 /*
-	NOTE:
-		게임 내 전반적인 입력처리를 담당하는 Manager Class
+	NOTE: 게임 내 전반적인 입력처리를 담당하는 Manager Class
 
 */
 
@@ -14,6 +13,7 @@ class CInputManager : public Singleton<CInputManager> {
 
 	DECLARE_SINGLETON(CInputManager)
 
+	//InputManager 내에서 입력들의 관리를 위해 사용하게 될 내부 구조체.
 	struct InputInfo {
 		InputInfo(const TSTRING& strInputname, SHORT iInputCode, bool bCheckOnce = false, bool bPressed = false)
 			:m_strInputName(strInputname), m_iInputCode(iInputCode), 
@@ -87,6 +87,7 @@ private:
 
 
 private:
+	//마우스에 대한 입력과 키보드에 대한 입력을 따로 관리한다.
 	std::vector<InputInfo> m_KeyInputList;
 	std::vector<InputInfo> m_MouseInputList;
 

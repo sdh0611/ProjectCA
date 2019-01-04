@@ -3,13 +3,15 @@
 #include "..\..\..\stdafx.h"
 #include "CActor.h"
 
-
+//NOTE: 게임 내 Pickup들이 상속받게 될 추상클래스.
+//			PickupType을 내부 변수 값으로 갖고 있고, 
+//			각각 습득했을 때 얻게되는 점수 값이 있음.
 
 class CPickup : public CActor 
 {
 public:
 	enum PickupType {
-		PT_MUSHROOM_RED, PT_MUSHROOM_GREEN, PT_FLOWER, PT_COIN
+		PT_MUSHROOM_RED, PT_FLOWER, PT_COIN
 	};
 
 

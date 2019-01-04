@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "CRandomBlock.h"
 
+//NOTE: CRandomBlock을 상속받은 객체.
+//			
 
 class CCoinBlock : public CRandomBlock
 {

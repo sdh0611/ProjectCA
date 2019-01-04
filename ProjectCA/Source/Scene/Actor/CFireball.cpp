@@ -45,7 +45,7 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 	auto onCollision = [&](CObject* pOther, Collider::CollisionType type, float fIntersectLength)->void {
 
 		CActor* pOtherActor = static_cast<CActor*>(pOther);
-
+		//PROB, BLOCK, GROUND의 바닥을 제외한 모든 충돌에선 InActive
 		switch (pOtherActor->GetObjectType())
 		{
 		case Types::OT_BLOCK:
@@ -58,7 +58,6 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 					break;
 				default:
 					SetFireballInactive();
-					//SetActive(false);
 					break;
 				}
 			}
@@ -71,7 +70,6 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 				break;
 			default:
 				SetFireballInactive();
-				//SetActive(false);
 				break;
 			}
 			break;
@@ -84,7 +82,6 @@ bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)
 		case Types::OT_ENEMY:
 		case Types::OT_PICKABLE:
 			SetFireballInactive();
-			//SetActive(false);
 			break;
 		}
 

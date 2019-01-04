@@ -93,7 +93,6 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	pParticle->SetActive(false);
 	m_pOwnerScene->AddEntityToScene(pParticle);
 	m_pOwnerScene->FindLayer(TEXT("Block"))->AddActor(pParticle);
-	//m_pOwnerLayer->AddActor(pParticle);
 	AddParticle(pParticle);
 
 	m_dTimeElapsed = 0.f;

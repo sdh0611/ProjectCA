@@ -3,7 +3,7 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CScene.h"
 
-
+//NOTE: TitleScene ±¸Çö
 
 class CTitleScene : public CScene 
 {
@@ -17,15 +17,6 @@ public:
 	virtual bool Init();
 	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC);
-
-
-private:
-
-
-
-
-private:
-
 
 
 };

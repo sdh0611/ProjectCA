@@ -3,6 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "ComponentBase.h"
 
+//NOTE : InputComponent들의 추상클래스
+
 class CActor;
 
 class InputComponent :public ComponentBase {

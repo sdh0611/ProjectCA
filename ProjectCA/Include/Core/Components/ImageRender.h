@@ -3,6 +3,9 @@
 #include "..\..\..\stdafx.h"
 #include "RenderComponent.h"
 
+//NOTE : RenderComponent를 상속받은 Component.
+//			애니메이션이 없는 객체들의 Rendering을 위한 기능들을 정의함.
+
 class CSprite;
 
 class ImageRender : public RenderComponent {

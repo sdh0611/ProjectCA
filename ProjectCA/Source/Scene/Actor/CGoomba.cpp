@@ -34,22 +34,6 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	if (!pAI->PostInit(this))
 		return false;
 
-	//auto enemyBehavior = [](CActor* pActor) ->void {
-
-	//	if (pActor->GetObjectPosition().x < 100.f)
-	//	{
-	//		pActor->SetActorDirection(Types::DIR_RIGHT);
-	//	}
-	//	else if (pActor->GetObjectPosition().x > 1000.f)
-	//	{
-	//		pActor->SetActorDirection(Types::DIR_LEFT);
-	//	}
-
-	//};
-	//pAI->SetDelegate(enemyBehavior);
-	//if (!AddComponent(pAI, pAI->GetComponentTag()))
-	//	return false;
-
 	//PhysicsComponent √ ±‚»≠
 	std::shared_ptr<PhysicsComponent> pPhysics = std::make_shared<PhysicsComponent>();
 	if (!pPhysics->PostInit(this, 200.f, 750.f, 1300.f, 700.f))
@@ -261,32 +245,6 @@ void CGoomba::ActorBehavior(double dDeltaTime)
 			SetActive(false);
 		}
 		break;
-	//case Types::OS_DAMAGED:
-	//	if (m_Direction == Types::DIR_LEFT)
-	//	{
-	//		if (pPhysics->GetCurSpeed() < 0.f)
-	//		{
-	//			pPhysics->AddForceX(50.f);
-	//			if (pPhysics->GetCurSpeed() > 0.f)
-	//			{
-	//				pPhysics->SetCurSpeed(0.f);
-	//			}
-	//		}
-	//		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("TurnOverLeft"));
-	//	}
-	//	else if (m_Direction == Types::DIR_RIGHT)
-	//	{
-	//		if (pPhysics->GetCurSpeed() > 0.f)
-	//		{
-	//			pPhysics->AddForceX(-50.f);
-	//			if (pPhysics->GetCurSpeed() < 0.f)
-	//			{
-	//				pPhysics->SetCurSpeed(0.f);
-	//			}
-	//		}
-	//		GetComponent<AnimationRender>().lock()->ChangeAnimation(TEXT("TurnOverRight"));
-	//	}
-	//	break;
 	default:
 		{
 			float fWalkSpeed = pPhysics->GetSpeed();

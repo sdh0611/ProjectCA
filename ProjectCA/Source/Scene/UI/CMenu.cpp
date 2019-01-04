@@ -60,10 +60,6 @@ void CMenu::Render(const HDC & hDC)
 {
 	if (m_bActive)
 	{
-		//POSITION position = GetEntityPosition();
-		//Rectangle(hDC, position.x - m_iEntityWidth * 0.5, position.y - m_iEntityHeight * 0.5f,
-		//	position.x + m_iEntityWidth * 0.5, position.y + m_iEntityHeight * 0.5);
-
 		for (const auto& button : m_ButtonList)
 		{
 			if (button->IsActive())

@@ -3,7 +3,8 @@
 #include "..\..\..\stdafx.h"
 #include "ComponentBase.h"
 
-//ColliderType에 Trigger도 추가해보자.
+//NOTE: 객체간의 충돌을 감지하기 위한 Component
+//			객체에 Collider를 추가할 경우 Collider에 충돌이 일어났을 경우 실행되는 Callback메소드를 지정해줘야함.
 
 class CObject;
 

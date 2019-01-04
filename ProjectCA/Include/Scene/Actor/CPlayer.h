@@ -3,7 +3,10 @@
 #include "..\..\..\stdafx.h"
 #include "CActor.h"
 #include "CFireball.h"
-//#include "..\..\Core\Components\PlayerInputComponent.h"
+
+//NOTE: Player객체 구현.
+//			내부적으로 3가지의 상태값을 가지고 있음.(Small, Big, Flower)
+//			Fireball객체의 생성, 관리 담당
 
 class CCamera;
 
@@ -45,10 +48,9 @@ public:
 
 
 public:
-	PlayerState	GetPlayerState();
-	bool			IsDead();
-	bool			IsRequestInterrupt();
-	bool			IsPickingObject();
+	PlayerState					GetPlayerState();
+	bool							IsRequestInterrupt();
+	bool							IsPickingObject();
 	std::weak_ptr<CObject> GetStoredPickup();
 
 

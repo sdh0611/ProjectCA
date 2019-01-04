@@ -5,7 +5,6 @@
 #include "..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\Include\Scene\Actor\CActor.h"
-//#include "..\..\Include\Core\Components\ColliderCircle.h"
 
 
 
@@ -205,12 +204,6 @@ bool CCollisionManager::BoxAndBox(ColliderBox* pCollider, ColliderBox* pOther)
 			pCollider->SetCollisionType(Collider::COLLISION_BOT);
 			pOther->SetCollisionType(Collider::COLLISION_TOP);
 		}
-		//else if (box1.bottom > box2.bottom)
-		//{
-		//	fIntersecRectHeight = box2.bottom - box1.top;
-		//	pCollider->SetCollisionType(Collider::COLLISION_TOP);
-		//	pOther->SetCollisionType(Collider::COLLISION_BOT);	
-		//}
 		else
 		{
 			fIntersecRectHeight = box2.bottom - box1.top;

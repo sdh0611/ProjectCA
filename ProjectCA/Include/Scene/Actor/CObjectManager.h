@@ -1,8 +1,7 @@
 #pragma once
 
 /*
-	NOTE:
-		Actor의 생성, 상호작용 관련 기능을 담당하는 Manager Class
+	NOTE: Entity, Object, Actor를 상속받는 객체들을 생성하기 위한 Class.
 */
 
 #include "..\..\..\stdafx.h"
@@ -24,12 +23,6 @@ class CObjectManager : public Singleton<CObjectManager> {
 public:
 	bool Init();
 
-
-public:
-//	WeakObjectPtr GetTarget(Types::ActorID id);
-//	WeakObjectPtr GetTarger(const Types::tstring& strTag);
-//	
-//
 public:
 	void Clear();
 
@@ -149,7 +142,7 @@ private:
 
 private:
 	//std::list<StrongObjectPtr>		m_strongActorPtrList;
-	static ENTITY_ID			m_LastEntityID;
+	ENTITY_ID			m_LastEntityID;
 	
 };
 

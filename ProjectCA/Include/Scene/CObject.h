@@ -3,7 +3,9 @@
 #include "..\..\stdafx.h"
 #include "CEntity.h"
 
-class ComponentBase;
+//NOTE: 게임 내의 물체들이 상속받게 될 Class.
+//			다른 Object를 소유할 수 있고, 다른 Object에 속할 수 있음.
+
 class CParticle;
 
 class CObject : public CEntity
@@ -40,6 +42,7 @@ public:
 public:
 	bool												IsActive();
 	bool												IsSubordinate();
+	bool												IsDead();
 	UINT												GetObjectWidth() const;
 	UINT												GetObjectHeight() const;
 	POSITION										GetObjectPosition();

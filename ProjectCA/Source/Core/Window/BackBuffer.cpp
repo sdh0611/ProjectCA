@@ -3,7 +3,7 @@
 
 
 BackBuffer::BackBuffer()
-	:m_hMemDC(NULL), m_hDrawDC(NULL),
+	:m_hMemDC(NULL), m_hBlendDC(NULL), 
 	m_hBit(NULL), m_hOldBit(NULL)
 {
 }
@@ -19,9 +19,6 @@ BackBuffer::~BackBuffer()
 	if (m_hMemDC)
 		DeleteDC(m_hMemDC);
 
-	if (m_hDrawDC)
-		DeleteDC(m_hDrawDC);
-
 	if (m_hBlendDC)
 		DeleteDC(m_hBlendDC);
 
@@ -31,10 +28,6 @@ bool BackBuffer::Init(const HDC & hDC)
 {
 	m_hMemDC = CreateCompatibleDC(hDC);
 	if (m_hMemDC == NULL)
-		return false;
-	
-	m_hDrawDC = CreateCompatibleDC(hDC);
-	if (m_hDrawDC == NULL)
 		return false;
 
 	m_hBlendDC = CreateCompatibleDC(hDC);
@@ -74,11 +67,6 @@ HDC&& BackBuffer::AllocationCompatibleDC()
 const HDC & BackBuffer::GetMemDC() const
 {
 	return m_hMemDC;
-}
-
-const HDC & BackBuffer::GetDrawDC() const
-{
-	return m_hDrawDC;
 }
 
 const HDC & BackBuffer::GetBlendDC() const

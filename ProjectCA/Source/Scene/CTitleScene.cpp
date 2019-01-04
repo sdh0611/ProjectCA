@@ -93,9 +93,6 @@ bool CTitleScene::Init()
 		pButton->SetImage(TEXT("StartButton"));
 		pButton->SetOnClickCallback(startButtonCallback);
 		pMenu->AddButton(pButton);
-		//m_EntityPtrList.emplace_back(pButton);
-		//FindLayer(TEXT("Button"))->AddActor(pButton);
-
 		
 		//Exit button
 		pButton = pObjMgr->CreateEntity<CButton>(SPRITE_WIDTH * 8, SPRITE_HEIGHT, MAX_WIDTH / 2.f, MAX_HEIGHT / 2.f + 180, TEXT("Button"), this);
@@ -110,15 +107,6 @@ bool CTitleScene::Init()
 		pButton->SetImage(TEXT("ExitButton"));
 		pButton->SetOnClickCallback(exitButtonCallback);
 		pMenu->AddButton(pButton);
-
-		//m_EntityPtrList.emplace_back(pButton);
-		//FindLayer(TEXT("Button"))->AddActor(pButton);
-	}
-
-	//Test侩 Menu Box积己
-	{
-
-
 
 	}
 
@@ -146,23 +134,12 @@ bool CTitleScene::Init()
 		FindLayer(TEXT("Font"))->AddActor(pFont);
 	}
 
-	//{
-	//	if (!CreateLayer(TEXT("Ground"), 3))
-	//		return false;
-
-	//	auto pGround = pObjMgr->CreateObject<CGround>(MAX_WIDTH, 256, MAX_WIDTH / 2.f, 700.f, Types::OT_GROUND, TEXT("Ground"), this);
-	//	if (pGround == nullptr)
-	//		return false;
-	//	m_EntityPtrList.push_back(pGround);
-	//	FindLayer(TEXT("Ground"))->AddActor(pGround);
-	//}
-
 	//硅版 积己
 	{
 		if (!CreateLayer(TEXT("Background"), 99))
 			return false;
 
-		auto pBackground = pObjMgr->CreateObject<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0, 0, Types::OT_BACKGROUND, TEXT("Background"), this);
+		auto pBackground = pObjMgr->CreateEntity<CBackground>(MAX_WIDTH, MAX_HEIGHT, 0, 0, TEXT("Background"), this);
 		if (pBackground == nullptr)
 			return false;
 		pBackground->SetBackgroundImage(TEXT("BackgroundMountain2"));

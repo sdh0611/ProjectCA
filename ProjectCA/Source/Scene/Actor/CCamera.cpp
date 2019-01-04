@@ -1,5 +1,5 @@
 #include "..\..\..\stdafx.h"
-#include "..\..\..\Include\Scene\CObject.h"
+#include "..\..\..\Include\Scene\CEntity.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
@@ -8,15 +8,13 @@
 
 CCamera::CCamera()
 {
-	puts("Camera Create");
 }
 
 CCamera::~CCamera()
 {
-	puts("Camera Destroy");
 }
 
-bool CCamera::PostInit(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id)
+bool CCamera::PostInit(std::shared_ptr<CEntity> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id)
 {
 	m_bActive = true;
 	m_fDestPosition = 0.f;
@@ -27,8 +25,7 @@ bool CCamera::PostInit(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeigh
 	m_iHeight = iHeight;
 	m_iCameraID = id;
 	m_CameraMode = CM_DEFAULT;
-
-
+	
 	if (pOwner)
 	{
 		m_pOwner = pOwner;
@@ -41,8 +38,7 @@ bool CCamera::PostInit(std::shared_ptr<CObject> pOwner, UINT iWidth, UINT iHeigh
 		{
 			m_fCameraMaxSpeed = pPhysics.lock()->GetMaxSpeed()*2.f;
 		}
-		m_CameraPosition			= POSITION(m_pOwner.lock()->GetObjectPosition().x - m_iWidth / 2.f, 0.f);
-		//m_CameraPosition			= POSITION(0, 0.f);
+		m_CameraPosition			= POSITION(m_pOwner.lock()->GetEntityPosition().x - m_iWidth / 2.f, 0.f);
 		m_OwnerScreenPosition = m_pOwner.lock()->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 	}
 	else
@@ -59,7 +55,7 @@ void CCamera::Init()
 {
 	if (!m_pOwner.expired())
 	{
-		m_CameraPosition.x = m_pOwner.lock()->GetObjectPosition().x - m_iWidth / 2.f;
+		m_CameraPosition.x = m_pOwner.lock()->GetEntityPosition().x - m_iWidth / 2.f;
 		m_OwnerScreenPosition = m_pOwner.lock()->GetComponent<TransformComponent>().lock()->GetScreenPosition();
 	}
 	m_CameraPosition.y = 0.f;
@@ -74,10 +70,10 @@ void CCamera::Update(double dDeltaTime)
 	AdjustCameraPosition(dDeltaTime);
 }
 
-std::weak_ptr<CObject> CCamera::GetOwner()
+std::weak_ptr<CEntity> CCamera::GetOwner()
 {
 	if(m_pOwner.expired())
-		return std::weak_ptr<CObject>();
+		return std::weak_ptr<CEntity>();
 
 	return m_pOwner;
 }
@@ -102,7 +98,7 @@ void CCamera::AdjustCameraPosition(double dDeltaTime)
 	case CM_SCROLL_HOR:
 		ScrollHorizon(dDeltaTime);
 		break;
-	case CM_SCROLL_VER:
+	case CM_SCROLL_HOR_VER:
 		ScrollVertical(dDeltaTime);
 		break;
 	case CM_AUTO:
@@ -124,7 +120,7 @@ void CCamera::SetCameraSize(UINT iWidth, UINT iHeight)
 
 }
 
-void CCamera::SetOwner(std::shared_ptr<CObject> pOwner)
+void CCamera::SetOwner(std::shared_ptr<CEntity> pOwner)
 {
 	m_pOwner = pOwner;
 }
@@ -162,11 +158,14 @@ void CCamera::SetCameraMode(CameraMode mode)
 	m_CameraMode = mode;
 }
 
+//Position Locking
 void CCamera::ScrollDefault(double dDeltaTime)
 {
 	m_CameraPosition.x += (m_fOwnerCurSpeed * dDeltaTime);
+	m_CameraPosition.y -= (m_fOwnerCurJumpForce * dDeltaTime);
 }
 
+//수직 카메라이동
 void CCamera::ScrollHorizon(double dDeltaTime)
 {
 	float fUnit = m_iWidth * (1.f / 5.f);
@@ -230,12 +229,89 @@ void CCamera::ScrollHorizon(double dDeltaTime)
 			}
 
 		}
-
 	}
+	
 }
 
+//수평, 수직 카메라이동
 void CCamera::ScrollVertical(double dDeltaTime)
 {
+	float fUnit = m_iWidth * (1.f / 5.f);
+	m_fCameraCurSpeed = 0.f;
+
+	if (m_fDestPosition != 0.f)
+	{
+		if (m_fDestPosition == fUnit * 2.f)
+		{
+			if (m_OwnerScreenPosition.x >= fUnit * 1.89f)
+			{
+				m_CameraPosition.x += m_fCameraMaxSpeed * dDeltaTime;
+				m_fCameraCurSpeed = m_fCameraMaxSpeed;
+			}
+			else
+			{
+				m_fDestPosition = 0.f;
+			}
+
+		}
+		else if (m_fDestPosition == fUnit * 3.f)
+		{
+			if (m_OwnerScreenPosition.x <= fUnit * 3.11f)
+			{
+				m_CameraPosition.x -= m_fCameraMaxSpeed * dDeltaTime;
+				m_fCameraCurSpeed = -1 * m_fCameraMaxSpeed;
+			}
+			else
+			{
+				m_fDestPosition = 0.f;
+			}
+
+		}
+
+	}
+	else
+	{
+		if (m_fOwnerCurSpeed > 0.f)
+		{
+			if (m_OwnerScreenPosition.x > fUnit * 4.f)
+			{
+				m_fDestPosition = fUnit * 2.f;
+			}
+			else if (m_OwnerScreenPosition.x <= fUnit * 2.f && m_OwnerScreenPosition.x >= fUnit * 1.9f)
+			{
+				m_CameraPosition.x += m_fOwnerCurSpeed * dDeltaTime;
+				m_fCameraCurSpeed = m_fOwnerCurSpeed;
+			}
+
+		}
+		else if (m_fOwnerCurSpeed < 0.f)
+		{
+			if (m_OwnerScreenPosition.x < fUnit)
+			{
+				m_fDestPosition = fUnit * 3.f;
+			}
+			else if (m_OwnerScreenPosition.x >= fUnit * 3.f && m_OwnerScreenPosition.x <= fUnit * 3.1f)
+			{
+				m_CameraPosition.x += m_fOwnerCurSpeed * dDeltaTime;
+				m_fCameraCurSpeed = m_fOwnerCurSpeed;
+			}
+
+		}
+	}
+
+	auto pPhysics = m_pOwner.lock()->GetComponent<PhysicsComponent>().lock();
+	POSITION position = m_pOwner.lock()->GetTransform().lock()->GetScreenPosition();
+	if (pPhysics->IsGrounded())
+	{
+		if (position.y < m_iHeight * 0.49f)
+		{
+			m_CameraPosition.y += pPhysics->GetJumpForce() * dDeltaTime;
+		}
+		else if (position.y > m_iHeight * 0.51f)
+		{
+			m_CameraPosition.y -= pPhysics->GetJumpForce() * dDeltaTime;
+		}
+	}
 }
 
 void CCamera::ScrollAuto(double dDeltaTime)

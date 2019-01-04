@@ -1,28 +1,20 @@
 #pragma once
 
 /*
-	NOTE:
-		게임 내 모든 Actor들의 기본 Class 정의.
-		CWorld객체에서만 생성가능하게 설정.
+	NOTE:게임 내의 움직이는 물체들이 상속받게 될 기본 Class 정의.
+			CObject를 상속받아서 작성.
+			수평, 수직상의 상태, 방향, ActionType 값들을 내부적으로 가짐.
 */
 
 #include "..\..\..\stdafx.h"
 #include "..\CObject.h"
-//#include "..\"
-//#include "CActorManager.h"
 
-
-//class CWorld;
 class CGameScene;
-class ComponentBase;
 
-//typedef std::shared_ptr<ComponentBase> StrongComponentPtr;
+typedef std::shared_ptr<ComponentBase> StrongComponentPtr;
 
-class CActor : public CObject{
-	////Layer, World Class만 Actor의 생성, 파괴가 가능함.
-	//friend class CWorld;
-	//friend class CLayer;
-	
+class CActor : public CObject
+{	
 	//08:17 : ActorFactory에서만 생성 가능하게 바꿈.
 	//파괴의 경우엔 Actor 자체의 Destroy 메소드를 이용하여 내부 컴포넌트들을 정리하게끔 함.
 	//friend class CActorFactory;
@@ -40,8 +32,6 @@ public:
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
 	virtual void Render(const HDC& hDC) = 0;
-	//virtual void LateUpdate() override;
-	//virtual void Destroy();
 
 
 public:
@@ -49,7 +39,6 @@ public:
 	void SetActorDirection(DIRECTION dir);
 	void SetActorVerticalState(VER_STATE vertical);
 	void SetActorHorizonalState(HOR_STATE horizonal);
-	//void SetOwnerWorld(CWorld* pWorld);
 
 
 public:
@@ -59,7 +48,6 @@ public:
 	DIRECTION				GetActorDirection() const;
 	UINT						GetActorWidth() const;
 	UINT						GetActorHeight() const;
-	//CWorld* const			GetOwnerWorld() const;
 
 
 public:
@@ -75,7 +63,6 @@ protected:
 	VER_STATE					m_ActorCurVerticalState;
 	HOR_STATE					m_ActorHorizonalState;
 	DIRECTION					m_Direction;
-	//CWorld*					m_pOwnerWorld;
 
 	
 };

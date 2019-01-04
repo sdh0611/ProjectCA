@@ -11,8 +11,11 @@ CInputManager::~CInputManager()
 
 }
 
-bool CInputManager::Init() {
+//기본적인 입력들 추가.
+bool CInputManager::Init() 
+{
 	
+	//키보드
 	m_KeyInputList.emplace_back(TEXT("LEFT"), VK_LEFT);
 	m_KeyInputList.emplace_back(TEXT("RIGHT"), VK_RIGHT);
 	m_KeyInputList.emplace_back(TEXT("UP"), VK_UP);
@@ -25,6 +28,7 @@ bool CInputManager::Init() {
 	m_KeyInputList.emplace_back(TEXT("FUNC1"), VK_SPACE, true);
 	m_KeyInputList.emplace_back(TEXT("RESET"), VK_ESCAPE, true);
 
+	//마우스
 	m_MouseInputList.emplace_back(TEXT("LBUTTON_DBCLK"), WM_LBUTTONDBLCLK);
 	m_MouseInputList.emplace_back(TEXT("LBUTTON"), WM_LBUTTONDOWN);
 	m_MouseInputList.emplace_back(TEXT("RBUTTON_DBCLK"), WM_RBUTTONDBLCLK);
