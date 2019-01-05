@@ -234,6 +234,11 @@ bool CSoundManager::LoadEnemySFX()
 		return false;
 	}
 
+	if (!LoadSound("./Resources/Sound/SFX/smw_stomp_no_damage.wav", TEXT("SFXStompNoDamage"), SOUND_SFX_ENEMY, FMOD_DEFAULT))
+	{
+		return false;
+	}
+
 	if (!LoadSound("./Resources/Sound/SFX/smw_shell_ricochet.wav", TEXT("SFXShellRicochet"), SOUND_SFX_ENEMY, FMOD_DEFAULT))
 	{
 		return false;

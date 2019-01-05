@@ -14,7 +14,5 @@ public:
 
 public:
 	virtual bool PostInit(const OBJECT_DATA&, CScene*) override;
-	virtual void Update(double dDeltaTime) override;
-
 
 };

@@ -70,8 +70,6 @@ void CGround::Render(const HDC & hDC)
 		outputPosition.x = fOriginPositionX;
 	}
 
-	//GetComponent<ColliderBox>().lock()->DrawCollider(hDC);
-
 }
 
 void CGround::LateUpdate()

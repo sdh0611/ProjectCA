@@ -24,7 +24,7 @@ CRex::~CRex()
 bool CRex::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 	//기본 Actor의 속성 초기화
-	if (!CActor::PostInit(data, pScene))
+	if (!CEnemy::PostInit(data, pScene))
 		return false;
 
 	//PhysicsComponent 초기화

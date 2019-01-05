@@ -19,7 +19,6 @@ public:
 	virtual bool PostInit(const OBJECT_DATA& data, CScene* pScene);
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
-	virtual void Render(const HDC& hDC) = 0;
 	virtual void LateUpdate();
 
 

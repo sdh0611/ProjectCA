@@ -345,6 +345,9 @@
     <ClCompile Include="Source\Scene\UI\CPointer.cpp">
       <Filter>소스 파일\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Actor\CPiranha.cpp">
+      <Filter>소스 파일\Scene\Actors\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -574,6 +577,9 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\UI\CPointer.h">
       <Filter>헤더 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CPiranha.h">
+      <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

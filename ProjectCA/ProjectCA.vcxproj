@@ -179,6 +179,7 @@
     <ClCompile Include="Source\Scene\Actor\CBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCoinBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPickupBlock.cpp" />
+    <ClCompile Include="Source\Scene\Actor\CPiranha.cpp" />
     <ClCompile Include="Source\Scene\Actor\CRandomBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCoin.cpp" />
     <ClCompile Include="Source\Scene\Actor\CEndPickup.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="Include\Scene\Actor\CBlock.h" />
     <ClInclude Include="Include\Scene\Actor\CCoinBlock.h" />
     <ClInclude Include="Include\Scene\Actor\CPickupBlock.h" />
+    <ClInclude Include="Include\Scene\Actor\CPiranha.h" />
     <ClInclude Include="Include\Scene\Actor\CRandomBlock.h" />
     <ClInclude Include="Include\Scene\Actor\CCoin.h" />
     <ClInclude Include="Include\Scene\Actor\CEndPickup.h" />

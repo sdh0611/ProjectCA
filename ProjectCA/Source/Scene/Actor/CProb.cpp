@@ -34,7 +34,3 @@ bool CProb::PostInit(const OBJECT_DATA& data, CScene* pScene)
 	return true;
 }
 
-void CProb::Update(double dDeltaTime)
-{
-	CObject::Update(dDeltaTime);
-}

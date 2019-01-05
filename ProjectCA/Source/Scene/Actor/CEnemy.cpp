@@ -44,22 +44,10 @@ void CEnemy::Init()
 
 void CEnemy::Update(double fDeltaTime)
 {
-	CActor::Update(fDeltaTime);
-
-}
-
-void CEnemy::Render(const HDC & hDC)
-{
-	POSITION position = GetComponent<TransformComponent>().lock()->GetPosition();
-
-	Rectangle(hDC, position.x, position.y, position.x + m_iEntityWidth, position.y + m_iEntityHeight);
-	if (GetComponent<Collider>().lock()->IsCollision()) {
-		TextOut(hDC, position.x, position.y, TEXT("TRUE"), sizeof(TEXT("TRUE")));
+	if (m_bActive)
+	{
+		CActor::Update(fDeltaTime);
 	}
-	else {
-		TextOut(hDC, position.x, position.y, TEXT("FALSE"), sizeof(TEXT("FALSE")));
-	}
-
 }
 
 //Player를 중심으로 한 일정 범위 내에 Enemy가 있는지 판단.

@@ -42,7 +42,7 @@ void CPickup::Update(double dDeltaTime)
 void CPickup::LateUpdate()
 {
 	CObject::LateUpdate();
-	if (m_ObjectState != Types::OS_DEAD && m_ObjectState != Types::OS_DESTROYED)
+	if (!IsDead())
 	{
 		UINT cameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
 		UINT cameraHeight = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight();

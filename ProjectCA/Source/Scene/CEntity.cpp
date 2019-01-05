@@ -2,6 +2,7 @@
 #include "..\..\Include\Scene\CEntity.h"
 #include "..\..\Include\Core\Components\ComponentBase.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
+#include "..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Scene\CCameraManager.h"
 
@@ -58,7 +59,11 @@ void CEntity::Update(double dDeltaTime)
 
 void CEntity::Render(const HDC & hDC)
 {
-
+	auto pRender = GetComponent(TEXT("RenderComponent"));
+	if (!pRender.expired())
+	{
+		STATIC_POINTER_CAST(RenderComponent, pRender.lock())->Draw(hDC);
+	}
 }
 
 void CEntity::LateUpdate()
@@ -67,12 +72,6 @@ void CEntity::LateUpdate()
 		return;
 
 	GetTransform().lock()->AdjustScreenPosition();
-
-	//auto pCollider = GetComponent(TEXT("Collider"));
-	//if (!pCollider.expired())
-	//{
-	//	pCollider.lock()->LateUpdate();
-	//}
 
 	auto pRender = GetComponent(TEXT("RenderComponent"));
 	if (!pRender.expired())

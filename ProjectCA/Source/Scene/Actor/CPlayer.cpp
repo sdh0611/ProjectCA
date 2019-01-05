@@ -77,16 +77,25 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			switch (type)
 			{
 			case Collider::COLLISION_BOT:
-				SetActorVerticalState(Types::VS_JUMP);
-				pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+				if (pOther->GetObjectName() != TEXT("Piranha"))
+				{
+					SetActorVerticalState(Types::VS_JUMP);
+					pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+				}
+				else
+				{
+					if (GetActorAct() == Types::ACT_DESTROY)
+					{
+						SetActorVerticalState(Types::VS_JUMP);
+						pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+						m_pSoundManager->SoundPlay(TEXT("SFXStompNoDamage"));
+					}
+				}
 				break;
 			default:
 				if (GetObjectState() != Types::OS_DAMAGED)
 				{
-					if (pOther->GetComponent<PhysicsComponent>().lock()->GetCurSpeed() != 0.f)
-					{
-						HandlingEvent(Types::EVENT_DAMAGED);
-					}
+					HandlingEvent(Types::EVENT_DAMAGED);			
 				}
 				break;
 			}
@@ -1046,6 +1055,7 @@ void CPlayer::PopStoredPickup()
 	m_pStoredPickupPtr.lock()->SetObjectState(Types::OS_IDLE);
 	m_pStoredPickupPtr.lock()->SetActive(true);
 	m_pStoredPickupPtr.reset();
+	m_pSoundManager->SoundPlay(TEXT("SFXReserveItemReleaseUp"));
 }
 
 
@@ -1264,7 +1274,6 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	if (CInputManager::GetInstance()->IsKeyDown(TEXT("FUNC1")))
 	{
 		PopStoredPickup();
-		m_pSoundManager->SoundPlay(TEXT("SFXReserveItemReleaseUp"));
 	}
 
 	ChangeAnimationClip(fCurSpeed, fWalkSpeed, fMaxSpeed, fCurJumpForce);

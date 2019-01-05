@@ -18,6 +18,7 @@
 #include "..\..\Include\Scene\Actor\CKoopa.h"
 #include "..\..\Include\Scene\Actor\CGoomba.h"
 #include "..\..\Include\Scene\Actor\CRex.h"
+#include "..\..\Include\Scene\Actor\CPiranha.h"
 #include "..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\Include\Scene\Actor\CProb.h"
 #include "..\..\Include\Scene\Actor\CGround.h"
@@ -592,7 +593,7 @@ bool CGameScene::BuildWorld()
 
 	//Enemy 持失
 	{
-		if (!CreateLayer(TEXT("Enemy"), 4))
+		if (!CreateLayer(TEXT("Enemy"), 5))
 		{
 			return false;
 		}
@@ -699,11 +700,47 @@ bool CGameScene::BuildWorld()
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
+
+		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 0.f, 560.f, Types::OT_ENEMY,
+			Types::DIR_LEFT, TEXT("Piranha"), this);
+		if (pEnemy == nullptr)
+			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 1300.f, 520.f, Types::OT_ENEMY,
+			Types::DIR_LEFT, TEXT("Piranha"), this);
+		if (pEnemy == nullptr)
+			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+		
+		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 7400.f, 540.f, Types::OT_ENEMY,
+			Types::DIR_LEFT, TEXT("Piranha"), this);
+		if (pEnemy == nullptr)
+			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+		
+		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 7600.f, 500.f, Types::OT_ENEMY,
+			Types::DIR_LEFT, TEXT("Piranha"), this);
+		if (pEnemy == nullptr)
+			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 7800.f, 580.f, Types::OT_ENEMY,
+			Types::DIR_LEFT, TEXT("Piranha"), this);
+		if (pEnemy == nullptr)
+			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
 	}
 
 	//Block 持失
 	{
-		if (!CreateLayer(TEXT("Block"), 8))
+		if (!CreateLayer(TEXT("Block"), 4))
 		{
 			return false;
 		}
@@ -906,7 +943,7 @@ bool CGameScene::BuildWorld()
 
 	//Prob 持失
 	{
-		if (!CreateLayer(TEXT("Prob"), 9))
+		if (!CreateLayer(TEXT("Prob"), 5))
 			return false;
 
 		auto pProb = m_pObjectManager->CreateObject<CPipe>(1, 7, 400.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);

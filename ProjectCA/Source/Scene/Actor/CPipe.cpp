@@ -92,10 +92,10 @@ void CPipe::LateUpdate()
 {
 	CObject::LateUpdate();
 
-	UINT cameraWidth = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
-	UINT cameraHeight = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight();
-	POSITION cameraPosition = CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraPosition();
-	POSITION position = GetObjectPosition();
+	UINT cameraWidth			= CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraWidth();
+	UINT cameraHeight			= CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraHeight();
+	POSITION cameraPosition	= CCameraManager::GetInstance()->GetMainCamera().lock()->GetCameraPosition();
+	POSITION position			= GetObjectPosition();
 
 	if (IsActive())
 	{

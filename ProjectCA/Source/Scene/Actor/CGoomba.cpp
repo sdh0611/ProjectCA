@@ -8,7 +8,6 @@
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
-//#include "..\..\..\Include\Core\Components\HPComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
@@ -26,7 +25,7 @@ CGoomba::~CGoomba()
 bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 	//기본 Actor의 속성 초기화
-	if (!CActor::PostInit(data, pScene))
+	if (!CEnemy::PostInit(data, pScene))
 		return false;
 
 	//AIComponent (InputComponent) 초기화
@@ -198,22 +197,11 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 	return true;
 }
 
-void CGoomba::Init()
-{
-	CEnemy::Init();
-}
-
-void CGoomba::Update(double dDeltaTime)
-{
-	CEnemy::Update(dDeltaTime);
-}
-
 void CGoomba::Render(const HDC & hDC)
 {
 	auto pRender = GetComponent<AnimationRender>().lock();
 	if (pRender->IsActive())
 		pRender->Draw(hDC);
-
 }
 
 void CGoomba::ActorBehavior(double dDeltaTime)

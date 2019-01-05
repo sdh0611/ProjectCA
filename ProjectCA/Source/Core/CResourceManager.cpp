@@ -447,6 +447,10 @@ bool CResourceManager::LoadEnemySpriteInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Rex/rex_dead_left.bmp"), TEXT("RexDeadLeft")))
 		return false;
 
+	//Piranha
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Enemy/Plant/piranha_animation.bmp"), TEXT("PiranhaDefault")))
+		return false;
+	
 
 	return true;
 }

@@ -37,22 +37,19 @@ bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 		case Types::OT_PLAYER:
 		{
 			auto pPlayer = static_cast<CPlayer*>(pOther);
-			if (pPlayer->GetActorAct() == Types::ACT_DESTROY)
+			if (type == Collider::COLLISION_BOT)
 			{
-				if (pPlayer->GetPlayerState() != CPlayer::PS_SMALL)
+				HandlingEvent(Types::EVENT_DAMAGED);
+			}
+			else if (type == Collider::COLLISION_TOP)
+			{
+				if (pPlayer->GetActorAct() == Types::ACT_DESTROY)
 				{
-					if (type == Collider::COLLISION_TOP)
+					if (pPlayer->GetPlayerState() != CPlayer::PS_SMALL)
 					{
 						pPlayer->GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(300.f);
 						HandlingEvent(Types::EVENT_DESTROY);
 					}
-				}
-			}
-			else
-			{
-				if (type == Collider::COLLISION_BOT)
-				{
-					HandlingEvent(Types::EVENT_DAMAGED);
 				}
 			}
 		}

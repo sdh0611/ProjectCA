@@ -31,8 +31,7 @@ public:
 	virtual bool PostInit(const Types::ActorData&, CGameScene*);
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
-	virtual void Render(const HDC& hDC) = 0;
-
+	
 
 public:
 	void SetActorAct(ACT act);
