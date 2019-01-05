@@ -28,8 +28,6 @@ bool CActor::PostInit(const Types::ActorData & data, CGameScene *pScene)
 
 	//기본 Actor의 속성 초기화
 	m_ActType					= data.m_ActType;
-	m_ActorCurVerticalState = data.m_VerticalState;
-	m_ActorHorizonalState	= data.m_HorizonalState;
 	m_Direction					= data.m_Direction;
 	
 	return true;
@@ -62,9 +60,7 @@ void CActor::Update(double dDeltaTime)
 			component.second->Update(dDeltaTime);
 		}
 	}
-
-
-
+	
 }
 
 void CActor::SetActorAct(ACT act)
@@ -77,29 +73,9 @@ void CActor::SetActorDirection(DIRECTION dir)
 	m_Direction = dir;
 }
 
-void CActor::SetActorVerticalState(VER_STATE vertical)
-{
-	m_ActorCurVerticalState = vertical;;
-}
-
-void CActor::SetActorHorizonalState(HOR_STATE horizonal)
-{
-	m_ActorHorizonalState = horizonal;
-}
-
 ACT CActor::GetActorAct() const
 {
 	return m_ActType;
-}
-
-VER_STATE CActor::GetActorVerticalState() const
-{
-	return m_ActorCurVerticalState;
-}
-
-HOR_STATE	CActor::GetActorHorizonalState() const
-{
-	return m_ActorHorizonalState;
 }
 
 Types::Direction CActor::GetActorDirection() const

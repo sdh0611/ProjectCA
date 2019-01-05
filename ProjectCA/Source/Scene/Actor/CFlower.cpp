@@ -50,7 +50,6 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				case Collider::COLLISION_BOT:
 					pPhysics->SetGrounded(true);
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
-					SetActorVerticalState(Types::VS_IDLE);
 					break;
 				case Collider::COLLISION_TOP:
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
@@ -65,7 +64,6 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				{
 					pPhysics->SetGrounded(true);
 					pPhysics->SetCurJumpForce(0.f);
-					SetActorVerticalState(Types::VS_IDLE);
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				}
 
@@ -82,7 +80,6 @@ bool CFlower::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					case Collider::COLLISION_BOT:
 						pPhysics->SetGrounded(true);
 						SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
-						SetActorVerticalState(Types::VS_IDLE);
 						break;
 					case Collider::COLLISION_TOP:
 						SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);

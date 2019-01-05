@@ -490,8 +490,7 @@ bool CGameScene::BuildWorld()
 		if (!CreateLayer(TEXT("Pickup"), 3))
 			return false;
 		//테스트용 Mushroom 생성
-		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 150.f, Types::OT_PICKUP,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_RIGHT, TEXT("Mushroom"), this);
+		std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 150.f, Types::OT_PICKUP,Types::DIR_RIGHT, TEXT("Mushroom"), this);
 		if (pPickup == nullptr)
 			return false;
 		AddEntityToScene(pPickup);
@@ -598,103 +597,90 @@ bool CGameScene::BuildWorld()
 			return false;
 		}
 
-		std::shared_ptr<CEnemy> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 250.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		std::shared_ptr<CEnemy> pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 250.f, 250.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 200.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 200.f, 250.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 150.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 150.f, 250.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 300.f, 250.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 300.f, 250.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 450.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 300.f, 450.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("Goomba"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 500.f, 444.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
+		pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 500.f, 444.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("Rex"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 550.f, 444.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 550.f, 444.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 570.f, 444.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 570.f, 444.f, Types::OT_ENEMY,Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 	
 
-		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1000.f, 450.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1000.f, 450.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("Goomba"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1300.f, 450.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1300.f, 450.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("Goomba"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1600.f, 450.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Goomba"), this);
+		pEnemy = m_pObjectManager->CreateActor<CGoomba>(SPRITE_WIDTH, SPRITE_HEIGHT, 1600.f, 450.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("Goomba"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
 
-		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 3180.f, 300.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
+		pEnemy = m_pObjectManager->CreateActor<CKoopa>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 3180.f, 300.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("KoopaGreen"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 
-		pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 6250.f, 200.f, Types::OT_ENEMY,
-			Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN, Types::DIR_LEFT, TEXT("Rex"), this);
+		pEnemy = m_pObjectManager->CreateActor<CRex>(SPRITE_WIDTH, SPRITE_HEIGHT*1.8f, 6250.f, 200.f, Types::OT_ENEMY, Types::DIR_LEFT, TEXT("Rex"), this);
 		if (pEnemy == nullptr)
 			return false;
 		AddEntityToScene(pEnemy);
@@ -752,8 +738,7 @@ bool CGameScene::BuildWorld()
 				return false;
 			//Block에 저장시켜놓을 Pickup 생성
 			std::shared_ptr<CPickup> pPickup = m_pObjectManager->CreateActor<CMushroom>(SPRITE_WIDTH, SPRITE_HEIGHT,
-				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::OS_IDLE, Types::VS_IDLE, Types::HS_RUN,
-				Types::DIR_RIGHT, TEXT("Mushroom"), this);
+				pBlock->GetObjectPosition().x, pBlock->GetObjectPosition().y - pBlock->GetObjectHeight() / 2.f, Types::OT_PICKUP, Types::DIR_RIGHT, TEXT("Mushroom"), this);
 			FindLayer(TEXT("Pickup"))->AddActor(pPickup);
 			AddEntityToScene(pPickup);
 			if (pPickup == nullptr)

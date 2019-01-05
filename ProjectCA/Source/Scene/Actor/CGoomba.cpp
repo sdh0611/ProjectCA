@@ -71,7 +71,6 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			switch (type) {
 			case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
-				SetActorVerticalState(Types::VS_IDLE);
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				break;
 			case Collider::COLLISION_LEFT:
@@ -92,7 +91,6 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 					return;
 				pPhysics->SetGrounded(true);
 				pPhysics->SetCurJumpForce(0.f);
-				SetActorVerticalState(Types::VS_IDLE);
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 			}
 			break;
@@ -104,13 +102,11 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 				switch (type) {
 				case Collider::COLLISION_BOT:
 					pPhysics->SetGrounded(true);
-					SetActorVerticalState(Types::VS_IDLE);
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 					break;
 				case Collider::COLLISION_TOP:
 					pPhysics->SetGrounded(false);
 					pPhysics->SetCurJumpForce(-100.f);
-					SetActorVerticalState(Types::VS_FALL);
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 					break;
 				case Collider::COLLISION_LEFT:

@@ -10,7 +10,6 @@
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PlayerInputComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
-//#include "..\..\..\Include\Core\Components\HPComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
@@ -79,14 +78,12 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			case Collider::COLLISION_BOT:
 				if (pOther->GetObjectName() != TEXT("Piranha"))
 				{
-					SetActorVerticalState(Types::VS_JUMP);
 					pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 				}
 				else
 				{
 					if (GetActorAct() == Types::ACT_DESTROY)
 					{
-						SetActorVerticalState(Types::VS_JUMP);
 						pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 						m_pSoundManager->SoundPlay(TEXT("SFXStompNoDamage"));
 					}
@@ -105,20 +102,17 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			m_pSoundManager->SoundPlay(TEXT("SFXSheelRicochet"));
 		case Collider::COLLISION_BOT:
 				pPhysics->SetGrounded(true);
-				SetActorVerticalState(Types::VS_IDLE);
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 				break;
 			case Collider::COLLISION_TOP:
-				SetActorVerticalState(Types::VS_FALL);
+				pPhysics->SetCurJumpForce(-10.f);
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 				break;
 			case Collider::COLLISION_LEFT:
-				SetActorHorizonalState(Types::HS_IDLE);
 				SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
 				pPhysics->SetCurSpeed(0.f);
 				break;
 			case Collider::COLLISION_RIGHT:
-				SetActorHorizonalState(Types::HS_IDLE);
 				SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 				pPhysics->SetCurSpeed(0.f);
 				break;
@@ -130,13 +124,12 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 
 			if (pBlock->IsHiding())
 			{
-				if (m_ActorCurVerticalState != Types::VS_FALL)
+				if (pPhysics->GetCurJumpForce() >= 0.f)
 				{
 					if (type == Collider::COLLISION_TOP)
 					{
 						m_pSoundManager->SoundPlay(TEXT("SFXSheelRicochet"));
 						pPhysics->SetCurJumpForce(0.f);
-						SetActorVerticalState(Types::VS_FALL);
 						SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 						break;
 					}
@@ -146,23 +139,19 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			{
 				switch (type) {
 				case Collider::COLLISION_TOP:
-					SetActorVerticalState(Types::VS_FALL);
+					pPhysics->SetCurJumpForce(-10.f);
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y + fIntersectLength);
 					m_pSoundManager->SoundPlay(TEXT("SFXSheelRicochet"));
 					break;
 				case Collider::COLLISION_BOT:
 					pPhysics->SetGrounded(true);
-					//pPhysics->SetCurJumpForce(0.f);
-					SetActorVerticalState(Types::VS_IDLE);
 					SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 					break;
 				case Collider::COLLISION_LEFT:
-					SetActorHorizonalState(Types::HS_IDLE);
 					SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
 					pPhysics->SetCurSpeed(0.f);
 					break;
 				case Collider::COLLISION_RIGHT:
-					SetActorHorizonalState(Types::HS_IDLE);
 					SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
 					pPhysics->SetCurSpeed(0.f);
 					break;
@@ -174,11 +163,10 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			if (type == Collider::COLLISION_BOT)
 			{
 				if (GetObjectPosition().y > pOther->GetObjectPosition().y+ fIntersectLength
-					|| GetActorVerticalState() == Types::VS_JUMP)
+					|| pPhysics->GetCurJumpForce() > 0.f)
 					return;
 				pPhysics->SetGrounded(true);
 				pPhysics->SetCurJumpForce(0.f);
-				SetActorVerticalState(Types::VS_IDLE);
 				SetObjectPosition(GetObjectPosition().x, GetObjectPosition().y - fIntersectLength);
 			}
 			break;
@@ -221,7 +209,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 			{
 				if (type == Collider::COLLISION_BOT)
 				{
-					SetActorVerticalState(Types::VS_JUMP);
 					pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 				}
 				else
@@ -250,7 +237,6 @@ bool CPlayer::PostInit(const Types::ActorData& data, CGameScene* pScene)
 					}
 					else if (type == Collider::COLLISION_BOT)
 					{
-						SetActorVerticalState(Types::VS_JUMP);
 						pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 						break;
 					}
@@ -664,8 +650,11 @@ void CPlayer::LateUpdate()
 
 void CPlayer::SetPlayerDead()
 {
+	m_dTimeElapsed	= 0.f;
+	m_ObjectState		= Types::OS_DEAD;
+
 	m_pSoundManager->ChangeBGM(TEXT("BGMDead"));
-	m_ObjectState = Types::OS_DEAD;
+
 	GetComponent<AnimationRender>().lock()->ChangeAnimationTable(TEXT("MarioSmall"), TEXT("DeadAnimation"));
 	GetComponent<AnimationRender>().lock()->SetPauseAnimation(true);
 	GetComponent<PhysicsComponent>().lock()->SetCurJumpForce(700.f);
@@ -718,7 +707,7 @@ void CPlayer::Attack()
 	//공격 모션
 	if (m_ActType == Types::ACT_ATTACK && m_iAvailableFireballCount > 0)
 	{
-		if (m_ActorCurVerticalState == Types::VS_IDLE)
+		if (GetComponent<PhysicsComponent>().lock()->IsGrounded())
 		{
 			if (m_Direction == Types::DIR_RIGHT)
 			{
@@ -777,6 +766,7 @@ bool CPlayer::GenerateFireball()
 void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxSpeed, float fCurJumpForce)
 {
 	auto pRender = GetComponent<AnimationRender>().lock();
+	auto pPhysics = GetComponent<PhysicsComponent>().lock();
 	float fCurSpeedAbs = std::fabsf(fCurSpeed);
 
 	if (m_pPickObjectPtr.expired())
@@ -797,7 +787,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		}
 
 		//위를 보는 모션 모션
-		if (m_ActorCurVerticalState == Types::VS_IDLE)
+		if (pPhysics->IsGrounded())
 		{
 			if (m_ActType == Types::ACT_LOOKUP)
 			{
@@ -815,7 +805,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		}
 
 		//이동 관련 Animation
-		if (m_ActorCurVerticalState == Types::VS_JUMP)
+		if (pPhysics->GetCurJumpForce() > 0.f)
 		{
 			if (GetActorAct() == Types::ACT_DESTROY)
 			{
@@ -847,7 +837,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 				}
 			}
 		}
-		else if (m_ActorCurVerticalState == Types::VS_FALL)
+		else if (pPhysics->GetCurJumpForce() < 0.f)
 		{
 			if (GetActorAct() == Types::ACT_DESTROY)
 			{
@@ -896,7 +886,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 				}
 				else if (m_Direction == Types::DIR_RIGHT)
 				{
-					if (m_ActorHorizonalState != Types::HS_IDLE)
+					if (CInputManager::GetInstance()->IsKeyDown(TEXT("RIGHT")))
 					{
 						pRender->ChangeAnimation(TEXT("TurnRight"));
 					}
@@ -921,7 +911,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 				}
 				else if (m_Direction == Types::DIR_LEFT)
 				{
-					if (m_ActorHorizonalState != Types::HS_IDLE)
+					if (CInputManager::GetInstance()->IsKeyDown(TEXT("LEFT")))
 					{
 						pRender->ChangeAnimation(TEXT("TurnLeft"));
 					}
@@ -962,7 +952,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		}
 
 		//위를 보는 모션 모션
-		if (m_ActorCurVerticalState == Types::VS_IDLE)
+		if (pPhysics->IsGrounded())
 		{
 			if (m_ActType == Types::ACT_LOOKUP)
 			{
@@ -980,7 +970,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		}
 
 		//이동 관련 Animation
-		if (m_ActorCurVerticalState != Types::VS_IDLE)
+		if (!pPhysics->IsGrounded())
 		{
 			if (m_Direction == Types::DIR_RIGHT)
 			{
@@ -1019,7 +1009,7 @@ void CPlayer::ChangeAnimationClip(float fCurSpeed, float fWalkSpeed, float fMaxS
 		}
 	}
 
-	if (GetActorVerticalState() == Types::VS_IDLE)
+	if (pPhysics->IsGrounded())
 	{
 		if (fCurSpeedAbs > 0.f)
 		{
@@ -1071,103 +1061,103 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 	float fWalkSpeed		= pPhysics->GetSpeed();
 	float fCurJumpForce	= pPhysics->GetCurJumpForce();
 
-	//수직상의 이동에 대한 연산
-	if (m_Direction == Types::DIR_LEFT)
-	{
-		if (m_ActorHorizonalState == Types::HS_RUN)
-		{
-			if (fCurSpeed > -1 * fMaxSpeed)
-			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
-			}
-		}
-		else if (m_ActorHorizonalState == Types::HS_WALK)
-		{
-			if (fCurSpeed < -1 * fWalkSpeed)
-			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
-			}
-			else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
-			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
-			}
-			else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
-			{
-				pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
-			}
-		}
-		else if (m_ActorHorizonalState == Types::HS_IDLE)
-		{
-			if (fCurSpeed < 0.f)
-			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
-				if (pPhysics->GetCurSpeed() > 0.f)
-				{
-					pPhysics->SetCurSpeed(0.f);
-				}
-			}
-			else if (fCurSpeed > 0.f)
-			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
-				if (pPhysics->GetCurSpeed() < 0.f)
-				{
-					pPhysics->SetCurSpeed(0.f);
-				}
-			}
-		}
-	}
-	else if (m_Direction == Types::DIR_RIGHT)
-	{
-		if (m_ActorHorizonalState == Types::HS_RUN)
-		{
-			if (fCurSpeed < fMaxSpeed)
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
-		}
-		else if (m_ActorHorizonalState == Types::HS_WALK)
-		{
-			if (fCurSpeed > fWalkSpeed)
-			{
-				pPhysics->SetCurSpeed(fCurSpeed - 10.f);
-			}
-			else if (fCurSpeed < fWalkSpeed)
-			{
-				pPhysics->SetCurSpeed(fCurSpeed + 10.f);
-			}
-			else if (fCurSpeed >= fWalkSpeed)
-			{
-				pPhysics->SetCurSpeed(fWalkSpeed);
-			}
-		}
-		else if (m_ActorHorizonalState == Types::HS_IDLE)
-		{
-			if (fCurSpeed > 0.f)
-			{
-				pPhysics->SetCurSpeed(fCurSpeed - 5.f);
-				if (pPhysics->GetCurSpeed() < 0.f)
-				{
-					pPhysics->SetCurSpeed(0.f);
-				}
-			}
-			else if (fCurSpeed < 0.f)
-			{
-				pPhysics->SetCurSpeed(fCurSpeed + 5.f);
-				if (pPhysics->GetCurSpeed() > 0.f)
-				{
-					pPhysics->SetCurSpeed(0.f);
-				}
-			}
-		}
-	}
+	////수평상의 이동에 대한 연산
+	//if (m_Direction == Types::DIR_LEFT)
+	//{
+	//	if (m_ActorHorizonalState == Types::HS_RUN)
+	//	{
+	//		if (fCurSpeed > -1 * fMaxSpeed)
+	//		{
+	//			pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+	//		}
+	//	}
+	//	else if (m_ActorHorizonalState == Types::HS_WALK)
+	//	{
+	//		if (fCurSpeed < -1 * fWalkSpeed)
+	//		{
+	//			pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+	//		}
+	//		else if (pPhysics->GetCurSpeed() > -1 * fWalkSpeed)
+	//		{
+	//			pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+	//		}
+	//		else if (pPhysics->GetCurSpeed() <= -1 * fWalkSpeed)
+	//		{
+	//			pPhysics->SetCurSpeed(-1.f * pPhysics->GetSpeed());
+	//		}
+	//	}
+	//	else if (m_ActorHorizonalState == Types::HS_IDLE)
+	//	{
+	//		if (fCurSpeed < 0.f)
+	//		{
+	//			pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+	//			if (pPhysics->GetCurSpeed() > 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(0.f);
+	//			}
+	//		}
+	//		else if (fCurSpeed > 0.f)
+	//		{
+	//			pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+	//			if (pPhysics->GetCurSpeed() < 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(0.f);
+	//			}
+	//		}
+	//	}
+	//}
+	//else if (m_Direction == Types::DIR_RIGHT)
+	//{
+	//	if (m_ActorHorizonalState == Types::HS_RUN)
+	//	{
+	//		if (fCurSpeed < fMaxSpeed)
+	//			pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+	//	}
+	//	else if (m_ActorHorizonalState == Types::HS_WALK)
+	//	{
+	//		if (fCurSpeed > fWalkSpeed)
+	//		{
+	//			pPhysics->SetCurSpeed(fCurSpeed - 10.f);
+	//		}
+	//		else if (fCurSpeed < fWalkSpeed)
+	//		{
+	//			pPhysics->SetCurSpeed(fCurSpeed + 10.f);
+	//		}
+	//		else if (fCurSpeed >= fWalkSpeed)
+	//		{
+	//			pPhysics->SetCurSpeed(fWalkSpeed);
+	//		}
+	//	}
+	//	else if (m_ActorHorizonalState == Types::HS_IDLE)
+	//	{
+	//		if (fCurSpeed > 0.f)
+	//		{
+	//			pPhysics->SetCurSpeed(fCurSpeed - 5.f);
+	//			if (pPhysics->GetCurSpeed() < 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(0.f);
+	//			}
+	//		}
+	//		else if (fCurSpeed < 0.f)
+	//		{
+	//			pPhysics->SetCurSpeed(fCurSpeed + 5.f);
+	//			if (pPhysics->GetCurSpeed() > 0.f)
+	//			{
+	//				pPhysics->SetCurSpeed(0.f);
+	//			}
+	//		}
+	//	}
+	//}
 
-	//Jump관련 연산
-	if (pPhysics->IsGrounded())
-	{
-		if (m_ActorCurVerticalState == Types::VS_JUMP)
-		{
-			pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
-			pPhysics->SetGrounded(false);
-		}
-	}
+	////Jump관련 연산
+	//if (pPhysics->IsGrounded())
+	//{
+	//	if (m_ActorCurVerticalState == Types::VS_JUMP)
+	//	{
+	//		pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
+	//		pPhysics->SetGrounded(false);
+	//	}
+	//}
 	pTransform->Move(pPhysics->GetCurSpeed() * dDeltaTime, pPhysics->GetCurJumpForce() * dDeltaTime);
 
 	//PickObject Update
@@ -1228,21 +1218,21 @@ void CPlayer::ActorBehavior(double dDeltaTime)
 		}
 	}
 
-	//Jump 관련 연산
-	if (!pPhysics->IsGrounded())
-	{
-		if (pPhysics->GetCurJumpForce() < 0.f)
-		{
-			SetActorVerticalState(Types::VS_FALL);
-		}
-		else if (pPhysics->GetCurJumpForce() > 0.f)
-		{
-			if (m_ActorCurVerticalState == Types::VS_FALL)
-			{
-				pPhysics->SetCurJumpForce(0.f);
-			}
-		}
-	}
+	////Jump 관련 연산
+	//if (!pPhysics->IsGrounded())
+	//{
+	//	if (pPhysics->GetCurJumpForce() < 0.f)
+	//	{
+	//		SetActorVerticalState(Types::VS_FALL);
+	//	}
+	//	else if (pPhysics->GetCurJumpForce() > 0.f)
+	//	{
+	//		if (m_ActorCurVerticalState == Types::VS_FALL)
+	//		{
+	//			pPhysics->SetCurJumpForce(0.f);
+	//		}
+	//	}
+	//}
 
 	//Collider 변환 관련 Player로직
 	{

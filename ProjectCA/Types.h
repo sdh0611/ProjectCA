@@ -56,11 +56,6 @@ namespace Types {
 	//Actor들의 동작에 대한 열거체
 	enum ActType { ACT_IDLE, ACT_MOVE, ACT_SITDOWN, ACT_LOOKUP, ACT_ATTACK, ACT_DESTROY };
 
-	//수직상의 이동 상태를 구분하기 위한 열거체 (10.13)
-	enum VerticalState { VS_IDLE, VS_JUMP, VS_FALL };
-
-	//수평상의 이동 상태를 구분하기 위한 열거체 (10.13)
-	enum HorizonalState { HS_IDLE, HS_WALK, HS_RUN, HS_TURN };
 #endif
 	//Animation관련 
 	enum AnimationMotion {
@@ -125,8 +120,7 @@ namespace Types {
 		}
 
 	};
-
-
+	
 
 	//Rect구조체 정의
 	struct Rect {
@@ -239,17 +233,13 @@ namespace Types {
 		ObjectType				m_ActorType;
 		ObjectState				m_ActorState;
 		ActType					m_ActType;
-		VerticalState			m_VerticalState;
-		HorizonalState			m_HorizonalState;
 		Direction					m_Direction;
 
 		ActorData(UINT iWidth, UINT iHeight, Point point, ObjectType type, ObjectState state,
-			ActType act, VerticalState vertical, HorizonalState horizonal, Direction dir,
-			EntityID id, const tstring& strName)
+			ActType act, Direction dir, EntityID id, const tstring& strName)
 			:ObjectData(iWidth, iHeight, point, strName, id, type, state),
 			m_ActorType(type), m_ActorState(state),
-			m_ActType(act), m_VerticalState(vertical), m_HorizonalState(horizonal),
-			m_Direction(dir)
+			m_ActType(act), m_Direction(dir)
 		{
 		}
 
@@ -262,8 +252,6 @@ namespace Types {
 			m_ActorType = other.m_ActorType;
 			m_ActorState = other.m_ActorState;
 			m_ActType = other.m_ActType;
-			m_VerticalState = other.m_VerticalState;
-			m_HorizonalState = other.m_HorizonalState;
 			m_Direction = other.m_Direction;
 		}
 		//CWorld*					m_pOwnerWorld;
@@ -283,8 +271,6 @@ typedef Types::ObjectData			OBJECT_DATA;
 typedef Types::ObjectState			OBJECT_STATE;
 typedef Types::ActorData			ACTOR_DATA;
 typedef Types::ActType				ACT;
-typedef Types::VerticalState			VER_STATE;
-typedef Types::HorizonalState		HOR_STATE;
 typedef Types::Direction				DIRECTION;
 typedef Types::AnimationMotion	ANIM_MOTION;
 typedef Types::EventType			EVENT_TYPE;
