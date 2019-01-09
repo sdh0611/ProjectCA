@@ -1,7 +1,7 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "..\CEntity.h"
+#include "..\CEntity.hpp"
 
 //NOTE: 배경을 그리는 기능들을 구현한 Class.
 //			MainCamera의 이동속도에 맞춰 스크롤함.

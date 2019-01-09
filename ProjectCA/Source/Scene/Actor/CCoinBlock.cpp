@@ -3,7 +3,7 @@
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\..\Include\Scene\Actor\CMushroom.h"
 #include "..\..\..\Include\Scene\Actor\CFlower.h"
-#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\..\Include\Scene\CObject.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"

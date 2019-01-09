@@ -2,7 +2,7 @@
 #include "..\..\Include\Scene\CGameOverScene.h"
 #include "..\..\Include\Core\CInputManager.h"
 #include "..\..\Include\Scene\CSceneManager.h"
-#include "..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
@@ -56,7 +56,7 @@ bool CGameOverScene::Init()
 		if (!CreateLayer(TEXT("Menu"), 1))
 			return false;
 
-		auto pMenu = pObjMgr->CreateEntity<CMenu>(SPRITE_WIDTH * 6, SPRITE_HEIGHT, MAX_WIDTH * 0.5f, MAX_HEIGHT * 0.5f + 100, TEXT("Menu"), this);
+		auto pMenu = pObjMgr->CreateEntity<CMenu>(SPRITE_WIDTH * 6, SPRITE_HEIGHT, MAX_WIDTH * 0.5f, MAX_HEIGHT * 0.5f, TEXT("Menu"), this);
 		if (pMenu == nullptr)
 		{
 			return false;

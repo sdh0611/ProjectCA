@@ -3,17 +3,17 @@
 #include "..\..\..\Include\Scene\Actor\CPlayer.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"
-#include "..\..\..\Include\Core\Components\TransformComponent.h"
-#include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Sound\CSoundManager.h"
 #include "..\..\..\Include\Scene\Actor\CPiranha.h"
+
 
 CPiranha::CPiranha()
 {
@@ -27,11 +27,6 @@ bool CPiranha::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 	//기본 Actor의 속성 초기화
 	if (!CEnemy::PostInit(data, pScene))
-		return false;
-
-	//AIComponent (InputComponent) 초기화
-	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
-	if (!pAI->PostInit(this))
 		return false;
 
 	//Collider 초기화
@@ -49,18 +44,6 @@ bool CPiranha::PostInit(const Types::ActorData & data, CGameScene * pScene)
 			{
 				HandlingEvent(Types::EVENT_DEAD);
 			}
-			//else
-			//{
-			//	if (type == Collider::COLLISION_LEFT)
-			//	{
-			//		SetObjectPosition(GetObjectPosition().x + fIntersectLength, GetObjectPosition().y);
-			//	}
-			//	else if (type == Collider::COLLISION_RIGHT)
-			//	{
-			//		SetObjectPosition(GetObjectPosition().x - fIntersectLength, GetObjectPosition().y);
-			//	}
-			//	FlipActorDirection();
-			//}
 			break;
 		}
 
@@ -117,7 +100,7 @@ void CPiranha::ActorBehavior(double dDeltaTime)
 		if (m_dTimeElapsed == 0.f)
 		{
 			auto playerPosition = static_cast<CGameScene*>(m_pOwnerScene)->GetPlayerPtr().lock()->GetEntityPosition();
-			if (playerPosition.x > GetEntityPosition().x - SPRITE_WIDTH && playerPosition.x < GetEntityPosition().x + SPRITE_WIDTH)
+			if (playerPosition.x > GetEntityPosition().x - SPRITE_WIDTH * 2.f && playerPosition.x < GetEntityPosition().x + SPRITE_WIDTH * 2.f)
 			{
 				return;
 			}

@@ -47,13 +47,6 @@ void CCoinParticle::Render(const HDC & hDC)
 
 }
 
-void CCoinParticle::LateUpdate()
-{
-	if (m_bActive)
-	{
-		CEntity::LateUpdate();
-	}
-}
 
 void CCoinParticle::ParticleUpdate(double dDeltaTime)
 {

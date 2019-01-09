@@ -1,7 +1,6 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Scene\UI\CMenu.h"
 #include "..\..\..\Include\Scene\UI\CButton.h"
-#include "..\..\..\Include\Scene\UI\CPointer.h"
 #include "..\..\..\Include\Core\Components\ImageRender.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\CResourceManager.h"

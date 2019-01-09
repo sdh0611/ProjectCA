@@ -2,7 +2,7 @@
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Scene\CObject.h"
 #include "..\..\Include\Scene\CCameraManager.h"
-#include "..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.hpp"
 
 
 CScene::CScene(Types::SceneType type):

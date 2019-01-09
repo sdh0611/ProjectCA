@@ -231,9 +231,6 @@
     <ClCompile Include="Source\Scene\Actor\CFlower.cpp">
       <Filter>소스 파일\Scene\Actors\Pickup</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\Actor\CShell.cpp">
-      <Filter>소스 파일\Scene\Actors\Prob</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CGround.cpp">
       <Filter>소스 파일\Scene\Actors\Prob</Filter>
     </ClCompile>
@@ -300,9 +297,6 @@
     <ClCompile Include="Source\Scene\Actor\CPipe.cpp">
       <Filter>소스 파일\Scene\Actors\Prob</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Graphic\CEffectManager.cpp">
-      <Filter>소스 파일\Core\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CEndPickup.cpp">
       <Filter>소스 파일\Scene\Actors\Pickup</Filter>
     </ClCompile>
@@ -313,9 +307,6 @@
       <Filter>소스 파일\Scene\Actors\Block</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CSpinBlock.cpp">
-      <Filter>소스 파일\Scene\Actors\Block</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\Actor\CBlock.cpp">
       <Filter>소스 파일\Scene\Actors\Block</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CCoinBlock.cpp">
@@ -342,11 +333,11 @@
     <ClCompile Include="Source\Scene\UI\CUI.cpp">
       <Filter>소스 파일\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\UI\CPointer.cpp">
-      <Filter>소스 파일\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene\Actor\CPiranha.cpp">
       <Filter>소스 파일\Scene\Actors\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Graphic\CStompParticle.cpp">
+      <Filter>소스 파일\Core\Graphic\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,9 +388,6 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CActor.h">
       <Filter>헤더 파일\Scene\Actors</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Event.h">
-      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\CLayer.h">
       <Filter>헤더 파일\Scene</Filter>
@@ -470,9 +458,6 @@
     <ClInclude Include="Include\Scene\Actor\CGround.h">
       <Filter>헤더 파일\Scene\Actors\Prob</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Actor\CShell.h">
-      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\Components\AnimationRender.h">
       <Filter>헤더 파일\Core\Components</Filter>
     </ClInclude>
@@ -495,9 +480,6 @@
       <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Include\Core\Window\BackBuffer.h">
-      <Filter>헤더 파일\Core\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene\Actor\CObjectManager.h">
       <Filter>헤더 파일\Core\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CFireball.h">
@@ -536,9 +518,6 @@
     <ClInclude Include="Include\Scene\Actor\CPipe.h">
       <Filter>헤더 파일\Scene\Actors\Prob</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Core\Graphic\CEffectManager.h">
-      <Filter>헤더 파일\Core\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CRex.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
     </ClInclude>
@@ -548,17 +527,11 @@
     <ClInclude Include="Include\Scene\Actor\CRandomBlock.h">
       <Filter>헤더 파일\Scene\Actors\Block</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Actor\CBlock.h">
-      <Filter>헤더 파일\Scene\Actors\Block</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CCoinBlock.h">
       <Filter>헤더 파일\Scene\Actors\Block</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CPickupBlock.h">
       <Filter>헤더 파일\Scene\Actors\Block</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene\CEntity.h">
-      <Filter>헤더 파일\Scene\Actors</Filter>
     </ClInclude>
     <ClInclude Include="Include\Core\Graphic\CParticle.h">
       <Filter>헤더 파일\Core\Graphic\Particle</Filter>
@@ -575,11 +548,17 @@
     <ClInclude Include="Include\Scene\UI\CUI.h">
       <Filter>헤더 파일\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\UI\CPointer.h">
-      <Filter>헤더 파일\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CPiranha.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Graphic\CStompParticle.h">
+      <Filter>헤더 파일\Core\Graphic\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CObjectManager.hpp">
+      <Filter>헤더 파일\Core\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\CEntity.hpp">
+      <Filter>헤더 파일\Scene\Actors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

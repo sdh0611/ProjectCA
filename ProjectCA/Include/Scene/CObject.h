@@ -1,7 +1,7 @@
 #pragma once
 
 #include "..\..\stdafx.h"
-#include "CEntity.h"
+#include "CEntity.hpp"
 
 //NOTE: 게임 내의 물체들이 상속받게 될 Class.
 //			다른 Object를 소유할 수 있고, 다른 Object에 속할 수 있음.

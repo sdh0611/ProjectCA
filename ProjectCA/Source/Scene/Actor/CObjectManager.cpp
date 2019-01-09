@@ -1,5 +1,5 @@
 #include "..\..\..\stdafx.h"
-#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CScene.h"

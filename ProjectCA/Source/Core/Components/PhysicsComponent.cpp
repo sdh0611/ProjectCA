@@ -135,7 +135,7 @@ void PhysicsComponent::AddForceX(float fForce)
 
 void PhysicsComponent::AddForceY(float fForce)
 {
-	m_fYSpeed += fForce;
+	m_fYSpeed -= fForce;
 }
 
 bool PhysicsComponent::IsGrounded() const

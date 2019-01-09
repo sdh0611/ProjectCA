@@ -1,7 +1,7 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "..\CEntity.h"
+#include "..\CEntity.hpp"
 
 
 class CUI : public CEntity

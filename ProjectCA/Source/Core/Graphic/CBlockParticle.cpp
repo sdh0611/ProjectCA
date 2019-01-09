@@ -5,7 +5,7 @@
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Graphic\CBlockParticle.h"
-#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\..\Include\Scene\CScene.h"
 #include "..\..\..\Include\Core\CResourceManager.h"
 
@@ -61,7 +61,6 @@ void CBlockParticle::Update(double dDeltaTime)
 			{
 				peace->SetActive(false);
 			}
-			//m_pOwnerScene->DeleteEntityFromScene(m_EntityID);
 		}
 	}
 }

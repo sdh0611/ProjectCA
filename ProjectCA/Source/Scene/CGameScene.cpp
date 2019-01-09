@@ -11,7 +11,7 @@
 #include "..\..\Include\Scene\CGameScene.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Scene\CSceneManager.h"
-#include "..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\CScoreManager.h"
 #include "..\..\Include\Scene\Actor\CEnemy.h"
@@ -62,7 +62,6 @@ bool CGameScene::Init()
 	}
 	m_pObjectManager = CObjectManager::GetInstance();
 
-	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
 	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMAthletic"));
 
 	CInputManager::GetInstance()->SetKeyCheckMode(VK_UP, false);
@@ -76,6 +75,8 @@ bool CGameScene::Init()
 
 	//Player 생성
 	{
+		if (!CreateLayer(TEXT("Player"), 2))
+			return false;
 		auto pPlayer = m_pObjectManager->CreateActor<CPlayer>(SPRITE_WIDTH, SPRITE_HEIGHT*2.f, 0, 0, Types::OT_PLAYER,
 			Types::DIR_RIGHT, TEXT("Player"), this);
 		if (pPlayer == nullptr)
@@ -90,11 +91,7 @@ bool CGameScene::Init()
 		//카메라 부착
 		pPlayer->AttachCamera(pCamera.lock());
 		SetSceneMainCamera(pCamera.lock());
-
-		m_EntityPtrList.emplace_back(pPlayer);
-		if (!CreateLayer(TEXT("Player"), 2))
-			return false;
-
+		AddEntityToScene(pPlayer);
 		FindLayer(TEXT("Player"))->AddActor(pPlayer);
 		m_pPlayer = pPlayer;
 	}
@@ -701,6 +698,27 @@ bool CGameScene::BuildWorld()
 		AddEntityToScene(pEnemy);
 		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
 		
+		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 6800.f, 580.f, Types::OT_ENEMY,
+			Types::DIR_LEFT, TEXT("Piranha"), this);
+		if (pEnemy == nullptr)
+			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 7080.f, 540.f, Types::OT_ENEMY,
+			Types::DIR_LEFT, TEXT("Piranha"), this);
+		if (pEnemy == nullptr)
+			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
+		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 7240.f, 540.f, Types::OT_ENEMY,
+			Types::DIR_LEFT, TEXT("Piranha"), this);
+		if (pEnemy == nullptr)
+			return false;
+		AddEntityToScene(pEnemy);
+		FindLayer(TEXT("Enemy"))->AddActor(pEnemy);
+
 		pEnemy = m_pObjectManager->CreateActor<CPiranha>(SPRITE_WIDTH, SPRITE_HEIGHT*2.2f, 7400.f, 540.f, Types::OT_ENEMY,
 			Types::DIR_LEFT, TEXT("Piranha"), this);
 		if (pEnemy == nullptr)
@@ -987,6 +1005,41 @@ bool CGameScene::BuildWorld()
 		FindLayer(TEXT("Prob"))->AddActor(pProb);
 
 
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 5, 6800.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7000.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7080.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7160.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
+		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7240.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProb == nullptr)
+			return false;
+		AddEntityToScene(pProb);
+		FindLayer(TEXT("Prob"))->AddActor(pProb);
+
+
 		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7400.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
 		if (pProb == nullptr)
 			return false;
@@ -1082,7 +1135,6 @@ void CGameScene::GameUpdate(double dDeltaTime)
 
 void CGameScene::ResetScene()
 {
-	//CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMOverworld"));
 	CSoundManager::GetInstance()->ChangeBGM(TEXT("BGMAthletic"));
 	m_bClear				= false;
 	m_iRemainTime	= 999;

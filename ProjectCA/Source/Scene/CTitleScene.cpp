@@ -2,7 +2,7 @@
 #include "..\..\Include\Scene\CTitleScene.h"
 #include "..\..\Include\Core\CInputManager.h"
 #include "..\..\Include\Scene\CSceneManager.h"
-#include "..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\Include\Scene\Actor\CGround.h"

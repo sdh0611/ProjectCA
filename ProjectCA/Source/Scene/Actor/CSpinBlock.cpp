@@ -13,7 +13,7 @@
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Sound\CSoundManager.h"
-#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\..\Include\Scene\Actor\CObjectManager.hpp"
 
 
 CSpinBlock::CSpinBlock()

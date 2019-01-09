@@ -65,14 +65,6 @@ void CParticle::Update(double dDeltaTime)
 		}
 	}
 }
-//
-//void CParticle::Render(const HDC & hDC)
-//{
-//}
-
-//void CParticle::SetAnimation()
-//{
-//}
 
 void CParticle::SetOwnerEntity(CEntity * pOwner)
 {
@@ -81,6 +73,10 @@ void CParticle::SetOwnerEntity(CEntity * pOwner)
 
 void CParticle::SetPlayTime(double dPlayTime)
 {
+	if (dPlayTime < 0.f)
+		return;
+
+	m_dPlayTime = dPlayTime;
 }
 
 void CParticle::SetXSpeed(float fSpeed)

@@ -982,7 +982,7 @@ bool CResourceManager::LoadEffectImageInfo()
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Effects/effect_destroy_enemy.bmp"), TEXT("EffectDestroyEnemy")))
 		return false;
 
-	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Effects/effect_stepping.bmp"), TEXT("EffectStepping")))
+	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Effects/effect_stomp.bmp"), TEXT("EffectStomp")))
 		return false;
 
 	if (!AddSpriteUsePath(TEXT("./Resources/Sprite/Effects/effect_throw.bmp"), TEXT("EffectThrow")))

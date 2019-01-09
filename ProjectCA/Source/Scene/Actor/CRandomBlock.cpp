@@ -3,7 +3,7 @@
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Core\Components\AnimationRender.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
-#include "..\..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\..\Include\Scene\Actor\CObjectManager.hpp"
 
 
 

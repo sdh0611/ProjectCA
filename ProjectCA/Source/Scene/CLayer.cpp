@@ -1,5 +1,5 @@
 #include "..\..\Include\Scene\CLayer.h"
-#include "..\..\Include\Scene\CEntity.h"
+#include "..\..\Include\Scene\CEntity.hpp"
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CWorld.h"
 #include "..\..\Include\Core\Components\RenderComponent.h"

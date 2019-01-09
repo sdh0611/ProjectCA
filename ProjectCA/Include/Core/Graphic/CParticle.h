@@ -1,9 +1,9 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "..\..\Scene\CEntity.h"
+#include "..\..\Scene\CEntity.hpp"
 
-//NOTE: Particle들이 상속받게 되는 추상 클래스
+//NOTE: Particle들이 상속받게 되는 클래스
 
 class CScene;
 
@@ -18,11 +18,9 @@ public:
 	virtual bool PostInit(const ENTITY_DATA& data, CScene* pScene) override;
 	virtual void Init() override;
 	virtual void Update(double dDeltaTime);
-	//virtual void Render(const HDC& hDC) override;
 
 
 public:
-	//void SetAnimation();
 	void SetOwnerEntity(CEntity* pOwner);
 	void SetPlayTime(double dPlayTime);
 	void SetXSpeed(float fSpeed);

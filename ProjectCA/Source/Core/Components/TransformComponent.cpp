@@ -1,7 +1,7 @@
 #include "..\..\..\stdafx.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
-#include "..\..\..\Include\Scene\CEntity.h"
+#include "..\..\..\Include\Scene\CEntity.hpp"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 

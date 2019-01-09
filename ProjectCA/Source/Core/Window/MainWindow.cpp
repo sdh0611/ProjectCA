@@ -87,6 +87,7 @@ void MainWindow::Update()
 	m_pTimer->Update();
 	m_pSceneManager->Update(m_pTimer->GetDeltaTime());
 	m_pTimer->CheckFrameCount();
+	Sleep(1);
 }
 
 

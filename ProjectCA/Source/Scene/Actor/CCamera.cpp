@@ -1,5 +1,5 @@
 #include "..\..\..\stdafx.h"
-#include "..\..\..\Include\Scene\CEntity.h"
+#include "..\..\..\Include\Scene\CEntity.hpp"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\TransformComponent.h"

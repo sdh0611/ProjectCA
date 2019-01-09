@@ -2,11 +2,10 @@
 #include "..\..\..\Include\Scene\Actor\CGoomba.h"
 #include "..\..\..\Include\Scene\CGameScene.h"
 #include "..\..\..\Include\Scene\CScoreManager.h"
-#include "..\..\..\Include\Core\Components\TransformComponent.h"
-#include "..\..\..\Include\Core\Components\AIComponent.h"
 #include "..\..\..\Include\Scene\CCameraManager.h"
 #include "..\..\..\Include\Scene\Actor\CCamera.h"
 #include "..\..\..\Include\Scene\Actor\CRandomBlock.h"
+#include "..\..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\..\Include\Core\Components\PhysicsComponent.h"
 #include "..\..\..\Include\Core\Components\ColliderBox.h"
 #include "..\..\..\Include\Core\Components\RenderComponent.h"
@@ -26,11 +25,6 @@ bool CGoomba::PostInit(const Types::ActorData & data, CGameScene * pScene)
 {
 	//기본 Actor의 속성 초기화
 	if (!CEnemy::PostInit(data, pScene))
-		return false;
-
-	//AIComponent (InputComponent) 초기화
-	std::shared_ptr<AIComponent> pAI = std::make_shared<AIComponent>();
-	if (!pAI->PostInit(this))
 		return false;
 
 	//PhysicsComponent 초기화

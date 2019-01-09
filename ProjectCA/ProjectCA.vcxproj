@@ -166,9 +166,9 @@
     <ClCompile Include="Source\Core\Graphic\CBlockParticle.cpp" />
     <ClCompile Include="Source\Core\Graphic\CCoinParticle.cpp" />
     <ClCompile Include="Source\Core\Graphic\CParticle.cpp" />
-    <ClCompile Include="Source\Core\Graphic\CEffectManager.cpp" />
     <ClCompile Include="Source\Core\Graphic\CSprite.cpp" />
     <ClCompile Include="Source\Core\CInputManager.cpp" />
+    <ClCompile Include="Source\Core\Graphic\CStompParticle.cpp" />
     <ClCompile Include="Source\Core\Math\CVector.cpp" />
     <ClCompile Include="Source\Core\Sound\CSoundManager.cpp" />
     <ClCompile Include="Source\Core\Timer.cpp" />
@@ -176,7 +176,6 @@
     <ClCompile Include="Source\Core\Window\MainWindow.cpp" />
     <ClCompile Include="Source\Core\Window\MyWindow.cpp" />
     <ClCompile Include="Source\Scene\Actor\CActor.cpp" />
-    <ClCompile Include="Source\Scene\Actor\CBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CCoinBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPickupBlock.cpp" />
     <ClCompile Include="Source\Scene\Actor\CPiranha.cpp" />
@@ -198,7 +197,6 @@
     <ClCompile Include="Source\Scene\Actor\CPlayer.cpp" />
     <ClCompile Include="Source\Scene\Actor\CProb.cpp" />
     <ClCompile Include="Source\Scene\Actor\CRex.cpp" />
-    <ClCompile Include="Source\Scene\Actor\CShell.cpp" />
     <ClCompile Include="Source\Scene\Actor\CSpinBlock.cpp" />
     <ClCompile Include="Source\Scene\CCameraManager.cpp" />
     <ClCompile Include="Source\Scene\CEntity.cpp" />
@@ -218,7 +216,6 @@
     <ClCompile Include="Source\Scene\UI\CItemInfo.cpp" />
     <ClCompile Include="Source\Scene\UI\CMenu.cpp" />
     <ClCompile Include="Source\Scene\UI\CNumberInterface.cpp" />
-    <ClCompile Include="Source\Scene\UI\CPointer.cpp" />
     <ClCompile Include="Source\Scene\UI\CUI.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
@@ -242,18 +239,16 @@
     <ClInclude Include="Include\Core\Graphic\CBlockParticle.h" />
     <ClInclude Include="Include\Core\Graphic\CCoinParticle.h" />
     <ClInclude Include="Include\Core\Graphic\CParticle.h" />
-    <ClInclude Include="Include\Core\Graphic\CEffectManager.h" />
     <ClInclude Include="Include\Core\Graphic\CSprite.h" />
     <ClInclude Include="Include\Core\CInputManager.h" />
+    <ClInclude Include="Include\Core\Graphic\CStompParticle.h" />
     <ClInclude Include="Include\Core\Math\CVector.h" />
     <ClInclude Include="Include\Core\Sound\CSoundManager.h" />
     <ClInclude Include="Include\Core\Timer.h" />
     <ClInclude Include="Include\Core\Window\BackBuffer.h" />
     <ClInclude Include="Include\Core\Window\MainWindow.h" />
     <ClInclude Include="Include\Core\Window\MyWindow.h" />
-    <ClInclude Include="Include\Event.h" />
     <ClInclude Include="Include\Scene\Actor\CActor.h" />
-    <ClInclude Include="Include\Scene\Actor\CBlock.h" />
     <ClInclude Include="Include\Scene\Actor\CCoinBlock.h" />
     <ClInclude Include="Include\Scene\Actor\CPickupBlock.h" />
     <ClInclude Include="Include\Scene\Actor\CPiranha.h" />
@@ -262,7 +257,7 @@
     <ClInclude Include="Include\Scene\Actor\CEndPickup.h" />
     <ClInclude Include="Include\Scene\Actor\CFireball.h" />
     <ClInclude Include="Include\Scene\Actor\CGoomba.h" />
-    <ClInclude Include="Include\Scene\Actor\CObjectManager.h" />
+    <ClInclude Include="Include\Scene\Actor\CObjectManager.hpp" />
     <ClInclude Include="Include\Scene\Actor\CBackground.h" />
     <ClInclude Include="Include\Scene\Actor\CCamera.h" />
     <ClInclude Include="Include\Scene\Actor\CEnemy.h" />
@@ -275,10 +270,9 @@
     <ClInclude Include="Include\Scene\Actor\CPlayer.h" />
     <ClInclude Include="Include\Scene\Actor\CProb.h" />
     <ClInclude Include="Include\Scene\Actor\CRex.h" />
-    <ClInclude Include="Include\Scene\Actor\CShell.h" />
     <ClInclude Include="Include\Scene\Actor\CSpinBlock.h" />
     <ClInclude Include="Include\Scene\CCameraManager.h" />
-    <ClInclude Include="Include\Scene\CEntity.h" />
+    <ClInclude Include="Include\Scene\CEntity.hpp" />
     <ClInclude Include="Include\Scene\CGameScene.h" />
     <ClInclude Include="Include\Scene\CLayer.h" />
     <ClInclude Include="Include\Scene\CObject.h" />
@@ -295,7 +289,6 @@
     <ClInclude Include="Include\Scene\UI\CItemInfo.h" />
     <ClInclude Include="Include\Scene\UI\CMenu.h" />
     <ClInclude Include="Include\Scene\UI\CNumberInterface.h" />
-    <ClInclude Include="Include\Scene\UI\CPointer.h" />
     <ClInclude Include="Include\Scene\UI\CUI.h" />
     <ClInclude Include="Include\Singleton.hpp" />
     <ClInclude Include="stdafx.h" />

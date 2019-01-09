@@ -48,73 +48,198 @@ void PlayerInputComponent::LateUpdate()
 
 void PlayerInputComponent::KeyProcess()
 {
-	CPlayer* pOwner			= static_cast<CPlayer*>(m_pOwner);
-	DIRECTION dir				= pOwner->GetActorDirection();
-	auto pSoundManager	= CSoundManager::GetInstance();
-	auto pPhysics				= m_pOwner->GetComponent<PhysicsComponent>().lock();
+	CPlayer* pOwner = static_cast<CPlayer*>(m_pOwner);
+	DIRECTION dir = pOwner->GetActorDirection();
+	auto pSoundManager = CSoundManager::GetInstance();
+	auto pPhysics = m_pOwner->GetComponent<PhysicsComponent>().lock();
 
 	if (pPhysics->IsGrounded())
 	{
 		pOwner->SetActorAct(Types::ACT_IDLE);
 	}
 
+
+	//위, 아래키에 대한 입력
+	if (m_pInputManager->IsKeyDown(TEXT("DOWN")))
+	{
+		if (pPhysics->IsGrounded())
+		{
+			pOwner->SetActorAct(Types::ACT_SITDOWN);
+		}
+
+	}
+	else if (m_pInputManager->IsKeyDown(TEXT("UP")))
+	{
+		if (pPhysics->IsGrounded())
+		{
+			pOwner->SetActorAct(Types::ACT_LOOKUP);
+		}
+	}
+
+
 	//수평상의 움직임에 대한 입력
 	if (m_pInputManager->IsKeyDown(TEXT("LEFT")))
 	{
 		pOwner->SetActorDirection(Types::DIR_LEFT);
 		
-		if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
+		if (pPhysics->IsGrounded())
 		{
-			if (pPhysics->GetCurSpeed() > -1 * pPhysics->GetMaxSpeed())
+			if (m_pInputManager->IsKeyDown(TEXT("DOWN"))
+				|| m_pInputManager->IsKeyDown(TEXT("UP")))
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+				if (pPhysics->GetCurSpeed() > 0.f)
+				{
+					pPhysics->AddForceX(-10.f);
+					if (pPhysics->GetCurSpeed() < 0.f)
+					{
+						pPhysics->SetCurSpeed(0.f);
+					}
+				}
+				else if (pPhysics->GetCurSpeed() < 0.f)
+				{
+					pPhysics->AddForceX(10.f);
+					if (pPhysics->GetCurSpeed() > 0.f)
+					{
+						pPhysics->SetCurSpeed(0.f);
+					}
+				}
+			}
+			else
+			{
+				if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
+				{
+					if (pPhysics->GetCurSpeed() > -1 * pPhysics->GetMaxSpeed())
+					{
+						pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+					}
+				}
+				else
+				{
+					if (pPhysics->GetCurSpeed() > -1 * pPhysics->GetSpeed())
+					{
+						pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+					}
+					else if (pPhysics->GetCurSpeed() < -1 * pPhysics->GetSpeed())
+					{
+						pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+						//오차 보정
+						if (pPhysics->GetCurSpeed() > -1 * pPhysics->GetSpeed())
+						{
+							pPhysics->SetCurSpeed(-1 * pPhysics->GetSpeed());
+						}
+					}
+				}
 			}
 		}
 		else
 		{
-			if (pPhysics->GetCurSpeed() > -1 * pPhysics->GetSpeed())
+			if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+				if (pPhysics->GetCurSpeed() > -1 * pPhysics->GetMaxSpeed())
+				{
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+				}
 			}
-			else if (pPhysics->GetCurSpeed() < -1 * pPhysics->GetSpeed())
+			else
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
-				//오차 보정
 				if (pPhysics->GetCurSpeed() > -1 * pPhysics->GetSpeed())
 				{
-					pPhysics->SetCurSpeed(-1 * pPhysics->GetSpeed());
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+				}
+				else if (pPhysics->GetCurSpeed() < -1 * pPhysics->GetSpeed())
+				{
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+					//오차 보정
+					if (pPhysics->GetCurSpeed() > -1 * pPhysics->GetSpeed())
+					{
+						pPhysics->SetCurSpeed(-1 * pPhysics->GetSpeed());
+					}
 				}
 			}
 		}
+
 	}
 	else if (m_pInputManager->IsKeyDown(TEXT("RIGHT")))
 	{
 		pOwner->SetActorDirection(Types::DIR_RIGHT);
-		if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
+
+		if (pPhysics->IsGrounded())
 		{
-			if (pPhysics->GetCurSpeed() < pPhysics->GetMaxSpeed())
+			if (m_pInputManager->IsKeyDown(TEXT("DOWN"))
+				|| m_pInputManager->IsKeyDown(TEXT("UP")))
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+				if (pPhysics->GetCurSpeed() > 0.f)
+				{
+					pPhysics->AddForceX(-10.f);
+					if (pPhysics->GetCurSpeed() < 0.f)
+					{
+						pPhysics->SetCurSpeed(0.f);
+					}
+				}
+				else if (pPhysics->GetCurSpeed() < 0.f)
+				{
+					pPhysics->AddForceX(10.f);
+					if (pPhysics->GetCurSpeed() > 0.f)
+					{
+						pPhysics->SetCurSpeed(0.f);
+					}
+				}
+			}
+			else
+			{
+				if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
+				{
+					if (pPhysics->GetCurSpeed() < pPhysics->GetMaxSpeed())
+					{
+						pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+					}
+				}
+				else
+				{
+					if (pPhysics->GetCurSpeed() < pPhysics->GetSpeed())
+					{
+						pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+					}
+					else if (pPhysics->GetCurSpeed() > pPhysics->GetSpeed())
+					{
+						pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+						//오차 보정
+						if (pPhysics->GetCurSpeed() < pPhysics->GetSpeed())
+						{
+							pPhysics->SetCurSpeed(pPhysics->GetSpeed());
+						}
+					}
+				}
 			}
 		}
 		else
 		{
-			if (pPhysics->GetCurSpeed() < pPhysics->GetSpeed())
+			if (m_pInputManager->IsKeyDown(TEXT("ACCEL")))
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+				if (pPhysics->GetCurSpeed() < pPhysics->GetMaxSpeed())
+				{
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+				}
 			}
-			else if (pPhysics->GetCurSpeed()  > pPhysics->GetSpeed())
+			else
 			{
-				pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
-				//오차 보정
 				if (pPhysics->GetCurSpeed() < pPhysics->GetSpeed())
 				{
-					pPhysics->SetCurSpeed( pPhysics->GetSpeed());
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() + 10.f);
+				}
+				else if (pPhysics->GetCurSpeed() > pPhysics->GetSpeed())
+				{
+					pPhysics->SetCurSpeed(pPhysics->GetCurSpeed() - 10.f);
+					//오차 보정
+					if (pPhysics->GetCurSpeed() < pPhysics->GetSpeed())
+					{
+						pPhysics->SetCurSpeed(pPhysics->GetSpeed());
+					}
 				}
 			}
 		}
 	}
-	else 
+	else
 	{
 		if (pPhysics->GetCurSpeed() < 0.f)
 		{
@@ -134,25 +259,6 @@ void PlayerInputComponent::KeyProcess()
 		}
 	}
 
-	//위, 아래키에 대한 입력
-	if (m_pInputManager->IsKeyDown(TEXT("DOWN")))
-	{
-		if (pPhysics->IsGrounded())
-		{
-			pOwner->SetActorAct(Types::ACT_SITDOWN);
-			pPhysics->SetCurSpeed(0.f);
-		}
-
-	}
-	else if (m_pInputManager->IsKeyDown(TEXT("UP")))
-	{
-		if (pPhysics->IsGrounded())
-		{
-			pOwner->SetActorAct(Types::ACT_LOOKUP);
-			pPhysics->SetCurSpeed(0.f);
-		}
-
-	}
 
 	//수직상의 움직임에 대한 입력
 	if (m_pInputManager->IsKeyDown(TEXT("JUMP")))
@@ -168,7 +274,7 @@ void PlayerInputComponent::KeyProcess()
 	{
 		if (pPhysics->IsGrounded())
 		{
-			if (!static_cast<CPlayer*>(m_pOwner)->IsPickingObject())
+			if (!pOwner->IsPickingObject())
 			{
 				pOwner->SetActorAct(Types::ACT_DESTROY);
 				pSoundManager->SoundPlay(TEXT("SFXSpinJump"));
@@ -181,7 +287,7 @@ void PlayerInputComponent::KeyProcess()
 			pPhysics->SetCurJumpForce(pPhysics->GetJumpForce());
 		}
 	}
-	else 
+	else
 	{
 		if (pPhysics->GetCurJumpForce() > 50.f)
 		{

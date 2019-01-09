@@ -4,7 +4,7 @@
 #include "..\..\Include\Scene\Actor\CActor.h"
 #include "..\..\Include\Scene\CLayer.h"
 #include "..\..\Include\Core\CCollisionManager.h"
-#include "..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\Include\Core\CResourceManager.h"
 #include "..\..\Include\Core\Components\TransformComponent.h"
 #include "..\..\Include\Core\Components\PlayerInputComponent.h"

@@ -66,7 +66,6 @@ private:
 
 
 private:
-	//bool							m_bProtected;
 	bool							m_bInterrupt;
 	bool							m_bTransforming;
 	double						m_dTimeElapsed;

@@ -1,7 +1,7 @@
 #include "..\..\stdafx.h"
 #include "..\..\Include\Scene\CSceneManager.h"
 #include "..\..\Include\Scene\CCameraManager.h"
-#include "..\..\Include\Scene\Actor\CObjectManager.h"
+#include "..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\Include\Core\Sound\CSoundManager.h"
 #include "..\..\Include\Scene\CScene.h"
 #include "..\..\Include\Scene\CGameScene.h"
