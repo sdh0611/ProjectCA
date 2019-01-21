@@ -3,7 +3,7 @@
 /*
 	NOTE:게임 내의 움직이는 물체들이 상속받게 될 기본 Class 정의.
 			CObject를 상속받아서 작성.
-			수평, 수직상의 상태, 방향, ActionType 값들을 내부적으로 가짐.
+			방향, ActionType 값들을 내부적으로 가짐.
 */
 
 #include "..\..\..\stdafx.h"
@@ -28,7 +28,7 @@ public:
 	
 
 public:
-	virtual bool PostInit(const Types::ActorData&, CGameScene*);
+	virtual bool PostInit(const ACTOR_DATA& data, CGameScene* pScene);
 	virtual void Init();
 	virtual void Update(double dDeltaTime);
 	

@@ -17,7 +17,7 @@ CRandomBlock::~CRandomBlock()
 
 bool CRandomBlock::PostInit(const OBJECT_DATA & objectData, CScene * pScene)
 {
-	if (!CProb::PostInit(objectData, pScene))
+	if (!CProp::PostInit(objectData, pScene))
 		return false;
 	GetTransform().lock()->SetPivotRatio(0.5f, 1.f);
 

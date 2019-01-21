@@ -3,6 +3,7 @@
 #include "..\..\..\stdafx.h"
 
 //NOTE: Screen상에서 그려질 화면을 담는 Camera 객체 구현.
+//			하나의 Owner Entity를 가질 수 있음.
 
 class CEntity;
 
@@ -19,7 +20,7 @@ public:
 
 
 public:
-	bool PostInit(std::shared_ptr<CEntity> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id);
+	bool PostInit(std::shared_ptr<CEntity> pOwner, UINT iWidth, UINT iHeight, CAMERA_ID id);
 	void Init();
 	void Update(double dDeltaTime);
 

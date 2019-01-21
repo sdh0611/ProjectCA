@@ -1,11 +1,11 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "CProb.h"
+#include "CProp.h"
 
 //NOTE: SpinBlock을 구현한 클래스.
 
-class CSpinBlock : public CProb
+class CSpinBlock : public CProp
 {
 public:
 	CSpinBlock();

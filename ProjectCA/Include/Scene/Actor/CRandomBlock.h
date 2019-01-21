@@ -1,13 +1,13 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "CProb.h"
+#include "CProp.h"
 
 //NOTE: RandomBox들의 추상 클래스.
 
 class CPickup;
 
-class CRandomBlock : public CProb
+class CRandomBlock : public CProp
 {
 	enum BlockType {
 		BT_DEFAULT, BT_HIDE

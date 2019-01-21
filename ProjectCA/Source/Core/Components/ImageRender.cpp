@@ -36,7 +36,6 @@ void ImageRender::Draw(const HDC & hDC)
 	{
 		if (!m_pWeakSprite.expired())
 		{
-			//POSITION pivot = m_pOwner->GetComponent<TransformComponent>().lock()->GetScreenPivot();
 			HBITMAP hOldBit = (HBITMAP)SelectObject(m_hRenderDC, m_pWeakSprite.lock()->GetBitmap());
 
 			if (m_RenderMode == RenderMode::RENDER_DEFAULT)
@@ -62,6 +61,7 @@ void ImageRender::Draw(const HDC & hDC)
 					m_iDrawWidth, m_iDrawHeight, m_BlendFunction);
 
 				DeleteObject(SelectObject(m_hBlendingDC, hOldBitmap));
+				DeleteObject(hTempBit);
 			}
 			SelectObject(m_hRenderDC, hOldBit);
 		}
@@ -100,7 +100,7 @@ void ImageRender::Draw(const HDC& hDC, const POSITION& position)
 					m_iDrawWidth, m_iDrawHeight, m_BlendFunction);
 
 				DeleteObject(SelectObject(m_hBlendingDC, hOldBitmap));
-
+				DeleteObject(hTempBit);
 			}
 			SelectObject(m_hRenderDC, hOldBit);
 		}
@@ -138,6 +138,7 @@ void ImageRender::Draw(const HDC & hDC, const POSITION & position, std::weak_ptr
 				m_iDrawWidth, m_iDrawHeight, m_BlendFunction);
 
 			DeleteObject(SelectObject(m_hBlendingDC, hOldBitmap));
+			DeleteObject(hTempBit);
 		}
 		SelectObject(m_hRenderDC, hOldBit);
 	}

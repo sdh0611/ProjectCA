@@ -7,7 +7,6 @@
 
 CAnim::CAnim()
 	:m_bLoop(false), m_iCurFrame(0), m_iMaxFrame(0),
-	//m_iDrawWidth(0), m_iDrawHeight(0),	
 	m_dPlayTime(0.f), m_dPlaySpeed(0.f), 
 	m_dPlaySectionLength(0.f), m_dTimeElapsed(0.f)
 {
@@ -104,7 +103,7 @@ void CAnim::DrawAnimation(const HDC & hDC, const HDC& hMemDC, const HDC& hBlendi
 
 	DeleteObject(SelectObject(hBlendingDC, hOldBitmap));
 	SelectObject(hMemDC, hOldBit);
-	//DeleteObject(hTempBit);
+	DeleteObject(hTempBit);
 }
 
 void CAnim::DrawAnimation(const HDC & hDC, const HDC & hMemDC, const POSITION & point, UINT iWidth, UINT iHeight)

@@ -26,7 +26,7 @@ CSpinBlock::~CSpinBlock()
 
 bool CSpinBlock::PostInit(const OBJECT_DATA & data, CScene * pScene)
 {
-	if (!CProb::PostInit(data, pScene))
+	if (!CProp::PostInit(data, pScene))
 		return false;
 	
 	//Collider에 OnCollision 콜백 메소드 설정
@@ -111,7 +111,7 @@ void CSpinBlock::Update(double dDeltaTime)
 	if (m_bActive)
 	{
 		BlockBehavior(dDeltaTime);
-		CProb::Update(dDeltaTime);
+		CProp::Update(dDeltaTime);
 	}
 }
 

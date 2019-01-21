@@ -14,7 +14,7 @@ CCamera::~CCamera()
 {
 }
 
-bool CCamera::PostInit(std::shared_ptr<CEntity> pOwner, UINT iWidth, UINT iHeight, Types::CameraID id)
+bool CCamera::PostInit(std::shared_ptr<CEntity> pOwner, UINT iWidth, UINT iHeight, CAMERA_ID id)
 {
 	m_bActive = true;
 	m_fDestPosition = 0.f;

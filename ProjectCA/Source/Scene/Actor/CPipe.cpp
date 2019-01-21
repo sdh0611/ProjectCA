@@ -31,7 +31,7 @@ bool CPipe::PostInit(const OBJECT_DATA & data, CScene * pScene)
 	iWidth = data.m_iEntityWidth * PIPE_UNIT_WIDTH;
 	iHeight = data.m_iEntityHeight * PIPE_UNIT_HEIGHT;
 
-	if (!CProb::PostInit(data, pScene))
+	if (!CProp::PostInit(data, pScene))
 		return false;
 
 	auto pRender = std::make_shared<ImageRender>();
@@ -57,14 +57,14 @@ bool CPipe::PostInit(const OBJECT_DATA & data, CScene * pScene)
 
 void CPipe::Init()
 {
-	CProb::Init();
+	CProp::Init();
 }
 
 void CPipe::Update(double dDeltaTime)
 {
 	if (m_bActive)
 	{
-		CProb::Update(dDeltaTime);
+		CProp::Update(dDeltaTime);
 	}
 }
 

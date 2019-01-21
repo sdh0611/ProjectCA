@@ -13,6 +13,15 @@
 
 
 
+CGround::CGround()
+{
+}
+
+CGround::~CGround()
+{
+	m_TileSpriteTable.clear();
+}
+
 bool CGround::PostInit(const OBJECT_DATA &data, CScene *pScene)
 {
 	UINT& iWidth = const_cast<UINT&>(data.m_iEntityWidth);
@@ -21,7 +30,7 @@ bool CGround::PostInit(const OBJECT_DATA &data, CScene *pScene)
 	iWidth *= TILE_WIDTH;
 	iHeight *= TILE_HEIGHT;
 
-	if (!CProb::PostInit(data, pScene))
+	if (!CProp::PostInit(data, pScene))
 		return false;
 
 	GetTransform().lock()->SetPivotRatio(0.f, 0.f);

@@ -14,13 +14,11 @@
 #include "..\..\Include\Scene\Actor\CObjectManager.hpp"
 #include "..\..\Include\Scene\CCameraManager.h"
 #include "..\..\Include\Scene\CScoreManager.h"
-#include "..\..\Include\Scene\Actor\CEnemy.h"
 #include "..\..\Include\Scene\Actor\CKoopa.h"
 #include "..\..\Include\Scene\Actor\CGoomba.h"
 #include "..\..\Include\Scene\Actor\CRex.h"
 #include "..\..\Include\Scene\Actor\CPiranha.h"
 #include "..\..\Include\Scene\Actor\CPlayer.h"
-#include "..\..\Include\Scene\Actor\CProb.h"
 #include "..\..\Include\Scene\Actor\CGround.h"
 #include "..\..\Include\Scene\Actor\CSpinBlock.h"
 #include "..\..\Include\Scene\Actor\CRandomBlock.h"
@@ -48,8 +46,6 @@ CGameScene::CGameScene(Types::SceneType type)
 
 CGameScene::~CGameScene()
 {
-	m_EntityPtrList.clear();
-	puts("Destroy Game");
 	CCollisionManager::GetInstance()->Destroy();
 }
 
@@ -949,123 +945,123 @@ bool CGameScene::BuildWorld()
 		if (!CreateLayer(TEXT("Prob"), 5))
 			return false;
 
-		auto pProb = m_pObjectManager->CreateObject<CPipe>(1, 7, 400.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		auto pProp = m_pObjectManager->CreateObject<CPipe>(1, 7, 400.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 3, 0.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 3, 0.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 3, 1000.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 3, 1000.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1300.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 4, 1300.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 1600.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 4, 1600.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 2, 3100.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 2, 3100.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 4, 3180.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 4, 3180.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 3260.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 6, 3260.f, 600.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 5, 6800.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 5, 6800.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7000.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 6, 7000.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7080.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 6, 7080.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7160.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 6, 7160.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7240.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 6, 7240.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 6, 7400.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 6, 7400.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 7, 7600.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 7, 7600.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 5, 7800.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 5, 7800.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 
-		pProb = m_pObjectManager->CreateObject<CPipe>(1, 5, 8170.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
-		if (pProb == nullptr)
+		pProp = m_pObjectManager->CreateObject<CPipe>(1, 5, 8170.f, 700.f, Types::OT_PROB, TEXT("PIPE"), this);
+		if (pProp == nullptr)
 			return false;
-		AddEntityToScene(pProb);
-		FindLayer(TEXT("Prob"))->AddActor(pProb);
+		AddEntityToScene(pProp);
+		FindLayer(TEXT("Prob"))->AddActor(pProp);
 
 	}
 

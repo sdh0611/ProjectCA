@@ -17,7 +17,6 @@ CFireball::CFireball()
 
 CFireball::~CFireball()
 {
-	puts("Destroy Fireball");
 }
 
 bool CFireball::PostInit(const Types::ActorData & data, CGameScene* pScene)

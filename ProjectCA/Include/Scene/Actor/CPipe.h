@@ -1,12 +1,12 @@
 #pragma once
 
 #include "..\..\..\stdafx.h"
-#include "CProb.h"
+#include "CProp.h"
 
-//NOTE: Pipe를 구현한 Class.s
+//NOTE: Pipe를 구현한 Class
 //			생성할 때 Width, Height값은 타일의 개수에 대한 값이어야 함.
 
-class CPipe : public CProb
+class CPipe : public CProp
 {
 	const int PIPE_UNIT_WIDTH		= SPRITE_WIDTH * 2.5f;
 	const int PIPE_UNIT_HEIGHT	= SPRITE_HEIGHT * 0.5f * 2.5f;

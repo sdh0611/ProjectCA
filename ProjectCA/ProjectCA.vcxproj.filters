@@ -85,9 +85,6 @@
     <Filter Include="소스 파일\Scene\Actors\Prob">
       <UniqueIdentifier>{59b24586-081d-4626-bd45-94d6e8e8cbed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Scene\Actors\Prob">
-      <UniqueIdentifier>{0fc2a38c-9d6b-4acc-a819-d0d105c238de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Core\Graphic">
       <UniqueIdentifier>{0094c806-cc53-4984-a168-c4e0c80087e2}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,9 @@
     </Filter>
     <Filter Include="소스 파일\Core\Sound">
       <UniqueIdentifier>{c0eee12b-a7d1-426b-a38f-554e08016be2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Scene\Actors\Prop">
+      <UniqueIdentifier>{0fc2a38c-9d6b-4acc-a819-d0d105c238de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -404,9 +404,6 @@
     <ClInclude Include="Include\Scene\Actor\CEnemy.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\Actor\CProb.h">
-      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Core\Components\AIComponent.h">
       <Filter>헤더 파일\Core\Components</Filter>
     </ClInclude>
@@ -423,7 +420,7 @@
       <Filter>헤더 파일\Core\Graphic</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CBackground.h">
-      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
+      <Filter>헤더 파일\Scene\Actors\Prop</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CKoopa.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
@@ -456,7 +453,7 @@
       <Filter>헤더 파일\Scene\Actors\Pickup</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CGround.h">
-      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
+      <Filter>헤더 파일\Scene\Actors\Prop</Filter>
     </ClInclude>
     <ClInclude Include="Include\Core\Components\AnimationRender.h">
       <Filter>헤더 파일\Core\Components</Filter>
@@ -516,7 +513,7 @@
       <Filter>헤더 파일\UI</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CPipe.h">
-      <Filter>헤더 파일\Scene\Actors\Prob</Filter>
+      <Filter>헤더 파일\Scene\Actors\Prop</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\Actor\CRex.h">
       <Filter>헤더 파일\Scene\Actors\Enemy</Filter>
@@ -559,6 +556,9 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\CEntity.hpp">
       <Filter>헤더 파일\Scene\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Actor\CProp.h">
+      <Filter>헤더 파일\Scene\Actors\Prop</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

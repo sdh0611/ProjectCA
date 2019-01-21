@@ -3,6 +3,8 @@
 #include "..\..\stdafx.h"
 
 //NOTE: 프로그램 내의 대부분의 객체들의 상속받는 Class
+//			UI, Actor, Object들의 상위 클래스이며, 컴포넌트를 가질 수 있는 최소 단위.
+//			기본적으로 Transform Component를 가지고 있음.
 
 class CScene;
 class CLayer;

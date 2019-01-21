@@ -121,7 +121,6 @@ private:
 
 
 private:
-	//std::list<StrongObjectPtr>		m_strongActorPtrList;
 	ENTITY_ID			m_LastEntityID;
 	
 };

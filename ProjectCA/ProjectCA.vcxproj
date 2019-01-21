@@ -268,7 +268,7 @@
     <ClInclude Include="Include\Scene\Actor\CPickup.h" />
     <ClInclude Include="Include\Scene\Actor\CPipe.h" />
     <ClInclude Include="Include\Scene\Actor\CPlayer.h" />
-    <ClInclude Include="Include\Scene\Actor\CProb.h" />
+    <ClInclude Include="Include\Scene\Actor\CProp.h" />
     <ClInclude Include="Include\Scene\Actor\CRex.h" />
     <ClInclude Include="Include\Scene\Actor\CSpinBlock.h" />
     <ClInclude Include="Include\Scene\CCameraManager.h" />

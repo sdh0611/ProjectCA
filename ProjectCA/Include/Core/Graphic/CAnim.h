@@ -17,8 +17,6 @@ public:
 
 
 public:
-	//bool Init(const TSTRING& strSpriteName, UINT iWidth, UINT iHeight,
-	//	double dPlayTime, bool bLoop, const TSTRING& strAnimTag = TEXT("Default"), bool bInterrupt = true);
 	bool Init(const TSTRING& strSpriteName, double dPlayTime, bool bLoop, 
 		const TSTRING& strAnimTag = TEXT("Default"), bool bInterrupt = true);
 	void Update(double dDeltaTIme);
