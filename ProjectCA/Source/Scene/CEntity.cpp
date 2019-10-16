@@ -69,9 +69,14 @@ void CEntity::Render(const HDC & hDC)
 void CEntity::LateUpdate()
 {
 	if (CCameraManager::GetInstance()->GetMainCamera().expired())
+	{
 		return;
+	}
 
-	GetTransform().lock()->AdjustScreenPosition();
+	if (!GetTransform().expired())
+	{
+		GetTransform().lock()->AdjustScreenPosition();
+	}
 
 	auto pRender = GetComponent(TEXT("RenderComponent"));
 	if (!pRender.expired())
